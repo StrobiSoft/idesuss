@@ -165,10 +165,13 @@ az oldal új lapon nyitási linket ad.
 
 <script>
 function detectPlatform(link){
+link = link.toLowerCase();
+
 if(link.includes("youtube.com") || link.includes("youtu.be")) return "YouTube";
 if(link.includes("tiktok.com")) return "TikTok";
 if(link.includes("instagram.com")) return "Instagram";
 if(link.includes("facebook.com") || link.includes("fb.watch")) return "Facebook";
+if(link.includes("x.com") || link.includes("twitter.com")) return "X";
 return "Unknown";
 }
 
@@ -191,7 +194,8 @@ return null;
 }
 
 function play(){
-let link = document.getElementById("videolink").value.trim();
+let input = document.getElementById("videolink");
+let link = input.value.trim();
 let platform = detectPlatform(link);
 let player = document.getElementById("player");
 let status = document.getElementById("status");
@@ -204,17 +208,28 @@ return;
 
 if(platform === "YouTube"){
 let embedLink = convertYouTubeLink(link);
+
 if(embedLink){
-status.innerText = "Platform detected: YouTube";
 player.src = embedLink;
+status.innerText = "Platform detected: YouTube";
 return;
 }
 }
 
 player.src = "";
-status.innerHTML = 'Platform detected: ' + platform + ' — direct embed may be blocked. <a href="' + link + '" target="_blank" style="color:#8db7ff;">Open video in new tab</a>';
+status.innerHTML =
+'Platform detected: ' + platform +
+' — direct embed may be blocked. <a href="' + link + '" target="_blank" style="color:#8db7ff;">Open video in new tab</a>';
 }
-</script>
 
+document.addEventListener("DOMContentLoaded", function(){
+let input = document.getElementById("videolink");
+input.addEventListener("keydown", function(e){
+if(e.key === "Enter"){
+play();
+}
+});
+});
+</script>
 </body>
 </html>
