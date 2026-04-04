@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Idesüss Video Viewer</title>
+
+<style>
+body{
+font-family:Arial;
+text-align:center;
+background:#111;
+color:white;
+padding:40px;
+}
+
+input{
+width:60%;
+padding:12px;
+font-size:16px;
+}
+
+button{
+padding:12px 20px;
+font-size:16px;
+margin-left:10px;
+cursor:pointer;
+}
+
+iframe{
+margin-top:30px;
+width:80%;
+height:480px;
+border:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Idesüss Video Viewer</h1>
+<p>Watch Without Login</p>
+
+<input id="videolink" placeholder="Paste video link here">
+<button onclick="play()">Play</button>
+
+<br>
+
+<iframe id="player"></iframe>
+
+<script>
+function play(){
+let link=document.getElementById("videolink").value;
+document.getElementById("player").src=link;
+}
+</script>
+
+</body>
+</html>
