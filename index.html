@@ -50,7 +50,18 @@ border:none;
 
 <script>
 function play(){
-let link=document.getElementById("videolink").value;
+let link=document.getElementById("videolink").value.trim();
+
+if(link.includes("youtube.com/watch?v=")){
+let videoId = link.split("watch?v=")[1].split("&")[0];
+link = "https://www.youtube.com/embed/" + videoId;
+}
+
+if(link.includes("youtu.be/")){
+let videoId = link.split("youtu.be/")[1].split("?")[0];
+link = "https://www.youtube.com/embed/" + videoId;
+}
+
 document.getElementById("player").src=link;
 }
 </script>
