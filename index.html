@@ -1,53 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="hu">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Idesüss Video Viewer</title>
 
 <style>
+*{
+box-sizing:border-box;
+}
+
 body{
-font-family:Arial;
-text-align:center;
-background:#111;
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(180deg,#0f1117,#171b26);
 color:white;
-padding:40px;
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.app{
+width:100%;
+max-width:900px;
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:20px;
+padding:24px;
+box-shadow:0 20px 50px rgba(0,0,0,0.35);
+backdrop-filter:blur(8px);
+}
+
+h1{
+margin:0 0 8px 0;
+font-size:clamp(28px,4vw,42px);
+text-align:center;
+}
+
+.subtitle{
+margin:0 0 24px 0;
+text-align:center;
+color:#c7cede;
+font-size:15px;
+}
+
+.controls{
+display:flex;
+gap:12px;
+align-items:center;
+margin-bottom:18px;
 }
 
 input{
-width:60%;
-padding:12px;
+flex:1;
+padding:14px 16px;
 font-size:16px;
+border:none;
+border-radius:12px;
+outline:none;
+background:white;
+color:#111;
 }
 
 button{
-padding:12px 20px;
+padding:14px 20px;
 font-size:16px;
-margin-left:10px;
+font-weight:bold;
+border:none;
+border-radius:12px;
 cursor:pointer;
+background:#5b8cff;
+color:white;
+transition:transform 0.15s ease, opacity 0.15s ease;
+}
+
+button:hover{
+transform:translateY(-1px);
+opacity:0.95;
+}
+
+.status{
+min-height:24px;
+margin:0 0 18px 0;
+color:#d3d9e6;
+font-size:14px;
+}
+
+.player-wrap{
+width:100%;
+aspect-ratio:16 / 9;
+background:#0b0d12;
+border-radius:16px;
+overflow:hidden;
+border:1px solid rgba(255,255,255,0.06);
 }
 
 iframe{
-margin-top:30px;
-width:80%;
-height:480px;
+width:100%;
+height:100%;
 border:none;
+display:block;
+background:#0b0d12;
+}
+
+.tip{
+margin-top:16px;
+font-size:13px;
+color:#98a2b3;
+text-align:center;
+line-height:1.5;
+}
+
+.tip code{
+background:rgba(255,255,255,0.08);
+padding:2px 6px;
+border-radius:6px;
+}
+
+@media (max-width:700px){
+.app{
+padding:18px;
+border-radius:16px;
+}
+
+.controls{
+flex-direction:column;
+}
+
+button{
+width:100%;
+}
+
+input{
+width:100%;
+}
 }
 </style>
-
 </head>
 
 <body>
 
+<div class="app">
 <h1>Idesüss Video Viewer</h1>
-<p>Watch Without Login</p>
+<p class="subtitle">Watch Without Login</p>
 
+<div class="controls">
 <input id="videolink" placeholder="Paste video link here">
 <button onclick="play()">Play</button>
+</div>
 
-<br>
+<p id="status" class="status"></p>
 
-<iframe id="player"></iframe>
-<p id="status" style="margin-top:20px;color:#ccc;"></p>
+<div class="player-wrap">
+<iframe id="player" allowfullscreen></iframe>
+</div>
+
+<p class="tip">
+YouTube linkek beágyazva mennek. Más platformoknál, ha az embed tiltott,
+az oldal új lapon nyitási linket ad.
+</p>
+</div>
+
 <script>
 function detectPlatform(link){
 if(link.includes("youtube.com") || link.includes("youtu.be")) return "YouTube";
@@ -81,6 +196,12 @@ let platform = detectPlatform(link);
 let player = document.getElementById("player");
 let status = document.getElementById("status");
 
+if(!link){
+status.innerText = "Paste a link first.";
+player.src = "";
+return;
+}
+
 if(platform === "YouTube"){
 let embedLink = convertYouTubeLink(link);
 if(embedLink){
@@ -91,7 +212,7 @@ return;
 }
 
 player.src = "";
-status.innerHTML = 'Platform detected: ' + platform + ' — direct embed may be blocked. <a href="' + link + '" target="_blank" style="color:#9cf;">Open video in new tab</a>';
+status.innerHTML = 'Platform detected: ' + platform + ' — direct embed may be blocked. <a href="' + link + '" target="_blank" style="color:#8db7ff;">Open video in new tab</a>';
 }
 </script>
 
