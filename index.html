@@ -49,20 +49,49 @@ border:none;
 <iframe id="player"></iframe>
 
 <script>
-function play(){
-let link=document.getElementById("videolink").value.trim();
+function detectPlatform(link){
+if(link.includes("youtube.com") || link.includes("youtu.be")) return "YouTube";
+if(link.includes("tiktok.com")) return "TikTok";
+if(link.includes("instagram.com")) return "Instagram";
+if(link.includes("facebook.com") || link.includes("fb.watch")) return "Facebook";
+return "Unknown";
+}
 
+function convertYouTubeLink(link){
 if(link.includes("youtube.com/watch?v=")){
 let videoId = link.split("watch?v=")[1].split("&")[0];
-link = "https://www.youtube.com/embed/" + videoId;
+return "https://www.youtube.com/embed/" + videoId;
 }
 
 if(link.includes("youtu.be/")){
 let videoId = link.split("youtu.be/")[1].split("?")[0];
-link = "https://www.youtube.com/embed/" + videoId;
+return "https://www.youtube.com/embed/" + videoId;
 }
 
-document.getElementById("player").src=link;
+if(link.includes("youtube.com/embed/")){
+return link;
+}
+
+return null;
+}
+
+function play(){
+let link = document.getElementById("videolink").value.trim();
+let platform = detectPlatform(link);
+let player = document.getElementById("player");
+let status = document.getElementById("status");
+
+if(platform === "YouTube"){
+let embedLink = convertYouTubeLink(link);
+if(embedLink){
+status.innerText = "Platform detected: YouTube";
+player.src = embedLink;
+return;
+}
+}
+
+player.src = "";
+status.innerHTML = 'Platform detected: ' + platform + ' — direct embed may be blocked. <a href="' + link + '" target="_blank" style="color:#9cf;">Open video in new tab</a>';
 }
 </script>
 
