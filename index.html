@@ -230,6 +230,15 @@ play();
 }
 });
 });
+const params = new URLSearchParams(window.location.search);
+const video = params.get("video");
+
+if (video) {
+  const input = document.querySelector("input");
+  if (input) {
+    input.value = video;
+  }
+}  
 </script>
 </body>
 </html>
