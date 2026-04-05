@@ -73,12 +73,29 @@ border-radius:12px;
 cursor:pointer;
 background:#5b8cff;
 color:white;
-transition:transform 0.15s ease, opacity 0.15s ease;
+transition:transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
 }
 
 button:hover{
 transform:translateY(-1px);
 opacity:0.95;
+}
+
+.paste-btn{
+background:#5f6675;
+color:white;
+opacity:0.65;
+min-width:130px;
+}
+
+.paste-btn.active{
+background:#5b8cff;
+opacity:1;
+}
+
+.paste-btn:disabled{
+cursor:not-allowed;
+transform:none;
 }
 
 .status{
@@ -137,6 +154,10 @@ width:100%;
 input{
 width:100%;
 }
+
+.paste-btn{
+min-width:unset;
+}
 }
 
 .video-watermark{
@@ -176,6 +197,7 @@ user-select:none;
 
 <div class="controls">
 <input id="videolink" placeholder="Paste video link here">
+<button id="pasteBtn" class="paste-btn" onclick="pasteVideoLink()" disabled>Paste</button>
 <button onclick="play()">Play</button>
 </div>
 
@@ -208,6 +230,22 @@ function detectPlatform(link){
   if (lower.includes("x.com") || lower.includes("twitter.com")) return "X";
 
   return "Unknown";
+}
+
+function isVideoLink(link){
+  const lower = link.toLowerCase().trim();
+
+  return (
+    lower.includes("youtube.com") ||
+    lower.includes("youtu.be") ||
+    lower.includes("m.youtube.com") ||
+    lower.includes("tiktok.com") ||
+    lower.includes("instagram.com") ||
+    lower.includes("facebook.com") ||
+    lower.includes("fb.watch") ||
+    lower.includes("x.com") ||
+    lower.includes("twitter.com")
+  );
 }
 
 function convertYouTubeLink(link){
@@ -250,6 +288,61 @@ function convertYouTubeLink(link){
   return null;
 }
 
+async function checkClipboardForVideoLink(){
+  const pasteBtn = document.getElementById("pasteBtn");
+  const status = document.getElementById("status");
+
+  if (!pasteBtn || !navigator.clipboard || !navigator.clipboard.readText) {
+    return;
+  }
+
+  try{
+    const text = (await navigator.clipboard.readText()).trim();
+
+    if (isVideoLink(text)) {
+      pasteBtn.disabled = false;
+      pasteBtn.classList.add("active");
+      pasteBtn.innerText = "Paste link";
+      status.innerText = "Video link detected in clipboard.";
+    } else {
+      pasteBtn.disabled = true;
+      pasteBtn.classList.remove("active");
+      pasteBtn.innerText = "No video link";
+    }
+  } catch(err){
+    pasteBtn.disabled = true;
+    pasteBtn.classList.remove("active");
+    pasteBtn.innerText = "Paste";
+  }
+}
+
+async function pasteVideoLink(){
+  const input = document.getElementById("videolink");
+  const pasteBtn = document.getElementById("pasteBtn");
+  const status = document.getElementById("status");
+
+  if (!navigator.clipboard || !navigator.clipboard.readText) {
+    status.innerText = "Clipboard access is not supported in this browser.";
+    return;
+  }
+
+  try{
+    const text = (await navigator.clipboard.readText()).trim();
+
+    if (isVideoLink(text)) {
+      input.value = text;
+      pasteBtn.innerText = "Pasted";
+      pasteBtn.classList.add("active");
+      status.innerText = "Video link pasted from clipboard.";
+      play();
+    } else {
+      status.innerText = "Clipboard does not contain a supported video link.";
+    }
+  } catch(err){
+    status.innerText = "Clipboard access was blocked.";
+  }
+}
+
 function play(){
   const input = document.getElementById("videolink");
   const link = input.value.trim();
@@ -290,6 +383,14 @@ document.addEventListener("DOMContentLoaded", function(){
     if (e.key === "Enter") {
       play();
     }
+  });
+
+  input.addEventListener("focus", function(){
+    checkClipboardForVideoLink();
+  });
+
+  input.addEventListener("click", function(){
+    checkClipboardForVideoLink();
   });
 });
 
