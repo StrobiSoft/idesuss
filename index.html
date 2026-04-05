@@ -88,7 +88,9 @@ color:#d3d9e6;
 font-size:14px;
 }
 
+/* JAVÍTVA: position:relative hozzáadva */
 .player-wrap{
+position:relative;
 width:100%;
 aspect-ratio:16 / 9;
 background:#0b0d12;
@@ -137,6 +139,23 @@ input{
 width:100%;
 }
 }
+
+.video-watermark{
+position:absolute;
+top:10px;
+right:12px;
+font-size:12px;
+font-family:system-ui,sans-serif;
+color:rgba(255,255,255,0.55);
+background:rgba(0,0,0,0.18);
+padding:4px 8px;
+border-radius:999px;
+backdrop-filter:blur(2px);
+pointer-events:none;
+user-select:none;
+z-index:5;
+}
+
 </style>
 </head>
 
@@ -151,16 +170,18 @@ width:100%;
 <button onclick="play()">Play</button>
 </div>
 
-<p id="status" class="status"></p>
-
 <div class="player-wrap">
 <iframe id="player" allowfullscreen></iframe>
+<div class="video-watermark">idesüss.net</div>
 </div>
+
+<p id="status" class="status"></p>
 
 <p class="tip">
 YouTube linkek beágyazva mennek. Más platformoknál, ha az embed tiltott,
 az oldal új lapon nyitási linket ad.
 </p>
+
 </div>
 
 <script>
@@ -230,6 +251,7 @@ play();
 }
 });
 });
+
 const params = new URLSearchParams(window.location.search);
 const video = params.get("video");
 
@@ -238,9 +260,10 @@ if (video) {
   if (input) {
     input.value = video;
   }
-}  
+}
 </script>
- <div class="stzoo-signature">Powered by St.Zoo</div>
+
+<div class="stzoo-signature">Powered by St.Zoo</div>
 
 <style>
 .stzoo-signature{
@@ -256,5 +279,4 @@ user-select:none;
 </style>
 
 </body>
-</html> 
-
+</html>
