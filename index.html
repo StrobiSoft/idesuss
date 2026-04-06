@@ -165,29 +165,36 @@
     }
 
     .btn-play{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  padding:12px 18px;
-  font-size:16px;
-  background:linear-gradient(135deg,var(--accent1),var(--accent2));
-  color:white;
-  box-shadow:0 12px 26px rgba(14,165,233,.24);
-  flex:1 1 240px;
-}
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      padding:12px 18px;
+      font-size:16px;
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:white;
+      box-shadow:0 12px 26px rgba(14,165,233,.24);
+      flex:1 1 240px;
+    }
 
     .btn-clear{
       background:linear-gradient(180deg,var(--danger),var(--danger2));
       color:white;
       min-width:132px;
     }
-.play-eye{
-  width:42px;
-  height:42px;
-  display:block;
-  flex:0 0 42px;
-}
+
+    .play-eye{
+      width:42px;
+      height:42px;
+      display:block;
+      flex:0 0 42px;
+    }
+
+    .play-eye svg{
+      width:42px;
+      height:42px;
+      display:block;
+    }
 
     .status{
       margin-top:16px;
@@ -331,7 +338,16 @@
 
         <div class="actions">
           <button class="btn btn-play" id="playBtn" type="button">
-            <img src="eye-play.png" class="play-eye" alt="">
+            <span class="play-eye" aria-hidden="true">
+              <svg viewBox="0 0 64 40" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 20 C10 6, 26 2, 32 2 C38 2, 54 6, 62 20 C54 34, 38 38, 32 38 C26 38, 10 34, 2 20 Z"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="3"/>
+                <circle cx="32" cy="20" r="8" fill="#38bdf8"/>
+                <polygon points="30,16 30,24 36,20" fill="white"/>
+              </svg>
+            </span>
             <span>Play</span>
           </button>
 
