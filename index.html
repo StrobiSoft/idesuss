@@ -3,16 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ideSüs Player</title>
-  <meta name="description" content="ideSüs Player – Watch Without Login" />
+  <title>Idesüss</title>
+  <meta name="description" content="Idesüss – Watch Without Login" />
   <meta name="theme-color" content="#0f172a" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <style>
     :root {
@@ -24,7 +18,6 @@
       --muted: #94a3b8;
       --accent: #38bdf8;
       --accent-strong: #0ea5e9;
-      --success: #22c55e;
       --danger: #ef4444;
       --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
       --radius: 22px;
@@ -77,7 +70,7 @@
     }
 
     .brand-title {
-      font-size: 1.4rem;
+      font-size: 1.45rem;
       font-weight: 800;
       letter-spacing: 0.02em;
     }
@@ -87,19 +80,9 @@
       color: var(--muted);
     }
 
-    .status-pill {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      color: #c6f1ff;
-      font-size: 0.88rem;
-      white-space: nowrap;
-    }
-
     .main-card {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 18px;
     }
 
@@ -141,7 +124,7 @@
       font-weight: 600;
     }
 
-    textarea, input {
+    textarea {
       width: 100%;
       border: 1px solid rgba(255,255,255,0.1);
       background: rgba(255,255,255,0.04);
@@ -151,67 +134,66 @@
       font-size: 1rem;
       outline: none;
       transition: 0.2s ease;
-    }
-
-    textarea {
       min-height: 110px;
       resize: vertical;
     }
 
-    textarea:focus, input:focus {
+    textarea:focus {
       border-color: rgba(56, 189, 248, 0.6);
       box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
     }
 
-    .button-row {
+    .main-actions {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 14px;
     }
 
     button {
       border: none;
-      border-radius: 14px;
-      padding: 13px 16px;
-      font-size: 0.96rem;
-      font-weight: 700;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 800;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+      transition: transform 0.15s ease, opacity 0.15s ease;
     }
 
     button:hover {
       transform: translateY(-1px);
     }
 
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.45;
-      transform: none;
-    }
-
-    .btn-primary {
+    .btn-play {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
       color: white;
+      box-shadow: 0 10px 24px rgba(14, 165, 233, 0.28);
+      flex: 1;
     }
 
-    .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.08);
+    .btn-play img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      object-fit: contain;
+      border-radius: 6px;
     }
 
-    .btn-danger {
-      background: rgba(239, 68, 68, 0.14);
+    .btn-clear {
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      background: rgba(239, 68, 68, 0.12);
       color: #fecaca;
-      border: 1px solid rgba(239, 68, 68, 0.22);
     }
 
     .hint {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.55;
       margin-top: 10px;
+      min-height: 24px;
     }
 
     .player-wrap {
@@ -223,9 +205,12 @@
       border-radius: 22px;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    iframe, video {
+    iframe {
       width: 100%;
       height: 100%;
       border: none;
@@ -233,50 +218,30 @@
       background: black;
     }
 
-    .empty-state {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .empty-state,
+    .fallback-state {
       text-align: center;
       color: var(--muted);
       padding: 24px;
       line-height: 1.6;
     }
 
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
+    .fallback-state strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.05rem;
+      margin-bottom: 10px;
     }
 
-    .mini-badge {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--muted);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-    }
-
-    .info-box {
-      margin-top: 18px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
-    }
-
-    .success {
-      color: #bbf7d0;
-    }
-
-    .warning {
-      color: #fde68a;
+    .open-link-btn {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: white;
+      text-decoration: none;
+      font-weight: 800;
     }
 
     @media (max-width: 860px) {
@@ -285,7 +250,6 @@
       }
 
       .player-wrap {
-        aspect-ratio: 9 / 16;
         max-height: 70vh;
       }
 
@@ -305,20 +269,17 @@
         padding: 16px;
       }
 
-      .brand-title {
-        font-size: 1.15rem;
+      .main-actions {
+        flex-direction: column;
       }
 
-      .brand-subtitle {
-        font-size: 0.86rem;
-      }
-
-      button {
+      .btn-play,
+      .btn-clear {
         width: 100%;
       }
 
-      .button-row {
-        flex-direction: column;
+      .brand-title {
+        font-size: 1.18rem;
       }
     }
   </style>
@@ -327,19 +288,16 @@
   <div class="app-shell">
     <div class="topbar">
       <div class="brand">
-        <div class="brand-title">ideSüs Player</div>
+        <div class="brand-title">Idesüss</div>
         <div class="brand-subtitle">Watch Without Login</div>
       </div>
-      <div class="status-pill" id="clipboardStatus">Vágólap figyelése…</div>
     </div>
 
     <div class="main-card">
       <section class="panel left-panel">
         <h1 class="section-title">Videólink beillesztése</h1>
         <p class="section-text">
-          Illessz be egy publikus videólinket. Az oldal megpróbálja felismerni és betölteni.
-          TikTok, Instagram, Facebook Reels és egyéb publikus linkek esetén ez csak akkor működik jól,
-          ha az adott forrás valóban engedi a beágyazást vagy megnyitást.
+          Illessz be egy publikus videólinket, majd indítsd el.
         </p>
 
         <div class="input-group">
@@ -347,34 +305,27 @@
           <textarea id="videoUrl" placeholder="Ide illeszd be a videó linkjét..."></textarea>
         </div>
 
-        <div class="button-row">
-          <button class="btn-primary" id="loadBtn">Videó betöltése</button>
-          <button class="btn-secondary" id="pasteBtn" disabled>Beillesztés a vágólapról</button>
-          <button class="btn-secondary" id="testBtn">Link ellenőrzése</button>
-          <button class="btn-danger" id="clearBtn">Törlés</button>
+        <div class="main-actions">
+          <button class="btn-play" id="playBtn">
+            <img src="favicon.png" alt="">
+            <span>Play</span>
+          </button>
+          <button class="btn-clear" id="clearBtn">Törlés</button>
         </div>
 
-        <div class="hint" id="message">
-          Tipp: mobilon különösen fontos, hogy a videó nyilvános legyen. Egyes platformok korlátozzák az automatikus lejátszást és a hangos indulást.
-        </div>
-
-        <div class="info-box">
-          <strong class="warning">Fontos:</strong> a legtöbb böngésző és platform nem szereti a hangos automatikus indulást.
-          Emiatt a videók gyakran <strong>némítva</strong> indulnak, vagy a felhasználónak rá kell kattintania a lejátszásra.
-          Ez nem feltétlenül a te oldalad hibája, hanem böngészős/platformos korlátozás.
-        </div>
+        <div class="hint" id="message"></div>
       </section>
 
       <section class="panel right-panel">
         <h2 class="section-title">Lejátszó</h2>
         <p class="section-text">
-          Itt jelenik meg a tartalom. Ha a platform nem engedi az iframe-es beágyazást, akkor külön megnyitás vagy más megoldás kell.
+          Itt jelenik meg a tartalom.
         </p>
 
         <div class="player-wrap" id="playerWrap">
-          <div class="empty-state" id="emptyState">
-            Még nincs betöltött videó.<br />
-            Illessz be egy publikus linket, majd nyomd meg a „Videó betöltése” gombot.
+          <div class="empty-state">
+            Még nincs betöltött videó.<br>
+            Illessz be egy publikus linket, majd nyomd meg a Play gombot.
           </div>
         </div>
       </section>
@@ -382,143 +333,112 @@
   </div>
 
   <script>
-    const videoUrl = document.getElementById('videoUrl');
-    const loadBtn = document.getElementById('loadBtn');
-    const pasteBtn = document.getElementById('pasteBtn');
-    const testBtn = document.getElementById('testBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const message = document.getElementById('message');
-    const playerWrap = document.getElementById('playerWrap');
-    const emptyState = document.getElementById('emptyState');
-    const clipboardStatus = document.getElementById('clipboardStatus');
+    const videoUrl = document.getElementById("videoUrl");
+    const playBtn = document.getElementById("playBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const message = document.getElementById("message");
+    const playerWrap = document.getElementById("playerWrap");
 
-    function setMessage(text, type = 'normal') {
-      message.className = 'hint';
-      if (type === 'success') message.classList.add('success');
-      if (type === 'warning') message.classList.add('warning');
+    function setMessage(text, type = "normal") {
+      if (type === "error") {
+        message.style.color = "#fca5a5";
+      } else if (type === "success") {
+        message.style.color = "#bbf7d0";
+      } else {
+        message.style.color = "#94a3b8";
+      }
       message.textContent = text;
     }
 
     function isProbablyUrl(text) {
       try {
         const url = new URL(text.trim());
-        return ['http:', 'https:'].includes(url.protocol);
+        return ["http:", "https:"].includes(url.protocol);
       } catch {
         return false;
       }
     }
 
-    function normalizeUrl(url) {
-      return url.trim();
-    }
-
     function clearPlayer() {
       playerWrap.innerHTML = `
-        <div class="empty-state" id="emptyState">
-          Még nincs betöltött videó.<br />
-          Illessz be egy publikus linket, majd nyomd meg a „Videó betöltése” gombot.
+        <div class="empty-state">
+          Még nincs betöltött videó.<br>
+          Illessz be egy publikus linket, majd nyomd meg a Play gombot.
         </div>
       `;
     }
 
-    function tryEmbed(url) {
-      clearPlayer();
+    function showFallback(url, platformName, buttonLabel) {
+      playerWrap.innerHTML = `
+        <div class="fallback-state">
+          <strong>${platformName}</strong>
+          Ez a platform nem engedi a közvetlen lejátszást ezen az oldalon.
+          <br>
+          <a class="open-link-btn" href="${url}" target="_blank" rel="noopener noreferrer">${buttonLabel}</a>
+        </div>
+      `;
+    }
 
-      const iframe = document.createElement('iframe');
-      iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-      iframe.allowFullscreen = true;
-      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-
-      // Itt most alapból a megadott URL-t tesszük be.
-      // Sok platform ezt nem fogja szeretni közvetlen embedként,
-      // ezért ez inkább alaplogika, amit később platformonként finomíthatunk.
+    function embedUrl(url) {
+      playerWrap.innerHTML = "";
+      const iframe = document.createElement("iframe");
       iframe.src = url;
-
-      playerWrap.innerHTML = '';
+      iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
       playerWrap.appendChild(iframe);
     }
 
     function loadVideo() {
-      const url = normalizeUrl(videoUrl.value);
+      const url = videoUrl.value.trim();
 
       if (!url) {
-        setMessage('Előbb illessz be egy linket.', 'warning');
+        setMessage("Előbb illessz be egy linket.", "error");
         return;
       }
 
       if (!isProbablyUrl(url)) {
-        setMessage('Ez nem tűnik érvényes linknek.', 'warning');
+        setMessage("Ez nem tűnik érvényes linknek.", "error");
         return;
       }
 
-      tryEmbed(url);
-      setMessage('A link betöltése megtörtént. Ha nem jelenik meg jól, az adott platform tiltja vagy korlátozza a beágyazást.', 'success');
-    }
+      const lower = url.toLowerCase();
 
-    function testLink() {
-      const url = normalizeUrl(videoUrl.value);
-
-      if (!url) {
-        setMessage('Nincs mit ellenőrizni, a mező üres.', 'warning');
+      if (lower.includes("instagram.com")) {
+        showFallback(url, "Instagram", "Megnyitás Instagramon");
+        setMessage("Az Instagram link felismerve. Közvetlen lejátszás helyett megnyitó gombot adtam.", "success");
         return;
       }
 
-      if (isProbablyUrl(url)) {
-        setMessage('A link formátuma rendben van. A tényleges működés attól függ, hogy az adott oldal engedi-e a megjelenítést.', 'success');
-      } else {
-        setMessage('A link formátuma hibásnak tűnik.', 'warning');
-      }
-    }
-
-    async function readClipboard() {
-      try {
-        const text = await navigator.clipboard.readText();
-        if (text && isProbablyUrl(text)) {
-          videoUrl.value = text.trim();
-          setMessage('A vágólapról beillesztettem a linket.', 'success');
-        } else {
-          setMessage('A vágólapon most nem találtam használható linket.', 'warning');
-        }
-      } catch (err) {
-        setMessage('A vágólap olvasása nem sikerült. Lehet, hogy a böngésző vagy az oldal jogosultságot kér.', 'warning');
-      }
-    }
-
-    async function updatePasteButtonState() {
-      if (!navigator.clipboard || !window.isSecureContext) {
-        pasteBtn.disabled = true;
-        clipboardStatus.textContent = 'Vágólap nem elérhető';
+      if (lower.includes("facebook.com") || lower.includes("fb.watch")) {
+        showFallback(url, "Facebook", "Megnyitás Facebookon");
+        setMessage("A Facebook link felismerve. Közvetlen lejátszás helyett megnyitó gombot adtam.", "success");
         return;
       }
 
-      try {
-        const text = await navigator.clipboard.readText();
-        const active = !!text && isProbablyUrl(text);
-        pasteBtn.disabled = !active;
-        clipboardStatus.textContent = active ? 'Link érzékelve a vágólapon' : 'Nincs használható link a vágólapon';
-      } catch {
-        pasteBtn.disabled = true;
-        clipboardStatus.textContent = 'Vágólap-hozzáférés nincs engedélyezve';
+      if (lower.includes("tiktok.com")) {
+        showFallback(url, "TikTok", "Megnyitás TikTokon");
+        setMessage("A TikTok link felismerve. Közvetlen lejátszás helyett megnyitó gombot adtam.", "success");
+        return;
       }
+
+      if (lower.includes("youtube.com") || lower.includes("youtu.be")) {
+        embedUrl(url);
+        setMessage("A link betöltve.", "success");
+        return;
+      }
+
+      embedUrl(url);
+      setMessage("A link betöltve. Ha nem jelenik meg jól, az adott platform korlátozza a beágyazást.", "success");
     }
 
-    loadBtn.addEventListener('click', loadVideo);
-    testBtn.addEventListener('click', testLink);
-    pasteBtn.addEventListener('click', readClipboard);
-    clearBtn.addEventListener('click', () => {
-      videoUrl.value = '';
+    playBtn.addEventListener("click", loadVideo);
+
+    clearBtn.addEventListener("click", () => {
+      videoUrl.value = "";
       clearPlayer();
-      setMessage('A mezőt és a lejátszót töröltem.');
+      setMessage("");
     });
-
-    videoUrl.addEventListener('input', () => {
-      if (videoUrl.value.trim()) {
-        setMessage('Link megadva. Betöltheted vagy ellenőrizheted.');
-      }
-    });
-
-    window.addEventListener('focus', updatePasteButtonState);
-    window.addEventListener('load', updatePasteButtonState);
   </script>
 </body>
 </html>
