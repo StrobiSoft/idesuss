@@ -1,59 +1,118 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Idesüss Player</title>
 
-<link rel="icon" href="favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
 
 <style>
 
 body{
-background:#0f172a;
+margin:0;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+background:linear-gradient(145deg,#1c2433,#0d1117);
 color:white;
-font-family:Arial, Helvetica, sans-serif;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
-margin:0;
+min-height:100vh;
 }
 
 .container{
-background:#1e293b;
+width:95%;
+max-width:900px;
+background:rgba(255,255,255,0.05);
+border-radius:20px;
 padding:30px;
-border-radius:18px;
-width:520px;
-box-shadow:0 0 40px rgba(0,0,0,0.5);
+box-shadow:0 20px 40px rgba(0,0,0,0.6);
+backdrop-filter:blur(10px);
 }
 
-h1{
-margin-top:0;
-font-size:26px;
+.header{
+font-size:28px;
+font-weight:700;
+margin-bottom:25px;
+}
+
+.subtitle{
+opacity:0.6;
+margin-bottom:30px;
+}
+
+.layout{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+}
+
+.box{
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:16px;
 }
 
 textarea{
 width:100%;
-height:80px;
-border-radius:10px;
+height:100px;
 border:none;
-padding:10px;
-margin-top:10px;
+border-radius:12px;
+padding:12px;
+font-size:14px;
+resize:none;
+outline:none;
+background:rgba(255,255,255,0.08);
+color:white;
+}
+
+textarea::placeholder{
+color:rgba(255,255,255,0.5);
+}
+
+.player{
+background:black;
+height:260px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:14px;
+opacity:0.6;
+}
+
+.controls{
+margin-top:15px;
+display:flex;
+gap:10px;
 }
 
 .play-btn{
 display:inline-flex;
 align-items:center;
-gap:8px;
-margin-top:15px;
-padding:12px 22px;
-border:none;
-border-radius:12px;
+gap:10px;
 background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+border:none;
+padding:12px 20px;
+border-radius:14px;
 color:white;
-font-size:18px;
+font-weight:600;
+cursor:pointer;
+transition:0.2s;
+}
+
+.play-btn:hover{
+transform:scale(1.05);
+}
+
+.delete-btn{
+background:#c14646;
+border:none;
+padding:12px 16px;
+border-radius:14px;
+color:white;
 cursor:pointer;
 }
 
@@ -67,8 +126,6 @@ height:24px;
 position:absolute;
 width:24px;
 height:24px;
-left:0;
-top:0;
 opacity:0;
 }
 
@@ -89,49 +146,50 @@ animation:eyeWink 0.2s forwards;
 }
 
 @keyframes eyeOpen{
-0%{opacity:1;}
-40%{opacity:0;}
-100%{opacity:0;}
+0%{opacity:1}
+40%{opacity:0}
+100%{opacity:0}
 }
 
 @keyframes eyeMid{
-0%{opacity:0;}
-40%{opacity:1;}
-70%{opacity:0;}
-100%{opacity:0;}
+0%{opacity:0}
+40%{opacity:1}
+70%{opacity:0}
+100%{opacity:0}
 }
 
 @keyframes eyeWink{
-0%{opacity:0;}
-70%{opacity:1;}
-100%{opacity:1;}
-}
-
-.player{
-margin-top:20px;
-background:#020617;
-height:260px;
-border-radius:14px;
-display:flex;
-align-items:center;
-justify-content:center;
-color:#64748b;
+0%{opacity:0}
+70%{opacity:1}
+100%{opacity:1}
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>Idesüss Player</h1>
-<p>Watch Without Login</p>
+<div class="header">
+Idesüss Player
+</div>
 
-<textarea placeholder="Ide illeszd be a videó linkjét..."></textarea>
+<div class="subtitle">
+Watch Without Login
+</div>
 
-<button class="play-btn">
+<div class="layout">
+
+<div class="box">
+
+<h3>Videólink beillesztése</h3>
+
+<textarea id="videoURL" placeholder="Ide illeszd be a videó linkjét..."></textarea>
+
+<div class="controls">
+
+<button class="play-btn" onclick="loadVideo()">
 
 <span class="eye">
 <img src="eye-open.svg" class="eye-open">
@@ -143,11 +201,51 @@ Play
 
 </button>
 
-<div class="player">
+<button class="delete-btn" onclick="clearVideo()">
+Törlés
+</button>
+
+</div>
+
+</div>
+
+<div class="box">
+
+<h3>Lejátszó</h3>
+
+<div class="player" id="player">
 Még nincs betöltött videó
 </div>
 
 </div>
+
+</div>
+
+</div>
+
+<script>
+
+function loadVideo(){
+
+let url=document.getElementById("videoURL").value;
+
+if(url.trim()===""){
+return;
+}
+
+document.getElementById("player").innerHTML=
+'<iframe width="100%" height="100%" src="'+url+'" frameborder="0" allowfullscreen></iframe>';
+
+}
+
+function clearVideo(){
+
+document.getElementById("videoURL").value="";
+document.getElementById("player").innerHTML="Még nincs betöltött videó";
+
+}
+
+</script>
 
 </body>
 </html>
