@@ -1,448 +1,153 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Idesüss</title>
-  <meta name="description" content="Idesüss – Watch Without Login" />
-  <meta name="theme-color" content="#0f172a" />
-  <link rel="icon" type="image/png" href="favicon.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    :root {
-      --bg: #08111f;
-      --bg2: #0f172a;
-      --panel: rgba(15, 23, 42, 0.78);
-      --panel-border: rgba(255, 255, 255, 0.08);
-      --text: #e5edf8;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-strong: #0ea5e9;
-      --danger: #ef4444;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-      --radius: 22px;
-      --radius-sm: 14px;
-    }
+<title>Idesüss Player</title>
 
-    * {
-      box-sizing: border-box;
-    }
+<link rel="icon" href="favicon.png">
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.12), transparent 25%),
-        linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
-      color: var(--text);
-      min-height: 100%;
-    }
+<style>
 
-    body {
-      padding: 20px;
-    }
+body{
+background:#0f172a;
+color:white;
+font-family:Arial, Helvetica, sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
 
-    .app-shell {
-      max-width: 980px;
-      margin: 0 auto;
-    }
+.container{
+background:#1e293b;
+padding:30px;
+border-radius:18px;
+width:520px;
+box-shadow:0 0 40px rgba(0,0,0,0.5);
+}
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
-      padding: 16px 18px;
-      border: 1px solid var(--panel-border);
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(16px);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
+h1{
+margin-top:0;
+font-size:26px;
+}
 
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+textarea{
+width:100%;
+height:80px;
+border-radius:10px;
+border:none;
+padding:10px;
+margin-top:10px;
+}
 
-    .brand-title {
-      font-size: 1.45rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-    }
+.play-btn{
+display:inline-flex;
+align-items:center;
+gap:8px;
+margin-top:15px;
+padding:12px 22px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+color:white;
+font-size:18px;
+cursor:pointer;
+}
 
-    .brand-subtitle {
-      font-size: 0.92rem;
-      color: var(--muted);
-    }
+.eye{
+position:relative;
+width:24px;
+height:24px;
+}
 
-    .main-card {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 18px;
-    }
+.eye img{
+position:absolute;
+width:24px;
+height:24px;
+left:0;
+top:0;
+opacity:0;
+}
 
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
+.eye-open{
+opacity:1;
+}
 
-    .left-panel,
-    .right-panel {
-      padding: 20px;
-    }
+.play-btn:hover .eye-open{
+animation:eyeOpen 0.2s forwards;
+}
 
-    .section-title {
-      margin: 0 0 8px;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
+.play-btn:hover .eye-mid{
+animation:eyeMid 0.2s forwards;
+}
 
-    .section-text {
-      margin: 0 0 18px;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 0.96rem;
-    }
+.play-btn:hover .eye-wink{
+animation:eyeWink 0.2s forwards;
+}
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
+@keyframes eyeOpen{
+0%{opacity:1;}
+40%{opacity:0;}
+100%{opacity:0;}
+}
 
-    label {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
+@keyframes eyeMid{
+0%{opacity:0;}
+40%{opacity:1;}
+70%{opacity:0;}
+100%{opacity:0;}
+}
 
-    textarea {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      font-size: 1rem;
-      outline: none;
-      transition: 0.2s ease;
-      min-height: 110px;
-      resize: vertical;
-    }
+@keyframes eyeWink{
+0%{opacity:0;}
+70%{opacity:1;}
+100%{opacity:1;}
+}
 
-    textarea:focus {
-      border-color: rgba(56, 189, 248, 0.6);
-      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
-    }
+.player{
+margin-top:20px;
+background:#020617;
+height:260px;
+border-radius:14px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#64748b;
+}
 
-    .main-actions {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
+</style>
 
-    button {
-      border: none;
-      border-radius: 16px;
-      padding: 14px 18px;
-      font-size: 1rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-play {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: white;
-      box-shadow: 0 10px 24px rgba(14, 165, 233, 0.28);
-      flex: 1;
-    }
-
-    .btn-play img {
-      width: 22px;
-      height: 22px;
-      display: block;
-      object-fit: contain;
-      border-radius: 6px;
-    }
-
-    .btn-clear {
-      border: 1px solid rgba(239, 68, 68, 0.25);
-      background: rgba(239, 68, 68, 0.12);
-      color: #fecaca;
-    }
-
-    .hint {
-      font-size: 0.95rem;
-      color: var(--muted);
-      line-height: 1.55;
-      margin-top: 10px;
-      min-height: 24px;
-    }
-
-    .player-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 9 / 16;
-      max-height: 78vh;
-      background: linear-gradient(145deg, #020617, #111827);
-      border-radius: 22px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-      background: black;
-    }
-
-    .empty-state,
-    .fallback-state {
-      text-align: center;
-      color: var(--muted);
-      padding: 24px;
-      line-height: 1.6;
-    }
-
-    .fallback-state strong {
-      display: block;
-      color: var(--text);
-      font-size: 1.05rem;
-      margin-bottom: 10px;
-    }
-
-    .open-link-btn {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: white;
-      text-decoration: none;
-      font-weight: 800;
-    }
-
-    @media (max-width: 860px) {
-      .main-card {
-        grid-template-columns: 1fr;
-      }
-
-      .player-wrap {
-        max-height: 70vh;
-      }
-
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-
-    @media (max-width: 520px) {
-      body {
-        padding: 12px;
-      }
-
-      .left-panel,
-      .right-panel {
-        padding: 16px;
-      }
-
-      .main-actions {
-        flex-direction: column;
-      }
-
-      .btn-play,
-      .btn-clear {
-        width: 100%;
-      }
-
-      .brand-title {
-        font-size: 1.18rem;
-      }
-    }
-  </style>
 </head>
+
 <body>
-  <div class="app-shell">
-    <div class="topbar">
-      <div class="brand">
-        <div class="brand-title">Idesüss</div>
-        <div class="brand-subtitle">Watch Without Login</div>
-      </div>
-    </div>
 
-    <div class="main-card">
-      <section class="panel left-panel">
-        <h1 class="section-title">Videólink beillesztése</h1>
-        <p class="section-text">
-          Illessz be egy publikus videólinket, majd indítsd el.
-        </p>
+<div class="container">
 
-        <div class="input-group">
-          <label for="videoUrl">Videólink</label>
-          <textarea id="videoUrl" placeholder="Ide illeszd be a videó linkjét..."></textarea>
-        </div>
+<h1>Idesüss Player</h1>
+<p>Watch Without Login</p>
 
-        <div class="main-actions">
-          <button id="playButton" class="play-btn">
-  <span class="eye">
-    <img src="eye-open.svg" class="eye-open">
-    <img src="eye-mid.svg" class="eye-mid">
-    <img src="eye-wink.svg" class="eye-wink">
-  </span>
-  Play
+<textarea placeholder="Ide illeszd be a videó linkjét..."></textarea>
+
+<button class="play-btn">
+
+<span class="eye">
+<img src="eye-open.svg" class="eye-open">
+<img src="eye-mid.svg" class="eye-mid">
+<img src="eye-wink.svg" class="eye-wink">
+</span>
+
+Play
+
 </button>
-          <button class="btn-clear" id="clearBtn">Törlés</button>
-        </div>
 
-        <div class="hint" id="message"></div>
-      </section>
+<div class="player">
+Még nincs betöltött videó
+</div>
 
-      <section class="panel right-panel">
-        <h2 class="section-title">Lejátszó</h2>
-        <p class="section-text">
-          Itt jelenik meg a tartalom.
-        </p>
+</div>
 
-        <div class="player-wrap" id="playerWrap">
-          <div class="empty-state">
-            Még nincs betöltött videó.<br>
-            Illessz be egy publikus linket, majd nyomd meg a Play gombot.
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <script>
-    const videoUrl = document.getElementById("videoUrl");
-    const playBtn = document.getElementById("playBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const message = document.getElementById("message");
-    const playerWrap = document.getElementById("playerWrap");
-
-    function setMessage(text, type = "normal") {
-      if (type === "error") {
-        message.style.color = "#fca5a5";
-      } else if (type === "success") {
-        message.style.color = "#bbf7d0";
-      } else {
-        message.style.color = "#94a3b8";
-      }
-      message.textContent = text;
-    }
-
-    function isProbablyUrl(text) {
-      try {
-        const url = new URL(text.trim());
-        return ["http:", "https:"].includes(url.protocol);
-      } catch {
-        return false;
-      }
-    }
-
-    function clearPlayer() {
-      playerWrap.innerHTML = `
-        <div class="empty-state">
-          Még nincs betöltött videó.<br>
-          Illessz be egy publikus linket, majd nyomd meg a Play gombot.
-        </div>
-      `;
-    }
-
-    function showFallback(url, platformName, buttonLabel) {
-      playerWrap.innerHTML = `
-        <div class="fallback-state">
-          <strong>${platformName}</strong>
-          Ez a platform nem engedi a közvetlen lejátszást ezen az oldalon.
-          <br>
-          <a class="open-link-btn" href="${url}" target="_blank" rel="noopener noreferrer">${buttonLabel}</a>
-        </div>
-      `;
-    }
-
-    function embedUrl(url) {
-      playerWrap.innerHTML = "";
-      const iframe = document.createElement("iframe");
-      iframe.src = url;
-      iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-      iframe.allowFullscreen = true;
-      iframe.referrerPolicy = "strict-origin-when-cross-origin";
-      playerWrap.appendChild(iframe);
-    }
-
-    function loadVideo() {
-      const url = videoUrl.value.trim();
-
-      if (!url) {
-        setMessage("Előbb illessz be egy linket.", "error");
-        return;
-      }
-
-      if (!isProbablyUrl(url)) {
-        setMessage("Ez nem tűnik érvényes linknek.", "error");
-        return;
-      }
-
-      const lower = url.toLowerCase();
-
-      if (lower.includes("instagram.com")) {
-        showFallback(url, "Instagram", "Megnyitás Instagramon");
-        setMessage("Az Instagram link felismerve. Közvetlen lejátszás helyett megnyitó gombot adtam.", "success");
-        return;
-      }
-
-      if (lower.includes("facebook.com") || lower.includes("fb.watch")) {
-        showFallback(url, "Facebook", "Megnyitás Facebookon");
-        setMessage("A Facebook link felismerve. Közvetlen lejátszás helyett megnyitó gombot adtam.", "success");
-        return;
-      }
-
-      if (lower.includes("tiktok.com")) {
-        showFallback(url, "TikTok", "Megnyitás TikTokon");
-        setMessage("A TikTok link felismerve. Közvetlen lejátszás helyett megnyitó gombot adtam.", "success");
-        return;
-      }
-
-      if (lower.includes("youtube.com") || lower.includes("youtu.be")) {
-        embedUrl(url);
-        setMessage("A link betöltve.", "success");
-        return;
-      }
-
-      embedUrl(url);
-      setMessage("A link betöltve. Ha nem jelenik meg jól, az adott platform korlátozza a beágyazást.", "success");
-    }
-
-    playBtn.addEventListener("click", loadVideo);
-
-    clearBtn.addEventListener("click", () => {
-      videoUrl.value = "";
-      clearPlayer();
-      setMessage("");
-    });
-  </script>
 </body>
 </html>
