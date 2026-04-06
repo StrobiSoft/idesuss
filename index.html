@@ -380,127 +380,151 @@
   </div>
 
   <script>
-    const videoURL = document.getElementById("videoURL");
-    const playBtn = document.getElementById("playBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const player = document.getElementById("player");
-    const statusBox = document.getElementById("status");
+  const videoURL = document.getElementById("videoURL");
+  const playBtn = document.getElementById("playBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const player = document.getElementById("player");
+  const statusBox = document.getElementById("status");
 
-    function setStatus(text = "", type = "") {
-      statusBox.textContent = text;
-      statusBox.className = "status" + (type ? " " + type : "");
+  function setStatus(text = "", type = "") {
+    statusBox.textContent = text;
+    statusBox.className = "status" + (type ? " " + type : "");
+  }
+
+  function resetPlayer() {
+    player.innerHTML = `
+      <div class="player-empty">
+        Még nincs betöltött videó.<br>
+        Illessz be egy publikus linket, majd nyomd meg a Play gombot.
+      </div>
+    `;
+  }
+
+  function showFallback(url, platformName, buttonText) {
+    player.innerHTML = `
+      <div class="player-fallback">
+        <strong>${platformName}</strong>
+        Ez a platform nem engedi a közvetlen lejátszást ezen az oldalon.
+        <br>
+        <a class="open-btn" href="${url}" target="_blank" rel="noopener noreferrer">${buttonText}</a>
+      </div>
+    `;
+  }
+
+  function isValidUrl(text) {
+    try {
+      const parsed = new URL(text);
+      return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+      return false;
     }
+  }
 
-    function resetPlayer() {
-      player.innerHTML = `
-        <div class="player-empty">
-          Még nincs betöltött videó.<br>
-          Illessz be egy publikus linket, majd nyomd meg a Play gombot.
-        </div>
-      `;
-    }
+  function getYouTubeEmbedUrl(url) {
+    try {
+      const u = new URL(url);
 
-    function showFallback(url, platformName, buttonText) {
-      player.innerHTML = `
-        <div class="player-fallback">
-          <strong>${platformName}</strong>
-          Ez a platform nem engedi a közvetlen lejátszást ezen az oldalon.
-          <br>
-          <a class="open-btn" href="${url}" target="_blank" rel="noopener noreferrer">${buttonText}</a>
-        </div>
-      `;
-    }
-
-    function isValidUrl(text) {
-      try {
-        const parsed = new URL(text);
-        return parsed.protocol === "http:" || parsed.protocol === "https:";
-      } catch {
-        return false;
+      if (u.hostname.includes("youtu.be")) {
+        const id = u.pathname.replace("/", "").trim();
+        if (id) return "https://www.youtube.com/embed/" + id;
       }
-    }
 
-    function getYouTubeEmbedUrl(url) {
-      try {
-        const u = new URL(url);
-
-        if (u.hostname.includes("youtu.be")) {
-          const id = u.pathname.replace("/", "").trim();
+      if (u.hostname.includes("youtube.com")) {
+        if (u.pathname === "/watch") {
+          const id = u.searchParams.get("v");
           if (id) return "https://www.youtube.com/embed/" + id;
         }
 
-        if (u.hostname.includes("youtube.com")) {
-          if (u.pathname === "/watch") {
-            const id = u.searchParams.get("v");
-            if (id) return "https://www.youtube.com/embed/" + id;
-          }
-
-          if (u.pathname.startsWith("/shorts/")) {
-            const id = u.pathname.split("/shorts/")[1]?.split("/")[0];
-            if (id) return "https://www.youtube.com/embed/" + id;
-          }
-
-          if (u.pathname.startsWith("/embed/")) {
-            return url;
-          }
+        if (u.pathname.startsWith("/shorts/")) {
+          const id = u.pathname.split("/shorts/")[1]?.split("/")[0];
+          if (id) return "https://www.youtube.com/embed/" + id;
         }
-      } catch {}
 
-      return null;
+        if (u.pathname.startsWith("/embed/")) {
+          return url;
+        }
+      }
+    } catch {}
+
+    return null;
+  }
+
+  function detectPlatform(url) {
+    const lower = url.toLowerCase();
+
+    if (lower.includes("youtube.com") || lower.includes("youtu.be")) return "youtube";
+    if (lower.includes("facebook.com") || lower.includes("fb.watch")) return "facebook";
+    if (lower.includes("instagram.com")) return "instagram";
+    if (lower.includes("tiktok.com")) return "tiktok";
+
+    return "other";
+  }
+
+  function loadVideo() {
+    const url = videoURL.value.trim();
+
+    if (!url) {
+      setStatus("Előbb illessz be egy linket.", "error");
+      return;
     }
 
-    function loadVideo() {
-      const url = videoURL.value.trim();
+    if (!isValidUrl(url)) {
+      setStatus("Ez nem tűnik érvényes linknek.", "error");
+      return;
+    }
 
-      if (!url) {
-        setStatus("Előbb illessz be egy linket.", "error");
-        return;
-      }
+    const platform = detectPlatform(url);
 
-      if (!isValidUrl(url)) {
-        setStatus("Ez nem tűnik érvényes linknek.", "error");
-        return;
-      }
-
-      const lower = url.toLowerCase();
-
-      if (lower.includes("facebook.com") || lower.includes("fb.watch")) {
-        showFallback(url, "Facebook", "Megnyitás Facebookon");
-        setStatus("A Facebook link felismerve. Új lapon fog megnyílni.", "info");
-        return;
-      }
-
-      if (lower.includes("instagram.com")) {
-        showFallback(url, "Instagram", "Megnyitás Instagramon");
-        setStatus("Az Instagram link felismerve. Új lapon fog megnyílni.", "info");
-        return;
-      }
-
-      if (lower.includes("tiktok.com")) {
-        showFallback(url, "TikTok", "Megnyitás TikTokon");
-        setStatus("A TikTok link felismerve. Új lapon fog megnyílni.", "info");
-        return;
-      }
-
+    if (platform === "youtube") {
       const ytEmbed = getYouTubeEmbedUrl(url);
+
       if (ytEmbed) {
-        player.innerHTML = `<iframe src="${ytEmbed}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+        player.innerHTML = `
+          <iframe
+            src="${ytEmbed}"
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin">
+          </iframe>
+        `;
         setStatus("A YouTube link betöltve.", "success");
         return;
       }
 
-      showFallback(url, "Külső link", "Megnyitás új lapon");
-      setStatus("Ez a link új lapon nyitható meg.", "info");
+      setStatus("A YouTube linket nem sikerült értelmezni.", "error");
+      return;
     }
 
-    function clearVideo() {
-      videoURL.value = "";
-      resetPlayer();
-      setStatus("");
+    if (platform === "facebook") {
+      showFallback(url, "Facebook", "Megnyitás Facebookon");
+      setStatus("A Facebook link felismerve. Új lapon fog megnyílni.", "info");
+      return;
     }
 
-    playBtn.addEventListener("click", loadVideo);
-    clearBtn.addEventListener("click", clearVideo);
-  </script>
+    if (platform === "instagram") {
+      showFallback(url, "Instagram", "Megnyitás Instagramon");
+      setStatus("Az Instagram link felismerve. Új lapon fog megnyílni.", "info");
+      return;
+    }
+
+    if (platform === "tiktok") {
+      showFallback(url, "TikTok", "Megnyitás TikTokon");
+      setStatus("A TikTok link felismerve. Új lapon fog megnyílni.", "info");
+      return;
+    }
+
+    showFallback(url, "Külső link", "Megnyitás új lapon");
+    setStatus("Ez a link új lapon nyitható meg.", "info");
+  }
+
+  function clearVideo() {
+    videoURL.value = "";
+    resetPlayer();
+    setStatus("");
+  }
+
+  playBtn.addEventListener("click", loadVideo);
+  clearBtn.addEventListener("click", clearVideo);
+</script>
 </body>
 </html>
