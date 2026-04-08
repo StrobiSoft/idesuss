@@ -177,12 +177,6 @@
       flex:1 1 240px;
     }
 
-    .btn-clear{
-      background:linear-gradient(180deg,var(--danger),var(--danger2));
-      color:white;
-      min-width:132px;
-    }
-
     .btn-secondary{
       background:rgba(255,255,255,.08);
       color:var(--text);
@@ -481,7 +475,6 @@
         flex:1 1 auto;
       }
 
-      .btn-clear,
       .btn-secondary{
         min-width:118px;
       }
@@ -523,16 +516,12 @@
             </span>
             <span>Play</span>
           </button>
-
-          <button class="btn btn-clear" id="clearBtn" type="button">
-            Törlés
-          </button>
         </div>
 
         <div class="status" id="status"></div>
 
         <div class="helper">
-          YouTube linket megpróbál beágyazni. Facebook, Instagram és TikTok linket új lapon nyit meg.
+          A linket kézzel illeszd be. A YouTube videót megpróbálja beágyazni, a Facebook, Instagram és TikTok linkeket pedig külön megnyitja.
         </div>
       </div>
 
@@ -565,7 +554,6 @@
   <script>
     const videoURL = document.getElementById("videoURL");
     const playBtn = document.getElementById("playBtn");
-    const clearBtn = document.getElementById("clearBtn");
     const clearHistoryBtn = document.getElementById("clearHistoryBtn");
     const player = document.getElementById("player");
     const statusBox = document.getElementById("status");
@@ -869,12 +857,6 @@
       setStatus("Ez a link új lapon nyitható meg.", "info");
     }
 
-    function clearVideo() {
-      videoURL.value = "";
-      resetPlayer();
-      setStatus("");
-    }
-
     function openFromHistory(index) {
       const items = getHistory();
       const item = items[index];
@@ -885,7 +867,6 @@
     }
 
     playBtn.addEventListener("click", loadVideo);
-    clearBtn.addEventListener("click", clearVideo);
     clearHistoryBtn.addEventListener("click", clearHistory);
 
     renderHistory();
