@@ -488,16 +488,16 @@
 <body>
   <div class="app">
     <section class="header">
-      <h1 class="brand">Idesüss Player</h1>
-      <p class="tagline">Watch Without Login</p>
+      <h1 class="brand" id="brandText">Idesüss Player</h1>
+      <p class="tagline" id="taglineText">Watch Without Login</p>
     </section>
 
     <section class="grid">
       <div class="card">
-        <h2>Videólink beillesztése</h2>
-        <p class="desc">Illessz be egy publikus videólinket, majd indítsd el.</p>
+        <h2 id="inputTitle">Videólink beillesztése</h2>
+        <p class="desc" id="inputDesc">Illessz be egy publikus videólinket, majd indítsd el.</p>
 
-        <label class="label" for="videoURL">Videólink</label>
+        <label class="label" for="videoURL" id="videoLabel">Videólink</label>
         <textarea id="videoURL" placeholder="Ide illeszd be a videó linkjét..."></textarea>
 
         <div class="actions">
@@ -514,35 +514,30 @@
                 <polygon points="27,12 27,28 42,20" fill="white"/>
               </svg>
             </span>
-            <span>Play</span>
+            <span id="playBtnText">Play</span>
           </button>
         </div>
 
         <div class="status" id="status"></div>
 
-        <div class="helper">
+        <div class="helper" id="helperText">
           A linket kézzel illeszd be. A YouTube videót beágyazza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.
         </div>
       </div>
 
       <div class="card">
-        <h2>Lejátszó</h2>
-        <p class="desc">Itt jelenik meg a tartalom.</p>
+        <h2 id="playerTitle">Lejátszó</h2>
+        <p class="desc" id="playerDesc">Itt jelenik meg a tartalom.</p>
 
-        <div class="player-shell" id="player">
-          <div class="player-empty">
-            Még nincs betöltött videó.<br>
-            Illessz be egy publikus linket, majd nyomd meg a Play gombot.
-          </div>
-        </div>
+        <div class="player-shell" id="player"></div>
       </div>
     </section>
 
     <section class="card history-card">
       <div class="history-head">
         <div>
-          <h2>History</h2>
-          <p class="desc" style="margin:8px 0 0;">Az utoljára megnyitott linkek bélyegképes nézetben.</p>
+          <h2 id="historyTitle">History</h2>
+          <p class="desc" id="historyDesc" style="margin:8px 0 0;">Az utoljára megnyitott linkek bélyegképes nézetben.</p>
         </div>
         <button class="btn btn-secondary" id="clearHistoryBtn" type="button">Összes törlése</button>
       </div>
@@ -562,6 +557,119 @@
     const HISTORY_KEY = "idesuss_history_v1";
     const HISTORY_LIMIT = 12;
 
+    const LANG = (navigator.language || navigator.userLanguage || "en").toLowerCase().startsWith("hu") ? "hu" : "en";
+
+    const I18N = {
+      hu: {
+        pageTitle: "Idesüss Player",
+        pageDescription: "Idesüss Player – Watch Without Login",
+        brand: "Idesüss Player",
+        tagline: "Watch Without Login",
+        inputTitle: "Videólink beillesztése",
+        inputDesc: "Illessz be egy publikus videólinket, majd indítsd el.",
+        videoLabel: "Videólink",
+        videoPlaceholder: "Ide illeszd be a videó linkjét...",
+        play: "Play",
+        helper: "A linket kézzel illeszd be. A YouTube videót beágyazza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.",
+        playerTitle: "Lejátszó",
+        playerDesc: "Itt jelenik meg a tartalom.",
+        playerEmpty: "Még nincs betöltött videó.<br>Illessz be egy publikus linket, majd nyomd meg a Play gombot.",
+        historyTitle: "History",
+        historyDesc: "Az utoljára megnyitott linkek bélyegképes nézetben.",
+        clearHistory: "Összes törlése",
+        historyEmpty: "Még nincs elmentett előzmény.<br>Játssz le egy videólinket, és itt meg fog jelenni.",
+        open: "Megnyitás",
+        delete: "Törlés",
+        savedAt: "Mentve",
+        platformYoutube: "YouTube",
+        platformFacebook: "Facebook",
+        platformInstagram: "Instagram",
+        platformTiktok: "TikTok",
+        platformLink: "Link",
+        fallbackBlocked: "Ez a platform nem engedi a közvetlen lejátszást ezen az oldalon.",
+        openOnTikTok: "Megnyitás TikTokon",
+        openOnFacebook: "Megnyitás Facebookon",
+        openOnInstagram: "Megnyitás Instagramon",
+        openInNewTab: "Megnyitás új lapon",
+        statusNeedLink: "Előbb illessz be egy linket.",
+        statusInvalidLink: "Ez nem tűnik érvényes linknek.",
+        statusYouTubeLoaded: "A YouTube link betöltve.",
+        statusYouTubeBad: "A YouTube linket nem sikerült értelmezni.",
+        statusTikTokTry: "A TikTok videó beágyazása megpróbál betöltődni.",
+        statusTikTokBad: "A TikTok linkből nem sikerült videóazonosítót kinyerni.",
+        statusFacebookTry: "A Facebook videó vagy Reel beágyazása megpróbál betöltődni.",
+        statusInstagramOpen: "Az Instagram link külön nyílik meg.",
+        statusExternalOpen: "Ez a link külön nyitható meg.",
+        statusHistoryCleared: "A history törölve lett."
+      },
+      en: {
+        pageTitle: "Idesüss Player",
+        pageDescription: "Idesüss Player – Watch Without Login",
+        brand: "Idesüss Player",
+        tagline: "Watch Without Login",
+        inputTitle: "Paste video link",
+        inputDesc: "Paste a public video link, then start playback.",
+        videoLabel: "Video link",
+        videoPlaceholder: "Paste the video link here...",
+        play: "Play",
+        helper: "Paste the link manually. YouTube videos are embedded directly, TikTok and Facebook video/Reel links are tried as embeds first, while Instagram opens separately.",
+        playerTitle: "Player",
+        playerDesc: "The content will appear here.",
+        playerEmpty: "No video loaded yet.<br>Paste a public link, then press Play.",
+        historyTitle: "History",
+        historyDesc: "Recently opened links in thumbnail view.",
+        clearHistory: "Clear all",
+        historyEmpty: "No saved history yet.<br>Play a video link and it will appear here.",
+        open: "Open",
+        delete: "Delete",
+        savedAt: "Saved",
+        platformYoutube: "YouTube",
+        platformFacebook: "Facebook",
+        platformInstagram: "Instagram",
+        platformTiktok: "TikTok",
+        platformLink: "Link",
+        fallbackBlocked: "This platform does not allow direct playback on this page.",
+        openOnTikTok: "Open on TikTok",
+        openOnFacebook: "Open on Facebook",
+        openOnInstagram: "Open on Instagram",
+        openInNewTab: "Open in new tab",
+        statusNeedLink: "Paste a link first.",
+        statusInvalidLink: "This does not look like a valid link.",
+        statusYouTubeLoaded: "YouTube link loaded.",
+        statusYouTubeBad: "Could not interpret the YouTube link.",
+        statusTikTokTry: "Trying to load the TikTok video as an embed.",
+        statusTikTokBad: "Could not extract a video ID from the TikTok link.",
+        statusFacebookTry: "Trying to load the Facebook video or Reel as an embed.",
+        statusInstagramOpen: "The Instagram link opens separately.",
+        statusExternalOpen: "This link can be opened separately.",
+        statusHistoryCleared: "History has been cleared."
+      }
+    };
+
+    function t(key) {
+      return I18N[LANG][key] || key;
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = LANG;
+      document.title = t("pageTitle");
+      document.querySelector('meta[name="description"]').setAttribute("content", t("pageDescription"));
+
+      document.getElementById("brandText").textContent = t("brand");
+      document.getElementById("taglineText").textContent = t("tagline");
+      document.getElementById("inputTitle").textContent = t("inputTitle");
+      document.getElementById("inputDesc").textContent = t("inputDesc");
+      document.getElementById("videoLabel").textContent = t("videoLabel");
+      document.getElementById("playBtnText").textContent = t("play");
+      document.getElementById("helperText").textContent = t("helper");
+      document.getElementById("playerTitle").textContent = t("playerTitle");
+      document.getElementById("playerDesc").textContent = t("playerDesc");
+      document.getElementById("historyTitle").textContent = t("historyTitle");
+      document.getElementById("historyDesc").textContent = t("historyDesc");
+      document.getElementById("clearHistoryBtn").textContent = t("clearHistory");
+      videoURL.placeholder = t("videoPlaceholder");
+    }
+
     function setStatus(text = "", type = "") {
       statusBox.textContent = text;
       statusBox.className = "status" + (type ? " " + type : "");
@@ -579,8 +687,7 @@
     function resetPlayer() {
       player.innerHTML = `
         <div class="player-empty">
-          Még nincs betöltött videó.<br>
-          Illessz be egy publikus linket, majd nyomd meg a Play gombot.
+          ${t("playerEmpty")}
         </div>
       `;
     }
@@ -589,7 +696,7 @@
       player.innerHTML = `
         <div class="player-fallback">
           <strong>${escapeHtml(platformName)}</strong>
-          Ez a platform nem engedi a közvetlen lejátszást ezen az oldalon.
+          ${escapeHtml(t("fallbackBlocked"))}
           <br>
           <a class="open-btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(buttonText)}</a>
         </div>
@@ -672,11 +779,11 @@
 
     function getPlatformLabel(platform) {
       switch (platform) {
-        case "youtube": return "YouTube";
-        case "facebook": return "Facebook";
-        case "instagram": return "Instagram";
-        case "tiktok": return "TikTok";
-        default: return "Link";
+        case "youtube": return t("platformYoutube");
+        case "facebook": return t("platformFacebook");
+        case "instagram": return t("platformInstagram");
+        case "tiktok": return t("platformTiktok");
+        default: return t("platformLink");
       }
     }
 
@@ -731,13 +838,13 @@
     function clearHistory() {
       localStorage.removeItem(HISTORY_KEY);
       renderHistory();
-      setStatus("A history törölve lett.", "info");
+      setStatus(t("statusHistoryCleared"), "info");
     }
 
     function formatDate(iso) {
       try {
         const d = new Date(iso);
-        return d.toLocaleString("hu-HU", {
+        return d.toLocaleString(LANG === "hu" ? "hu-HU" : "en-US", {
           year: "numeric",
           month: "2-digit",
           day: "2-digit",
@@ -759,7 +866,7 @@
             <img
               class="history-thumb"
               src="${escapeHtml(item.thumbnail)}"
-              alt="${escapeHtml(platformLabel)} előnézet"
+              alt="${escapeHtml(platformLabel)} preview"
               loading="lazy"
             />
           </div>
@@ -782,8 +889,7 @@
       if (!items.length) {
         historyList.innerHTML = `
           <div class="history-empty">
-            Még nincs elmentett előzmény.<br>
-            Játssz le egy videólinket, és itt meg fog jelenni.
+            ${t("historyEmpty")}
           </div>
         `;
         return;
@@ -798,14 +904,14 @@
             </button>
 
             <div class="history-url">${escapeHtml(shortenUrl(item.url))}</div>
-            <div class="history-url">Mentve: ${escapeHtml(formatDate(item.createdAt))}</div>
+            <div class="history-url">${escapeHtml(t("savedAt"))}: ${escapeHtml(formatDate(item.createdAt))}</div>
 
             <div class="history-actions">
               <button class="mini-btn mini-open" type="button" onclick="openFromHistory(${index})">
-                Megnyitás
+                ${escapeHtml(t("open"))}
               </button>
               <button class="mini-btn mini-delete" type="button" onclick="deleteHistoryItem(${index})">
-                Törlés
+                ${escapeHtml(t("delete"))}
               </button>
             </div>
           </div>
@@ -817,12 +923,12 @@
       const url = videoURL.value.trim();
 
       if (!url) {
-        setStatus("Előbb illessz be egy linket.", "error");
+        setStatus(t("statusNeedLink"), "error");
         return;
       }
 
       if (!isValidUrl(url)) {
-        setStatus("Ez nem tűnik érvényes linknek.", "error");
+        setStatus(t("statusInvalidLink"), "error");
         return;
       }
 
@@ -842,11 +948,11 @@
             </iframe>
           `;
           saveToHistory(url);
-          setStatus("A YouTube link betöltve.", "success");
+          setStatus(t("statusYouTubeLoaded"), "success");
           return;
         }
 
-        setStatus("A YouTube linket nem sikerült értelmezni.", "error");
+        setStatus(t("statusYouTubeBad"), "error");
         return;
       }
 
@@ -864,13 +970,13 @@
             </iframe>
           `;
           saveToHistory(url);
-          setStatus("A TikTok videó beágyazása megpróbál betöltődni.", "info");
+          setStatus(t("statusTikTokTry"), "info");
           return;
         }
 
-        showFallback(url, "TikTok", "Megnyitás TikTokon");
+        showFallback(url, t("platformTiktok"), t("openOnTikTok"));
         saveToHistory(url);
-        setStatus("A TikTok linkből nem sikerült videóazonosítót kinyerni.", "error");
+        setStatus(t("statusTikTokBad"), "error");
         return;
       }
 
@@ -887,20 +993,20 @@
           </iframe>
         `;
         saveToHistory(url);
-        setStatus("A Facebook videó vagy Reel beágyazása megpróbál betöltődni.", "info");
+        setStatus(t("statusFacebookTry"), "info");
         return;
       }
 
       if (platform === "instagram") {
-        showFallback(url, "Instagram", "Megnyitás Instagramon");
+        showFallback(url, t("platformInstagram"), t("openOnInstagram"));
         saveToHistory(url);
-        setStatus("Az Instagram link külön nyílik meg.", "info");
+        setStatus(t("statusInstagramOpen"), "info");
         return;
       }
 
-      showFallback(url, "Külső link", "Megnyitás új lapon");
+      showFallback(url, t("platformLink"), t("openInNewTab"));
       saveToHistory(url);
-      setStatus("Ez a link külön nyitható meg.", "info");
+      setStatus(t("statusExternalOpen"), "info");
     }
 
     function openFromHistory(index) {
@@ -911,6 +1017,9 @@
       videoURL.value = item.url;
       loadVideo();
     }
+
+    applyTranslations();
+    resetPlayer();
 
     playBtn.addEventListener("click", loadVideo);
     clearHistoryBtn.addEventListener("click", clearHistory);
