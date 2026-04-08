@@ -4,12 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Idesüss App</title>
-  <meta name="description" content="Idesüss App – mobilos béta" />
+  <meta name="description" content="Idesüss App – Watch Without Login" />
   <meta name="theme-color" content="#0f172a" />
+
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Idesüss App" />
+
   <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="favicon.png" />
 
   <style>
     :root{
@@ -24,10 +28,10 @@
       --danger:#cf4a4a;
       --danger2:#b63d3d;
       --shadow:0 20px 50px rgba(0,0,0,.45);
-      --safe-top: env(safe-area-inset-top);
-      --safe-right: env(safe-area-inset-right);
-      --safe-bottom: env(safe-area-inset-bottom);
-      --safe-left: env(safe-area-inset-left);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
     }
 
     *{box-sizing:border-box}
@@ -42,79 +46,88 @@
         radial-gradient(circle at top right, rgba(56,189,248,.10), transparent 22%),
         radial-gradient(circle at bottom left, rgba(59,130,246,.10), transparent 24%),
         linear-gradient(155deg,var(--bg1),var(--bg2));
+      -webkit-tap-highlight-color: transparent;
     }
 
     body{
       padding:
-        calc(16px + var(--safe-top))
-        calc(16px + var(--safe-right))
-        calc(20px + var(--safe-bottom))
-        calc(16px + var(--safe-left));
+        calc(12px + var(--safe-top))
+        calc(12px + var(--safe-right))
+        calc(18px + var(--safe-bottom))
+        calc(12px + var(--safe-left));
     }
 
-    .app-shell{
-      max-width:520px;
+    .app{
+      max-width:760px;
       margin:0 auto;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    .topbar{
       background:rgba(255,255,255,.03);
       border:1px solid rgba(255,255,255,.06);
-      border-radius:24px;
-      padding:18px 18px 16px;
+      border-radius:28px;
       box-shadow:var(--shadow);
       backdrop-filter:blur(14px);
+      padding:18px;
+    }
+
+    .header{
+      margin-bottom:18px;
+      padding:18px 18px 14px;
+      border-radius:22px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
     }
 
     .brand{
-      margin:0;
       font-size:1.9rem;
       font-weight:800;
       letter-spacing:-0.02em;
+      margin:0 0 8px;
     }
 
     .tagline{
-      margin:6px 0 0;
+      margin:0;
       color:var(--muted);
-      font-size:1.05rem;
-      line-height:1.45;
+      font-size:1rem;
+      font-weight:500;
+      line-height:1.4;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
     }
 
     .card{
       background:var(--panel);
       border:1px solid var(--panel-border);
-      border-radius:26px;
+      border-radius:24px;
       padding:18px;
       box-shadow:var(--shadow);
-      backdrop-filter:blur(14px);
     }
 
     .card h2{
-      margin:0 0 8px;
-      font-size:1.08rem;
+      margin:0 0 10px;
+      font-size:1.12rem;
       line-height:1.2;
     }
 
-    .desc{
+    .card p.desc{
       margin:0 0 16px;
       color:var(--muted);
       line-height:1.5;
-      font-size:.95rem;
+      font-size:.96rem;
     }
 
     .label{
       display:block;
       margin-bottom:10px;
-      font-size:.95rem;
+      font-size:.96rem;
       font-weight:700;
     }
 
     textarea{
       width:100%;
-      min-height:128px;
+      min-height:124px;
       border:none;
       outline:none;
       resize:vertical;
@@ -139,7 +152,7 @@
 
     .actions{
       display:flex;
-      gap:12px;
+      gap:14px;
       margin-top:16px;
       flex-wrap:wrap;
     }
@@ -147,15 +160,15 @@
     .btn{
       border:none;
       border-radius:18px;
-      padding:14px 18px;
+      padding:14px 20px;
       font-size:1rem;
       font-weight:800;
       cursor:pointer;
-      transition:transform .15s ease, filter .15s ease;
+      transition:transform .15s ease, filter .15s ease, opacity .15s ease;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:12px;
+      gap:10px;
       min-height:54px;
     }
 
@@ -169,37 +182,31 @@
     }
 
     .btn-play{
-      flex:1 1 180px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      padding:12px 18px;
+      font-size:16px;
       background:linear-gradient(135deg,var(--accent1),var(--accent2));
       color:white;
       box-shadow:0 12px 26px rgba(14,165,233,.24);
-    }
-
-    .btn-paste{
-      min-width:132px;
-      background:rgba(255,255,255,.08);
-      color:white;
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .btn-clear{
-      min-width:120px;
-      background:linear-gradient(180deg,var(--danger),var(--danger2));
-      color:white;
+      flex:1 1 auto;
+      width:100%;
     }
 
     .btn-secondary{
-      min-width:148px;
       background:rgba(255,255,255,.08);
-      color:white;
+      color:var(--text);
       border:1px solid rgba(255,255,255,.08);
+      min-width:148px;
     }
 
     .play-eye{
-      width:42px;
-      height:42px;
+      width:48px;
+      height:48px;
       display:block;
-      flex:0 0 42px;
+      flex:0 0 48px;
     }
 
     .play-eye svg{
@@ -223,9 +230,10 @@
     .player-shell{
       width:100%;
       aspect-ratio:9/16;
-      min-height:340px;
+      min-height:300px;
+      max-height:72vh;
       background:linear-gradient(180deg,#050914,#02050b);
-      border-radius:24px;
+      border-radius:22px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.06);
       display:flex;
@@ -246,7 +254,7 @@
     .player-fallback strong{
       display:block;
       color:var(--text);
-      font-size:1.05rem;
+      font-size:1.08rem;
       margin-bottom:10px;
     }
 
@@ -283,17 +291,22 @@
       line-height:1.5;
     }
 
+    .history-card{
+      margin-top:18px;
+    }
+
     .history-head{
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
       gap:12px;
       margin-bottom:14px;
       flex-wrap:wrap;
     }
 
-    .history-head .desc{
-      margin:8px 0 0;
+    .history-head h2{
+      margin:0;
+      font-size:1.12rem;
     }
 
     .history-list{
@@ -319,6 +332,7 @@
       overflow:hidden;
       display:flex;
       flex-direction:column;
+      min-height:100%;
     }
 
     .history-thumb-wrap{
@@ -377,6 +391,7 @@
       flex-direction:column;
       gap:10px;
       padding:14px;
+      flex:1 1 auto;
     }
 
     .history-link{
@@ -408,7 +423,7 @@
     .history-actions{
       display:flex;
       gap:10px;
-      margin-top:4px;
+      margin-top:auto;
       flex-wrap:wrap;
     }
 
@@ -435,110 +450,238 @@
       flex:1 1 100px;
     }
 
-    .footer{
-      text-align:center;
-      margin-top:8px;
-      font-size:0.9rem;
-      color:var(--muted);
-      opacity:0.75;
+    @media (min-width: 860px){
+      .grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .history-list{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .player-shell{
+        max-height:78vh;
+      }
     }
 
     @media (max-width: 560px){
-      .actions{
-        flex-direction:column;
+      body{
+        padding:
+          calc(8px + var(--safe-top))
+          calc(8px + var(--safe-right))
+          calc(14px + var(--safe-bottom))
+          calc(8px + var(--safe-left));
       }
 
-      .btn-clear,
-      .btn-paste,
-      .btn-play,
+      .app{
+        border-radius:22px;
+        padding:14px;
+      }
+
+      .header,
+      .card,
+      .player-shell{
+        border-radius:20px;
+      }
+
+      .brand{
+        font-size:1.7rem;
+      }
+
       .btn-secondary{
-        width:100%;
+        min-width:118px;
+      }
+
+      textarea{
+        min-height:116px;
       }
     }
   </style>
 </head>
 <body>
-  <main class="app-shell">
-    <section class="topbar">
-      <h1 class="brand">Idesüss App</h1>
-      <p class="tagline">Mobilos béta. Az első cél: stabil, gyors, letisztult használat.</p>
+  <div class="app">
+    <section class="header">
+      <h1 class="brand" id="brandText">Idesüss App</h1>
+      <p class="tagline" id="taglineText">Watch Without Login</p>
     </section>
 
-    <section class="card">
-      <h2>Videólink beillesztése</h2>
-      <p class="desc">Illessz be egy publikus videólinket, majd indítsd el.</p>
+    <section class="grid">
+      <div class="card">
+        <h2 id="inputTitle">Videólink beillesztése</h2>
+        <p class="desc" id="inputDesc">Illessz be egy publikus videólinket, majd indítsd el.</p>
 
-      <label class="label" for="videoURL">Videólink</label>
-      <textarea id="videoURL" placeholder="Ide illeszd be a videó linkjét..."></textarea>
+        <label class="label" for="videoURL" id="videoLabel">Videólink</label>
+        <textarea id="videoURL" placeholder="Ide illeszd be a videó linkjét..."></textarea>
 
-      <div class="actions">
-        <button class="btn btn-play" id="playBtn" type="button">
-          <span class="play-eye" aria-hidden="true">
-            <svg viewBox="0 0 64 40" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 20 C10 6, 26 2, 32 2 C38 2, 54 6, 62 20 C54 34, 38 38, 32 38 C26 38, 10 34, 2 20 Z"
-                    fill="none"
-                    stroke="white"
-                    stroke-width="3.6"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"/>
-              <circle cx="32" cy="20" r="11" fill="#38bdf8" stroke="white" stroke-width="2.5"/>
-              <polygon points="28,13 28,27 40,20" fill="white"/>
-            </svg>
-          </span>
-          <span>Play</span>
-        </button>
+        <div class="actions">
+          <button class="btn btn-play" id="playBtn" type="button">
+            <span class="play-eye" aria-hidden="true">
+              <svg viewBox="0 0 64 40" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 20 C10 6, 26 2, 32 2 C38 2, 54 6, 62 20 C54 34, 38 38, 32 38 C26 38, 10 34, 2 20 Z"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="3.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+                <circle cx="32" cy="20" r="11" fill="#38bdf8" stroke="white" stroke-width="2.5"/>
+                <polygon points="27,12 27,28 42,20" fill="white"/>
+              </svg>
+            </span>
+            <span id="playBtnText">Play</span>
+          </button>
+        </div>
 
-        <button class="btn btn-paste" id="pasteBtn" type="button">Beillesztés</button>
+        <div class="status" id="status"></div>
 
-        <button class="btn btn-clear" id="clearBtn" type="button">Törlés</button>
-      </div>
-
-      <div class="status" id="status"></div>
-
-      <div class="helper">
-        YouTube linket megpróbál beágyazni. Facebook, Instagram és TikTok linket új lapon nyit meg.
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Lejátszó</h2>
-      <p class="desc">Itt jelenik meg a tartalom.</p>
-
-      <div class="player-shell" id="player">
-        <div class="player-empty">
-          Még nincs betöltött videó.<br>
-          Illessz be egy publikus linket, majd nyomd meg a Play gombot.
+        <div class="helper" id="helperText">
+          A linket kézzel illeszd be. A YouTube videót beágyazza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.
         </div>
       </div>
+
+      <div class="card">
+        <h2 id="playerTitle">Lejátszó</h2>
+        <p class="desc" id="playerDesc">Itt jelenik meg a tartalom.</p>
+
+        <div class="player-shell" id="player"></div>
+      </div>
     </section>
 
-    <section class="card">
+    <section class="card history-card">
       <div class="history-head">
         <div>
-          <h2>History</h2>
-          <p class="desc">Az utoljára megnyitott linkek bélyegképes nézetben.</p>
+          <h2 id="historyTitle">History</h2>
+          <p class="desc" id="historyDesc" style="margin:8px 0 0;">Az utoljára megnyitott linkek bélyegképes nézetben.</p>
         </div>
         <button class="btn btn-secondary" id="clearHistoryBtn" type="button">Összes törlése</button>
       </div>
 
       <div id="historyList" class="history-list"></div>
     </section>
-
-    <div class="footer">Powered by St.Zoo</div>
-  </main>
+  </div>
 
   <script>
     const videoURL = document.getElementById("videoURL");
     const playBtn = document.getElementById("playBtn");
-    const pasteBtn = document.getElementById("pasteBtn");
-    const clearBtn = document.getElementById("clearBtn");
     const clearHistoryBtn = document.getElementById("clearHistoryBtn");
     const player = document.getElementById("player");
     const statusBox = document.getElementById("status");
     const historyList = document.getElementById("historyList");
 
-    const HISTORY_KEY = "idesuss_app_history_v1";
+    const HISTORY_KEY = "idesuss_app_history_v2";
     const HISTORY_LIMIT = 12;
+
+    const LANG = (navigator.language || navigator.userLanguage || "en").toLowerCase().startsWith("hu") ? "hu" : "en";
+
+    const I18N = {
+      hu: {
+        pageTitle: "Idesüss App",
+        pageDescription: "Idesüss App – Watch Without Login",
+        brand: "Idesüss App",
+        tagline: "Watch Without Login",
+        inputTitle: "Videólink beillesztése",
+        inputDesc: "Illessz be egy publikus videólinket, majd indítsd el.",
+        videoLabel: "Videólink",
+        videoPlaceholder: "Ide illeszd be a videó linkjét...",
+        play: "Play",
+        helper: "A linket kézzel illeszd be. A YouTube videót beágyazza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.",
+        playerTitle: "Lejátszó",
+        playerDesc: "Itt jelenik meg a tartalom.",
+        playerEmpty: "Még nincs betöltött videó.<br>Illessz be egy publikus linket, majd nyomd meg a Play gombot.",
+        historyTitle: "History",
+        historyDesc: "Az utoljára megnyitott linkek bélyegképes nézetben.",
+        clearHistory: "Összes törlése",
+        historyEmpty: "Még nincs elmentett előzmény.<br>Játssz le egy videólinket, és itt meg fog jelenni.",
+        open: "Megnyitás",
+        delete: "Törlés",
+        savedAt: "Mentve",
+        platformYoutube: "YouTube",
+        platformFacebook: "Facebook",
+        platformInstagram: "Instagram",
+        platformTiktok: "TikTok",
+        platformLink: "Link",
+        fallbackBlocked: "Ez a platform nem engedi a közvetlen lejátszást ezen az oldalon.",
+        openOnTikTok: "Megnyitás TikTokon",
+        openOnFacebook: "Megnyitás Facebookon",
+        openOnInstagram: "Megnyitás Instagramon",
+        openInNewTab: "Megnyitás új lapon",
+        statusNeedLink: "Előbb illessz be egy linket.",
+        statusInvalidLink: "Ez nem tűnik érvényes linknek.",
+        statusYouTubeLoaded: "A YouTube link betöltve.",
+        statusYouTubeBad: "A YouTube linket nem sikerült értelmezni.",
+        statusTikTokTry: "A TikTok videó beágyazása megpróbál betöltődni.",
+        statusTikTokBad: "A TikTok linkből nem sikerült videóazonosítót kinyerni.",
+        statusFacebookTry: "A Facebook videó vagy Reel beágyazása megpróbál betöltődni.",
+        statusInstagramOpen: "Az Instagram link külön nyílik meg.",
+        statusExternalOpen: "Ez a link külön nyitható meg.",
+        statusHistoryCleared: "A history törölve lett."
+      },
+      en: {
+        pageTitle: "Idesüss App",
+        pageDescription: "Idesüss App – Watch Without Login",
+        brand: "Idesüss App",
+        tagline: "Watch Without Login",
+        inputTitle: "Paste video link",
+        inputDesc: "Paste a public video link, then start playback.",
+        videoLabel: "Video link",
+        videoPlaceholder: "Paste the video link here...",
+        play: "Play",
+        helper: "Paste the link manually. YouTube videos are embedded directly, TikTok and Facebook video/Reel links are tried as embeds first, while Instagram opens separately.",
+        playerTitle: "Player",
+        playerDesc: "The content will appear here.",
+        playerEmpty: "No video loaded yet.<br>Paste a public link, then press Play.",
+        historyTitle: "History",
+        historyDesc: "Recently opened links in thumbnail view.",
+        clearHistory: "Clear all",
+        historyEmpty: "No saved history yet.<br>Play a video link and it will appear here.",
+        open: "Open",
+        delete: "Delete",
+        savedAt: "Saved",
+        platformYoutube: "YouTube",
+        platformFacebook: "Facebook",
+        platformInstagram: "Instagram",
+        platformTiktok: "TikTok",
+        platformLink: "Link",
+        fallbackBlocked: "This platform does not allow direct playback on this page.",
+        openOnTikTok: "Open on TikTok",
+        openOnFacebook: "Open on Facebook",
+        openOnInstagram: "Open on Instagram",
+        openInNewTab: "Open in new tab",
+        statusNeedLink: "Paste a link first.",
+        statusInvalidLink: "This does not look like a valid link.",
+        statusYouTubeLoaded: "YouTube link loaded.",
+        statusYouTubeBad: "Could not interpret the YouTube link.",
+        statusTikTokTry: "Trying to load the TikTok video as an embed.",
+        statusTikTokBad: "Could not extract a video ID from the TikTok link.",
+        statusFacebookTry: "Trying to load the Facebook video or Reel as an embed.",
+        statusInstagramOpen: "The Instagram link opens separately.",
+        statusExternalOpen: "This link can be opened separately.",
+        statusHistoryCleared: "History has been cleared."
+      }
+    };
+
+    function t(key) {
+      return I18N[LANG][key] || key;
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = LANG;
+      document.title = t("pageTitle");
+      document.querySelector('meta[name="description"]').setAttribute("content", t("pageDescription"));
+
+      document.getElementById("brandText").textContent = t("brand");
+      document.getElementById("taglineText").textContent = t("tagline");
+      document.getElementById("inputTitle").textContent = t("inputTitle");
+      document.getElementById("inputDesc").textContent = t("inputDesc");
+      document.getElementById("videoLabel").textContent = t("videoLabel");
+      document.getElementById("playBtnText").textContent = t("play");
+      document.getElementById("helperText").textContent = t("helper");
+      document.getElementById("playerTitle").textContent = t("playerTitle");
+      document.getElementById("playerDesc").textContent = t("playerDesc");
+      document.getElementById("historyTitle").textContent = t("historyTitle");
+      document.getElementById("historyDesc").textContent = t("historyDesc");
+      document.getElementById("clearHistoryBtn").textContent = t("clearHistory");
+      videoURL.placeholder = t("videoPlaceholder");
+    }
 
     function setStatus(text = "", type = "") {
       statusBox.textContent = text;
@@ -555,19 +698,14 @@
     }
 
     function resetPlayer() {
-      player.innerHTML = `
-        <div class="player-empty">
-          Még nincs betöltött videó.<br>
-          Illessz be egy publikus linket, majd nyomd meg a Play gombot.
-        </div>
-      `;
+      player.innerHTML = `<div class="player-empty">${t("playerEmpty")}</div>`;
     }
 
-    function showFallback(url, title, buttonText) {
+    function showFallback(url, platformName, buttonText) {
       player.innerHTML = `
         <div class="player-fallback">
-          <strong>${escapeHtml(title)}</strong>
-          Ez a platform itt nem játszható le közvetlenül.
+          <strong>${escapeHtml(platformName)}</strong>
+          ${escapeHtml(t("fallbackBlocked"))}
           <br>
           <a class="open-btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(buttonText)}</a>
         </div>
@@ -576,29 +714,10 @@
 
     function isValidUrl(text) {
       try {
-        const u = new URL(text);
-        return u.protocol === "http:" || u.protocol === "https:";
+        const parsed = new URL(text);
+        return parsed.protocol === "http:" || parsed.protocol === "https:";
       } catch {
         return false;
-      }
-    }
-
-    function getPlatform(url) {
-      const lower = url.toLowerCase();
-      if (lower.includes("youtube.com") || lower.includes("youtu.be")) return "youtube";
-      if (lower.includes("instagram.com")) return "instagram";
-      if (lower.includes("tiktok.com")) return "tiktok";
-      if (lower.includes("facebook.com") || lower.includes("fb.watch")) return "facebook";
-      return "other";
-    }
-
-    function getPlatformLabel(platform) {
-      switch (platform) {
-        case "youtube": return "YouTube";
-        case "instagram": return "Instagram";
-        case "tiktok": return "TikTok";
-        case "facebook": return "Facebook";
-        default: return "Link";
       }
     }
 
@@ -606,34 +725,62 @@
       try {
         const u = new URL(url);
 
-        if (u.hostname.includes("youtu.be")) {
-          return u.pathname.replace("/", "").trim() || null;
-        }
+        if (u.hostname.includes("youtu.be")) return u.pathname.replace("/", "").trim() || null;
 
-        if (u.pathname === "/watch") {
-          return u.searchParams.get("v");
-        }
-
-        if (u.pathname.startsWith("/shorts/")) {
-          return u.pathname.split("/shorts/")[1]?.split("/")[0] || null;
-        }
-
-        if (u.pathname.startsWith("/embed/")) {
-          return u.pathname.split("/embed/")[1]?.split("/")[0] || null;
+        if (u.hostname.includes("youtube.com")) {
+          if (u.pathname === "/watch") return u.searchParams.get("v");
+          if (u.pathname.startsWith("/shorts/")) return u.pathname.split("/shorts/")[1]?.split("/")[0] || null;
+          if (u.pathname.startsWith("/embed/")) return u.pathname.split("/embed/")[1]?.split("/")[0] || null;
         }
       } catch {}
-
       return null;
     }
 
     function getYouTubeEmbedUrl(url) {
       const id = getYouTubeVideoId(url);
-      return id ? `https://www.youtube.com/embed/${id}` : null;
+      return id ? "https://www.youtube.com/embed/" + id : null;
     }
 
     function getYouTubeThumbnail(url) {
       const id = getYouTubeVideoId(url);
       return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+    }
+
+    function getTikTokVideoId(url) {
+      try {
+        const u = new URL(url);
+        const match = u.pathname.match(/\/video\/(\d+)/);
+        return match ? match[1] : null;
+      } catch {}
+      return null;
+    }
+
+    function getTikTokEmbedUrl(url) {
+      const id = getTikTokVideoId(url);
+      return id ? `https://www.tiktok.com/player/v1/${id}` : null;
+    }
+
+    function getFacebookEmbedUrl(url) {
+      return "https://www.facebook.com/plugins/video.php?href=" + encodeURIComponent(url) + "&show_text=false&width=560";
+    }
+
+    function detectPlatform(url) {
+      const lower = url.toLowerCase();
+      if (lower.includes("youtube.com") || lower.includes("youtu.be")) return "youtube";
+      if (lower.includes("facebook.com") || lower.includes("fb.watch")) return "facebook";
+      if (lower.includes("instagram.com")) return "instagram";
+      if (lower.includes("tiktok.com")) return "tiktok";
+      return "other";
+    }
+
+    function getPlatformLabel(platform) {
+      switch (platform) {
+        case "youtube": return t("platformYoutube");
+        case "facebook": return t("platformFacebook");
+        case "instagram": return t("platformInstagram");
+        case "tiktok": return t("platformTiktok");
+        default: return t("platformLink");
+      }
     }
 
     function shortenUrl(url, max = 72) {
@@ -656,11 +803,10 @@
     }
 
     function saveToHistory(url) {
-      const platform = getPlatform(url);
+      const platform = detectPlatform(url);
       const thumbnail = platform === "youtube" ? getYouTubeThumbnail(url) : null;
 
-      let items = getHistory();
-      items = items.filter(item => item.url !== url);
+      let items = getHistory().filter(item => item.url !== url);
 
       items.unshift({
         url,
@@ -669,9 +815,7 @@
         createdAt: new Date().toISOString()
       });
 
-      if (items.length > HISTORY_LIMIT) {
-        items = items.slice(0, HISTORY_LIMIT);
-      }
+      if (items.length > HISTORY_LIMIT) items = items.slice(0, HISTORY_LIMIT);
 
       setHistory(items);
       renderHistory();
@@ -687,13 +831,13 @@
     function clearHistory() {
       localStorage.removeItem(HISTORY_KEY);
       renderHistory();
-      setStatus("A history törölve lett.", "info");
+      setStatus(t("statusHistoryCleared"), "info");
     }
 
     function formatDate(iso) {
       try {
         const d = new Date(iso);
-        return d.toLocaleString("hu-HU", {
+        return d.toLocaleString(LANG === "hu" ? "hu-HU" : "en-US", {
           year: "numeric",
           month: "2-digit",
           day: "2-digit",
@@ -712,12 +856,7 @@
         return `
           <div class="history-thumb-wrap">
             <span class="history-platform-badge">${escapeHtml(platformLabel)}</span>
-            <img
-              class="history-thumb"
-              src="${escapeHtml(item.thumbnail)}"
-              alt="${escapeHtml(platformLabel)} előnézet"
-              loading="lazy"
-            />
+            <img class="history-thumb" src="${escapeHtml(item.thumbnail)}" alt="${escapeHtml(platformLabel)} preview" loading="lazy" />
           </div>
         `;
       }
@@ -736,12 +875,7 @@
       const items = getHistory();
 
       if (!items.length) {
-        historyList.innerHTML = `
-          <div class="history-empty">
-            Még nincs elmentett előzmény.<br>
-            Játssz le egy videólinket, és itt meg fog jelenni.
-          </div>
-        `;
+        historyList.innerHTML = `<div class="history-empty">${t("historyEmpty")}</div>`;
         return;
       }
 
@@ -754,14 +888,14 @@
             </button>
 
             <div class="history-url">${escapeHtml(shortenUrl(item.url))}</div>
-            <div class="history-url">Mentve: ${escapeHtml(formatDate(item.createdAt))}</div>
+            <div class="history-url">${escapeHtml(t("savedAt"))}: ${escapeHtml(formatDate(item.createdAt))}</div>
 
             <div class="history-actions">
               <button class="mini-btn mini-open" type="button" onclick="openFromHistory(${index})">
-                Megnyitás
+                ${escapeHtml(t("open"))}
               </button>
               <button class="mini-btn mini-delete" type="button" onclick="deleteHistoryItem(${index})">
-                Törlés
+                ${escapeHtml(t("delete"))}
               </button>
             </div>
           </div>
@@ -773,89 +907,90 @@
       const url = videoURL.value.trim();
 
       if (!url) {
-        setStatus("Előbb illessz be egy linket.", "error");
+        setStatus(t("statusNeedLink"), "error");
         return;
       }
 
       if (!isValidUrl(url)) {
-        setStatus("Ez nem tűnik érvényes linknek.", "error");
+        setStatus(t("statusInvalidLink"), "error");
         return;
       }
 
-      const platform = getPlatform(url);
+      const platform = detectPlatform(url);
 
       if (platform === "youtube") {
-        const embedUrl = getYouTubeEmbedUrl(url);
+        const ytEmbed = getYouTubeEmbedUrl(url);
 
-        if (!embedUrl) {
-          setStatus("A YouTube linket nem sikerült értelmezni.", "error");
+        if (ytEmbed) {
+          player.innerHTML = `
+            <iframe
+              src="${escapeHtml(ytEmbed)}"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+              loading="lazy">
+            </iframe>
+          `;
+          saveToHistory(url);
+          setStatus(t("statusYouTubeLoaded"), "success");
           return;
         }
 
-        player.innerHTML = `
-          <iframe
-            src="${escapeHtml(embedUrl)}"
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowfullscreen
-            referrerpolicy="strict-origin-when-cross-origin">
-          </iframe>
-        `;
-        saveToHistory(url);
-        setStatus("A YouTube link betöltve.", "success");
-        return;
-      }
-
-      if (platform === "instagram") {
-        showFallback(url, "Instagram", "Megnyitás Instagramon");
-        saveToHistory(url);
-        setStatus("Instagram link felismerve.", "info");
+        setStatus(t("statusYouTubeBad"), "error");
         return;
       }
 
       if (platform === "tiktok") {
-        showFallback(url, "TikTok", "Megnyitás TikTokon");
+        const ttEmbed = getTikTokEmbedUrl(url);
+
+        if (ttEmbed) {
+          player.innerHTML = `
+            <iframe
+              src="${escapeHtml(ttEmbed)}"
+              allow="fullscreen"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+              loading="lazy">
+            </iframe>
+          `;
+          saveToHistory(url);
+          setStatus(t("statusTikTokTry"), "info");
+          return;
+        }
+
+        showFallback(url, t("platformTiktok"), t("openOnTikTok"));
         saveToHistory(url);
-        setStatus("TikTok link felismerve.", "info");
+        setStatus(t("statusTikTokBad"), "error");
         return;
       }
 
       if (platform === "facebook") {
-        showFallback(url, "Facebook", "Megnyitás Facebookon");
+        const fbEmbed = getFacebookEmbedUrl(url);
+
+        player.innerHTML = `
+          <iframe
+            src="${escapeHtml(fbEmbed)}"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+            loading="lazy">
+          </iframe>
+        `;
         saveToHistory(url);
-        setStatus("Facebook link felismerve.", "info");
+        setStatus(t("statusFacebookTry"), "info");
         return;
       }
 
-      showFallback(url, "Külső link", "Megnyitás új lapon");
-      saveToHistory(url);
-      setStatus("Ez a link új lapon nyitható meg.", "info");
-    }
-
-    function clearVideo() {
-      videoURL.value = "";
-      resetPlayer();
-      setStatus("");
-    }
-
-    async function pasteFromClipboard() {
-      try {
-        const text = await navigator.clipboard.readText();
-
-        if (!text) {
-          setStatus("A vágólap üres.", "error");
-          return;
-        }
-
-        videoURL.value = text.trim();
-
-        if (isValidUrl(videoURL.value)) {
-          setStatus("A link beillesztve a vágólapról.", "success");
-        } else {
-          setStatus("A vágólap tartalma beillesztve, de nem biztos, hogy érvényes link.", "info");
-        }
-      } catch {
-        setStatus("A vágólap olvasása itt nem engedélyezett.", "error");
+      if (platform === "instagram") {
+        showFallback(url, t("platformInstagram"), t("openOnInstagram"));
+        saveToHistory(url);
+        setStatus(t("statusInstagramOpen"), "info");
+        return;
       }
+
+      showFallback(url, t("platformLink"), t("openInNewTab"));
+      saveToHistory(url);
+      setStatus(t("statusExternalOpen"), "info");
     }
 
     function openFromHistory(index) {
@@ -867,20 +1002,22 @@
       loadVideo();
     }
 
-    playBtn.addEventListener("click", loadVideo);
-    pasteBtn.addEventListener("click", pasteFromClipboard);
-    clearBtn.addEventListener("click", clearVideo);
-    clearHistoryBtn.addEventListener("click", clearHistory);
-
+    applyTranslations();
+    resetPlayer();
     renderHistory();
+
+    playBtn.addEventListener("click", loadVideo);
+    clearHistoryBtn.addEventListener("click", clearHistory);
 
     window.openFromHistory = openFromHistory;
     window.deleteHistoryItem = deleteHistoryItem;
   </script>
 
   <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
+    if ("serviceWorker" in navigator && location.protocol === "https:") {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch(() => {});
+      });
     }
   </script>
 </body>
