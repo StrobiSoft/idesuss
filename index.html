@@ -521,7 +521,7 @@
         <div class="status" id="status"></div>
 
         <div class="helper">
-          A linket kézzel illeszd be. A YouTube videót megpróbálja beágyazni, a Facebook, Instagram és TikTok linkeket pedig külön megnyitja.
+          A linket kézzel illeszd be. A YouTube videót beágyazza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.
         </div>
       </div>
 
@@ -639,6 +639,24 @@
     function getYouTubeThumbnail(url) {
       const id = getYouTubeVideoId(url);
       return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+    }
+
+    function getTikTokVideoId(url) {
+      try {
+        const u = new URL(url);
+        const match = u.pathname.match(/\/video\/(\d+)/);
+        return match ? match[1] : null;
+      } catch {}
+      return null;
+    }
+
+    function getTikTokEmbedUrl(url) {
+      const id = getTikTokVideoId(url);
+      return id ? `https://www.tiktok.com/player/v1/${id}` : null;
+    }
+
+    function getFacebookEmbedUrl(url) {
+      return "https://www.facebook.com/plugins/video.php?href=" + encodeURIComponent(url) + "&show_text=false&width=560";
     }
 
     function detectPlatform(url) {
@@ -819,7 +837,8 @@
               src="${escapeHtml(ytEmbed)}"
               allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
               allowfullscreen
-              referrerpolicy="strict-origin-when-cross-origin">
+              referrerpolicy="strict-origin-when-cross-origin"
+              loading="lazy">
             </iframe>
           `;
           saveToHistory(url);
@@ -831,30 +850,57 @@
         return;
       }
 
-      if (platform === "facebook") {
-        showFallback(url, "Facebook", "Megnyitás Facebookon");
+      if (platform === "tiktok") {
+        const ttEmbed = getTikTokEmbedUrl(url);
+
+        if (ttEmbed) {
+          player.innerHTML = `
+            <iframe
+              src="${escapeHtml(ttEmbed)}"
+              allow="fullscreen"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+              loading="lazy">
+            </iframe>
+          `;
+          saveToHistory(url);
+          setStatus("A TikTok videó beágyazása megpróbál betöltődni.", "info");
+          return;
+        }
+
+        showFallback(url, "TikTok", "Megnyitás TikTokon");
         saveToHistory(url);
-        setStatus("A Facebook link felismerve. Új lapon fog megnyílni.", "info");
+        setStatus("A TikTok linkből nem sikerült videóazonosítót kinyerni.", "error");
+        return;
+      }
+
+      if (platform === "facebook") {
+        const fbEmbed = getFacebookEmbedUrl(url);
+
+        player.innerHTML = `
+          <iframe
+            src="${escapeHtml(fbEmbed)}"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+            loading="lazy">
+          </iframe>
+        `;
+        saveToHistory(url);
+        setStatus("A Facebook videó vagy Reel beágyazása megpróbál betöltődni.", "info");
         return;
       }
 
       if (platform === "instagram") {
         showFallback(url, "Instagram", "Megnyitás Instagramon");
         saveToHistory(url);
-        setStatus("Az Instagram link felismerve. Új lapon fog megnyílni.", "info");
-        return;
-      }
-
-      if (platform === "tiktok") {
-        showFallback(url, "TikTok", "Megnyitás TikTokon");
-        saveToHistory(url);
-        setStatus("A TikTok link felismerve. Új lapon fog megnyílni.", "info");
+        setStatus("Az Instagram link külön nyílik meg.", "info");
         return;
       }
 
       showFallback(url, "Külső link", "Megnyitás új lapon");
       saveToHistory(url);
-      setStatus("Ez a link új lapon nyitható meg.", "info");
+      setStatus("Ez a link külön nyitható meg.", "info");
     }
 
     function openFromHistory(index) {
