@@ -141,6 +141,7 @@
       display:flex;
       gap:12px;
       margin-top:16px;
+      flex-wrap:wrap;
     }
 
     .btn{
@@ -168,7 +169,7 @@
     }
 
     .btn-play{
-      flex:1 1 auto;
+      flex:1 1 180px;
       background:linear-gradient(135deg,var(--accent1),var(--accent2));
       color:white;
       box-shadow:0 12px 26px rgba(14,165,233,.24);
@@ -185,6 +186,13 @@
       min-width:120px;
       background:linear-gradient(180deg,var(--danger),var(--danger2));
       color:white;
+    }
+
+    .btn-secondary{
+      min-width:148px;
+      background:rgba(255,255,255,.08);
+      color:white;
+      border:1px solid rgba(255,255,255,.08);
     }
 
     .play-eye{
@@ -275,9 +283,161 @@
       line-height:1.5;
     }
 
+    .history-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .history-head .desc{
+      margin:8px 0 0;
+    }
+
+    .history-list{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+
+    .history-empty{
+      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      line-height:1.5;
+      font-size:.95rem;
+    }
+
+    .history-item{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:20px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .history-thumb-wrap{
+      position:relative;
+      aspect-ratio:16/9;
+      background:linear-gradient(135deg, rgba(56,189,248,.18), rgba(14,165,233,.05));
+      overflow:hidden;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .history-thumb{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .history-thumb-fallback{
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:18px;
+      font-weight:800;
+      letter-spacing:.03em;
+      color:#e7f6ff;
+      background:
+        radial-gradient(circle at top right, rgba(56,189,248,.24), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(59,130,246,.18), transparent 30%),
+        linear-gradient(135deg, rgba(15,23,42,.95), rgba(8,17,31,.98));
+    }
+
+    .history-platform-badge{
+      position:absolute;
+      top:10px;
+      left:10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(0,0,0,.45);
+      backdrop-filter:blur(6px);
+      border:1px solid rgba(255,255,255,.08);
+      color:#fff;
+      font-size:.74rem;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .history-body{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding:14px;
+    }
+
+    .history-link{
+      display:block;
+      width:100%;
+      background:none;
+      border:none;
+      padding:0;
+      margin:0;
+      text-align:left;
+      color:var(--text);
+      cursor:pointer;
+      font-size:.95rem;
+      line-height:1.45;
+      word-break:break-word;
+    }
+
+    .history-link:hover{
+      text-decoration:underline;
+    }
+
+    .history-url{
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.35;
+      word-break:break-word;
+    }
+
+    .history-actions{
+      display:flex;
+      gap:10px;
+      margin-top:4px;
+      flex-wrap:wrap;
+    }
+
+    .mini-btn{
+      border:none;
+      cursor:pointer;
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:.87rem;
+      font-weight:800;
+    }
+
+    .mini-open{
+      background:rgba(56,189,248,.14);
+      color:#dff6ff;
+      border:1px solid rgba(56,189,248,.22);
+      flex:1 1 120px;
+    }
+
+    .mini-delete{
+      background:rgba(207,74,74,.18);
+      color:#ffd1d1;
+      border:1px solid rgba(207,74,74,.22);
+      flex:1 1 100px;
+    }
+
     .footer{
       text-align:center;
-      margin-top:22px;
+      margin-top:8px;
       font-size:0.9rem;
       color:var(--muted);
       opacity:0.75;
@@ -290,7 +450,8 @@
 
       .btn-clear,
       .btn-paste,
-      .btn-play{
+      .btn-play,
+      .btn-secondary{
         width:100%;
       }
     }
@@ -351,6 +512,18 @@
       </div>
     </section>
 
+    <section class="card">
+      <div class="history-head">
+        <div>
+          <h2>History</h2>
+          <p class="desc">Az utoljára megnyitott linkek bélyegképes nézetben.</p>
+        </div>
+        <button class="btn btn-secondary" id="clearHistoryBtn" type="button">Összes törlése</button>
+      </div>
+
+      <div id="historyList" class="history-list"></div>
+    </section>
+
     <div class="footer">Powered by St.Zoo</div>
   </main>
 
@@ -359,12 +532,26 @@
     const playBtn = document.getElementById("playBtn");
     const pasteBtn = document.getElementById("pasteBtn");
     const clearBtn = document.getElementById("clearBtn");
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
     const player = document.getElementById("player");
     const statusBox = document.getElementById("status");
+    const historyList = document.getElementById("historyList");
+
+    const HISTORY_KEY = "idesuss_app_history_v1";
+    const HISTORY_LIMIT = 12;
 
     function setStatus(text = "", type = "") {
       statusBox.textContent = text;
       statusBox.className = "status" + (type ? " " + type : "");
+    }
+
+    function escapeHtml(text = "") {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
     function resetPlayer() {
@@ -379,10 +566,10 @@
     function showFallback(url, title, buttonText) {
       player.innerHTML = `
         <div class="player-fallback">
-          <strong>${title}</strong>
+          <strong>${escapeHtml(title)}</strong>
           Ez a platform itt nem játszható le közvetlenül.
           <br>
-          <a class="open-btn" href="${url}" target="_blank" rel="noopener noreferrer">${buttonText}</a>
+          <a class="open-btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(buttonText)}</a>
         </div>
       `;
     }
@@ -405,29 +592,181 @@
       return "other";
     }
 
-    function getYouTubeEmbedUrl(url) {
+    function getPlatformLabel(platform) {
+      switch (platform) {
+        case "youtube": return "YouTube";
+        case "instagram": return "Instagram";
+        case "tiktok": return "TikTok";
+        case "facebook": return "Facebook";
+        default: return "Link";
+      }
+    }
+
+    function getYouTubeVideoId(url) {
       try {
         const u = new URL(url);
 
         if (u.hostname.includes("youtu.be")) {
-          const id = u.pathname.slice(1);
-          return id ? `https://www.youtube.com/embed/${id}` : null;
+          return u.pathname.replace("/", "").trim() || null;
         }
 
         if (u.pathname === "/watch") {
-          const id = u.searchParams.get("v");
-          return id ? `https://www.youtube.com/embed/${id}` : null;
+          return u.searchParams.get("v");
         }
 
         if (u.pathname.startsWith("/shorts/")) {
-          const id = u.pathname.split("/shorts/")[1]?.split("/")[0];
-          return id ? `https://www.youtube.com/embed/${id}` : null;
+          return u.pathname.split("/shorts/")[1]?.split("/")[0] || null;
         }
 
-        if (u.pathname.startsWith("/embed/")) return url;
+        if (u.pathname.startsWith("/embed/")) {
+          return u.pathname.split("/embed/")[1]?.split("/")[0] || null;
+        }
       } catch {}
 
       return null;
+    }
+
+    function getYouTubeEmbedUrl(url) {
+      const id = getYouTubeVideoId(url);
+      return id ? `https://www.youtube.com/embed/${id}` : null;
+    }
+
+    function getYouTubeThumbnail(url) {
+      const id = getYouTubeVideoId(url);
+      return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+    }
+
+    function shortenUrl(url, max = 72) {
+      if (url.length <= max) return url;
+      return url.slice(0, max - 1) + "…";
+    }
+
+    function getHistory() {
+      try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function setHistory(items) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
+    }
+
+    function saveToHistory(url) {
+      const platform = getPlatform(url);
+      const thumbnail = platform === "youtube" ? getYouTubeThumbnail(url) : null;
+
+      let items = getHistory();
+      items = items.filter(item => item.url !== url);
+
+      items.unshift({
+        url,
+        platform,
+        thumbnail,
+        createdAt: new Date().toISOString()
+      });
+
+      if (items.length > HISTORY_LIMIT) {
+        items = items.slice(0, HISTORY_LIMIT);
+      }
+
+      setHistory(items);
+      renderHistory();
+    }
+
+    function deleteHistoryItem(index) {
+      const items = getHistory();
+      items.splice(index, 1);
+      setHistory(items);
+      renderHistory();
+    }
+
+    function clearHistory() {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+      setStatus("A history törölve lett.", "info");
+    }
+
+    function formatDate(iso) {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleString("hu-HU", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return "";
+      }
+    }
+
+    function getPreviewMarkup(item) {
+      const platformLabel = getPlatformLabel(item.platform);
+
+      if (item.thumbnail) {
+        return `
+          <div class="history-thumb-wrap">
+            <span class="history-platform-badge">${escapeHtml(platformLabel)}</span>
+            <img
+              class="history-thumb"
+              src="${escapeHtml(item.thumbnail)}"
+              alt="${escapeHtml(platformLabel)} előnézet"
+              loading="lazy"
+            />
+          </div>
+        `;
+      }
+
+      return `
+        <div class="history-thumb-wrap">
+          <span class="history-platform-badge">${escapeHtml(platformLabel)}</span>
+          <div class="history-thumb-fallback">
+            ${escapeHtml(platformLabel)}<br>preview
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHistory() {
+      const items = getHistory();
+
+      if (!items.length) {
+        historyList.innerHTML = `
+          <div class="history-empty">
+            Még nincs elmentett előzmény.<br>
+            Játssz le egy videólinket, és itt meg fog jelenni.
+          </div>
+        `;
+        return;
+      }
+
+      historyList.innerHTML = items.map((item, index) => `
+        <article class="history-item">
+          ${getPreviewMarkup(item)}
+          <div class="history-body">
+            <button class="history-link" type="button" onclick="openFromHistory(${index})">
+              ${escapeHtml(getPlatformLabel(item.platform))}
+            </button>
+
+            <div class="history-url">${escapeHtml(shortenUrl(item.url))}</div>
+            <div class="history-url">Mentve: ${escapeHtml(formatDate(item.createdAt))}</div>
+
+            <div class="history-actions">
+              <button class="mini-btn mini-open" type="button" onclick="openFromHistory(${index})">
+                Megnyitás
+              </button>
+              <button class="mini-btn mini-delete" type="button" onclick="deleteHistoryItem(${index})">
+                Törlés
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join("");
     }
 
     function loadVideo() {
@@ -455,35 +794,40 @@
 
         player.innerHTML = `
           <iframe
-            src="${embedUrl}"
+            src="${escapeHtml(embedUrl)}"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowfullscreen
             referrerpolicy="strict-origin-when-cross-origin">
           </iframe>
         `;
+        saveToHistory(url);
         setStatus("A YouTube link betöltve.", "success");
         return;
       }
 
       if (platform === "instagram") {
         showFallback(url, "Instagram", "Megnyitás Instagramon");
+        saveToHistory(url);
         setStatus("Instagram link felismerve.", "info");
         return;
       }
 
       if (platform === "tiktok") {
         showFallback(url, "TikTok", "Megnyitás TikTokon");
+        saveToHistory(url);
         setStatus("TikTok link felismerve.", "info");
         return;
       }
 
       if (platform === "facebook") {
         showFallback(url, "Facebook", "Megnyitás Facebookon");
+        saveToHistory(url);
         setStatus("Facebook link felismerve.", "info");
         return;
       }
 
       showFallback(url, "Külső link", "Megnyitás új lapon");
+      saveToHistory(url);
       setStatus("Ez a link új lapon nyitható meg.", "info");
     }
 
@@ -509,15 +853,29 @@
         } else {
           setStatus("A vágólap tartalma beillesztve, de nem biztos, hogy érvényes link.", "info");
         }
-
       } catch {
         setStatus("A vágólap olvasása itt nem engedélyezett.", "error");
       }
     }
 
+    function openFromHistory(index) {
+      const items = getHistory();
+      const item = items[index];
+      if (!item || !item.url) return;
+
+      videoURL.value = item.url;
+      loadVideo();
+    }
+
     playBtn.addEventListener("click", loadVideo);
     pasteBtn.addEventListener("click", pasteFromClipboard);
     clearBtn.addEventListener("click", clearVideo);
+    clearHistoryBtn.addEventListener("click", clearHistory);
+
+    renderHistory();
+
+    window.openFromHistory = openFromHistory;
+    window.deleteHistoryItem = deleteHistoryItem;
   </script>
 
   <script>
