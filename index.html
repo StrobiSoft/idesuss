@@ -1032,5 +1032,19 @@ Views: ...
     window.openFromHistory = openFromHistory;
     window.deleteHistoryItem = deleteHistoryItem;
   </script>
+  <script>
+
+fetch("https://api.counterapi.dev/v1/idesuss/views/up")
+.then(res => res.json())
+.then(data => {
+  document.getElementById("viewCounter").innerText =
+    "Views: " + data.count;
+})
+.catch(() => {
+  document.getElementById("viewCounter").innerText =
+    "Views unavailable";
+});
+
+</script>
 </body>
 </html>
