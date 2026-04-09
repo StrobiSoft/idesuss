@@ -76,11 +76,47 @@
       border:1px solid rgba(255,255,255,.06);
     }
 
+    .header-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+      flex-wrap:wrap;
+    }
+
     .brand{
       font-size:1.9rem;
       font-weight:800;
       letter-spacing:-0.02em;
-      margin:0 0 8px;
+      margin:0;
+    }
+
+    .lang-switch{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:999px;
+      padding:4px;
+    }
+
+    .lang-btn{
+      border:none;
+      background:transparent;
+      color:var(--muted);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.88rem;
+      font-weight:800;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .lang-btn.active{
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:#fff;
     }
 
     .tagline{
@@ -89,6 +125,14 @@
       font-size:1rem;
       font-weight:500;
       line-height:1.4;
+    }
+
+    .counter{
+      margin-top:10px;
+      color:#9fb3d1;
+      font-size:.92rem;
+      line-height:1.4;
+      min-height:20px;
     }
 
     .grid{
@@ -501,8 +545,17 @@
 <body>
   <div class="app">
     <section class="header">
-      <h1 class="brand" id="brandText">Idesüss App</h1>
+      <div class="header-top">
+        <h1 class="brand" id="brandText">Idesüss App</h1>
+
+        <div class="lang-switch" aria-label="Language switch">
+          <button class="lang-btn" id="langHuBtn" type="button">HU</button>
+          <button class="lang-btn" id="langEnBtn" type="button">EN</button>
+        </div>
+      </div>
+
       <p class="tagline" id="taglineText">Watch Without Login</p>
+      <div class="counter" id="viewCounter">Views: ...</div>
     </section>
 
     <section class="grid">
@@ -534,7 +587,7 @@
         <div class="status" id="status"></div>
 
         <div class="helper" id="helperText">
-          A linket kézzel illeszd be. A YouTube videót beágyazza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.
+          A linket kézzel illeszd be. A YouTube videót beágyazza, a YouTube playlisteket is lejátssza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.
         </div>
       </div>
 
@@ -566,11 +619,22 @@
     const player = document.getElementById("player");
     const statusBox = document.getElementById("status");
     const historyList = document.getElementById("historyList");
+    const viewCounter = document.getElementById("viewCounter");
+    const langHuBtn = document.getElementById("langHuBtn");
+    const langEnBtn = document.getElementById("langEnBtn");
 
-    const HISTORY_KEY = "idesuss_app_history_v3";
+    const HISTORY_KEY = "idesuss_app_history_v4";
     const HISTORY_LIMIT = 12;
+    const LANG_KEY = "idesuss_lang_v1";
 
-    const LANG = (navigator.language || navigator.userLanguage || "en").toLowerCase().startsWith("hu") ? "hu" : "en";
+    function getInitialLanguage() {
+      const saved = localStorage.getItem(LANG_KEY);
+      if (saved === "hu" || saved === "en") return saved;
+      const browserLang = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+      return browserLang.startsWith("hu") ? "hu" : "en";
+    }
+
+    let LANG = getInitialLanguage();
 
     const I18N = {
       hu: {
@@ -578,12 +642,14 @@
         pageDescription: "Idesüss App – Watch Without Login",
         brand: "Idesüss App",
         tagline: "Watch Without Login",
+        counterLabel: "Megtekintések",
+        counterUnavailable: "Megtekintések nem elérhetők",
         inputTitle: "Videólink beillesztése",
         inputDesc: "Illessz be egy publikus videólinket, majd indítsd el.",
         videoLabel: "Videólink",
         videoPlaceholder: "Ide illeszd be a videó linkjét...",
         play: "Play",
-        helper: "A linket kézzel illeszd be. A YouTube videót beágyazza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.",
+        helper: "A linket kézzel illeszd be. A YouTube videót beágyazza, a YouTube playlisteket is lejátssza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.",
         playerTitle: "Lejátszó",
         playerDesc: "Itt jelenik meg a tartalom.",
         playerEmpty: "Még nincs betöltött videó.<br>Illessz be egy publikus linket, majd nyomd meg a Play gombot.",
@@ -608,6 +674,7 @@
         statusInvalidLink: "Ez nem tűnik érvényes linknek.",
         statusYouTubeLoaded: "A YouTube link betöltve.",
         statusYouTubeBad: "A YouTube linket nem sikerült értelmezni.",
+        statusPlaylistLoaded: "A YouTube playlist betöltve.",
         statusTikTokTry: "A TikTok videó beágyazása megpróbál betöltődni.",
         statusTikTokBad: "A TikTok linkből nem sikerült videóazonosítót kinyerni.",
         statusFacebookTry: "A Facebook videó vagy Reel beágyazása megpróbál betöltődni.",
@@ -622,12 +689,14 @@
         pageDescription: "Idesüss App – Watch Without Login",
         brand: "Idesüss App",
         tagline: "Watch Without Login",
+        counterLabel: "Views",
+        counterUnavailable: "Views unavailable",
         inputTitle: "Paste video link",
         inputDesc: "Paste a public video link, then start playback.",
         videoLabel: "Video link",
         videoPlaceholder: "Paste the video link here...",
         play: "Play",
-        helper: "Paste the link manually. YouTube videos are embedded directly, TikTok and Facebook video/Reel links are tried as embeds first, while Instagram opens separately.",
+        helper: "Paste the link manually. YouTube videos are embedded directly, YouTube playlists are also supported, TikTok and Facebook video/Reel links are tried as embeds first, while Instagram opens separately.",
         playerTitle: "Player",
         playerDesc: "The content will appear here.",
         playerEmpty: "No video loaded yet.<br>Paste a public link, then press Play.",
@@ -652,6 +721,7 @@
         statusInvalidLink: "This does not look like a valid link.",
         statusYouTubeLoaded: "YouTube link loaded.",
         statusYouTubeBad: "Could not interpret the YouTube link.",
+        statusPlaylistLoaded: "YouTube playlist loaded.",
         statusTikTokTry: "Trying to load the TikTok video as an embed.",
         statusTikTokBad: "Could not extract a video ID from the TikTok link.",
         statusFacebookTry: "Trying to load the Facebook video or Reel as an embed.",
@@ -665,6 +735,22 @@
 
     function t(key) {
       return I18N[LANG][key] || key;
+    }
+
+    function setLanguage(lang) {
+      if (lang !== "hu" && lang !== "en") return;
+      LANG = lang;
+      localStorage.setItem(LANG_KEY, lang);
+      applyTranslations();
+      resetPlayer();
+      renderHistory();
+      updateCounterText();
+      updateLangButtons();
+    }
+
+    function updateLangButtons() {
+      langHuBtn.classList.toggle("active", LANG === "hu");
+      langEnBtn.classList.toggle("active", LANG === "en");
     }
 
     function applyTranslations() {
@@ -685,6 +771,31 @@
       document.getElementById("historyDesc").textContent = t("historyDesc");
       document.getElementById("clearHistoryBtn").textContent = t("clearHistory");
       videoURL.placeholder = t("videoPlaceholder");
+    }
+
+    let currentViewCount = null;
+
+    function updateCounterText() {
+      if (currentViewCount === null) {
+        viewCounter.textContent = `${t("counterLabel")}: ...`;
+      } else if (currentViewCount === "unavailable") {
+        viewCounter.textContent = t("counterUnavailable");
+      } else {
+        viewCounter.textContent = `${t("counterLabel")}: ${currentViewCount}`;
+      }
+    }
+
+    function incrementViewCounter() {
+      fetch("https://api.counterapi.dev/v1/idesussapp/views/up")
+        .then(res => res.json())
+        .then(data => {
+          currentViewCount = data.count;
+          updateCounterText();
+        })
+        .catch(() => {
+          currentViewCount = "unavailable";
+          updateCounterText();
+        });
     }
 
     function setStatus(text = "", type = "") {
@@ -740,9 +851,41 @@
       return null;
     }
 
+    function getYouTubePlaylistId(url) {
+      try {
+        const u = new URL(url);
+        return u.searchParams.get("list");
+      } catch {}
+      return null;
+    }
+
+    function isYouTubePlaylistUrl(url) {
+      try {
+        const u = new URL(url);
+        const hostOk = u.hostname.includes("youtube.com") || u.hostname.includes("youtu.be");
+        const list = u.searchParams.get("list");
+        return hostOk && !!list;
+      } catch {
+        return false;
+      }
+    }
+
     function getYouTubeEmbedUrl(url) {
       const id = getYouTubeVideoId(url);
       return id ? "https://www.youtube.com/embed/" + id : null;
+    }
+
+    function getYouTubePlaylistEmbedUrl(url) {
+      const listId = getYouTubePlaylistId(url);
+      if (!listId) return null;
+
+      const videoId = getYouTubeVideoId(url);
+
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?list=${encodeURIComponent(listId)}`;
+      }
+
+      return `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(listId)}`;
     }
 
     function getYouTubeThumbnail(url) {
@@ -923,6 +1066,25 @@
       const platform = detectPlatform(url);
 
       if (platform === "youtube") {
+        if (isYouTubePlaylistUrl(url)) {
+          const playlistEmbed = getYouTubePlaylistEmbedUrl(url);
+
+          if (playlistEmbed) {
+            player.innerHTML = `
+              <iframe
+                src="${escapeHtml(playlistEmbed)}"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                allowfullscreen
+                referrerpolicy="strict-origin-when-cross-origin"
+                loading="lazy">
+              </iframe>
+            `;
+            saveToHistory(url);
+            setStatus(t("statusPlaylistLoaded"), "success");
+            return;
+          }
+        }
+
         const ytEmbed = getYouTubeEmbedUrl(url);
 
         if (ytEmbed) {
@@ -1035,12 +1197,18 @@
     }
 
     applyTranslations();
+    updateLangButtons();
     resetPlayer();
     renderHistory();
+    updateCounterText();
+    incrementViewCounter();
     loadSharedTargetData();
 
     playBtn.addEventListener("click", loadVideo);
     clearHistoryBtn.addEventListener("click", clearHistory);
+
+    langHuBtn.addEventListener("click", () => setLanguage("hu"));
+    langEnBtn.addEventListener("click", () => setLanguage("en"));
 
     window.openFromHistory = openFromHistory;
     window.deleteHistoryItem = deleteHistoryItem;
