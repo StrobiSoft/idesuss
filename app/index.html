@@ -567,7 +567,7 @@
     const statusBox = document.getElementById("status");
     const historyList = document.getElementById("historyList");
 
-    const HISTORY_KEY = "idesuss_app_history_v2";
+    const HISTORY_KEY = "idesuss_app_history_v3";
     const HISTORY_LIMIT = 12;
 
     const LANG = (navigator.language || navigator.userLanguage || "en").toLowerCase().startsWith("hu") ? "hu" : "en";
@@ -613,7 +613,9 @@
         statusFacebookTry: "A Facebook videó vagy Reel beágyazása megpróbál betöltődni.",
         statusInstagramOpen: "Az Instagram link külön nyílik meg.",
         statusExternalOpen: "Ez a link külön nyitható meg.",
-        statusHistoryCleared: "A history törölve lett."
+        statusHistoryCleared: "A history törölve lett.",
+        statusSharedLoaded: "Megosztott link fogadva.",
+        statusSharedTextLoaded: "Megosztott szövegből link fogadva."
       },
       en: {
         pageTitle: "Idesüss App",
@@ -655,7 +657,9 @@
         statusFacebookTry: "Trying to load the Facebook video or Reel as an embed.",
         statusInstagramOpen: "The Instagram link opens separately.",
         statusExternalOpen: "This link can be opened separately.",
-        statusHistoryCleared: "History has been cleared."
+        statusHistoryCleared: "History has been cleared.",
+        statusSharedLoaded: "Shared link received.",
+        statusSharedTextLoaded: "Link received from shared text."
       }
     };
 
@@ -1002,9 +1006,38 @@
       loadVideo();
     }
 
+    function loadSharedTargetData() {
+      const params = new URLSearchParams(window.location.search);
+
+      const sharedUrl = params.get("url");
+      const sharedText = params.get("text");
+      const sharedTitle = params.get("title");
+
+      if (sharedUrl && isValidUrl(sharedUrl)) {
+        videoURL.value = sharedUrl;
+        loadVideo();
+        setStatus(t("statusSharedLoaded"), "success");
+        return;
+      }
+
+      if (sharedText && isValidUrl(sharedText.trim())) {
+        videoURL.value = sharedText.trim();
+        loadVideo();
+        setStatus(t("statusSharedTextLoaded"), "success");
+        return;
+      }
+
+      if (sharedTitle && isValidUrl(sharedTitle.trim())) {
+        videoURL.value = sharedTitle.trim();
+        loadVideo();
+        setStatus(t("statusSharedTextLoaded"), "success");
+      }
+    }
+
     applyTranslations();
     resetPlayer();
     renderHistory();
+    loadSharedTargetData();
 
     playBtn.addEventListener("click", loadVideo);
     clearHistoryBtn.addEventListener("click", clearHistory);
