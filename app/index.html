@@ -68,6 +68,37 @@
       padding:18px;
     }
 
+    /* --- Új stílusok a váltógombokhoz --- */
+    .stream-switcher {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none; /* Firefox */
+    }
+    .stream-switcher::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+    .stream-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.2s ease;
+    }
+    .stream-btn:hover { background: rgba(255,255,255,0.12); color: var(--text); }
+    .stream-btn.active { 
+      background: linear-gradient(135deg, var(--accent1), var(--accent2)); 
+      color: white;
+      border-color: transparent;
+    }
+    /* ------------------------------------ */
+
     .header{
       margin-bottom:18px;
       padding:18px 18px 14px;
@@ -596,6 +627,13 @@
         <p class="desc" id="playerDesc">Itt jelenik meg a tartalom.</p>
 
         <div class="player-shell" id="player"></div>
+
+        <div class="stream-switcher">
+          <button class="stream-btn active" onclick="switchStream('', this)">Default</button>
+          <button class="stream-btn" onclick="switchStream('https://inv.tux.rs/embed/dQw4w9WgXcQ', this)">YT Reklám nélkül</button>
+          <button class="stream-btn" onclick="switchStream('https://player.twitch.tv/?channel=riot&parent=' + window.location.hostname, this)">Twitch Live</button>
+          <button class="stream-btn" onclick="switchStream('https://www.dailymotion.com/embed/video/x8m6m73', this)">Dailymotion</button>
+        </div>
       </div>
     </section>
 
@@ -772,6 +810,22 @@
       document.getElementById("clearHistoryBtn").textContent = t("clearHistory");
       videoURL.placeholder = t("videoPlaceholder");
     }
+
+    /* --- Új: Funkció a gyors csatornaváltáshoz --- */
+    function switchStream(url, btn) {
+      // Gombok vizuális frissítése
+      document.querySelectorAll('.stream-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (!url) {
+        resetPlayer();
+        return;
+      }
+
+      player.innerHTML = `<iframe src="${url}" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+      setStatus("Stream betöltve: " + btn.textContent, "success");
+    }
+    /* ------------------------------------------- */
 
     let currentViewCount = null;
 
@@ -1053,6 +1107,11 @@
     function loadVideo() {
       const url = videoURL.value.trim();
 
+      // Ha betöltünk valamit a felső sávval, állítsuk vissza a csatornaváltót az első gombra
+      document.querySelectorAll('.stream-btn').forEach((b, i) => {
+        b.classList.toggle('active', i === 0);
+      });
+
       if (!url) {
         setStatus(t("statusNeedLink"), "error");
         return;
@@ -1212,6 +1271,8 @@
 
     window.openFromHistory = openFromHistory;
     window.deleteHistoryItem = deleteHistoryItem;
+    // Új funkció globálissá tétele
+    window.switchStream = switchStream;
   </script>
 
   <script>
