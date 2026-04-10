@@ -135,106 +135,76 @@
 </div>
 
 <script>
-    const langData = {
-        hu: { input: "Beillesztés", btn: "Lejátszás indítása", player: "Lejátszó", history: "Előzmények", loading: "Elemzés...", error: "Érvénytelen link!" },
-        en: { input: "Paste Link", btn: "Start Playing", player: "Player", history: "History", loading: "Processing...", error: "Invalid URL!" }
-    };
-    let currentLang = 'hu';
-
-    function toggleLang(l) {
-        currentLang = l;
-        document.getElementById('hu-btn').classList.toggle('active', l==='hu');
-        document.getElementById('en-btn').classList.toggle('active', l==='en');
-        updateLabels();
-    }
-
-    function updateLabels() {
-        const d = langData[currentLang];
-        document.getElementById('lbl-input').innerText = d.input;
-        document.getElementById('lbl-btn').innerText = d.btn;
-        document.getElementById('lbl-player').innerText = d.player;
-        document.getElementById('lbl-history').innerText = d.history;
-    }
-
     function startApp() {
-        const url = document.getElementById('videoURL').value.trim();
-        const target = document.getElementById('pTarget');
-        const shell = document.getElementById('pShell');
-        const status = document.getElementById('status');
-        
-        if(!url) return;
-        status.innerText = langData[currentLang].loading;
+    let url = document.getElementById('videoURL').value.trim();
+    const target = document.getElementById('pTarget');
+    const shell = document.getElementById('pShell');
+    const status = document.getElementById('status');
+    
+    if(!url) return;
+    status.innerText = langData[currentLang].loading;
 
-        let embedUrl = "";
-        let isPortrait = false;
+    let embedUrl = "";
+    let isPortrait = false;
 
-        // --- OKOS FELISMERÉS ---
-        try {
-            // YouTube
-            if (url.includes("youtube.com") || url.includes("youtu.be")) {
-                let vId = url.includes("shorts/") ? url.split("shorts/")[1].split(/[?&]/)[0] : 
-                         (url.includes("v=") ? url.split("v=")[1].split("&")[0] : url.split("/").pop().split(/[?&]/)[0]);
-                embedUrl = `https://www.youtube-nocookie.com/embed/${vId}?autoplay=1`;
-                if(url.includes("shorts/")) isPortrait = true;
-            }
-            // TikTok
-            else if (url.includes("tiktok.com")) {
-                const vId = url.split("/video/")[1]?.split(/[?&]/)[0] || url.split("/").pop().split(/[?&]/)[0];
-                embedUrl = `https://www.tiktok.com/embed/v2/${vId}`;
-                isPortrait = true;
-            }
-            // Facebook / Reels
-            else if (url.includes("facebook.com") || url.includes("fb.watch")) {
-                const clean = url.split(/[?&]mibextid/)[0];
-                embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(clean)}&show_text=0&autoplay=1`;
-                if(url.includes("reels") || url.includes("fb.watch")) isPortrait = true;
-            }
-
-            if(embedUrl) {
-                document.getElementById('playerCard').style.display = "block";
-                shell.className = isPortrait ? "player-shell portrait" : "player-shell";
-                target.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-                status.innerText = "";
-                saveToHistory(url);
-                document.getElementById('playerCard').scrollIntoView({behavior: 'smooth'});
-            } else {
-                status.innerText = langData[currentLang].error;
-            }
-        } catch(e) { status.innerText = langData[currentLang].error; }
-    }
-
-    function saveToHistory(url) {
-        let h = JSON.parse(localStorage.getItem('idesuss_h') || '[]');
-        if(!h.includes(url)) {
-            h.unshift(url);
-            if(h.length > 8) h.pop();
-            localStorage.setItem('idesuss_h', JSON.stringify(h));
-            renderHistory();
+    // --- AGRESSZÍV LINKELEMZŐ ---
+    try {
+        // 1. YouTube & Shorts
+        if (url.includes("youtube.com") || url.includes("youtu.be")) {
+            let vId = url.includes("shorts/") ? url.split("shorts/")[1].split(/[?&]/)[0] : 
+                     (url.includes("v=") ? url.split("v=")[1].split("&")[0] : url.split("/").pop().split(/[?&]/)[0]);
+            embedUrl = `https://www.youtube-nocookie.com/embed/${vId}?autoplay=1`;
+            if(url.includes("shorts/")) isPortrait = true;
         }
+        
+        // 2. TikTok (Mobil link javítás: vm.tiktok.com)
+        else if (url.includes("tiktok.com")) {
+            isPortrait = true;
+            // Ha a linkben benne van a /video/, kinyerjük az ID-t
+            if (url.includes("/video/")) {
+                const vId = url.split("/video/")[1].split(/[?&]/)[0];
+                embedUrl = `https://www.tiktok.com/embed/v2/${vId}`;
+            } else {
+                // Ha rövidített mobil link, akkor sajnos a böngészőben nem mindig beágyazható
+                // Ilyenkor megpróbáljuk a teljes URL-t embeddé alakítani
+                embedUrl = `https://www.tiktok.com/embed/${url.split('/').pop().split('?')[0]}`;
+            }
+        }
+        
+        // 3. Facebook / Reels (share/v/ és mibextid javítás)
+        else if (url.includes("facebook.com") || url.includes("fb.watch") || url.includes("fb.com")) {
+            // A képen látható "share/v/" linket átalakítjuk a plugin számára ehető formátumra
+            let cleanFb = url.split(/[?&]mibextid/)[0];
+            cleanFb = cleanFb.split(/[?&]share/)[0]; // Levágjuk a share paramétert is
+            
+            embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(cleanFb)}&show_text=0&autoplay=1`;
+            if(url.includes("reels") || url.includes("share/v/")) isPortrait = true;
+        }
+
+        if(embedUrl) {
+            document.getElementById('playerCard').style.display = "block";
+            shell.className = isPortrait ? "player-shell portrait" : "player-shell";
+            
+            // Itt a legfontosabb: a "sandbox" attribútum segít iPhone-on kikerülni bizonyos blokkolásokat
+            target.innerHTML = `<iframe 
+                src="${embedUrl}" 
+                allow="autoplay; encrypted-media; fullscreen" 
+                allowfullscreen 
+                style="width:100%; height:100%;"
+                frameborder="0">
+            </iframe>`;
+            
+            status.innerText = "";
+            saveToHistory(url);
+            setTimeout(() => { document.getElementById('playerCard').scrollIntoView({behavior: 'smooth'}); }, 300);
+        } else {
+            status.innerText = langData[currentLang].error;
+        }
+    } catch(e) { 
+        status.innerText = langData[currentLang].error; 
     }
+}
 
-    function renderHistory() {
-        const box = document.getElementById('historyBox');
-        const h = JSON.parse(localStorage.getItem('idesuss_h') || '[]');
-        box.innerHTML = h.map(u => `
-            <div class="history-item">
-                <span class="history-url" onclick="document.getElementById('videoURL').value='${u}'; startApp();">${u}</span>
-                <button class="btn-del" onclick="deleteH('${u}')">✕</button>
-            </div>
-        `).join('');
-    }
-
-    function deleteH(u) {
-        let h = JSON.parse(localStorage.getItem('idesuss_h') || '[]');
-        localStorage.setItem('idesuss_h', JSON.stringify(h.filter(x => x !== u)));
-        renderHistory();
-    }
-
-    function clearAllHistory() { localStorage.removeItem('idesuss_h'); renderHistory(); }
-
-    // Init
-    updateLabels();
-    renderHistory();
 </script>
 
 </body>
