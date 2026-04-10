@@ -3,120 +3,1222 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Idesüss App - Multi Stream</title>
+  <title>Idesüss App</title>
+  <meta name="description" content="Idesüss App – Watch Without Login" />
+  <meta name="theme-color" content="#0f172a" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Idesüss App" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="favicon.png" />
+
   <style>
-    :root {
-      --bg1:#08111f; --bg2:#0f172a;
+    :root{
+      --bg1:#08111f;
+      --bg2:#0f172a;
       --panel:rgba(255,255,255,0.05);
-      --text:#eef4ff; --muted:#a4b1c8;
-      --accent: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      --panel-border:rgba(255,255,255,0.08);
+      --text:#eef4ff;
+      --muted:#a4b1c8;
+      --accent1:#38bdf8;
+      --accent2:#0ea5e9;
+      --danger:#cf4a4a;
+      --danger2:#b63d3d;
+      --shadow:0 20px 50px rgba(0,0,0,.45);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
     }
-    body {
-      margin: 0; padding: calc(20px + env(safe-area-inset-top)) 15px;
-      background: linear-gradient(155deg, var(--bg1), var(--bg2));
-      color: var(--text); font-family: system-ui, sans-serif;
-      display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(56,189,248,.10), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(59,130,246,.10), transparent 24%),
+        linear-gradient(155deg,var(--bg1),var(--bg2));
+      -webkit-tap-highlight-color: transparent;
     }
-    .app { width: 100%; max-width: 600px; }
-    .card {
-      background: var(--panel); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 24px; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(10px);
+
+    body{
+      padding:
+        calc(12px + var(--safe-top))
+        calc(12px + var(--safe-right))
+        calc(18px + var(--safe-bottom))
+        calc(12px + var(--safe-left));
     }
-    textarea {
-      width: 100%; min-height: 60px; background: rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
-      color: #white; padding: 12px; font-size: 14px; outline: none; resize: none;
+
+    .app{
+      max-width:760px;
+      margin:0 auto;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+      padding:18px;
     }
-    .btn-play {
-      width: 100%; padding: 15px; margin-top: 10px; border: none;
-      border-radius: 12px; background: var(--accent); color: white;
-      font-weight: bold; font-size: 16px; cursor: pointer;
+
+    .header{
+      margin-bottom:18px;
+      padding:18px 18px 14px;
+      border-radius:22px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
     }
-    .player-container {
-      width: 100%; aspect-ratio: 16/9; background: #000;
-      border-radius: 16px; overflow: hidden; position: relative;
+
+    .header-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+      flex-wrap:wrap;
     }
-    /* Álló videókhoz (TikTok/Reels/Shorts) automatikus igazítás */
-    .player-container.portrait { aspect-ratio: 9/16; max-height: 70vh; margin: 0 auto; width: 80%; }
-    
-    iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-    .status { text-align: center; font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+    .brand{
+      font-size:1.9rem;
+      font-weight:800;
+      letter-spacing:-0.02em;
+      margin:0;
+    }
+
+    .lang-switch{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:999px;
+      padding:4px;
+    }
+
+    .lang-btn{
+      border:none;
+      background:transparent;
+      color:var(--muted);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.88rem;
+      font-weight:800;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .lang-btn.active{
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:#fff;
+    }
+
+    .tagline{
+      margin:0;
+      color:var(--muted);
+      font-size:1rem;
+      font-weight:500;
+      line-height:1.4;
+    }
+
+    .counter{
+      margin-top:10px;
+      color:#9fb3d1;
+      font-size:.92rem;
+      line-height:1.4;
+      min-height:20px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--panel-border);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .card h2{
+      margin:0 0 10px;
+      font-size:1.12rem;
+      line-height:1.2;
+    }
+
+    .card p.desc{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.5;
+      font-size:.96rem;
+    }
+
+    .label{
+      display:block;
+      margin-bottom:10px;
+      font-size:.96rem;
+      font-weight:700;
+    }
+
+    textarea{
+      width:100%;
+      min-height:124px;
+      border:none;
+      outline:none;
+      resize:vertical;
+      border-radius:18px;
+      padding:16px;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-size:1rem;
+      line-height:1.45;
+      border:1px solid rgba(255,255,255,.06);
+      transition:.18s ease;
+    }
+
+    textarea::placeholder{
+      color:rgba(255,255,255,.45);
+    }
+
+    textarea:focus{
+      border-color:rgba(56,189,248,.5);
+      box-shadow:0 0 0 4px rgba(56,189,248,.10);
+    }
+
+    .actions{
+      display:flex;
+      gap:14px;
+      margin-top:16px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:18px;
+      padding:14px 20px;
+      font-size:1rem;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .15s ease, filter .15s ease, opacity .15s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-height:54px;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.04);
+    }
+
+    .btn:active{
+      transform:translateY(0);
+    }
+
+    .btn-play{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      padding:12px 18px;
+      font-size:16px;
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:white;
+      box-shadow:0 12px 26px rgba(14,165,233,.24);
+      flex:1 1 auto;
+      width:100%;
+    }
+
+    .btn-secondary{
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.08);
+      min-width:148px;
+    }
+
+    .play-eye{
+      width:48px;
+      height:48px;
+      display:block;
+      flex:0 0 48px;
+    }
+
+    .play-eye svg{
+      width:42px;
+      height:42px;
+      display:block;
+    }
+
+    .status{
+      margin-top:16px;
+      min-height:24px;
+      font-size:.95rem;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
+    .status.success{ color:#baf7cf; }
+    .status.error{ color:#ffb7b7; }
+    .status.info{ color:#b8e7ff; }
+
+    .player-shell{
+      width:100%;
+      aspect-ratio:9/16;
+      min-height:300px;
+      max-height:72vh;
+      background:linear-gradient(180deg,#050914,#02050b);
+      border-radius:22px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+
+    .player-empty,
+    .player-fallback{
+      padding:24px;
+      text-align:center;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:1rem;
+    }
+
+    .player-fallback strong{
+      display:block;
+      color:var(--text);
+      font-size:1.08rem;
+      margin-bottom:10px;
+    }
+
+    .open-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:16px;
+      padding:12px 16px;
+      border-radius:16px;
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:white;
+      text-decoration:none;
+      font-weight:800;
+      box-shadow:0 10px 22px rgba(14,165,233,.22);
+    }
+
+    iframe{
+      width:100%;
+      height:100%;
+      border:none;
+      background:#000;
+      display:block;
+    }
+
+    .helper{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.5;
+    }
+
+    .history-card{
+      margin-top:18px;
+    }
+
+    .history-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .history-head h2{
+      margin:0;
+      font-size:1.12rem;
+    }
+
+    .history-list{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+
+    .history-empty{
+      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--muted);
+      line-height:1.5;
+      font-size:.95rem;
+    }
+
+    .history-item{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:20px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:100%;
+    }
+
+    .history-thumb-wrap{
+      position:relative;
+      aspect-ratio:16/9;
+      background:linear-gradient(135deg, rgba(56,189,248,.18), rgba(14,165,233,.05));
+      overflow:hidden;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .history-thumb{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .history-thumb-fallback{
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:18px;
+      font-weight:800;
+      letter-spacing:.03em;
+      color:#e7f6ff;
+      background:
+        radial-gradient(circle at top right, rgba(56,189,248,.24), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(59,130,246,.18), transparent 30%),
+        linear-gradient(135deg, rgba(15,23,42,.95), rgba(8,17,31,.98));
+    }
+
+    .history-platform-badge{
+      position:absolute;
+      top:10px;
+      left:10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(0,0,0,.45);
+      backdrop-filter:blur(6px);
+      border:1px solid rgba(255,255,255,.08);
+      color:#fff;
+      font-size:.74rem;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .history-body{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding:14px;
+      flex:1 1 auto;
+    }
+
+    .history-link{
+      display:block;
+      width:100%;
+      background:none;
+      border:none;
+      padding:0;
+      margin:0;
+      text-align:left;
+      color:var(--text);
+      cursor:pointer;
+      font-size:.95rem;
+      line-height:1.45;
+      word-break:break-word;
+    }
+
+    .history-link:hover{
+      text-decoration:underline;
+    }
+
+    .history-url{
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.35;
+      word-break:break-word;
+    }
+
+    .history-actions{
+      display:flex;
+      gap:10px;
+      margin-top:auto;
+      flex-wrap:wrap;
+    }
+
+    .mini-btn{
+      border:none;
+      cursor:pointer;
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:.87rem;
+      font-weight:800;
+    }
+
+    .mini-open{
+      background:rgba(56,189,248,.14);
+      color:#dff6ff;
+      border:1px solid rgba(56,189,248,.22);
+      flex:1 1 120px;
+    }
+
+    .mini-delete{
+      background:rgba(207,74,74,.18);
+      color:#ffd1d1;
+      border:1px solid rgba(207,74,74,.22);
+      flex:1 1 100px;
+    }
+
+    @media (min-width: 860px){
+      .grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .history-list{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .player-shell{
+        max-height:78vh;
+      }
+    }
+
+    @media (max-width: 560px){
+      body{
+        padding:
+          calc(8px + var(--safe-top))
+          calc(8px + var(--safe-right))
+          calc(14px + var(--safe-bottom))
+          calc(8px + var(--safe-left));
+      }
+
+      .app{
+        border-radius:22px;
+        padding:14px;
+      }
+
+      .header,
+      .card,
+      .player-shell{
+        border-radius:20px;
+      }
+
+      .brand{
+        font-size:1.7rem;
+      }
+
+      .btn-secondary{
+        min-width:118px;
+      }
+
+      textarea{
+        min-height:116px;
+      }
+    }
   </style>
 </head>
 <body>
-
   <div class="app">
-    <div class="card">
-      <h2 style="margin-top:0; font-size: 1.2rem; text-align:center;">Beillesztés</h2>
-      <textarea id="videoURL" placeholder="YouTube, TikTok vagy FB Reels link..."></textarea>
-      <button class="btn-play" onclick="handleSmartPlay()">Indítás</button>
-      <div id="status" class="status">Várakozás linkre...</div>
-    </div>
+    <section class="header">
+      <div class="header-top">
+        <h1 class="brand" id="brandText">Idesüss App</h1>
 
-    <div id="playerCard" class="card" style="display:none;">
-      <div id="playerWrapper" class="player-container">
-        <div id="player"></div>
+        <div class="lang-switch" aria-label="Language switch">
+          <button class="lang-btn" id="langHuBtn" type="button">HU</button>
+          <button class="lang-btn" id="langEnBtn" type="button">EN</button>
+        </div>
       </div>
-    </div>
+
+      <p class="tagline" id="taglineText">Watch Without Login</p>
+      <div class="counter" id="viewCounter">Views: ...</div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2 id="inputTitle">Videólink beillesztése</h2>
+        <p class="desc" id="inputDesc">Illessz be egy publikus videólinket, majd indítsd el.</p>
+
+        <label class="label" for="videoURL" id="videoLabel">Videólink</label>
+        <textarea id="videoURL" placeholder="Ide illeszd be a videó linkjét..."></textarea>
+
+        <div class="actions">
+          <button class="btn btn-play" id="playBtn" type="button">
+            <span class="play-eye" aria-hidden="true">
+              <svg viewBox="0 0 64 40" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 20 C10 6, 26 2, 32 2 C38 2, 54 6, 62 20 C54 34, 38 38, 32 38 C26 38, 10 34, 2 20 Z"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="3.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+                <circle cx="32" cy="20" r="11" fill="#38bdf8" stroke="white" stroke-width="2.5"/>
+                <polygon points="27,12 27,28 42,20" fill="white"/>
+              </svg>
+            </span>
+            <span id="playBtnText">Play</span>
+          </button>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="helper" id="helperText">
+          A linket kézzel illeszd be. A YouTube videót beágyazza, a YouTube playlisteket is lejátssza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 id="playerTitle">Lejátszó</h2>
+        <p class="desc" id="playerDesc">Itt jelenik meg a tartalom.</p>
+
+        <div class="player-shell" id="player"></div>
+      </div>
+    </section>
+
+    <section class="card history-card">
+      <div class="history-head">
+        <div>
+          <h2 id="historyTitle">History</h2>
+          <p class="desc" id="historyDesc" style="margin:8px 0 0;">Az utoljára megnyitott linkek bélyegképes nézetben.</p>
+        </div>
+        <button class="btn btn-secondary" id="clearHistoryBtn" type="button">Összes törlése</button>
+      </div>
+
+      <div id="historyList" class="history-list"></div>
+    </section>
   </div>
 
   <script>
-    function handleSmartPlay() {
-      const url = document.getElementById("videoURL").value.trim();
-      const playerDiv = document.getElementById("player");
-      const wrapper = document.getElementById("playerWrapper");
-      const card = document.getElementById("playerCard");
-      const status = document.getElementById("status");
+    const videoURL = document.getElementById("videoURL");
+    const playBtn = document.getElementById("playBtn");
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+    const player = document.getElementById("player");
+    const statusBox = document.getElementById("status");
+    const historyList = document.getElementById("historyList");
+    const viewCounter = document.getElementById("viewCounter");
+    const langHuBtn = document.getElementById("langHuBtn");
+    const langEnBtn = document.getElementById("langEnBtn");
 
-      if (!url) return;
+    const HISTORY_KEY = "idesuss_app_history_v4";
+    const HISTORY_LIMIT = 12;
+    const LANG_KEY = "idesuss_lang_v1";
 
-      let embedUrl = "";
-      let isPortrait = false;
+    function getInitialLanguage() {
+      const saved = localStorage.getItem(LANG_KEY);
+      if (saved === "hu" || saved === "en") return saved;
+      const browserLang = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+      return browserLang.startsWith("hu") ? "hu" : "en";
+    }
 
-      // --- LOGIKA ---
+    let LANG = getInitialLanguage();
 
-      // 1. YouTube & Shorts
-      if (url.includes("youtube.com") || url.includes("youtu.be")) {
-        let vId = "";
-        if (url.includes("shorts/")) {
-          vId = url.split("shorts/")[1].split("?")[0];
-          isPortrait = true;
-        } else if (url.includes("v=")) {
-          vId = url.split("v=")[1].split("&")[0];
-        } else {
-          vId = url.split("/").pop();
-        }
-        embedUrl = `https://www.youtube.com/embed/${vId}?autoplay=1`;
+    const I18N = {
+      hu: {
+        pageTitle: "Idesüss App",
+        pageDescription: "Idesüss App – Watch Without Login",
+        brand: "Idesüss App",
+        tagline: "Watch Without Login",
+        counterLabel: "Megtekintések",
+        counterUnavailable: "Megtekintések nem elérhetők",
+        inputTitle: "Videólink beillesztése",
+        inputDesc: "Illessz be egy publikus videólinket, majd indítsd el.",
+        videoLabel: "Videólink",
+        videoPlaceholder: "Ide illeszd be a videó linkjét...",
+        play: "Play",
+        helper: "A linket kézzel illeszd be. A YouTube videót beágyazza, a YouTube playlisteket is lejátssza, a TikTokot és a Facebook videó/Reel linket először megpróbálja beágyazni, az Instagramot pedig külön megnyitja.",
+        playerTitle: "Lejátszó",
+        playerDesc: "Itt jelenik meg a tartalom.",
+        playerEmpty: "Még nincs betöltött videó.<br>Illessz be egy publikus linket, majd nyomd meg a Play gombot.",
+        historyTitle: "History",
+        historyDesc: "Az utoljára megnyitott linkek bélyegképes nézetben.",
+        clearHistory: "Összes törlése",
+        historyEmpty: "Még nincs elmentett előzmény.<br>Játssz le egy videólinket, és itt meg fog jelenni.",
+        open: "Megnyitás",
+        delete: "Törlés",
+        savedAt: "Mentve",
+        platformYoutube: "YouTube",
+        platformFacebook: "Facebook",
+        platformInstagram: "Instagram",
+        platformTiktok: "TikTok",
+        platformLink: "Link",
+        fallbackBlocked: "Ez a platform nem engedi a közvetlen lejátszást ezen az oldalon.",
+        openOnTikTok: "Megnyitás TikTokon",
+        openOnFacebook: "Megnyitás Facebookon",
+        openOnInstagram: "Megnyitás Instagramon",
+        openInNewTab: "Megnyitás új lapon",
+        statusNeedLink: "Előbb illessz be egy linket.",
+        statusInvalidLink: "Ez nem tűnik érvényes linknek.",
+        statusYouTubeLoaded: "A YouTube link betöltve.",
+        statusYouTubeBad: "A YouTube linket nem sikerült értelmezni.",
+        statusPlaylistLoaded: "A YouTube playlist betöltve.",
+        statusTikTokTry: "A TikTok videó beágyazása megpróbál betöltődni.",
+        statusTikTokBad: "A TikTok linkből nem sikerült videóazonosítót kinyerni.",
+        statusFacebookTry: "A Facebook videó vagy Reel beágyazása megpróbál betöltődni.",
+        statusInstagramOpen: "Az Instagram link külön nyílik meg.",
+        statusExternalOpen: "Ez a link külön nyitható meg.",
+        statusHistoryCleared: "A history törölve lett.",
+        statusSharedLoaded: "Megosztott link fogadva.",
+        statusSharedTextLoaded: "Megosztott szövegből link fogadva."
+      },
+      en: {
+        pageTitle: "Idesüss App",
+        pageDescription: "Idesüss App – Watch Without Login",
+        brand: "Idesüss App",
+        tagline: "Watch Without Login",
+        counterLabel: "Views",
+        counterUnavailable: "Views unavailable",
+        inputTitle: "Paste video link",
+        inputDesc: "Paste a public video link, then start playback.",
+        videoLabel: "Video link",
+        videoPlaceholder: "Paste the video link here...",
+        play: "Play",
+        helper: "Paste the link manually. YouTube videos are embedded directly, YouTube playlists are also supported, TikTok and Facebook video/Reel links are tried as embeds first, while Instagram opens separately.",
+        playerTitle: "Player",
+        playerDesc: "The content will appear here.",
+        playerEmpty: "No video loaded yet.<br>Paste a public link, then press Play.",
+        historyTitle: "History",
+        historyDesc: "Recently opened links in thumbnail view.",
+        clearHistory: "Clear all",
+        historyEmpty: "No saved history yet.<br>Play a video link and it will appear here.",
+        open: "Open",
+        delete: "Delete",
+        savedAt: "Saved",
+        platformYoutube: "YouTube",
+        platformFacebook: "Facebook",
+        platformInstagram: "Instagram",
+        platformTiktok: "TikTok",
+        platformLink: "Link",
+        fallbackBlocked: "This platform does not allow direct playback on this page.",
+        openOnTikTok: "Open on TikTok",
+        openOnFacebook: "Open on Facebook",
+        openOnInstagram: "Open on Instagram",
+        openInNewTab: "Open in new tab",
+        statusNeedLink: "Paste a link first.",
+        statusInvalidLink: "This does not look like a valid link.",
+        statusYouTubeLoaded: "YouTube link loaded.",
+        statusYouTubeBad: "Could not interpret the YouTube link.",
+        statusPlaylistLoaded: "YouTube playlist loaded.",
+        statusTikTokTry: "Trying to load the TikTok video as an embed.",
+        statusTikTokBad: "Could not extract a video ID from the TikTok link.",
+        statusFacebookTry: "Trying to load the Facebook video or Reel as an embed.",
+        statusInstagramOpen: "The Instagram link opens separately.",
+        statusExternalOpen: "This link can be opened separately.",
+        statusHistoryCleared: "History has been cleared.",
+        statusSharedLoaded: "Shared link received.",
+        statusSharedTextLoaded: "Link received from shared text."
       }
+    };
 
-      // 2. TikTok
-      else if (url.includes("tiktok.com")) {
-        const vId = url.split("/video/")[1]?.split("?")[0] || url.split("/").pop().split("?")[0];
-        embedUrl = `https://www.tiktok.com/embed/v2/${vId}`;
-        isPortrait = true;
-      }
+    function t(key) {
+      return I18N[LANG][key] || key;
+    }
 
-      // 3. Facebook Reels & Video
-      else if (url.includes("facebook.com") || url.includes("fb.watch")) {
-        // Facebooknál az eredeti URL-t kell kódolni az embedhez
-        embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0&autoplay=1`;
-        if (url.includes("reels") || url.includes("fb.watch")) isPortrait = true;
-      }
+    function setLanguage(lang) {
+      if (lang !== "hu" && lang !== "en") return;
+      LANG = lang;
+      localStorage.setItem(LANG_KEY, lang);
+      applyTranslations();
+      resetPlayer();
+      renderHistory();
+      updateCounterText();
+      updateLangButtons();
+    }
 
-      // --- MEGJELENÍTÉS ---
+    function updateLangButtons() {
+      langHuBtn.classList.toggle("active", LANG === "hu");
+      langEnBtn.classList.toggle("active", LANG === "en");
+    }
 
-      if (embedUrl) {
-        card.style.display = "block";
-        status.textContent = "Felismerve: " + (isPortrait ? "Álló videó" : "Fekvő videó");
-        
-        // Portré mód kezelése
-        if (isPortrait) wrapper.classList.add("portrait");
-        else wrapper.classList.remove("portrait");
+    function applyTranslations() {
+      document.documentElement.lang = LANG;
+      document.title = t("pageTitle");
+      document.querySelector('meta[name="description"]').setAttribute("content", t("pageDescription"));
 
-        playerDiv.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+      document.getElementById("brandText").textContent = t("brand");
+      document.getElementById("taglineText").textContent = t("tagline");
+      document.getElementById("inputTitle").textContent = t("inputTitle");
+      document.getElementById("inputDesc").textContent = t("inputDesc");
+      document.getElementById("videoLabel").textContent = t("videoLabel");
+      document.getElementById("playBtnText").textContent = t("play");
+      document.getElementById("helperText").textContent = t("helper");
+      document.getElementById("playerTitle").textContent = t("playerTitle");
+      document.getElementById("playerDesc").textContent = t("playerDesc");
+      document.getElementById("historyTitle").textContent = t("historyTitle");
+      document.getElementById("historyDesc").textContent = t("historyDesc");
+      document.getElementById("clearHistoryBtn").textContent = t("clearHistory");
+      videoURL.placeholder = t("videoPlaceholder");
+    }
+
+    let currentViewCount = null;
+
+    function updateCounterText() {
+      if (currentViewCount === null) {
+        viewCounter.textContent = `${t("counterLabel")}: ...`;
+      } else if (currentViewCount === "unavailable") {
+        viewCounter.textContent = t("counterUnavailable");
       } else {
-        status.textContent = "Nem támogatott link formátum.";
+        viewCounter.textContent = `${t("counterLabel")}: ${currentViewCount}`;
       }
+    }
+
+    function incrementViewCounter() {
+      fetch("https://api.counterapi.dev/v1/idesussapp/views/up")
+        .then(res => res.json())
+        .then(data => {
+          currentViewCount = data.count;
+          updateCounterText();
+        })
+        .catch(() => {
+          currentViewCount = "unavailable";
+          updateCounterText();
+        });
+    }
+
+    function setStatus(text = "", type = "") {
+      statusBox.textContent = text;
+      statusBox.className = "status" + (type ? " " + type : "");
+    }
+
+    function escapeHtml(text = "") {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function resetPlayer() {
+      player.innerHTML = `<div class="player-empty">${t("playerEmpty")}</div>`;
+    }
+
+    function showFallback(url, platformName, buttonText) {
+      player.innerHTML = `
+        <div class="player-fallback">
+          <strong>${escapeHtml(platformName)}</strong>
+          ${escapeHtml(t("fallbackBlocked"))}
+          <br>
+          <a class="open-btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(buttonText)}</a>
+        </div>
+      `;
+    }
+
+    function isValidUrl(text) {
+      try {
+        const parsed = new URL(text);
+        return parsed.protocol === "http:" || parsed.protocol === "https:";
+      } catch {
+        return false;
+      }
+    }
+
+    function getYouTubeVideoId(url) {
+      try {
+        const u = new URL(url);
+
+        if (u.hostname.includes("youtu.be")) return u.pathname.replace("/", "").trim() || null;
+
+        if (u.hostname.includes("youtube.com")) {
+          if (u.pathname === "/watch") return u.searchParams.get("v");
+          if (u.pathname.startsWith("/shorts/")) return u.pathname.split("/shorts/")[1]?.split("/")[0] || null;
+          if (u.pathname.startsWith("/embed/")) return u.pathname.split("/embed/")[1]?.split("/")[0] || null;
+        }
+      } catch {}
+      return null;
+    }
+
+    function getYouTubePlaylistId(url) {
+      try {
+        const u = new URL(url);
+        return u.searchParams.get("list");
+      } catch {}
+      return null;
+    }
+
+    function isYouTubePlaylistUrl(url) {
+      try {
+        const u = new URL(url);
+        const hostOk = u.hostname.includes("youtube.com") || u.hostname.includes("youtu.be");
+        const list = u.searchParams.get("list");
+        return hostOk && !!list;
+      } catch {
+        return false;
+      }
+    }
+
+    function getYouTubeEmbedUrl(url) {
+      const id = getYouTubeVideoId(url);
+      return id ? "https://www.youtube.com/embed/" + id : null;
+    }
+
+    function getYouTubePlaylistEmbedUrl(url) {
+      const listId = getYouTubePlaylistId(url);
+      if (!listId) return null;
+
+      const videoId = getYouTubeVideoId(url);
+
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?list=${encodeURIComponent(listId)}`;
+      }
+
+      return `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(listId)}`;
+    }
+
+    function getYouTubeThumbnail(url) {
+      const id = getYouTubeVideoId(url);
+      return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+    }
+
+    function getTikTokVideoId(url) {
+      try {
+        const u = new URL(url);
+        const match = u.pathname.match(/\/video\/(\d+)/);
+        return match ? match[1] : null;
+      } catch {}
+      return null;
+    }
+
+    function getTikTokEmbedUrl(url) {
+      const id = getTikTokVideoId(url);
+      return id ? `https://www.tiktok.com/player/v1/${id}` : null;
+    }
+
+    function getFacebookEmbedUrl(url) {
+      return "https://www.facebook.com/plugins/video.php?href=" + encodeURIComponent(url) + "&show_text=false&width=560";
+    }
+
+    function detectPlatform(url) {
+      const lower = url.toLowerCase();
+      if (lower.includes("youtube.com") || lower.includes("youtu.be")) return "youtube";
+      if (lower.includes("facebook.com") || lower.includes("fb.watch")) return "facebook";
+      if (lower.includes("instagram.com")) return "instagram";
+      if (lower.includes("tiktok.com")) return "tiktok";
+      return "other";
+    }
+
+    function getPlatformLabel(platform) {
+      switch (platform) {
+        case "youtube": return t("platformYoutube");
+        case "facebook": return t("platformFacebook");
+        case "instagram": return t("platformInstagram");
+        case "tiktok": return t("platformTiktok");
+        default: return t("platformLink");
+      }
+    }
+
+    function shortenUrl(url, max = 72) {
+      if (url.length <= max) return url;
+      return url.slice(0, max - 1) + "…";
+    }
+
+    function getHistory() {
+      try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function setHistory(items) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
+    }
+
+    function saveToHistory(url) {
+      const platform = detectPlatform(url);
+      const thumbnail = platform === "youtube" ? getYouTubeThumbnail(url) : null;
+
+      let items = getHistory().filter(item => item.url !== url);
+
+      items.unshift({
+        url,
+        platform,
+        thumbnail,
+        createdAt: new Date().toISOString()
+      });
+
+      if (items.length > HISTORY_LIMIT) items = items.slice(0, HISTORY_LIMIT);
+
+      setHistory(items);
+      renderHistory();
+    }
+
+    function deleteHistoryItem(index) {
+      const items = getHistory();
+      items.splice(index, 1);
+      setHistory(items);
+      renderHistory();
+    }
+
+    function clearHistory() {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+      setStatus(t("statusHistoryCleared"), "info");
+    }
+
+    function formatDate(iso) {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleString(LANG === "hu" ? "hu-HU" : "en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return "";
+      }
+    }
+
+    function getPreviewMarkup(item) {
+      const platformLabel = getPlatformLabel(item.platform);
+
+      if (item.thumbnail) {
+        return `
+          <div class="history-thumb-wrap">
+            <span class="history-platform-badge">${escapeHtml(platformLabel)}</span>
+            <img class="history-thumb" src="${escapeHtml(item.thumbnail)}" alt="${escapeHtml(platformLabel)} preview" loading="lazy" />
+          </div>
+        `;
+      }
+
+      return `
+        <div class="history-thumb-wrap">
+          <span class="history-platform-badge">${escapeHtml(platformLabel)}</span>
+          <div class="history-thumb-fallback">
+            ${escapeHtml(platformLabel)}<br>preview
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHistory() {
+      const items = getHistory();
+
+      if (!items.length) {
+        historyList.innerHTML = `<div class="history-empty">${t("historyEmpty")}</div>`;
+        return;
+      }
+
+      historyList.innerHTML = items.map((item, index) => `
+        <article class="history-item">
+          ${getPreviewMarkup(item)}
+          <div class="history-body">
+            <button class="history-link" type="button" onclick="openFromHistory(${index})">
+              ${escapeHtml(getPlatformLabel(item.platform))}
+            </button>
+
+            <div class="history-url">${escapeHtml(shortenUrl(item.url))}</div>
+            <div class="history-url">${escapeHtml(t("savedAt"))}: ${escapeHtml(formatDate(item.createdAt))}</div>
+
+            <div class="history-actions">
+              <button class="mini-btn mini-open" type="button" onclick="openFromHistory(${index})">
+                ${escapeHtml(t("open"))}
+              </button>
+              <button class="mini-btn mini-delete" type="button" onclick="deleteHistoryItem(${index})">
+                ${escapeHtml(t("delete"))}
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function loadVideo() {
+      const url = videoURL.value.trim();
+
+      if (!url) {
+        setStatus(t("statusNeedLink"), "error");
+        return;
+      }
+
+      if (!isValidUrl(url)) {
+        setStatus(t("statusInvalidLink"), "error");
+        return;
+      }
+
+      const platform = detectPlatform(url);
+
+      if (platform === "youtube") {
+        if (isYouTubePlaylistUrl(url)) {
+          const playlistEmbed = getYouTubePlaylistEmbedUrl(url);
+
+          if (playlistEmbed) {
+            player.innerHTML = `
+              <iframe
+                src="${escapeHtml(playlistEmbed)}"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                allowfullscreen
+                referrerpolicy="strict-origin-when-cross-origin"
+                loading="lazy">
+              </iframe>
+            `;
+            saveToHistory(url);
+            setStatus(t("statusPlaylistLoaded"), "success");
+            return;
+          }
+        }
+
+        const ytEmbed = getYouTubeEmbedUrl(url);
+
+        if (ytEmbed) {
+          player.innerHTML = `
+            <iframe
+              src="${escapeHtml(ytEmbed)}"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+              loading="lazy">
+            </iframe>
+          `;
+          saveToHistory(url);
+          setStatus(t("statusYouTubeLoaded"), "success");
+          return;
+        }
+
+        setStatus(t("statusYouTubeBad"), "error");
+        return;
+      }
+
+      if (platform === "tiktok") {
+        const ttEmbed = getTikTokEmbedUrl(url);
+
+        if (ttEmbed) {
+          player.innerHTML = `
+            <iframe
+              src="${escapeHtml(ttEmbed)}"
+              allow="fullscreen"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+              loading="lazy">
+            </iframe>
+          `;
+          saveToHistory(url);
+          setStatus(t("statusTikTokTry"), "info");
+          return;
+        }
+
+        showFallback(url, t("platformTiktok"), t("openOnTikTok"));
+        saveToHistory(url);
+        setStatus(t("statusTikTokBad"), "error");
+        return;
+      }
+
+      if (platform === "facebook") {
+        const fbEmbed = getFacebookEmbedUrl(url);
+
+        player.innerHTML = `
+          <iframe
+            src="${escapeHtml(fbEmbed)}"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+            loading="lazy">
+          </iframe>
+        `;
+        saveToHistory(url);
+        setStatus(t("statusFacebookTry"), "info");
+        return;
+      }
+
+      if (platform === "instagram") {
+        showFallback(url, t("platformInstagram"), t("openOnInstagram"));
+        saveToHistory(url);
+        setStatus(t("statusInstagramOpen"), "info");
+        return;
+      }
+
+      showFallback(url, t("platformLink"), t("openInNewTab"));
+      saveToHistory(url);
+      setStatus(t("statusExternalOpen"), "info");
+    }
+
+    function openFromHistory(index) {
+      const items = getHistory();
+      const item = items[index];
+      if (!item || !item.url) return;
+
+      videoURL.value = item.url;
+      loadVideo();
+    }
+
+    function loadSharedTargetData() {
+      const params = new URLSearchParams(window.location.search);
+
+      const sharedUrl = params.get("url");
+      const sharedText = params.get("text");
+      const sharedTitle = params.get("title");
+
+      if (sharedUrl && isValidUrl(sharedUrl)) {
+        videoURL.value = sharedUrl;
+        loadVideo();
+        setStatus(t("statusSharedLoaded"), "success");
+        return;
+      }
+
+      if (sharedText && isValidUrl(sharedText.trim())) {
+        videoURL.value = sharedText.trim();
+        loadVideo();
+        setStatus(t("statusSharedTextLoaded"), "success");
+        return;
+      }
+
+      if (sharedTitle && isValidUrl(sharedTitle.trim())) {
+        videoURL.value = sharedTitle.trim();
+        loadVideo();
+        setStatus(t("statusSharedTextLoaded"), "success");
+      }
+    }
+
+    applyTranslations();
+    updateLangButtons();
+    resetPlayer();
+    renderHistory();
+    updateCounterText();
+    incrementViewCounter();
+    loadSharedTargetData();
+
+    playBtn.addEventListener("click", loadVideo);
+    clearHistoryBtn.addEventListener("click", clearHistory);
+
+    langHuBtn.addEventListener("click", () => setLanguage("hu"));
+    langEnBtn.addEventListener("click", () => setLanguage("en"));
+
+    window.openFromHistory = openFromHistory;
+    window.deleteHistoryItem = deleteHistoryItem;
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator && location.protocol === "https:") {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch(() => {});
+      });
     }
   </script>
 </body>
