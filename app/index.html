@@ -3,190 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Idesüss App - Pro</title>
+    <title>Idesüss</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0f172a">
-
     <style>
         :root {
-            --bg1: #08111f; --bg2: #0f172a;
-            --panel: rgba(255, 255, 255, 0.05);
-            --panel-border: rgba(255, 255, 255, 0.08);
-            --text: #eef4ff; --muted: #a4b1c8;
-            --accent: linear-gradient(135deg, #38bdf8, #0ea5e9);
-            --danger: #cf4a4a;
-            --safe-top: env(safe-area-inset-top, 0px);
+            --bg: #0f172a; --card: rgba(30, 41, 59, 0.7);
+            --accent: #0ea5e9; --text: #f8fafc;
         }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body {
-            margin: 0; padding: 0; width: 100%; min-height: 100%;
-            background: linear-gradient(155deg, var(--bg1), var(--bg2));
-            color: var(--text); font-family: -apple-system, system-ui, sans-serif;
-            overflow-x: hidden;
+        body {
+            margin: 0; padding: 20px; background: var(--bg);
+            color: var(--text); font-family: -apple-system, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
         }
-
-        body { padding: calc(20px + var(--safe-top)) 15px 40px; }
-
-        .app-shell { max-width: 760px; margin: 0 auto; }
-
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .brand h1 { font-size: 1.6rem; margin: 0; font-weight: 800; }
-        
-        .lang-switch { background: var(--panel); border-radius: 12px; padding: 4px; display: flex; gap: 4px; }
-        .lang-btn { border: none; background: none; color: var(--muted); padding: 6px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-        .lang-btn.active { background: var(--accent); color: white; }
-
+        .app { width: 100%; max-width: 400px; }
         .card {
-            background: var(--panel); border: 1px solid var(--panel-border);
-            border-radius: 24px; padding: 20px; margin-bottom: 16px; backdrop-filter: blur(10px);
+            background: var(--card); border-radius: 24px;
+            padding: 20px; border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-
+        h1 { font-size: 24px; text-align: center; margin-bottom: 20px; }
         textarea {
-            width: 100%; min-height: 100px; background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
-            color: white; padding: 15px; font-size: 1rem; outline: none; resize: none;
+            width: 100%; height: 100px; background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 16px;
+            color: white; padding: 12px; font-size: 16px; box-sizing: border-box;
         }
-
-        .btn-play {
-            width: 100%; padding: 18px; margin-top: 15px; border: none;
-            border-radius: 16px; background: var(--accent); color: white;
-            font-weight: 800; font-size: 1.1rem; cursor: pointer;
+        .btn {
+            width: 100%; background: var(--accent); color: white;
+            border: none; padding: 18px; border-radius: 16px;
+            font-size: 18px; font-weight: bold; margin-top: 15px;
+            cursor: pointer; -webkit-appearance: none;
         }
-
-        .player-shell {
-            width: 100%; aspect-ratio: 16/9; background: #000;
-            border-radius: 20px; overflow: hidden; position: relative;
-        }
-        .player-shell.portrait { aspect-ratio: 9/16; max-width: 340px; margin: 0 auto; }
-        iframe { position: absolute; top:0; left:0; width:100%; height:100%; border:none; }
-
-        .history-item {
-            display: flex; align-items: center; justify-content: space-between;
-            background: rgba(255,255,255,0.03); padding: 12px 15px;
-            border-radius: 14px; margin-bottom: 8px; font-size: 0.85rem;
-        }
-        .history-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; color: #38bdf8; cursor: pointer; }
-        .btn-del { background: none; border: none; color: var(--danger); font-weight: bold; margin-left: 10px; cursor: pointer; }
-
-        #status { text-align: center; margin-top: 10px; font-size: 0.9rem; font-weight: 500; }
+        .btn:active { opacity: 0.8; transform: scale(0.98); }
+        #status { margin-top: 15px; text-align: center; font-size: 14px; min-height: 20px; color: var(--accent); }
+        .history { margin-top: 20px; width: 100%; font-size: 14px; opacity: 0.7; }
+        .hist-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; margin-bottom: 5px; word-break: break-all; }
     </style>
 </head>
 <body>
 
-<div class="app-shell">
-    <header class="header">
-        <div class="brand"><h1>Idesüss</h1></div>
-        <div class="lang-switch">
-            <button class="lang-btn active" id="hu-btn" onclick="toggleLang('hu')">HU</button>
-            <button class="lang-btn" id="en-btn" onclick="toggleLang('en')">EN</button>
-        </div>
-    </header>
-
+<div class="app">
+    <h1>Idesüss</h1>
     <div class="card">
-        <textarea id="videoURL" placeholder="YouTube link vagy közösségi média videó..."></textarea>
-        <button class="btn-play" onclick="smartLaunch()">Lejátszás</button>
+        <textarea id="urlInput" placeholder="Másold be a linket ide..."></textarea>
+        <button id="goBtn" class="btn">INDÍTÁS</button>
         <div id="status"></div>
     </div>
-
-    <div id="playerCard" class="card" style="display:none;">
-        <div id="pShell" class="player-shell">
-            <div id="pTarget"></div>
-        </div>
-    </div>
-
-    <div class="card">
-        <h3 style="margin-top:0;">Előzmények</h3>
-        <div id="historyBox"></div>
-    </div>
+    <div id="history" class="history"></div>
 </div>
 
 <script>
-    const lang = {
-        hu: { loading: "Indítás...", error: "Hoppá! Nem ismerhető fel a link.", external: "Ugrás a videóhoz (Biztonságos ablak)..." },
-        en: { loading: "Starting...", error: "Oops! URL not recognized.", external: "Opening video (Safe window)..." }
-    };
-    let currentLang = 'hu';
+    // Új típusú eseménykezelés, ami iPhone-on stabilabb
+    document.getElementById('goBtn').addEventListener('click', function() {
+        const input = document.getElementById('urlInput');
+        const status = document.getElementById('status');
+        const url = input.value.trim();
 
-    function toggleLang(l) {
-        currentLang = l;
-        document.getElementById('hu-btn').classList.toggle('active', l==='hu');
-        document.getElementById('en-btn').classList.toggle('active', l==='en');
-    }
-
-    function smartLaunch() {
-    const urlInput = document.getElementById('videoURL');
-    const url = urlInput.value.trim();
-    const status = document.getElementById('status');
-    const pCard = document.getElementById('playerCard');
-    const pTarget = document.getElementById('pTarget');
-
-    if(!url) return;
-
-    // YouTube maradhat beágyazva
-    if (url.includes("youtube.com") || url.includes("youtu.be")) {
-        status.innerText = lang[currentLang].loading;
-        let vId = url.includes("shorts/") ? url.split("shorts/")[1].split(/[?&]/)[0] : 
-                 (url.includes("v=") ? url.split("v=")[1].split("&")[0] : url.split("/").pop().split(/[?&]/)[0]);
-        
-        pCard.style.display = "block";
-        pTarget.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${vId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        saveHistory(url);
-        status.innerText = "";
-    } 
-    // FACEBOOK és TIKTOK - Itt a javítás!
-    else if (url.includes("facebook.com") || url.includes("fb.watch") || url.includes("tiktok.com") || url.includes("instagram.com")) {
-        status.style.color = "#38bdf8";
-        status.innerText = lang[currentLang].external;
-        
-        // ELŐZMÉNY MENTÉSE AZONNAL
-        saveHistory(url);
-
-        // ABLAK NYITÁSA AZONNAL (A Safari így engedi át)
-        const win = window.open(url, '_blank');
-        
-        // Ha mégis blokkolná a böngésző, teszünk ki egy kattintható linket mentőövnek
-        if (!win) {
-            status.innerHTML = `<a href="${url}" target="_blank" style="color:#0ea5e9; text-decoration:underline;">Kattints ide a videó megnyitásához</a> (A böngésződ blokkolta az automata nyitást)`;
-        } else {
-            // Ha sikerült, 2 másodperc múlva ürítsük ki a szövegdobozt
-            setTimeout(() => { urlInput.value = ""; status.innerText = ""; }, 2000);
+        if (!url) {
+            status.innerText = "Hiba: Üres mező!";
+            return;
         }
-    } else {
-        status.style.color = "var(--danger)";
-        status.innerText = lang[currentLang].error;
-    }
-}
 
+        status.innerText = "Indítás...";
 
-    function saveHistory(url) {
-        let h = JSON.parse(localStorage.getItem('ides_hist') || '[]');
+        // 1. YouTube Shorts és sima YT kezelése (Beágyazva)
+        if (url.includes("youtube.com") || url.includes("youtu.be")) {
+            status.innerText = "YouTube betöltése...";
+            let vId = "";
+            if (url.includes("shorts/")) {
+                vId = url.split("shorts/")[1].split(/[?&]/)[0];
+            } else if (url.includes("v=")) {
+                vId = url.split("v=")[1].split("&")[0];
+            } else {
+                vId = url.split("/").pop().split(/[?&]/)[0];
+            }
+            
+            // Itt nem ablakot nyitunk, hanem lecseréljük a tartalmat, hogy benne maradjon
+            const embedUrl = "https://www.youtube-nocookie.com/embed/" + vId + "?autoplay=1";
+            document.querySelector('.card').innerHTML = '<iframe src="' + embedUrl + '" style="width:100%; aspect-ratio:9/16; border-radius:16px; border:none;" allowfullscreen allow="autoplay"></iframe><button onclick="window.location.reload()" class="btn">VISSZA</button>';
+            saveToHistory(url);
+            return;
+        }
+
+        // 2. Facebook, TikTok, Instagram (Közvetlen nyitás)
+        if (url.includes("facebook.com") || url.includes("fb.watch") || url.includes("tiktok.com") || url.includes("instagram.com")) {
+            saveToHistory(url);
+            
+            // FONTOS: Azonnali ablaknyitás Safarihoz
+            const newTab = window.open(url, '_blank');
+            
+            if (!newTab) {
+                status.innerHTML = "Blokkolva! <br><a href='"+url+"' target='_blank' style='color:white; font-weight:bold;'>KATTINTS IDE A NYITÁSHOZ</a>";
+            } else {
+                status.innerText = "Sikeres nyitás!";
+                input.value = "";
+            }
+        } else {
+            status.innerText = "Ismeretlen link. Próbálom megnyitni...";
+            window.open(url, '_blank');
+        }
+    });
+
+    function saveToHistory(url) {
+        let h = JSON.parse(localStorage.getItem('ides_h') || '[]');
         if(!h.includes(url)) {
             h.unshift(url);
             if(h.length > 5) h.pop();
-            localStorage.setItem('ides_hist', JSON.stringify(h));
+            localStorage.setItem('ides_h', JSON.stringify(h));
             renderHistory();
         }
     }
 
     function renderHistory() {
-        const box = document.getElementById('historyBox');
-        const h = JSON.parse(localStorage.getItem('ides_hist') || '[]');
-        box.innerHTML = h.map(u => `
-            <div class="history-item">
-                <span class="history-url" onclick="document.getElementById('videoURL').value='${u}'; smartLaunch();">${u}</span>
-                <button class="btn-del" onclick="deleteItem('${u}')">✕</button>
-            </div>
-        `).join('');
+        const box = document.getElementById('history');
+        const h = JSON.parse(localStorage.getItem('ides_h') || '[]');
+        if(h.length > 0) {
+            box.innerHTML = '<b>Előzmények:</b>' + h.map(u => '<div class="hist-item">' + u + '</div>').join('');
+        }
     }
-
-    function deleteItem(u) {
-        let h = JSON.parse(localStorage.getItem('ides_hist') || '[]');
-        localStorage.setItem('ides_hist', JSON.stringify(h.filter(x => x !== u)));
-        renderHistory();
-    }
-
     renderHistory();
 </script>
 
