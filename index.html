@@ -70,54 +70,77 @@
 
       if (!url) return;
 
-      let embedUrl = "";
-      let isPortrait = false;
+      <script>
+      function handleSmartPlay() {
+  const urlInput = document.getElementById("videoURL").value.trim();
+  const playerDiv = document.getElementById("player");
+  const wrapper = document.getElementById("playerWrapper");
+  const card = document.getElementById("playerCard");
+  const status = document.getElementById("status");
 
-      // --- LOGIKA ---
+  if (!urlInput) return;
 
-      // 1. YouTube & Shorts
-      if (url.includes("youtube.com") || url.includes("youtu.be")) {
-        let vId = "";
-        if (url.includes("shorts/")) {
-          vId = url.split("shorts/")[1].split("?")[0];
-          isPortrait = true;
-        } else if (url.includes("v=")) {
-          vId = url.split("v=")[1].split("&")[0];
-        } else {
-          vId = url.split("/").pop();
-        }
-        embedUrl = `https://www.youtube.com/embed/${vId}?autoplay=1`;
-      }
+  let embedUrl = "";
+  let isPortrait = false;
 
-      // 2. TikTok
-      else if (url.includes("tiktok.com")) {
-        const vId = url.split("/video/")[1]?.split("?")[0] || url.split("/").pop().split("?")[0];
-        embedUrl = `https://www.tiktok.com/embed/v2/${vId}`;
-        isPortrait = true;
-      }
-
-      // 3. Facebook Reels & Video
-      else if (url.includes("facebook.com") || url.includes("fb.watch")) {
-        // Facebooknál az eredeti URL-t kell kódolni az embedhez
-        embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0&autoplay=1`;
-        if (url.includes("reels") || url.includes("fb.watch")) isPortrait = true;
-      }
-
-      // --- MEGJELENÍTÉS ---
-
-      if (embedUrl) {
-        card.style.display = "block";
-        status.textContent = "Felismerve: " + (isPortrait ? "Álló videó" : "Fekvő videó");
-        
-        // Portré mód kezelése
-        if (isPortrait) wrapper.classList.add("portrait");
-        else wrapper.classList.remove("portrait");
-
-        playerDiv.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
-      } else {
-        status.textContent = "Nem támogatott link formátum.";
-      }
+  // 1. YouTube & Shorts (Marad a régi, mert jól működik)
+  if (urlInput.includes("youtube.com") || urlInput.includes("youtu.be")) {
+    let vId = "";
+    if (urlInput.includes("shorts/")) {
+      vId = urlInput.split("shorts/")[1].split(/[?&]/)[0];
+      isPortrait = true;
+    } else if (urlInput.includes("v=")) {
+      vId = urlInput.split("v=")[1].split("&")[0];
+    } else {
+      vId = urlInput.split("/").pop().split(/[?&]/)[0];
     }
+    embedUrl = `https://www.youtube.com/embed/${vId}?autoplay=1`;
+  }
+
+  // 2. TikTok (Marad a régi)
+  else if (urlInput.includes("tiktok.com")) {
+    const vId = urlInput.split("/video/")[1]?.split(/[?&]/)[0] || urlInput.split("/").pop().split(/[?&]/)[0];
+    embedUrl = `https://www.tiktok.com/embed/v2/${vId}`;
+    isPortrait = true;
+  }
+
+  // 3. JAVÍTOTT Facebook & Reels felismerő
+  else if (urlInput.includes("facebook.com") || urlInput.includes("fb.watch") || urlInput.includes("fb.com")) {
+    // Minden sallangot levágunk a link végéről, csak az alap URL kell
+    let cleanFbUrl = urlInput.split(/[?&]mibextid/)[0]; // Eltávolítja a Facebook követő kódját
+    
+    // Facebook beágyazó plugin hívása
+    embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(cleanFbUrl)}&show_text=0&width=500&autoplay=1`;
+    
+    // Ha a linkben benne van a "reels", akkor álló formátumot kényszerítünk
+    if (urlInput.includes("reels") || urlInput.includes("fb.watch")) {
+      isPortrait = true;
+    }
+  }
+
+  // Megjelenítés
+  if (embedUrl) {
+    card.style.display = "block";
+    status.textContent = "Betöltés...";
+    
+    if (isPortrait) wrapper.classList.add("portrait");
+    else wrapper.classList.remove("portrait");
+
+    // iPhone-on az iframe-nek néha kell egy kis "erőszak", hogy betöltsön
+    playerDiv.innerHTML = `<iframe 
+        src="${embedUrl}" 
+        scrolling="no" 
+        frameborder="0" 
+        allowfullscreen="true" 
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+    </iframe>`;
+    
+    setTimeout(() => { status.textContent = "Kész!"; }, 1500);
+  } else {
+    status.textContent = "Nem támogatott vagy hibás link.";
+  }
+}
+
   </script>
 </body>
 </html>
