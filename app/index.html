@@ -116,43 +116,49 @@
     }
 
     function smartLaunch() {
-        const url = document.getElementById('videoURL').value.trim();
-        const status = document.getElementById('status');
-        const pCard = document.getElementById('playerCard');
-        const pTarget = document.getElementById('pTarget');
-        const pShell = document.getElementById('pShell');
+    const urlInput = document.getElementById('videoURL');
+    const url = urlInput.value.trim();
+    const status = document.getElementById('status');
+    const pCard = document.getElementById('playerCard');
+    const pTarget = document.getElementById('pTarget');
 
-        if(!url) return;
-        status.style.color = "var(--muted)";
+    if(!url) return;
+
+    // YouTube maradhat beágyazva
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
         status.innerText = lang[currentLang].loading;
+        let vId = url.includes("shorts/") ? url.split("shorts/")[1].split(/[?&]/)[0] : 
+                 (url.includes("v=") ? url.split("v=")[1].split("&")[0] : url.split("/").pop().split(/[?&]/)[0]);
+        
+        pCard.style.display = "block";
+        pTarget.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${vId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        saveHistory(url);
+        status.innerText = "";
+    } 
+    // FACEBOOK és TIKTOK - Itt a javítás!
+    else if (url.includes("facebook.com") || url.includes("fb.watch") || url.includes("tiktok.com") || url.includes("instagram.com")) {
+        status.style.color = "#38bdf8";
+        status.innerText = lang[currentLang].external;
+        
+        // ELŐZMÉNY MENTÉSE AZONNAL
+        saveHistory(url);
 
-        // 1. YOUTUBE (Belső lejátszás)
-        if (url.includes("youtube.com") || url.includes("youtu.be")) {
-            let vId = url.includes("shorts/") ? url.split("shorts/")[1].split(/[?&]/)[0] : 
-                     (url.includes("v=") ? url.split("v=")[1].split("&")[0] : url.split("/").pop().split(/[?&]/)[0]);
-            
-            pCard.style.display = "block";
-            pShell.className = url.includes("shorts/") ? "player-shell portrait" : "player-shell";
-            pTarget.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${vId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            status.innerText = "";
-            saveHistory(url);
-            pCard.scrollIntoView({behavior: 'smooth'});
-        } 
-        // 2. FACEBOOK / TIKTOK / EGYÉB (Külső ablakos megoldás)
-        else if (url.includes("facebook.com") || url.includes("fb.watch") || url.includes("tiktok.com") || url.includes("instagram.com")) {
-            status.style.color = "#38bdf8";
-            status.innerText = lang[currentLang].external;
-            pCard.style.display = "none";
-            
-            saveHistory(url);
-            setTimeout(() => {
-                window.open(url, '_blank');
-            }, 600);
+        // ABLAK NYITÁSA AZONNAL (A Safari így engedi át)
+        const win = window.open(url, '_blank');
+        
+        // Ha mégis blokkolná a böngésző, teszünk ki egy kattintható linket mentőövnek
+        if (!win) {
+            status.innerHTML = `<a href="${url}" target="_blank" style="color:#0ea5e9; text-decoration:underline;">Kattints ide a videó megnyitásához</a> (A böngésződ blokkolta az automata nyitást)`;
         } else {
-            status.style.color = "var(--danger)";
-            status.innerText = lang[currentLang].error;
+            // Ha sikerült, 2 másodperc múlva ürítsük ki a szövegdobozt
+            setTimeout(() => { urlInput.value = ""; status.innerText = ""; }, 2000);
         }
+    } else {
+        status.style.color = "var(--danger)";
+        status.innerText = lang[currentLang].error;
     }
+}
+
 
     function saveHistory(url) {
         let h = JSON.parse(localStorage.getItem('ides_hist') || '[]');
