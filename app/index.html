@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Idesüss</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        :root {
+            --bg: #0f172a; --card: rgba(30, 41, 59, 0.7);
+            --accent: #0ea5e9; --text: #f8fafc;
+        }
+        body {
+            margin: 0; padding: 20px; background: var(--bg);
+            color: var(--text); font-family: -apple-system, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .app { width: 100%; max-width: 400px; }
+        .card {
+            background: var(--card); border-radius: 24px;
+            padding: 20px; border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        h1 { font-size: 24px; text-align: center; margin-bottom: 20px; }
+        textarea {
+            width: 100%; height: 100px; background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 16px;
+            color: white; padding: 12px; font-size: 16px; box-sizing: border-box;
+        }
+        .btn {
+            width: 100%; background: var(--accent); color: white;
+            border: none; padding: 18px; border-radius: 16px;
+            font-size: 18px; font-weight: bold; margin-top: 15px;
+            cursor: pointer; -webkit-appearance: none;
+        }
+        .btn:active { opacity: 0.8; transform: scale(0.98); }
+        #status { margin-top: 15px; text-align: center; font-size: 14px; min-height: 20px; color: var(--accent); }
+        .history { margin-top: 20px; width: 100%; font-size: 14px; opacity: 0.7; }
+        .hist-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; margin-bottom: 5px; word-break: break-all; }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <h1>Idesüss</h1>
+    <div class="card">
+        <textarea id="urlInput" placeholder="Másold be a linket ide..."></textarea>
+        <button id="goBtn" class="btn">INDÍTÁS</button>
+        <div id="status"></div>
+    </div>
+    <div id="history" class="history"></div>
+</div>
+
+<script>
+    // Új típusú eseménykezelés, ami iPhone-on stabilabb
+    document.getElementById('goBtn').addEventListener('click', function() {
+        const input = document.getElementById('urlInput');
+        const status = document.getElementById('status');
+        const url = input.value.trim();
+
+        if (!url) {
+            status.innerText = "Hiba: Üres mező!";
+            return;
+        }
+
+        status.innerText = "Indítás...";
+
+        // 1. YouTube Shorts és sima YT kezelése (Beágyazva)
+        if (url.includes("youtube.com") || url.includes("youtu.be")) {
+            status.innerText = "YouTube betöltése...";
+            let vId = "";
+            if (url.includes("shorts/")) {
+                vId = url.split("shorts/")[1].split(/[?&]/)[0];
+            } else if (url.includes("v=")) {
+                vId = url.split("v=")[1].split("&")[0];
+            } else {
+                vId = url.split("/").pop().split(/[?&]/)[0];
+            }
+            
+            // Itt nem ablakot nyitunk, hanem lecseréljük a tartalmat, hogy benne maradjon
+            const embedUrl = "https://www.youtube-nocookie.com/embed/" + vId + "?autoplay=1";
+            document.querySelector('.card').innerHTML = '<iframe src="' + embedUrl + '" style="width:100%; aspect-ratio:9/16; border-radius:16px; border:none;" allowfullscreen allow="autoplay"></iframe><button onclick="window.location.reload()" class="btn">VISSZA</button>';
+            saveToHistory(url);
+            return;
+        }
+
+        // 2. Facebook, TikTok, Instagram (Közvetlen nyitás)
+        if (url.includes("facebook.com") || url.includes("fb.watch") || url.includes("tiktok.com") || url.includes("instagram.com")) {
+            saveToHistory(url);
+            
+            // FONTOS: Azonnali ablaknyitás Safarihoz
+            const newTab = window.open(url, '_blank');
+            
+            if (!newTab) {
+                status.innerHTML = "Blokkolva! <br><a href='"+url+"' target='_blank' style='color:white; font-weight:bold;'>KATTINTS IDE A NYITÁSHOZ</a>";
+            } else {
+                status.innerText = "Sikeres nyitás!";
+                input.value = "";
+            }
+        } else {
+            status.innerText = "Ismeretlen link. Próbálom megnyitni...";
+            window.open(url, '_blank');
+        }
+    });
+
+    function saveToHistory(url) {
+        let h = JSON.parse(localStorage.getItem('ides_h') || '[]');
+        if(!h.includes(url)) {
+            h.unshift(url);
+            if(h.length > 5) h.pop();
+            localStorage.setItem('ides_h', JSON.stringify(h));
+            renderHistory();
+        }
+    }
+
+    function renderHistory() {
+        const box = document.getElementById('history');
+        const h = JSON.parse(localStorage.getItem('ides_h') || '[]');
+        if(h.length > 0) {
+            box.innerHTML = '<b>Előzmények:</b>' + h.map(u => '<div class="hist-item">' + u + '</div>').join('');
+        }
+    }
+    renderHistory();
+</script>
+
+</body>
+</html>
