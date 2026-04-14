@@ -552,7 +552,7 @@
 
         async function loadLanguage(lang) {
             try {
-                const response = await fetch(`lang/${lang}.json`, { cache: 'no-cache' });
+                const response = await fetch(`${lang}.json.txt`, { cache: 'no-cache' });
                 if (!response.ok) throw new Error(`Language file not found: ${lang}`);
                 dict = await response.json();
                 currentLang = lang;
