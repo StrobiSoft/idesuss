@@ -63,7 +63,7 @@
         .topbar {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
             margin-bottom: 14px;
         }
@@ -85,30 +85,42 @@
             color: var(--muted);
         }
 
-        .lang-switch {
-            display: inline-flex;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            padding: 4px;
-            gap: 4px;
-            backdrop-filter: blur(12px);
+        .lang-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
         }
 
-        .lang-btn {
-            border: none;
-            background: transparent;
+        .lang-label {
+            font-size: 11px;
             color: var(--muted);
-            padding: 8px 12px;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
         }
 
-        .lang-btn.active {
-            background: rgba(14,165,233,0.18);
+        .lang-select {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.06);
             color: #fff;
+            border-radius: 14px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 700;
+            backdrop-filter: blur(12px);
+            outline: none;
+            min-width: 150px;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, #cbd5e1 50%),
+                linear-gradient(135deg, #cbd5e1 50%, transparent 50%);
+            background-position:
+                calc(100% - 18px) calc(50% - 3px),
+                calc(100% - 12px) calc(50% - 3px);
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 34px;
         }
 
         .card {
@@ -238,7 +250,8 @@
         .play-btn:active,
         .secondary-btn:active,
         .history-link:active,
-        .hist-clear:active {
+        .hist-clear:active,
+        .back-btn:active {
             transform: scale(0.985);
         }
 
@@ -373,6 +386,34 @@
             line-height: 1.5;
             padding: 14px 8px 0;
         }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.40);
+            letter-spacing: 0.5px;
+            padding-bottom: 8px;
+        }
+
+        @media (max-width: 420px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .lang-area {
+                align-items: stretch;
+            }
+
+            .lang-select {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -383,9 +424,15 @@
                 <div class="brand-sub" id="brandSub">Watch without login</div>
             </div>
 
-            <div class="lang-switch" aria-label="Language switcher">
-                <button class="lang-btn" id="langHuBtn" type="button">HU</button>
-                <button class="lang-btn" id="langEnBtn" type="button">EN</button>
+            <div class="lang-area">
+                <div class="lang-label" id="languageMenuLabel">Language</div>
+                <select id="langSelect" class="lang-select" aria-label="Language selector">
+                    <option value="hu">Magyar</option>
+                    <option value="en">English</option>
+                    <option value="nl">Nederlands</option>
+                    <option value="ro">Română</option>
+                    <option value="pl">Polski</option>
+                </select>
             </div>
         </div>
 
@@ -444,6 +491,8 @@
             </div>
             <div id="historyList" class="history-list"></div>
         </div>
+
+        <div class="footer" id="footerText">Powered by StZoo</div>
     </div>
 
     <script>
@@ -454,75 +503,13 @@
             lastVisit: 'ides_last_visit_ts'
         };
 
-        const VISIT_COOLDOWN_MS = 12 * 60 * 60 * 1000; // 12 óra
-
-        const I18N = {
-            hu: {
-                brandSub: 'Nézd meg bejelentkezés nélkül',
-                counterLabel: 'Látogatások',
-                counterNote: 'A számláló nem nő minden frissítésre.',
-                langBoxLabel: 'Nyelv',
-                currentLangText: 'Automatikus felismerés',
-                langSubnote: 'Magyar böngésző → magyar felület, minden más → angol.',
-                heroInfo: 'Minimalista motor, erősebb köntösben.',
-                mainTitle: 'Link indítása',
-                mainSub: 'Másold be a videó linkjét, aztán indítsd el a lejátszást.',
-                textareaPlaceholder: 'Másold be a linket ide...',
-                playBtnText: 'INDÍTÁS',
-                pasteBtn: 'BEILLESZT',
-                backBtn: 'VISSZA',
-                historyTitle: 'Előzmények',
-                clearHistoryBtn: 'Törlés',
-                emptyField: 'Hiba: üres mező!',
-                starting: 'Indítás...',
-                ytLoading: 'YouTube betöltése...',
-                directOpen: 'Közvetlen megnyitás...',
-                successOpen: 'Sikeres nyitás!',
-                blockedOpen: 'Blokkolva! Kattints ide a nyitáshoz.',
-                unknownLink: 'Ismeretlen link. Próbálom megnyitni...',
-                emptyHistory: 'Még nincs előzmény.',
-                openAgain: 'Újranyitás',
-                historyCleared: 'Előzmények törölve.',
-                currentLangDisplay: 'Kézi vagy automatikus váltás',
-                pasteFail: 'A beillesztés nem sikerült.',
-                pasted: 'Link beillesztve.',
-                openLinkText: 'KATTINTS IDE A NYITÁSHOZ'
-            },
-            en: {
-                brandSub: 'Watch without login',
-                counterLabel: 'Visits',
-                counterNote: 'The counter does not increase on every refresh.',
-                langBoxLabel: 'Language',
-                currentLangText: 'Automatic detection',
-                langSubnote: 'Hungarian browser → Hungarian UI, everything else → English.',
-                heroInfo: 'Minimal engine, stronger skin.',
-                mainTitle: 'Open link',
-                mainSub: 'Paste the video link, then start playback.',
-                textareaPlaceholder: 'Paste the link here...',
-                playBtnText: 'PLAY',
-                pasteBtn: 'PASTE',
-                backBtn: 'BACK',
-                historyTitle: 'History',
-                clearHistoryBtn: 'Clear',
-                emptyField: 'Error: empty field!',
-                starting: 'Starting...',
-                ytLoading: 'Loading YouTube...',
-                directOpen: 'Opening directly...',
-                successOpen: 'Opened successfully!',
-                blockedOpen: 'Blocked! Click here to open it.',
-                unknownLink: 'Unknown link. Trying to open it...',
-                emptyHistory: 'No history yet.',
-                openAgain: 'Open again',
-                historyCleared: 'History cleared.',
-                currentLangDisplay: 'Manual or automatic switching',
-                pasteFail: 'Paste failed.',
-                pasted: 'Link pasted.',
-                openLinkText: 'CLICK HERE TO OPEN'
-            }
-        };
+        const VISIT_COOLDOWN_MS = 12 * 60 * 60 * 1000;
+        const SUPPORTED_LANGS = ['hu', 'en', 'nl', 'ro', 'pl'];
 
         const els = {
             brandSub: document.getElementById('brandSub'),
+            languageMenuLabel: document.getElementById('languageMenuLabel'),
+            langSelect: document.getElementById('langSelect'),
             counterLabel: document.getElementById('counterLabel'),
             counterNote: document.getElementById('counterNote'),
             langBoxLabel: document.getElementById('langBoxLabel'),
@@ -537,40 +524,62 @@
             backBtn: document.getElementById('backBtn'),
             historyTitle: document.getElementById('historyTitle'),
             clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+            footerText: document.getElementById('footerText'),
             status: document.getElementById('status'),
             historyList: document.getElementById('historyList'),
             visitCount: document.getElementById('visitCount'),
             playerCard: document.getElementById('playerCard'),
             inputCard: document.getElementById('inputCard'),
             ytFrame: document.getElementById('ytFrame'),
-            goBtn: document.getElementById('goBtn'),
-            langHuBtn: document.getElementById('langHuBtn'),
-            langEnBtn: document.getElementById('langEnBtn')
+            goBtn: document.getElementById('goBtn')
         };
 
         let currentLang = detectInitialLanguage();
+        let dict = {};
 
         function detectInitialLanguage() {
             const saved = localStorage.getItem(STORAGE_KEYS.lang);
-            if (saved === 'hu' || saved === 'en') return saved;
+            if (SUPPORTED_LANGS.includes(saved)) return saved;
 
             const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-            return browserLang.startsWith('hu') ? 'hu' : 'en';
+
+            if (browserLang.startsWith('hu')) return 'hu';
+            if (browserLang.startsWith('nl')) return 'nl';
+            if (browserLang.startsWith('ro')) return 'ro';
+            if (browserLang.startsWith('pl')) return 'pl';
+            return 'en';
+        }
+
+        async function loadLanguage(lang) {
+            try {
+                const response = await fetch(`lang/${lang}.json`, { cache: 'no-cache' });
+                if (!response.ok) throw new Error(`Language file not found: ${lang}`);
+                dict = await response.json();
+                currentLang = lang;
+                localStorage.setItem(STORAGE_KEYS.lang, lang);
+                els.langSelect.value = lang;
+                applyLanguage();
+            } catch (error) {
+                console.error(error);
+                if (lang !== 'en') {
+                    await loadLanguage('en');
+                }
+            }
         }
 
         function t(key) {
-            return I18N[currentLang][key] || key;
+            return dict[key] || key;
         }
 
-        function applyLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem(STORAGE_KEYS.lang, lang);
+        function applyLanguage() {
+            document.documentElement.lang = currentLang;
 
             els.brandSub.textContent = t('brandSub');
+            els.languageMenuLabel.textContent = t('languageMenuLabel');
             els.counterLabel.textContent = t('counterLabel');
             els.counterNote.textContent = t('counterNote');
             els.langBoxLabel.textContent = t('langBoxLabel');
-            els.currentLangText.textContent = t('currentLangDisplay');
+            els.currentLangText.textContent = t('currentLangText');
             els.langSubnote.textContent = t('langSubnote');
             els.heroInfo.textContent = t('heroInfo');
             els.mainTitle.textContent = t('mainTitle');
@@ -581,9 +590,7 @@
             els.backBtn.textContent = t('backBtn');
             els.historyTitle.textContent = t('historyTitle');
             els.clearHistoryBtn.textContent = t('clearHistoryBtn');
-
-            els.langHuBtn.classList.toggle('active', lang === 'hu');
-            els.langEnBtn.classList.toggle('active', lang === 'en');
+            els.footerText.textContent = t('footerText');
 
             renderHistory();
         }
@@ -627,7 +634,7 @@
             const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
 
             if (!history.length) {
-                els.historyList.innerHTML = '<div class="empty-note">' + t('emptyHistory') + '</div>';
+                els.historyList.innerHTML = `<div class="empty-note">${escapeHtml(t('emptyHistory'))}</div>`;
                 return;
             }
 
@@ -635,7 +642,7 @@
                 <div class="hist-item">
                     <div class="hist-url">${escapeHtml(url)}</div>
                     <button class="history-link" type="button" onclick="reopenHistoryItem('${encodeURIComponent(url)}')">
-                        ${t('openAgain')}
+                        ${escapeHtml(t('openAgain'))}
                     </button>
                 </div>
             `).join('');
@@ -648,12 +655,21 @@
         }
 
         function escapeHtml(str) {
-            return str
+            return String(str)
                 .replaceAll('&', '&amp;')
                 .replaceAll('<', '&lt;')
                 .replaceAll('>', '&gt;')
                 .replaceAll('"', '&quot;')
                 .replaceAll("'", '&#39;');
+        }
+
+        function escapeAttribute(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;');
         }
 
         function extractYouTubeId(url) {
@@ -690,10 +706,7 @@
 
             if (!newTab) {
                 setStatus(
-                    t('blockedOpen') +
-                    "<br><a href='" + escapeAttribute(url) + "' target='_blank' style='color:white;font-weight:800;'>" +
-                    t('openLinkText') +
-                    "</a>",
+                    `${escapeHtml(t('blockedOpen'))}<br><a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer" style="color:white;font-weight:800;">${escapeHtml(t('openLinkText'))}</a>`,
                     'error'
                 );
                 return;
@@ -701,10 +714,6 @@
 
             setStatus(t('successOpen'), 'ok');
             els.urlInput.value = '';
-        }
-
-        function escapeAttribute(str) {
-            return String(str).replaceAll("'", '&#39;').replaceAll('"', '&quot;');
         }
 
         function handleGo(urlOverride = null) {
@@ -773,12 +782,13 @@
         els.backBtn.addEventListener('click', hideYouTubePlayer);
         els.pasteBtn.addEventListener('click', pasteFromClipboard);
         els.clearHistoryBtn.addEventListener('click', clearHistory);
-        els.langHuBtn.addEventListener('click', () => applyLanguage('hu'));
-        els.langEnBtn.addEventListener('click', () => applyLanguage('en'));
+        els.langSelect.addEventListener('change', (event) => loadLanguage(event.target.value));
 
-        applyLanguage(currentLang);
-        updateVisitCounter();
-        renderHistory();
+        (async function init() {
+            updateVisitCounter();
+            await loadLanguage(currentLang);
+            renderHistory();
+        })();
     </script>
 </body>
 </html>
