@@ -1,128 +1,758 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Idesüss</title>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0f172a" />
+
     <style>
         :root {
-            --bg: #0f172a; --card: rgba(30, 41, 59, 0.7);
-            --accent: #0ea5e9; --text: #f8fafc;
+            --bg-1: #020617;
+            --bg-2: #0f172a;
+            --card: rgba(15, 23, 42, 0.72);
+            --line: rgba(255, 255, 255, 0.10);
+            --line-soft: rgba(255, 255, 255, 0.06);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #0ea5e9;
+            --accent-2: #38bdf8;
+            --ok: #22c55e;
+            --danger: #f87171;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+            --radius-xl: 28px;
+            --radius-lg: 20px;
         }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background:
+                radial-gradient(circle at top, rgba(14,165,233,0.14), transparent 35%),
+                linear-gradient(180deg, var(--bg-2), var(--bg-1));
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
         body {
-            margin: 0; padding: 20px; background: var(--bg);
-            color: var(--text); font-family: -apple-system, sans-serif;
-            display: flex; flex-direction: column; align-items: center;
+            padding:
+                max(16px, env(safe-area-inset-top))
+                16px
+                max(24px, env(safe-area-inset-bottom))
+                16px;
+            display: flex;
+            justify-content: center;
         }
-        .app { width: 100%; max-width: 400px; }
+
+        .app {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .brand-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+
+        .brand-sub {
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 0.18em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .lang-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 8px 10px;
+            backdrop-filter: blur(12px);
+        }
+
+        .lang-icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .lang-select {
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 16px;
+            cursor: pointer;
+        }
+
+        .lang-select option {
+            color: #000;
+        }
+
         .card {
-            background: var(--card); border-radius: 24px;
-            padding: 20px; border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xl);
+            backdrop-filter: blur(18px);
+            box-shadow: var(--shadow);
         }
-        h1 { font-size: 24px; text-align: center; margin-bottom: 20px; }
+
+        .hero-card {
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mini-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line-soft);
+            border-radius: 18px;
+            padding: 14px;
+        }
+
+        .mini-label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 8px;
+        }
+
+        .counter-value {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .counter-note {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.35;
+        }
+
+        .lang-note {
+            font-size: 16px;
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        .lang-subnote {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.35;
+        }
+
+        .input-card {
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+
+        .section-title,
+        .section-sub,
+        .footer-note {
+            display: none;
+        }
+
         textarea {
-            width: 100%; height: 100px; background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 16px;
-            color: white; padding: 12px; font-size: 16px; box-sizing: border-box;
+            width: 100%;
+            min-height: 120px;
+            resize: vertical;
+            background: rgba(0, 0, 0, 0.20);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            color: #fff;
+            padding: 14px 14px;
+            font-size: 16px;
+            line-height: 1.45;
+            outline: none;
         }
-        .btn {
-            width: 100%; background: var(--accent); color: white;
-            border: none; padding: 18px; border-radius: 16px;
-            font-size: 18px; font-weight: bold; margin-top: 15px;
-            cursor: pointer; -webkit-appearance: none;
+
+        textarea::placeholder {
+            color: #94a3b8;
         }
-        .btn:active { opacity: 0.8; transform: scale(0.98); }
-        #status { margin-top: 15px; text-align: center; font-size: 14px; min-height: 20px; color: var(--accent); }
-        .history { margin-top: 20px; width: 100%; font-size: 14px; opacity: 0.7; }
-        .hist-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; margin-bottom: 5px; word-break: break-all; }
+
+        textarea:focus {
+            border-color: rgba(56,189,248,0.55);
+            box-shadow: 0 0 0 4px rgba(14,165,233,0.12);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .play-btn {
+            flex: 1;
+            border: none;
+            border-radius: 20px;
+            padding: 18px 16px;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 12px 30px rgba(14,165,233,0.28);
+        }
+
+        .play-btn:active,
+        .secondary-btn:active,
+        .history-link:active,
+        .back-btn:active,
+        .clear-btn:active {
+            transform: scale(0.985);
+        }
+
+        .play-icon {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .secondary-btn {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-radius: 20px;
+            padding: 0 16px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            min-width: 88px;
+        }
+
+        .status {
+            min-height: 20px;
+            margin-top: 14px;
+            font-size: 14px;
+            line-height: 1.45;
+            color: var(--accent-2);
+            text-align: center;
+        }
+
+        .status.error {
+            color: var(--danger);
+        }
+
+        .status.ok {
+            color: var(--ok);
+        }
+
+        .player-card {
+            padding: 14px;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        .player-frame {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            border: none;
+            border-radius: 18px;
+            background: #000;
+            display: block;
+        }
+
+        .back-btn {
+            width: 100%;
+            margin-top: 14px;
+            border: none;
+            border-radius: 18px;
+            padding: 16px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .history-card {
+            padding: 18px;
+        }
+
+        .history-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .history-title {
+            font-size: 15px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .clear-btn {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            border-radius: 14px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .hist-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--line-soft);
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+        .hist-url {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.4;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
+
+        .history-link {
+            width: 100%;
+            border: none;
+            border-radius: 14px;
+            padding: 12px;
+            background: rgba(14,165,233,0.14);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .empty-note {
+            font-size: 13px;
+            color: var(--muted);
+            text-align: center;
+            padding: 8px 0 2px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.40);
+            letter-spacing: 0.5px;
+            padding-bottom: 8px;
+        }
+
+        @media (max-width: 420px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="app">
+        <div class="topbar">
+            <div class="brand">
+                <div class="brand-title">Idesüss</div>
+                <div class="brand-sub" id="brandSub">BETA</div>
+            </div>
 
-<div class="app">
-    <h1>Idesüss</h1>
-    <div class="card">
-        <textarea id="urlInput" placeholder="Másold be a linket ide..."></textarea>
-        <button id="goBtn" class="btn">INDÍTÁS</button>
-        <div id="status"></div>
+            <div class="lang-area">
+                <span class="lang-icon">🌐</span>
+                <select id="langSelect" class="lang-select" aria-label="Language selector">
+                    <option value="hu">HU</option>
+                    <option value="en">EN</option>
+                    <option value="nl">NL</option>
+                    <option value="ro">RO</option>
+                    <option value="pl">PL</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card hero-card">
+            <div class="hero-grid">
+                <div class="mini-card">
+                    <div class="mini-label" id="counterLabel">Látogatások</div>
+                    <div class="counter-value" id="visitCount">0</div>
+                    <div class="counter-note" id="counterNote">
+                        A számláló nem nő minden frissítésre.
+                    </div>
+                </div>
+
+                <div class="mini-card">
+                    <div class="mini-label" id="langBoxLabel">Nyelv</div>
+                    <div class="lang-note" id="currentLangText">🌐 HU</div>
+                    <div class="lang-subnote" id="langSubnote">
+                        Magyar böngésző → magyar felület, minden más → angol.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card input-card" id="inputCard">
+            <div class="section-title" id="mainTitle"></div>
+            <div class="section-sub" id="mainSub"></div>
+
+            <textarea id="urlInput" placeholder="Másold be a linket ide..."></textarea>
+
+            <div class="action-row">
+                <button id="goBtn" class="play-btn" type="button">
+                    <span class="play-icon">▶</span>
+                    <span id="playBtnText">INDÍTÁS</span>
+                </button>
+                <button id="pasteBtn" class="secondary-btn" type="button">PASTE</button>
+            </div>
+
+            <div id="status" class="status"></div>
+        </div>
+
+        <div class="card player-card" id="playerCard">
+            <iframe id="ytFrame" class="player-frame" allowfullscreen allow="autoplay"></iframe>
+            <button id="backBtn" class="back-btn" type="button">VISSZA</button>
+        </div>
+
+        <div class="card history-card">
+            <div class="history-head">
+                <div class="history-title" id="historyTitle">Előzmények</div>
+                <button id="clearHistoryBtn" class="clear-btn" type="button">Előzmények törlése</button>
+            </div>
+            <div id="historyList" class="history-list"></div>
+        </div>
+
+        <div class="footer" id="footerText">Powered by StZoo</div>
     </div>
-    <div id="history" class="history"></div>
-</div>
 
-<script>
-    // Új típusú eseménykezelés, ami iPhone-on stabilabb
-    document.getElementById('goBtn').addEventListener('click', function() {
-        const input = document.getElementById('urlInput');
-        const status = document.getElementById('status');
-        const url = input.value.trim();
+    <script>
+        const STORAGE_KEYS = {
+            lang: 'ides_lang',
+            history: 'ides_h',
+            counter: 'ides_visit_count',
+            lastVisit: 'ides_last_visit_ts'
+        };
 
-        if (!url) {
-            status.innerText = "Hiba: Üres mező!";
-            return;
+        const VISIT_COOLDOWN_MS = 12 * 60 * 60 * 1000;
+        const SUPPORTED_LANGS = ['hu', 'en', 'nl', 'ro', 'pl'];
+
+        const els = {
+            brandSub: document.getElementById('brandSub'),
+            langSelect: document.getElementById('langSelect'),
+            counterLabel: document.getElementById('counterLabel'),
+            counterNote: document.getElementById('counterNote'),
+            langBoxLabel: document.getElementById('langBoxLabel'),
+            currentLangText: document.getElementById('currentLangText'),
+            langSubnote: document.getElementById('langSubnote'),
+            mainTitle: document.getElementById('mainTitle'),
+            mainSub: document.getElementById('mainSub'),
+            urlInput: document.getElementById('urlInput'),
+            playBtnText: document.getElementById('playBtnText'),
+            pasteBtn: document.getElementById('pasteBtn'),
+            backBtn: document.getElementById('backBtn'),
+            historyTitle: document.getElementById('historyTitle'),
+            clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+            footerText: document.getElementById('footerText'),
+            status: document.getElementById('status'),
+            historyList: document.getElementById('historyList'),
+            visitCount: document.getElementById('visitCount'),
+            playerCard: document.getElementById('playerCard'),
+            inputCard: document.getElementById('inputCard'),
+            ytFrame: document.getElementById('ytFrame'),
+            goBtn: document.getElementById('goBtn')
+        };
+
+        let currentLang = detectInitialLanguage();
+        let dict = {};
+
+        function detectInitialLanguage() {
+            const saved = localStorage.getItem(STORAGE_KEYS.lang);
+            if (SUPPORTED_LANGS.includes(saved)) return saved;
+
+            const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+
+            if (browserLang.startsWith('hu')) return 'hu';
+            if (browserLang.startsWith('nl')) return 'nl';
+            if (browserLang.startsWith('ro')) return 'ro';
+            if (browserLang.startsWith('pl')) return 'pl';
+            return 'en';
         }
 
-        status.innerText = "Indítás...";
-
-        // 1. YouTube Shorts és sima YT kezelése (Beágyazva)
-        if (url.includes("youtube.com") || url.includes("youtu.be")) {
-            status.innerText = "YouTube betöltése...";
-            let vId = "";
-            if (url.includes("shorts/")) {
-                vId = url.split("shorts/")[1].split(/[?&]/)[0];
-            } else if (url.includes("v=")) {
-                vId = url.split("v=")[1].split("&")[0];
-            } else {
-                vId = url.split("/").pop().split(/[?&]/)[0];
+        async function loadLanguage(lang) {
+            try {
+                const response = await fetch(`${lang}.json.txt`, { cache: 'no-cache' });
+                if (!response.ok) throw new Error(`Language file not found: ${lang}`);
+                dict = await response.json();
+                currentLang = lang;
+                localStorage.setItem(STORAGE_KEYS.lang, lang);
+                els.langSelect.value = lang;
+                applyLanguage();
+            } catch (error) {
+                console.error(error);
+                if (lang !== 'en') {
+                    await loadLanguage('en');
+                }
             }
-            
-            // Itt nem ablakot nyitunk, hanem lecseréljük a tartalmat, hogy benne maradjon
-            const embedUrl = "https://www.youtube-nocookie.com/embed/" + vId + "?autoplay=1";
-            document.querySelector('.card').innerHTML = '<iframe src="' + embedUrl + '" style="width:100%; aspect-ratio:9/16; border-radius:16px; border:none;" allowfullscreen allow="autoplay"></iframe><button onclick="window.location.reload()" class="btn">VISSZA</button>';
-            saveToHistory(url);
-            return;
         }
 
-        // 2. Facebook, TikTok, Instagram (Közvetlen nyitás)
-        if (url.includes("facebook.com") || url.includes("fb.watch") || url.includes("tiktok.com") || url.includes("instagram.com")) {
-            saveToHistory(url);
-            
-            // FONTOS: Azonnali ablaknyitás Safarihoz
-            const newTab = window.open(url, '_blank');
-            
-            if (!newTab) {
-                status.innerHTML = "Blokkolva! <br><a href='"+url+"' target='_blank' style='color:white; font-weight:bold;'>KATTINTS IDE A NYITÁSHOZ</a>";
-            } else {
-                status.innerText = "Sikeres nyitás!";
-                input.value = "";
-            }
-        } else {
-            status.innerText = "Ismeretlen link. Próbálom megnyitni...";
-            window.open(url, '_blank');
+        function t(key, fallback = '') {
+            return dict[key] || fallback || key;
         }
-    });
 
-    function saveToHistory(url) {
-        let h = JSON.parse(localStorage.getItem('ides_h') || '[]');
-        if(!h.includes(url)) {
-            h.unshift(url);
-            if(h.length > 5) h.pop();
-            localStorage.setItem('ides_h', JSON.stringify(h));
+        function applyLanguage() {
+            document.documentElement.lang = currentLang;
+
+            els.brandSub.textContent = 'BETA';
+            els.counterLabel.textContent = t('counterLabel', 'Visits');
+            els.counterNote.textContent = t('counterNote', 'The counter does not increase on every refresh.');
+            els.langBoxLabel.textContent = t('langBoxLabel', 'Language');
+            els.currentLangText.textContent = '🌐 ' + currentLang.toUpperCase();
+            els.langSubnote.textContent = t('langSubnote', 'Hungarian browser → Hungarian UI, everything else → English.');
+            els.mainTitle.textContent = '';
+            els.mainSub.textContent = '';
+            els.urlInput.placeholder = t('textareaPlaceholder', 'Paste the link here...');
+            els.playBtnText.textContent = t('playBtnText', 'PLAY');
+            els.pasteBtn.textContent = t('pasteBtn', 'PASTE');
+            els.backBtn.textContent = t('backBtn', 'BACK');
+            els.historyTitle.textContent = t('historyTitle', 'History');
+            els.clearHistoryBtn.textContent = t('clearHistoryBtn', 'Clear history');
+            els.footerText.textContent = t('footerText', 'Powered by StZoo');
+
             renderHistory();
         }
-    }
 
-    function renderHistory() {
-        const box = document.getElementById('history');
-        const h = JSON.parse(localStorage.getItem('ides_h') || '[]');
-        if(h.length > 0) {
-            box.innerHTML = '<b>Előzmények:</b>' + h.map(u => '<div class="hist-item">' + u + '</div>').join('');
+        function setStatus(message, type = '') {
+            els.status.className = 'status' + (type ? ' ' + type : '');
+            els.status.innerHTML = message;
         }
-    }
-    renderHistory();
-</script>
 
+        function getVisitCount() {
+            return parseInt(localStorage.getItem(STORAGE_KEYS.counter) || '0', 10);
+        }
+
+        function updateVisitCounter() {
+            const now = Date.now();
+            const lastVisit = parseInt(localStorage.getItem(STORAGE_KEYS.lastVisit) || '0', 10);
+            let count = getVisitCount();
+
+            if (!lastVisit || now - lastVisit > VISIT_COOLDOWN_MS) {
+                count += 1;
+                localStorage.setItem(STORAGE_KEYS.counter, String(count));
+                localStorage.setItem(STORAGE_KEYS.lastVisit, String(now));
+            }
+
+            els.visitCount.textContent = count;
+        }
+
+        function saveToHistory(url) {
+            let history = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
+
+            history = history.filter(item => item !== url);
+            history.unshift(url);
+
+            if (history.length > 8) history = history.slice(0, 8);
+
+            localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
+
+            if (!history.length) {
+                els.historyList.innerHTML = `<div class="empty-note">${escapeHtml(t('emptyHistory', 'No history yet.'))}</div>`;
+                return;
+            }
+
+            els.historyList.innerHTML = history.map(url => `
+                <div class="hist-item">
+                    <div class="hist-url">${escapeHtml(url)}</div>
+                    <button class="history-link" type="button" onclick="reopenHistoryItem('${encodeURIComponent(url)}')">
+                        ${escapeHtml(t('openAgain', 'Open again'))}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            localStorage.removeItem(STORAGE_KEYS.history);
+            renderHistory();
+            setStatus(t('historyCleared', 'History cleared.'), 'ok');
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        function escapeAttribute(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;');
+        }
+
+        function extractYouTubeId(url) {
+            try {
+                if (url.includes('shorts/')) {
+                    return url.split('shorts/')[1].split(/[?&]/)[0];
+                }
+                if (url.includes('v=')) {
+                    return url.split('v=')[1].split('&')[0];
+                }
+                return url.split('/').pop().split(/[?&]/)[0];
+            } catch {
+                return '';
+            }
+        }
+
+        function showYouTubePlayer(videoId, originalUrl) {
+            const embedUrl = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1';
+            els.ytFrame.src = embedUrl;
+            els.playerCard.style.display = 'block';
+            els.inputCard.style.display = 'none';
+            saveToHistory(originalUrl);
+        }
+
+        function hideYouTubePlayer() {
+            els.ytFrame.src = '';
+            els.playerCard.style.display = 'none';
+            els.inputCard.style.display = 'block';
+            setStatus('');
+        }
+
+        function openExternal(url) {
+            const newTab = window.open(url, '_blank');
+
+            if (!newTab) {
+                setStatus(
+                    `${escapeHtml(t('blockedOpen', 'Blocked! Click here to open it.'))}<br><a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer" style="color:white;font-weight:800;">${escapeHtml(t('openLinkText', 'CLICK HERE TO OPEN'))}</a>`,
+                    'error'
+                );
+                return;
+            }
+
+            setStatus(t('successOpen', 'Opened successfully!'), 'ok');
+            els.urlInput.value = '';
+        }
+
+        function handleGo(urlOverride = null) {
+            const url = (urlOverride || els.urlInput.value).trim();
+
+            if (!url) {
+                setStatus(t('emptyField', 'Error: empty field!'), 'error');
+                return;
+            }
+
+            setStatus(t('starting', 'Starting...'));
+
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                setStatus(t('ytLoading', 'Loading YouTube...'));
+                const videoId = extractYouTubeId(url);
+
+                if (!videoId) {
+                    setStatus(t('unknownLink', 'Unknown link. Trying to open it...'), 'error');
+                    return;
+                }
+
+                showYouTubePlayer(videoId, url);
+                return;
+            }
+
+            if (
+                url.includes('facebook.com') ||
+                url.includes('fb.watch') ||
+                url.includes('tiktok.com') ||
+                url.includes('instagram.com')
+            ) {
+                setStatus(t('directOpen', 'Opening directly...'));
+                saveToHistory(url);
+                openExternal(url);
+                return;
+            }
+
+            setStatus(t('unknownLink', 'Unknown link. Trying to open it...'));
+            saveToHistory(url);
+            openExternal(url);
+        }
+
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    els.urlInput.value = text.trim();
+                    setStatus(t('pasted', 'Link pasted.'), 'ok');
+                } else {
+                    setStatus(t('pasteFail', 'Paste failed.'), 'error');
+                }
+            } catch {
+                setStatus(t('pasteFail', 'Paste failed.'), 'error');
+            }
+        }
+
+        function reopenHistoryItem(encodedUrl) {
+            const url = decodeURIComponent(encodedUrl);
+            els.urlInput.value = url;
+            handleGo(url);
+        }
+
+        window.reopenHistoryItem = reopenHistoryItem;
+
+        els.goBtn.addEventListener('click', () => handleGo());
+        els.backBtn.addEventListener('click', hideYouTubePlayer);
+        els.pasteBtn.addEventListener('click', pasteFromClipboard);
+        els.clearHistoryBtn.addEventListener('click', clearHistory);
+        els.langSelect.addEventListener('change', (event) => loadLanguage(event.target.value));
+
+        (async function init() {
+            updateVisitCounter();
+            await loadLanguage(currentLang);
+            renderHistory();
+        })();
+    </script>
 </body>
 </html>
