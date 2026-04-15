@@ -2,10 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Idesüss — Homepage</title>
   <meta
     name="description"
@@ -13,7 +10,8 @@
   />
   <meta name="theme-color" content="#0d5bd7" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" href="favicon.ico" />
+  <link rel="icon" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
 
   <style>
     :root {
@@ -94,17 +92,19 @@
       min-width: 0;
     }
 
-    .brand-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--primary), #4a93ff);
-      color: white;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      box-shadow: var(--shadow);
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      object-fit: cover;
+      display: block;
       flex: 0 0 auto;
+      box-shadow: var(--shadow);
+      background: white;
+    }
+
+    .brand-mark {
+      display: none !important;
     }
 
     .brand-text {
@@ -511,8 +511,7 @@
       font-weight: 700;
     }
 
-    .input,
-    .textarea {
+    .input {
       width: 100%;
       border: 1px solid #cfdbe8;
       background: #fbfdff;
@@ -524,8 +523,7 @@
       transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
     }
 
-    .input:focus,
-    .textarea:focus {
+    .input:focus {
       border-color: #7baeff;
       box-shadow: 0 0 0 4px rgba(13, 91, 215, 0.08);
       background: #ffffff;
@@ -832,7 +830,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="#top" class="brand-wrap" aria-label="Idesüss homepage">
-        <div class="brand-mark">I</div>
+        <img src="/favicon.png" alt="Idesüss logo" class="brand-logo" />
         <div class="brand-text">
           <h2 class="brand-title">Idesüss</h2>
           <p class="brand-subtitle" data-i18n="brandSubtitle">Homepage + mini app experience</p>
@@ -872,7 +870,7 @@
           </p>
 
           <div class="hero-actions">
-            <a id="heroOpenAppBtn" class="btn btn-primary" href="https://idesuss.app">
+            <a id="heroOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
               <span data-i18n="openApp">Open App</span>
             </a>
 
@@ -996,17 +994,17 @@
             <div class="feature-box" style="padding: 16px;">
               <h3 style="margin:0 0 12px;" data-i18n="supportedTitle">Supported sources</h3>
               <ul class="support-list">
-                <li class="support-item"><span class="support-icon">TT</span><span>TikTok public links</span></li>
-                <li class="support-item"><span class="support-icon">YT</span><span>YouTube links and shorts</span></li>
-                <li class="support-item"><span class="support-icon">IG</span><span>Instagram public reels</span></li>
-                <li class="support-item"><span class="support-icon">FB</span><span>Facebook public videos</span></li>
+                <li class="support-item"><span class="support-icon">TT</span><span data-i18n="supportedTiktok">TikTok public links</span></li>
+                <li class="support-item"><span class="support-icon">YT</span><span data-i18n="supportedYoutube">YouTube links and shorts</span></li>
+                <li class="support-item"><span class="support-icon">IG</span><span data-i18n="supportedInstagram">Instagram public reels</span></li>
+                <li class="support-item"><span class="support-icon">FB</span><span data-i18n="supportedFacebook">Facebook public videos</span></li>
               </ul>
             </div>
 
             <div class="feature-box" style="padding: 16px;">
               <h3 style="margin:0 0 12px;" data-i18n="quickActionsTitle">Quick actions</h3>
               <div class="input-actions" style="margin:0;">
-                <a id="sideOpenAppBtn" class="btn btn-primary" href="https://idesuss.app">
+                <a id="sideOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
                   <span data-i18n="openFullApp">Open full app</span>
                 </a>
                 <button id="sideInstallBtn" class="btn btn-secondary" type="button">
@@ -1112,7 +1110,7 @@
             </p>
           </div>
           <div class="hero-actions" style="margin-top:0;">
-            <a id="ctaOpenAppBtn" class="btn btn-primary" href="https://idesuss.app">
+            <a id="ctaOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
               <span data-i18n="goToApp">Go to Idesüss App</span>
             </a>
             <button id="ctaInstallBtn" class="btn btn-secondary" type="button">
@@ -1159,7 +1157,7 @@
 
           <div class="footer-links">
             <a href="#miniapp" data-i18n="tryMiniApp">Try Mini App</a>
-            <a href="https://idesuss.app" data-i18n="openApp">Open App</a>
+            <a id="footerOpenAppLink" href="https://idesuss.net/app" data-i18n="openApp">Open App</a>
             <button id="footerInstallBtn" type="button" data-i18n="install">Install</button>
             <a href="#about" data-i18n="aboutLink">About</a>
           </div>
@@ -1172,6 +1170,16 @@
       </div>
     </div>
   </footer>
+
+  <div id="installOverlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#ffffff; color:#17324d; width:min(100%, 360px); border-radius:20px; box-shadow:0 18px 50px rgba(0,0,0,0.18); padding:20px;">
+      <div id="installOverlayTitle" style="font-size:1.1rem; font-weight:800; margin-bottom:10px;">Install Idesüss</div>
+      <div id="installOverlayText" style="color:#5e748d; line-height:1.5; margin-bottom:16px;">
+        On iPhone or iPad, tap Share, then choose Add to Home Screen.
+      </div>
+      <button id="closeInstallOverlayBtn" class="btn btn-primary" type="button" style="width:100%;">OK</button>
+    </div>
+  </div>
 
   <script>
     const APP_URL = "https://idesuss.net/app";
@@ -1212,6 +1220,10 @@
         counterLabel: "Links opened",
         counterNote: "Stored locally on this device for quick tracking.",
         supportedTitle: "Supported sources",
+        supportedTiktok: "TikTok public links",
+        supportedYoutube: "YouTube links and shorts",
+        supportedInstagram: "Instagram public reels",
+        supportedFacebook: "Facebook public videos",
         quickActionsTitle: "Quick actions",
         openFullApp: "Open full app",
         installPwa: "Install PWA",
@@ -1244,7 +1256,10 @@
         contactMini: "Expandable placement area",
         adBannerBottom: "Clickable homepage section ready for future content",
         footerDesc: "Homepage + mini app entry point for supported public video links.",
-        aboutLink: "About"
+        aboutLink: "About",
+        installGuideTitle: "Install Idesüss",
+        installGuideText: "On iPhone or iPad, tap Share, then choose Add to Home Screen.",
+        installNotAvailable: "Installation is not available right now"
       },
       hu: {
         brandSubtitle: "Főoldal + mini app élmény",
@@ -1276,6 +1291,10 @@
         counterLabel: "Megnyitott linkek",
         counterNote: "Helyben tárolva ezen az eszközön a gyors követéshez.",
         supportedTitle: "Támogatott források",
+        supportedTiktok: "TikTok nyilvános linkek",
+        supportedYoutube: "YouTube linkek és shortok",
+        supportedInstagram: "Instagram nyilvános reel linkek",
+        supportedFacebook: "Facebook nyilvános videók",
         quickActionsTitle: "Gyors műveletek",
         openFullApp: "Teljes app megnyitása",
         installPwa: "PWA telepítése",
@@ -1308,7 +1327,10 @@
         contactMini: "Bővíthető elhelyezési terület",
         adBannerBottom: "Kattintható főoldali szekció jövőbeli tartalomhoz",
         footerDesc: "Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.",
-        aboutLink: "Névjegy"
+        aboutLink: "Névjegy",
+        installGuideTitle: "Idesüss telepítése",
+        installGuideText: "iPhone vagy iPad esetén nyomd meg a Megosztás gombot, majd válaszd a Főképernyőhöz adás lehetőséget.",
+        installNotAvailable: "A telepítés most nem érhető el"
       }
     };
 
@@ -1322,6 +1344,10 @@
       installStatus: document.getElementById("installStatus"),
       openCounter: document.getElementById("openCounter"),
       year: document.getElementById("year"),
+      installOverlay: document.getElementById("installOverlay"),
+      installOverlayTitle: document.getElementById("installOverlayTitle"),
+      installOverlayText: document.getElementById("installOverlayText"),
+      closeInstallOverlayBtn: document.getElementById("closeInstallOverlayBtn"),
       installButtons: [
         document.getElementById("headerInstallBtn"),
         document.getElementById("heroInstallBtn"),
@@ -1333,7 +1359,8 @@
         document.getElementById("headerOpenAppBtn"),
         document.getElementById("heroOpenAppBtn"),
         document.getElementById("sideOpenAppBtn"),
-        document.getElementById("ctaOpenAppBtn")
+        document.getElementById("ctaOpenAppBtn"),
+        document.getElementById("footerOpenAppLink")
       ]
     };
 
@@ -1341,6 +1368,23 @@
       els.appLinks.forEach(link => {
         if (link) link.href = APP_URL;
       });
+    }
+
+    function isIOS() {
+      return /iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
+
+    function showInstallOverlay() {
+      const lang = document.documentElement.lang || "en";
+      els.installOverlayTitle.textContent = dict[lang]?.installGuideTitle || dict.en.installGuideTitle;
+      els.installOverlayText.textContent = dict[lang]?.installGuideText || dict.en.installGuideText;
+      els.installOverlay.classList.remove("hidden");
+      els.installOverlay.style.display = "flex";
+    }
+
+    function closeInstallOverlay() {
+      els.installOverlay.classList.add("hidden");
+      els.installOverlay.style.display = "none";
     }
 
     function applyTranslations(lang) {
@@ -1411,6 +1455,7 @@
 
     function getInstallLabelState() {
       const lang = document.documentElement.lang || "en";
+
       if (isInstalled) {
         return lang === "hu"
           ? { button: "Telepítve", status: "Az app már telepítve van", type: "ok", disabled: true }
@@ -1421,6 +1466,12 @@
         return lang === "hu"
           ? { button: "Telepítés", status: "A telepítés elérhető", type: "ok", disabled: false }
           : { button: "Install", status: "Installation is available", type: "ok", disabled: false };
+      }
+
+      if (isIOS()) {
+        return lang === "hu"
+          ? { button: "Telepítés", status: "Telepítés útmutató iPhone/iPad eszközre", type: "warn", disabled: false }
+          : { button: "Install", status: "Install instructions for iPhone/iPad", type: "warn", disabled: false };
       }
 
       return lang === "hu"
@@ -1441,13 +1492,28 @@
     }
 
     async function tryInstall() {
-      if (!deferredPrompt || isInstalled) return;
-      deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === "accepted") {
-        deferredPrompt = null;
+      if (isInstalled) return;
+
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choiceResult = await deferredPrompt.userChoice;
+        if (choiceResult.outcome === "accepted") {
+          deferredPrompt = null;
+        }
+        updateInstallUI();
+        return;
       }
-      updateInstallUI();
+
+      if (isIOS()) {
+        showInstallOverlay();
+        return;
+      }
+
+      const lang = document.documentElement.lang || "en";
+      updateInstallStatus(
+        "warn",
+        dict[lang]?.installNotAvailable || dict.en.installNotAvailable
+      );
     }
 
     async function pasteFromClipboard(force = false) {
@@ -1560,6 +1626,7 @@
     function detectInstalledState() {
       isInstalled =
         window.matchMedia("(display-mode: standalone)").matches ||
+        window.matchMedia("(display-mode: fullscreen)").matches ||
         window.navigator.standalone === true;
     }
 
@@ -1570,12 +1637,20 @@
       els.clearBtn.addEventListener("click", clearInput);
 
       els.videoUrl.addEventListener("keydown", e => {
-        if (e.key === "Enter") openUrl();
+        if (e.key === "Enter") {
+          e.preventDefault();
+          openUrl();
+        }
       });
 
       els.installButtons.forEach(btn => {
         if (!btn) return;
         btn.addEventListener("click", tryInstall);
+      });
+
+      els.closeInstallOverlayBtn.addEventListener("click", closeInstallOverlay);
+      els.installOverlay.addEventListener("click", (e) => {
+        if (e.target === els.installOverlay) closeInstallOverlay();
       });
 
       window.addEventListener("beforeinstallprompt", (e) => {
@@ -1587,10 +1662,12 @@
       window.addEventListener("appinstalled", () => {
         deferredPrompt = null;
         isInstalled = true;
+        closeInstallOverlay();
         updateInstallUI();
       });
 
       window.addEventListener("focus", () => pasteFromClipboard(false));
+
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
           pasteFromClipboard(false);
