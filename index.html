@@ -1,886 +1,1619 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
-<link rel="shortcut icon" href="/favicon.png">
-<link rel="apple-touch-icon" href="/favicon.png">
-   <link rel="icon" href="/favicon.png"> <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Idesüss</title>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+  <title>Idesüss — Homepage</title>
+  <meta
+    name="description"
+    content="Idesüss is a lightweight web interface to open public video links in a cleaner, faster and more accessible way."
+  />
+  <meta name="theme-color" content="#0d5bd7" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="favicon.ico" />
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#0f172a" />
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-alt: #eef3f9;
+      --line: #d7e0ea;
+      --text: #17324d;
+      --muted: #5e748d;
+      --primary: #0d5bd7;
+      --primary-dark: #0b4cb3;
+      --primary-soft: #e7f0ff;
+      --accent: #ffb547;
+      --success: #1f9d55;
+      --warning: #b7791f;
+      --danger: #c53030;
+      --shadow: 0 10px 28px rgba(22, 44, 77, 0.08);
+      --radius: 18px;
+      --maxw: 1180px;
+      --header-h: 76px;
+    }
 
-    <style>
-        :root {
-            --bg-1: #020617;
-            --bg-2: #0f172a;
-            --card: rgba(15, 23, 42, 0.72);
-            --line: rgba(255, 255, 255, 0.10);
-            --line-soft: rgba(255, 255, 255, 0.06);
-            --text: #f8fafc;
-            --muted: #94a3b8;
-            --accent: #0ea5e9;
-            --accent-2: #38bdf8;
-            --ok: #22c55e;
-            --danger: #f87171;
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-            --radius-xl: 28px;
-            --radius-lg: 20px;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            min-height: 100%;
-            background:
-                radial-gradient(circle at top, rgba(14,165,233,0.14), transparent 35%),
-                linear-gradient(180deg, var(--bg-2), var(--bg-1));
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(13, 91, 215, 0.08), transparent 22%),
+        linear-gradient(180deg, #f8fbff 0%, #f3f7fb 100%);
+      line-height: 1.5;
+    }
 
-        body {
-            padding:
-                max(16px, env(safe-area-inset-top))
-                16px
-                max(24px, env(safe-area-inset-bottom))
-                16px;
-            display: flex;
-            justify-content: center;
-        }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-        .app {
-            width: 100%;
-            max-width: 460px;
-        }
+    img {
+      max-width: 100%;
+      display: block;
+    }
 
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
+    .container {
+      width: min(var(--maxw), calc(100% - 32px));
+      margin: 0 auto;
+    }
 
-        .brand {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(215, 224, 234, 0.9);
+    }
 
-        .brand-title {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: 0.2px;
-        }
+    .header-inner {
+      min-height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+    }
 
-        .brand-sub {
-            font-size: 12px;
-            color: var(--muted);
-            letter-spacing: 0.18em;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
 
-        .top-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-        }
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), #4a93ff);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+    }
 
-        .install-btn {
-            border: 1px solid var(--line);
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-            border-radius: 14px;
-            padding: 10px 14px;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            white-space: nowrap;
-            backdrop-filter: blur(12px);
-        }
+    .brand-text {
+      min-width: 0;
+    }
 
-        .lang-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            padding: 8px 10px;
-            backdrop-filter: blur(12px);
-        }
+    .brand-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0;
+      white-space: nowrap;
+    }
 
-        .lang-icon {
-            font-size: 16px;
-            line-height: 1;
-        }
+    .brand-subtitle {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
 
-        .lang-select {
-            border: none;
-            background: transparent;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 800;
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-            min-width: 54px;
-        }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
 
-        .lang-select option {
-            color: #000;
-        }
+    .lang-select {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 0.96rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 105px;
+    }
 
-        .card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: var(--radius-xl);
-            backdrop-filter: blur(18px);
-            box-shadow: var(--shadow);
-        }
+    .btn {
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 0.96rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      white-space: nowrap;
+    }
 
-        .hero-card {
-            padding: 18px;
-            margin-bottom: 14px;
-        }
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
 
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+    .btn:disabled,
+    .btn[aria-disabled="true"] {
+      cursor: not-allowed;
+      opacity: 0.62;
+      transform: none;
+      box-shadow: none;
+    }
 
-        .mini-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--line-soft);
-            border-radius: 18px;
-            padding: 14px;
-        }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #2f7cf0);
+      color: white;
+      box-shadow: 0 10px 22px rgba(13, 91, 215, 0.18);
+    }
 
-        .mini-label {
-            font-size: 11px;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 8px;
-        }
+    .btn-primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    }
 
-        .counter-value {
-            font-size: 24px;
-            font-weight: 800;
-        }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--line);
+    }
 
-        .counter-note {
-            margin-top: 6px;
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.35;
-        }
+    .btn-soft {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: #cfe0ff;
+    }
 
-        .lang-note {
-            font-size: 16px;
-            color: var(--text);
-            font-weight: 800;
-        }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--line);
+    }
 
-        .lang-subnote {
-            margin-top: 6px;
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.35;
-        }
+    .hero {
+      padding: 44px 0 22px;
+    }
 
-        .input-card {
-            padding: 18px;
-            margin-bottom: 14px;
-        }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+      align-items: center;
+    }
 
-        textarea {
-            width: 100%;
-            min-height: 120px;
-            resize: vertical;
-            background: rgba(0, 0, 0, 0.20);
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            color: #fff;
-            padding: 14px 14px;
-            font-size: 16px;
-            line-height: 1.45;
-            outline: none;
-        }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #d7e5ff;
+      background: #f6f9ff;
+      color: var(--primary);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
 
-        textarea::placeholder {
-            color: #94a3b8;
-        }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2.4rem, 6vw, 4.7rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
 
-        textarea:focus {
-            border-color: rgba(56,189,248,0.55);
-            box-shadow: 0 0 0 4px rgba(14,165,233,0.12);
-        }
+    .hero p.lead {
+      margin: 0;
+      font-size: clamp(1.03rem, 2.3vw, 1.2rem);
+      color: var(--muted);
+      max-width: 700px;
+    }
 
-        .action-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 14px;
-        }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
 
-        .play-btn {
-            flex: 1;
-            border: none;
-            border-radius: 20px;
-            padding: 18px 16px;
-            cursor: pointer;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            color: white;
-            font-size: 18px;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 12px 30px rgba(14,165,233,0.28);
-        }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
 
-        .play-btn:active,
-        .secondary-btn:active,
-        .history-link:active,
-        .back-btn:active,
-        .clear-btn:active,
-        .install-btn:active {
-            transform: scale(0.985);
-        }
+    .hero-chip {
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.93rem;
+    }
 
-        .play-icon {
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 auto;
-        }
+    .hero-visual {
+      background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+      border: 1px solid #dce6f3;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
 
-        .play-icon svg {
-            width: 24px;
-            height: 24px;
-            display: block;
-        }
+    .visual-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e3ebf5;
+      background: #fbfdff;
+    }
 
-        .secondary-btn {
-            border: 1px solid var(--line);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            border-radius: 20px;
-            padding: 0 16px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            min-width: 88px;
-        }
+    .visual-dots {
+      display: flex;
+      gap: 6px;
+    }
 
-        .status {
-            min-height: 20px;
-            margin-top: 14px;
-            font-size: 14px;
-            line-height: 1.45;
-            color: var(--accent-2);
-            text-align: center;
-        }
+    .visual-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #d3deeb;
+    }
 
-        .status.error {
-            color: var(--danger);
-        }
+    .visual-url {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        .status.ok {
-            color: var(--ok);
-        }
+    .visual-body {
+      padding: 20px;
+      display: grid;
+      gap: 14px;
+    }
 
-        .player-card {
-            padding: 14px;
-            margin-bottom: 14px;
-            display: none;
-        }
+    .mock-nav,
+    .mock-panel,
+    .mock-banner,
+    .mock-row {
+      border-radius: 16px;
+      border: 1px solid #dde7f2;
+      background: white;
+    }
 
-        .player-frame {
-            width: 100%;
-            aspect-ratio: 9 / 16;
-            border: none;
-            border-radius: 18px;
-            background: #000;
-            display: block;
-        }
+    .mock-nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px;
+      font-weight: 700;
+      color: var(--muted);
+    }
 
-        .back-btn {
-            width: 100%;
-            margin-top: 14px;
-            border: none;
-            border-radius: 18px;
-            padding: 16px;
-            background: rgba(255,255,255,0.08);
-            color: white;
-            font-size: 15px;
-            font-weight: 800;
-            cursor: pointer;
-        }
+    .mock-banner {
+      padding: 18px;
+      background: linear-gradient(135deg, #eef5ff, #ffffff 62%, #fff1db);
+      color: var(--text);
+      font-weight: 800;
+    }
 
-        .history-card {
-            padding: 18px;
-        }
+    .mock-panel {
+      padding: 16px;
+    }
 
-        .history-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
+    .mock-input {
+      height: 50px;
+      border: 1px solid #d9e4f1;
+      border-radius: 12px;
+      background: #f9fbfe;
+      margin-bottom: 12px;
+    }
 
-        .history-title {
-            font-size: 15px;
-            font-weight: 800;
-            margin: 0;
-        }
+    .mock-row {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: transparent;
+      border: none;
+    }
 
-        .clear-btn {
-            border: 1px solid var(--line);
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-            border-radius: 14px;
-            padding: 10px 12px;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-        }
+    .mock-btn {
+      height: 42px;
+      border-radius: 12px;
+      flex: 1;
+      background: #eef4ff;
+      border: 1px solid #d6e4ff;
+    }
 
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .mock-btn.primary {
+      background: linear-gradient(135deg, var(--primary), #2f7cf0);
+      border-color: transparent;
+    }
 
-        .hist-item {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--line-soft);
-            border-radius: 16px;
-            padding: 12px;
-        }
+    .section {
+      padding: 30px 0;
+      scroll-margin-top: calc(var(--header-h) + 14px);
+    }
 
-        .hist-url {
-            font-size: 13px;
-            color: var(--text);
-            line-height: 1.4;
-            word-break: break-all;
-            margin-bottom: 10px;
-        }
+    .section-band {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-top: 1px solid rgba(215, 224, 234, 0.7);
+      border-bottom: 1px solid rgba(215, 224, 234, 0.7);
+    }
 
-        .history-link {
-            width: 100%;
-            border: none;
-            border-radius: 14px;
-            padding: 12px;
-            background: rgba(14,165,233,0.14);
-            color: #fff;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-        }
+    .section-head {
+      margin-bottom: 18px;
+    }
 
-        .empty-note {
-            font-size: 13px;
-            color: var(--muted);
-            text-align: center;
-            padding: 8px 0 2px;
-        }
+    .section-kicker {
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
 
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 12px;
-            color: rgba(255,255,255,0.40);
-            letter-spacing: 0.5px;
-            padding-bottom: 8px;
-        }
+    .section-title {
+      margin: 0 0 10px;
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+    }
 
-        [hidden] {
-            display: none !important;
-        }
+    .section-desc {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+      font-size: 1rem;
+    }
 
-        @media (max-width: 420px) {
-            .hero-grid {
-                grid-template-columns: 1fr;
-            }
+    .ad-shell {
+      border: 1px dashed #bfd0e6;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,251,255,0.95)),
+        linear-gradient(90deg, rgba(13,91,215,0.05), rgba(255,181,71,0.05));
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
 
-            .topbar {
-                align-items: stretch;
-            }
+    .ad-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
 
-            .top-actions {
-                align-items: stretch;
-            }
+    .ad-banner {
+      min-height: 110px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, #f6c768 0%, #f7b243 25%, #0d5bd7 70%, #7dc6ff 100%);
+      color: white;
+      font-weight: 800;
+      font-size: clamp(1.1rem, 2.2vw, 2rem);
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
 
-            .lang-area,
-            .install-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
+    .ad-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 40%, rgba(255,255,255,0.2), transparent 18%),
+        radial-gradient(circle at 78% 30%, rgba(255,255,255,0.18), transparent 24%);
+      pointer-events: none;
+    }
+
+    .ad-banner span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .miniapp-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .miniapp-main,
+    .miniapp-side,
+    .feature-box,
+    .about-grid > article,
+    .cta-panel,
+    .footer-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .miniapp-main {
+      padding: 22px;
+    }
+
+    .miniapp-side {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .miniapp-title {
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .miniapp-subtitle {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .field {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .input,
+    .textarea {
+      width: 100%;
+      border: 1px solid #cfdbe8;
+      background: #fbfdff;
+      border-radius: 14px;
+      padding: 15px 16px;
+      font-size: 1rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .input:focus,
+    .textarea:focus {
+      border-color: #7baeff;
+      box-shadow: 0 0 0 4px rgba(13, 91, 215, 0.08);
+      background: #ffffff;
+    }
+
+    .input-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #f7fbff;
+      border: 1px solid #d8e6f7;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #94a9c2;
+      flex: 0 0 auto;
+    }
+
+    .status-ok .status-dot {
+      background: var(--success);
+    }
+
+    .status-warn .status-dot {
+      background: var(--warning);
+    }
+
+    .status-error .status-dot {
+      background: var(--danger);
+    }
+
+    .support-list,
+    .how-list {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .support-item,
+    .how-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #f8fbff;
+      border: 1px solid #dce7f3;
+    }
+
+    .support-icon,
+    .how-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 0.92rem;
+      font-weight: 800;
+      flex: 0 0 auto;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .counter-panel {
+      background: linear-gradient(180deg, #f8fbff, #ffffff);
+      border: 1px solid #dbe7f3;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .counter-label {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .counter-value {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+    }
+
+    .counter-note {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .about-grid > article {
+      padding: 22px;
+    }
+
+    .about-grid h3 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+    }
+
+    .about-grid p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .cta-panel {
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background:
+        linear-gradient(180deg, #ffffff, #f8fbff),
+        var(--surface);
+    }
+
+    .cta-panel h3 {
+      margin: 0 0 8px;
+      font-size: clamp(1.35rem, 2.6vw, 2rem);
+      letter-spacing: -0.03em;
+    }
+
+    .cta-panel p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 650px;
+    }
+
+    .footer {
+      padding: 16px 0 36px;
+    }
+
+    .footer-card {
+      padding: 22px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #e0e8f2;
+      margin-bottom: 18px;
+    }
+
+    .footer-brand h3 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+    }
+
+    .footer-brand p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-links a,
+    .footer-links button {
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .powered {
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .miniapp-layout,
+      .about-grid,
+      .cta-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-panel {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --header-h: 86px;
+      }
+
+      .container {
+        width: min(var(--maxw), calc(100% - 22px));
+      }
+
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .header-actions > * {
+        flex: 1 1 auto;
+      }
+
+      .brand-subtitle,
+      .hero-meta {
+        white-space: normal;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .hero-actions,
+      .input-actions,
+      .footer-links {
+        flex-direction: column;
+      }
+
+      .btn,
+      .lang-select,
+      .footer-links a,
+      .footer-links button {
+        width: 100%;
+      }
+
+      .visual-url {
+        max-width: 180px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="app">
-        <div class="topbar">
-            <div class="brand">
-                <div class="brand-title">Idesüss</div>
-                <div class="brand-sub" id="brandSub">BETA</div>
-            </div>
-
-            <div class="top-actions">
-                <button id="installBtn" class="install-btn" type="button" hidden>Telepítés</button>
-
-                <div class="lang-area">
-                    <span class="lang-icon">🌐</span>
-                    <select id="langSelect" class="lang-select" aria-label="Language selector">
-                        <option value="hu">HU</option>
-                        <option value="en">EN</option>
-                        <option value="nl">NL</option>
-                        <option value="ro">RO</option>
-                        <option value="pl">PL</option>
-                    </select>
-                </div>
-            </div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand-wrap" aria-label="Idesüss homepage">
+        <div class="brand-mark">I</div>
+        <div class="brand-text">
+          <h2 class="brand-title">Idesüss</h2>
+          <p class="brand-subtitle" data-i18n="brandSubtitle">Homepage + mini app experience</p>
         </div>
+      </a>
 
-        <div class="card hero-card">
-            <div class="hero-grid">
-                <div class="mini-card">
-                    <div class="mini-label" id="counterLabel">Látogatások</div>
-                    <div class="counter-value" id="visitCount">0</div>
-                    <div class="counter-note" id="counterNote">
-                        A számláló nem nő minden frissítésre.
-                    </div>
-                </div>
+      <div class="header-actions">
+        <label class="sr-only" for="langSelect">Language</label>
+        <select id="langSelect" class="lang-select" aria-label="Language selector">
+          <option value="en">English</option>
+          <option value="hu">Magyar</option>
+        </select>
 
-                <div class="mini-card">
-                    <div class="mini-label" id="langBoxLabel">Nyelv</div>
-                    <div class="lang-note" id="currentLangText">🌐 HU</div>
-                    <div class="lang-subnote" id="langSubnote">
-                        Magyar böngésző → magyar felület, minden más → angol.
-                    </div>
-                </div>
-            </div>
-        </div>
+        <a id="headerOpenAppBtn" class="btn btn-primary" href="https://idesuss.app">
+          <span data-i18n="openApp">Open App</span>
+        </a>
 
-        <div class="card input-card" id="inputCard">
-            <textarea id="urlInput" placeholder="Másold be a linket ide..."></textarea>
+        <button id="headerInstallBtn" class="btn btn-secondary" type="button">
+          <span data-i18n="install">Install</span>
+        </button>
 
-            <div class="action-row">
-                <button id="goBtn" class="play-btn" type="button">
-                    <span class="play-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1.5 12C3.8 7.9 7.5 5.5 12 5.5C16.5 5.5 20.2 7.9 22.5 12C20.2 16.1 16.5 18.5 12 18.5C7.5 18.5 3.8 16.1 1.5 12Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
-                            <circle cx="12" cy="12" r="3.8" stroke="white" stroke-width="1.8"/>
-                            <path d="M11 9.8L14.6 12L11 14.2V9.8Z" fill="white"/>
-                        </svg>
-                    </span>
-                    <span id="playBtnText">INDÍTÁS</span>
-                </button>
-
-                <button id="pasteBtn" class="secondary-btn" type="button">PASTE</button>
-            </div>
-
-            <div id="status" class="status"></div>
-        </div>
-
-        <div class="card player-card" id="playerCard">
-            <iframe id="ytFrame" class="player-frame" allowfullscreen allow="autoplay"></iframe>
-            <button id="backBtn" class="back-btn" type="button">VISSZA</button>
-        </div>
-
-        <div class="card history-card">
-            <div class="history-head">
-                <div class="history-title" id="historyTitle">Előzmények</div>
-                <button id="clearHistoryBtn" class="clear-btn" type="button">Előzmények törlése</button>
-            </div>
-            <div id="historyList" class="history-list"></div>
-        </div>
-
-        <div class="footer" id="footerText">Powered by StZoo</div>
+        <a class="btn btn-ghost" href="#how">
+          <span data-i18n="howItWorks">How It Works</span>
+        </a>
+      </div>
     </div>
+  </header>
 
-    <script>
-        const STORAGE_KEYS = {
-            lang: 'ides_lang',
-            history: 'ides_h',
-            counter: 'ides_visit_count',
-            lastVisit: 'ides_last_visit_ts'
-        };
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow" data-i18n="eyebrow">Public links. Cleaner access. Faster flow.</div>
+          <h1 data-i18n="heroTitle">Open public video links in a cleaner way</h1>
+          <p class="lead" data-i18n="heroLead">
+            Idesüss gives you a light, mobile-friendly web interface for opening supported public video links quickly, simply and with less clutter.
+          </p>
 
-        const VISIT_COOLDOWN_MS = 12 * 60 * 60 * 1000;
-        const SUPPORTED_LANGS = ['hu', 'en', 'nl', 'ro', 'pl'];
+          <div class="hero-actions">
+            <a id="heroOpenAppBtn" class="btn btn-primary" href="https://idesuss.app">
+              <span data-i18n="openApp">Open App</span>
+            </a>
 
-        const els = {
-            brandSub: document.getElementById('brandSub'),
-            langSelect: document.getElementById('langSelect'),
-            installBtn: document.getElementById('installBtn'),
-            counterLabel: document.getElementById('counterLabel'),
-            counterNote: document.getElementById('counterNote'),
-            langBoxLabel: document.getElementById('langBoxLabel'),
-            currentLangText: document.getElementById('currentLangText'),
-            langSubnote: document.getElementById('langSubnote'),
-            urlInput: document.getElementById('urlInput'),
-            playBtnText: document.getElementById('playBtnText'),
-            pasteBtn: document.getElementById('pasteBtn'),
-            backBtn: document.getElementById('backBtn'),
-            historyTitle: document.getElementById('historyTitle'),
-            clearHistoryBtn: document.getElementById('clearHistoryBtn'),
-            footerText: document.getElementById('footerText'),
-            status: document.getElementById('status'),
-            historyList: document.getElementById('historyList'),
-            visitCount: document.getElementById('visitCount'),
-            playerCard: document.getElementById('playerCard'),
-            inputCard: document.getElementById('inputCard'),
-            ytFrame: document.getElementById('ytFrame'),
-            goBtn: document.getElementById('goBtn')
-        };
+            <button id="heroInstallBtn" class="btn btn-secondary" type="button">
+              <span data-i18n="install">Install</span>
+            </button>
 
-        let currentLang = detectInitialLanguage();
-        let dict = {};
-        let deferredInstallPrompt = null;
+            <a class="btn btn-soft" href="#miniapp">
+              <span data-i18n="tryMiniApp">Try Mini App</span>
+            </a>
+          </div>
 
-        function detectInitialLanguage() {
-            const saved = localStorage.getItem(STORAGE_KEYS.lang);
-            if (SUPPORTED_LANGS.includes(saved)) return saved;
+          <div class="hero-meta">
+            <div class="hero-chip" data-i18n="chipPublicOnly">Public links only</div>
+            <div class="hero-chip" data-i18n="chipMobileFriendly">Mobile-friendly</div>
+            <div class="hero-chip" data-i18n="chipFastEntry">Fast entry point to the app</div>
+          </div>
+        </div>
 
-            const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+        <div class="hero-visual" aria-hidden="true">
+          <div class="visual-top">
+            <div class="visual-dots"><span></span><span></span><span></span></div>
+            <div class="visual-url">https://idesuss.net</div>
+          </div>
+          <div class="visual-body">
+            <div class="mock-nav">
+              <span>Idesüss</span>
+              <span>EN | Install</span>
+            </div>
+            <div class="mock-banner">Homepage facelift + mini app + ad spaces</div>
+            <div class="mock-panel">
+              <div class="mock-input"></div>
+              <div class="mock-row">
+                <div class="mock-btn"></div>
+                <div class="mock-btn primary"></div>
+              </div>
+            </div>
+            <div class="mock-banner">Powered by StZoo</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            if (browserLang.startsWith('hu')) return 'hu';
-            if (browserLang.startsWith('nl')) return 'nl';
-            if (browserLang.startsWith('ro')) return 'ro';
-            if (browserLang.startsWith('pl')) return 'pl';
-            return 'en';
+    <section class="section section-band" id="ad-top">
+      <div class="container">
+        <div class="ad-shell">
+          <div class="ad-label">
+            <span data-i18n="advertisement">Advertisement</span>
+            <span class="small-note" data-i18n="adPlaceholderSmall">Reserved spot for future partner content</span>
+          </div>
+          <a href="#contact" class="ad-banner">
+            <span data-i18n="adBannerText">Your ad can live here</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="miniapp">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker" data-i18n="miniAppKicker">Mini app</div>
+          <h2 class="section-title" data-i18n="miniAppTitle">Try it directly on the homepage</h2>
+          <p class="section-desc" data-i18n="miniAppDesc">
+            Paste a supported public link here, open it right away, or continue to the dedicated app-style interface for a more focused experience.
+          </p>
+        </div>
+
+        <div class="miniapp-layout">
+          <div class="miniapp-main">
+            <h3 class="miniapp-title" data-i18n="inputTitle">Paste a public video link below</h3>
+            <p class="miniapp-subtitle" data-i18n="inputSubtitle">
+              TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.
+            </p>
+
+            <div class="field">
+              <label for="videoUrl" data-i18n="inputLabel">Public video URL</label>
+              <input
+                id="videoUrl"
+                class="input"
+                type="url"
+                inputmode="url"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="https://..."
+              />
+            </div>
+
+            <div class="input-actions">
+              <button id="pasteBtn" class="btn btn-secondary" type="button" data-i18n="paste">Paste</button>
+              <button id="openBtn" class="btn btn-primary" type="button" data-i18n="open">Open</button>
+              <button id="clearBtn" class="btn btn-ghost" type="button" data-i18n="clear">Clear</button>
+            </div>
+
+            <div class="status-bar">
+              <div id="clipboardStatus" class="status-pill">
+                <span class="status-dot"></span>
+                <span data-i18n="clipboardChecking">Clipboard checking…</span>
+              </div>
+
+              <div id="installStatus" class="status-pill">
+                <span class="status-dot"></span>
+                <span data-i18n="installStateUnknown">Install status loading…</span>
+              </div>
+
+              <div class="status-pill status-ok">
+                <span class="status-dot"></span>
+                <span data-i18n="publicLinksOnly">Public links only</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="miniapp-side">
+            <div class="counter-panel">
+              <div class="counter-label" data-i18n="counterLabel">Links opened</div>
+              <div id="openCounter" class="counter-value">0</div>
+              <div class="counter-note" data-i18n="counterNote">
+                Stored locally on this device for quick tracking.
+              </div>
+            </div>
+
+            <div class="feature-box" style="padding: 16px;">
+              <h3 style="margin:0 0 12px;" data-i18n="supportedTitle">Supported sources</h3>
+              <ul class="support-list">
+                <li class="support-item"><span class="support-icon">TT</span><span>TikTok public links</span></li>
+                <li class="support-item"><span class="support-icon">YT</span><span>YouTube links and shorts</span></li>
+                <li class="support-item"><span class="support-icon">IG</span><span>Instagram public reels</span></li>
+                <li class="support-item"><span class="support-icon">FB</span><span>Facebook public videos</span></li>
+              </ul>
+            </div>
+
+            <div class="feature-box" style="padding: 16px;">
+              <h3 style="margin:0 0 12px;" data-i18n="quickActionsTitle">Quick actions</h3>
+              <div class="input-actions" style="margin:0;">
+                <a id="sideOpenAppBtn" class="btn btn-primary" href="https://idesuss.app">
+                  <span data-i18n="openFullApp">Open full app</span>
+                </a>
+                <button id="sideInstallBtn" class="btn btn-secondary" type="button">
+                  <span data-i18n="installPwa">Install PWA</span>
+                </button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-band" id="how">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker" data-i18n="howKicker">How it works</div>
+          <h2 class="section-title" data-i18n="howTitle">Three simple steps</h2>
+          <p class="section-desc" data-i18n="howDesc">
+            Keep the homepage useful and clean, while the dedicated app remains the faster, more focused interface.
+          </p>
+        </div>
+
+        <ul class="how-list">
+          <li class="how-item">
+            <span class="how-num">1</span>
+            <div>
+              <strong data-i18n="step1Title">Paste or auto-detect a link</strong><br />
+              <span class="small-note" data-i18n="step1Text">The page can try to read a supported link from your clipboard automatically.</span>
+            </div>
+          </li>
+          <li class="how-item">
+            <span class="how-num">2</span>
+            <div>
+              <strong data-i18n="step2Title">Open it instantly</strong><br />
+              <span class="small-note" data-i18n="step2Text">The mini app opens the link directly, while also counting successful opens locally.</span>
+            </div>
+          </li>
+          <li class="how-item">
+            <span class="how-num">3</span>
+            <div>
+              <strong data-i18n="step3Title">Move to the full app anytime</strong><br />
+              <span class="small-note" data-i18n="step3Text">Use the dedicated Idesüss app interface when you want a more focused mobile workflow.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker" data-i18n="aboutKicker">About</div>
+          <h2 class="section-title" data-i18n="aboutTitle">Homepage, profile and practical entry point in one place</h2>
+          <p class="section-desc" data-i18n="aboutDesc">
+            Idesüss.net is designed to introduce the project clearly, stay usable on its own, and connect visitors to the dedicated app-style experience with a single tap.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <article>
+            <h3 data-i18n="aboutCard1Title">Clear profile</h3>
+            <p data-i18n="aboutCard1Text">
+              A more professional homepage presence with a direct explanation of what Idesüss is and what it is for.
+            </p>
+          </article>
+          <article>
+            <h3 data-i18n="aboutCard2Title">Useful homepage</h3>
+            <p data-i18n="aboutCard2Text">
+              Not just a landing page: visitors can already paste and open supported public links from here.
+            </p>
+          </article>
+          <article>
+            <h3 data-i18n="aboutCard3Title">Future-ready layout</h3>
+            <p data-i18n="aboutCard3Text">
+              Ad-ready sections, expandable blocks, language switching and install support are already built into the structure.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-band" id="ad-middle">
+      <div class="container">
+        <div class="ad-shell">
+          <div class="ad-label">
+            <span data-i18n="advertisement">Advertisement</span>
+            <span class="small-note" data-i18n="adFriendly">Friendly placeholder for now, monetizable later</span>
+          </div>
+          <a href="#contact" class="ad-banner" style="background: linear-gradient(135deg, #edf4ff 0%, #dbe9ff 40%, #fff0d1 100%); color: var(--text);">
+            <span data-i18n="adBannerMid">A dedicated place for banners, partners or project promos</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="app-cta">
+      <div class="container">
+        <div class="cta-panel">
+          <div>
+            <h3 data-i18n="ctaTitle">Want the faster mobile experience?</h3>
+            <p data-i18n="ctaText">
+              Use the dedicated Idesüss app interface for a cleaner, more focused workflow. The homepage stays informative and useful, while the app stays fast and tool-like.
+            </p>
+          </div>
+          <div class="hero-actions" style="margin-top:0;">
+            <a id="ctaOpenAppBtn" class="btn btn-primary" href="https://idesuss.app">
+              <span data-i18n="goToApp">Go to Idesüss App</span>
+            </a>
+            <button id="ctaInstallBtn" class="btn btn-secondary" type="button">
+              <span data-i18n="install">Install</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker" data-i18n="contactKicker">Contact / ad spot</div>
+          <h2 class="section-title" data-i18n="contactTitle">Reserved blocks for future placements</h2>
+          <p class="section-desc" data-i18n="contactDesc">
+            These sections can later hold banner ads, partner mentions, internal promotions or other clickable content without redesigning the homepage.
+          </p>
+        </div>
+
+        <div class="ad-shell">
+          <div class="ad-label">
+            <span data-i18n="advertisement">Advertisement</span>
+            <span class="small-note" data-i18n="contactMini">Expandable placement area</span>
+          </div>
+          <a href="#top" class="ad-banner" style="min-height: 140px;">
+            <span data-i18n="adBannerBottom">Clickable homepage section ready for future content</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-card">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <h3>Idesüss</h3>
+            <p data-i18n="footerDesc">
+              Homepage + mini app entry point for supported public video links.
+            </p>
+          </div>
+
+          <div class="footer-links">
+            <a href="#miniapp" data-i18n="tryMiniApp">Try Mini App</a>
+            <a href="https://idesuss.app" data-i18n="openApp">Open App</a>
+            <button id="footerInstallBtn" type="button" data-i18n="install">Install</button>
+            <a href="#about" data-i18n="aboutLink">About</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>© <span id="year"></span> Idesüss</div>
+          <div class="powered">Powered by StZoo</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const APP_URL = "https://idesuss.app";
+    const COUNTER_KEY = "idesuss_open_count";
+    const LANG_KEY = "idesuss_lang";
+
+    let deferredPrompt = null;
+    let isInstalled = false;
+
+    const dict = {
+      en: {
+        brandSubtitle: "Homepage + mini app experience",
+        eyebrow: "Public links. Cleaner access. Faster flow.",
+        heroTitle: "Open public video links in a cleaner way",
+        heroLead: "Idesüss gives you a light, mobile-friendly web interface for opening supported public video links quickly, simply and with less clutter.",
+        openApp: "Open App",
+        install: "Install",
+        howItWorks: "How It Works",
+        tryMiniApp: "Try Mini App",
+        chipPublicOnly: "Public links only",
+        chipMobileFriendly: "Mobile-friendly",
+        chipFastEntry: "Fast entry point to the app",
+        advertisement: "Advertisement",
+        adPlaceholderSmall: "Reserved spot for future partner content",
+        adBannerText: "Your ad can live here",
+        miniAppKicker: "Mini app",
+        miniAppTitle: "Try it directly on the homepage",
+        miniAppDesc: "Paste a supported public link here, open it right away, or continue to the dedicated app-style interface for a more focused experience.",
+        inputTitle: "Paste a public video link below",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.",
+        inputLabel: "Public video URL",
+        paste: "Paste",
+        open: "Open",
+        clear: "Clear",
+        clipboardChecking: "Clipboard checking…",
+        installStateUnknown: "Install status loading…",
+        publicLinksOnly: "Public links only",
+        counterLabel: "Links opened",
+        counterNote: "Stored locally on this device for quick tracking.",
+        supportedTitle: "Supported sources",
+        quickActionsTitle: "Quick actions",
+        openFullApp: "Open full app",
+        installPwa: "Install PWA",
+        howKicker: "How it works",
+        howTitle: "Three simple steps",
+        howDesc: "Keep the homepage useful and clean, while the dedicated app remains the faster, more focused interface.",
+        step1Title: "Paste or auto-detect a link",
+        step1Text: "The page can try to read a supported link from your clipboard automatically.",
+        step2Title: "Open it instantly",
+        step2Text: "The mini app opens the link directly, while also counting successful opens locally.",
+        step3Title: "Move to the full app anytime",
+        step3Text: "Use the dedicated Idesüss app interface when you want a more focused mobile workflow.",
+        aboutKicker: "About",
+        aboutTitle: "Homepage, profile and practical entry point in one place",
+        aboutDesc: "Idesüss.net is designed to introduce the project clearly, stay usable on its own, and connect visitors to the dedicated app-style experience with a single tap.",
+        aboutCard1Title: "Clear profile",
+        aboutCard1Text: "A more professional homepage presence with a direct explanation of what Idesüss is and what it is for.",
+        aboutCard2Title: "Useful homepage",
+        aboutCard2Text: "Not just a landing page: visitors can already paste and open supported public links from here.",
+        aboutCard3Title: "Future-ready layout",
+        aboutCard3Text: "Ad-ready sections, expandable blocks, language switching and install support are already built into the structure.",
+        adFriendly: "Friendly placeholder for now, monetizable later",
+        adBannerMid: "A dedicated place for banners, partners or project promos",
+        ctaTitle: "Want the faster mobile experience?",
+        ctaText: "Use the dedicated Idesüss app interface for a cleaner, more focused workflow. The homepage stays informative and useful, while the app stays fast and tool-like.",
+        goToApp: "Go to Idesüss App",
+        contactKicker: "Contact / ad spot",
+        contactTitle: "Reserved blocks for future placements",
+        contactDesc: "These sections can later hold banner ads, partner mentions, internal promotions or other clickable content without redesigning the homepage.",
+        contactMini: "Expandable placement area",
+        adBannerBottom: "Clickable homepage section ready for future content",
+        footerDesc: "Homepage + mini app entry point for supported public video links.",
+        aboutLink: "About"
+      },
+      hu: {
+        brandSubtitle: "Főoldal + mini app élmény",
+        eyebrow: "Nyilvános linkek. Tisztább elérés. Gyorsabb folyamat.",
+        heroTitle: "Nyisd meg a nyilvános videólinkeket letisztultabban",
+        heroLead: "Az Idesüss egy könnyű, mobilbarát webes felület, amellyel a támogatott nyilvános videólinkeket gyorsabban, egyszerűbben és kevesebb zavaró elemmel lehet megnyitni.",
+        openApp: "App megnyitása",
+        install: "Telepítés",
+        howItWorks: "Hogyan működik",
+        tryMiniApp: "Mini app kipróbálása",
+        chipPublicOnly: "Csak nyilvános linkek",
+        chipMobileFriendly: "Mobilbarát",
+        chipFastEntry: "Gyors belépés az appba",
+        advertisement: "Hirdetés",
+        adPlaceholderSmall: "Fenntartott hely jövőbeli partner tartalomnak",
+        adBannerText: "Itt lehet a hirdetésed",
+        miniAppKicker: "Mini app",
+        miniAppTitle: "Próbáld ki közvetlenül a főoldalon",
+        miniAppDesc: "Illessz be ide egy támogatott nyilvános linket, nyisd meg azonnal, vagy lépj át a dedikált app-felületre egy fókuszáltabb élményért.",
+        inputTitle: "Illessz be egy nyilvános videólinket",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.",
+        inputLabel: "Nyilvános videó URL",
+        paste: "Beillesztés",
+        open: "Megnyitás",
+        clear: "Törlés",
+        clipboardChecking: "Vágólap ellenőrzése…",
+        installStateUnknown: "Telepítési állapot betöltése…",
+        publicLinksOnly: "Csak nyilvános linkek",
+        counterLabel: "Megnyitott linkek",
+        counterNote: "Helyben tárolva ezen az eszközön a gyors követéshez.",
+        supportedTitle: "Támogatott források",
+        quickActionsTitle: "Gyors műveletek",
+        openFullApp: "Teljes app megnyitása",
+        installPwa: "PWA telepítése",
+        howKicker: "Működés",
+        howTitle: "Három egyszerű lépés",
+        howDesc: "A főoldal maradjon használható és tiszta, miközben a dedikált app a gyorsabb, fókuszáltabb felület marad.",
+        step1Title: "Link beillesztése vagy automatikus felismerése",
+        step1Text: "Az oldal megpróbálhat támogatott linket olvasni a vágólapról automatikusan.",
+        step2Title: "Azonnali megnyitás",
+        step2Text: "A mini app közvetlenül megnyitja a linket, és közben helyben számolja a sikeres megnyitásokat.",
+        step3Title: "Átlépés a teljes appba bármikor",
+        step3Text: "Használd a dedikált Idesüss app felületet, ha fókuszáltabb mobilos munkafolyamatot szeretnél.",
+        aboutKicker: "Névjegy",
+        aboutTitle: "Főoldal, profil és gyakorlati belépőpont egy helyen",
+        aboutDesc: "Az Idesüss.net célja, hogy világosan bemutassa a projektet, önmagában is használható maradjon, és egy érintéssel átvezesse a látogatót a dedikált app-élménybe.",
+        aboutCard1Title: "Tiszta profil",
+        aboutCard1Text: "Profibb főoldali megjelenés, közvetlen magyarázattal arról, mi az Idesüss és mire való.",
+        aboutCard2Title: "Használható főoldal",
+        aboutCard2Text: "Nem csak landing page: a látogató már innen is beilleszthet és megnyithat támogatott nyilvános linkeket.",
+        aboutCard3Title: "Jövőálló elrendezés",
+        aboutCard3Text: "Hirdetési blokkok, bővíthető szekciók, nyelvváltás és telepítési támogatás már eleve benne van a szerkezetben.",
+        adFriendly: "Egyelőre baráti helykitöltő, később monetizálható",
+        adBannerMid: "Külön hely bannereknek, partnereknek vagy projektajánlóknak",
+        ctaTitle: "Kell a gyorsabb mobilos élmény?",
+        ctaText: "Használd a dedikált Idesüss app felületet letisztultabb, fókuszáltabb munkafolyamathoz. A főoldal marad informatív és használható, az app pedig gyors és eszközszerű.",
+        goToApp: "Ugrás az Idesüss Appba",
+        contactKicker: "Kapcsolat / hirdetési hely",
+        contactTitle: "Fenntartott blokkok későbbi elhelyezésekhez",
+        contactDesc: "Ezek a részek később bannereket, partnermegjelenéseket, saját promókat vagy más kattintható tartalmat fogadhatnak újratervezés nélkül.",
+        contactMini: "Bővíthető elhelyezési terület",
+        adBannerBottom: "Kattintható főoldali szekció jövőbeli tartalomhoz",
+        footerDesc: "Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.",
+        aboutLink: "Névjegy"
+      }
+    };
+
+    const els = {
+      langSelect: document.getElementById("langSelect"),
+      videoUrl: document.getElementById("videoUrl"),
+      pasteBtn: document.getElementById("pasteBtn"),
+      openBtn: document.getElementById("openBtn"),
+      clearBtn: document.getElementById("clearBtn"),
+      clipboardStatus: document.getElementById("clipboardStatus"),
+      installStatus: document.getElementById("installStatus"),
+      openCounter: document.getElementById("openCounter"),
+      year: document.getElementById("year"),
+      installButtons: [
+        document.getElementById("headerInstallBtn"),
+        document.getElementById("heroInstallBtn"),
+        document.getElementById("sideInstallBtn"),
+        document.getElementById("ctaInstallBtn"),
+        document.getElementById("footerInstallBtn")
+      ],
+      appLinks: [
+        document.getElementById("headerOpenAppBtn"),
+        document.getElementById("heroOpenAppBtn"),
+        document.getElementById("sideOpenAppBtn"),
+        document.getElementById("ctaOpenAppBtn")
+      ]
+    };
+
+    function setAppLinks() {
+      els.appLinks.forEach(link => {
+        if (link) link.href = APP_URL;
+      });
+    }
+
+    function applyTranslations(lang) {
+      const active = dict[lang] ? lang : "en";
+      document.documentElement.lang = active;
+      els.langSelect.value = active;
+      localStorage.setItem(LANG_KEY, active);
+
+      document.querySelectorAll("[data-i18n]").forEach(node => {
+        const key = node.getAttribute("data-i18n");
+        const value = dict[active][key];
+        if (value) node.textContent = value;
+      });
+
+      els.videoUrl.placeholder = active === "hu"
+        ? "Illessz be egy nyilvános linket ide…"
+        : "Paste a public link here…";
+
+      updateInstallUI();
+    }
+
+    function getCounter() {
+      return Number(localStorage.getItem(COUNTER_KEY) || 0);
+    }
+
+    function setCounter(value) {
+      localStorage.setItem(COUNTER_KEY, String(value));
+      els.openCounter.textContent = String(value);
+    }
+
+    function incrementCounter() {
+      setCounter(getCounter() + 1);
+    }
+
+    function looksLikeUrl(text) {
+      if (!text || typeof text !== "string") return false;
+      try {
+        const url = new URL(text.trim());
+        return ["http:", "https:"].includes(url.protocol);
+      } catch {
+        return false;
+      }
+    }
+
+    function updateClipboardStatus(type, text) {
+      els.clipboardStatus.className = "status-pill";
+      if (type === "ok") els.clipboardStatus.classList.add("status-ok");
+      if (type === "warn") els.clipboardStatus.classList.add("status-warn");
+      if (type === "error") els.clipboardStatus.classList.add("status-error");
+
+      els.clipboardStatus.innerHTML = `
+        <span class="status-dot"></span>
+        <span>${text}</span>
+      `;
+    }
+
+    function updateInstallStatus(type, text) {
+      els.installStatus.className = "status-pill";
+      if (type === "ok") els.installStatus.classList.add("status-ok");
+      if (type === "warn") els.installStatus.classList.add("status-warn");
+      if (type === "error") els.installStatus.classList.add("status-error");
+
+      els.installStatus.innerHTML = `
+        <span class="status-dot"></span>
+        <span>${text}</span>
+      `;
+    }
+
+    function getInstallLabelState() {
+      const lang = document.documentElement.lang || "en";
+      if (isInstalled) {
+        return lang === "hu"
+          ? { button: "Telepítve", status: "Az app már telepítve van", type: "ok", disabled: true }
+          : { button: "Installed", status: "The app is already installed", type: "ok", disabled: true };
+      }
+
+      if (deferredPrompt) {
+        return lang === "hu"
+          ? { button: "Telepítés", status: "A telepítés elérhető", type: "ok", disabled: false }
+          : { button: "Install", status: "Installation is available", type: "ok", disabled: false };
+      }
+
+      return lang === "hu"
+        ? { button: "Telepítés", status: "A telepítés most nem érhető el", type: "warn", disabled: true }
+        : { button: "Install", status: "Installation is not available right now", type: "warn", disabled: true };
+    }
+
+    function updateInstallUI() {
+      const state = getInstallLabelState();
+      els.installButtons.forEach(btn => {
+        if (!btn) return;
+        btn.disabled = state.disabled;
+        btn.setAttribute("aria-disabled", String(state.disabled));
+        btn.textContent = state.button;
+        btn.title = state.status;
+      });
+      updateInstallStatus(state.type, state.status);
+    }
+
+    async function tryInstall() {
+      if (!deferredPrompt || isInstalled) return;
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === "accepted") {
+        deferredPrompt = null;
+      }
+      updateInstallUI();
+    }
+
+    async function pasteFromClipboard(force = false) {
+      const lang = document.documentElement.lang || "en";
+
+      if (!navigator.clipboard?.readText) {
+        updateClipboardStatus(
+          "warn",
+          lang === "hu"
+            ? "A vágólap olvasása itt nem támogatott"
+            : "Clipboard reading is not supported here"
+        );
+        return;
+      }
+
+      try {
+        const text = (await navigator.clipboard.readText()).trim();
+
+        if (!text) {
+          updateClipboardStatus(
+            "warn",
+            lang === "hu"
+              ? "A vágólap jelenleg üres"
+              : "Clipboard is currently empty"
+          );
+          return;
         }
 
-        async function loadLanguage(lang) {
-            try {
-                const response = await fetch(`${lang}.json.txt`, { cache: 'no-cache' });
-                if (!response.ok) throw new Error(`Language file not found: ${lang}`);
-                dict = await response.json();
-                currentLang = lang;
-                localStorage.setItem(STORAGE_KEYS.lang, lang);
-                els.langSelect.value = lang;
-                applyLanguage();
-            } catch (error) {
-                console.error(error);
-                if (lang !== 'en') {
-                    await loadLanguage('en');
-                }
-            }
+        if (looksLikeUrl(text)) {
+          els.videoUrl.value = text;
+          updateClipboardStatus(
+            "ok",
+            lang === "hu"
+              ? "Link észlelve — készen áll a megnyitásra"
+              : "Link detected — ready to open"
+          );
+          return;
         }
 
-        function t(key, fallback = '') {
-            return dict[key] || fallback || key;
+        if (force) {
+          els.videoUrl.value = text;
+          updateClipboardStatus(
+            "warn",
+            lang === "hu"
+              ? "A vágólap tartalma nem tűnik linknek"
+              : "Clipboard content does not look like a link"
+          );
+        } else {
+          updateClipboardStatus(
+            "warn",
+            lang === "hu"
+              ? "Nem találtam támogatott linket a vágólapon"
+              : "No supported link found in clipboard"
+          );
         }
+      } catch {
+        updateClipboardStatus(
+          "warn",
+          lang === "hu"
+            ? "A vágólaphoz most nincs hozzáférés"
+            : "Clipboard access is not available right now"
+        );
+      }
+    }
 
-        function applyLanguage() {
-            document.documentElement.lang = currentLang;
+    function normalizeUrl(value) {
+      const raw = value.trim();
+      if (!raw) return "";
+      if (/^https?:\/\//i.test(raw)) return raw;
+      return "https://" + raw;
+    }
 
-            els.brandSub.textContent = 'BETA';
-            els.counterLabel.textContent = t('counterLabel', 'Views');
-            els.counterNote.textContent = t('counterNote', 'The counter does not increase on every refresh.');
-            els.langBoxLabel.textContent = t('langBoxLabel', 'Language');
-            els.currentLangText.textContent = '🌐 ' + currentLang.toUpperCase();
-            els.langSubnote.textContent = t('langSubnote', 'Hungarian browser → Hungarian UI, everything else → English.');
-            els.urlInput.placeholder = t('textareaPlaceholder', 'Paste the link here...');
-            els.playBtnText.textContent = t('playBtnText', 'PLAY');
-            els.pasteBtn.textContent = t('pasteBtn', 'PASTE');
-            els.backBtn.textContent = t('backBtn', 'BACK');
-            els.historyTitle.textContent = t('historyTitle', 'History');
-            els.clearHistoryBtn.textContent = t('clearHistoryBtn', 'Clear history');
-            els.footerText.textContent = t('footerText', 'Powered by StZoo');
-            els.installBtn.textContent = t('installBtnText', 'Install app');
+    function openUrl() {
+      const lang = document.documentElement.lang || "en";
+      const normalized = normalizeUrl(els.videoUrl.value);
 
-            renderHistory();
+      if (!normalized || !looksLikeUrl(normalized)) {
+        updateClipboardStatus(
+          "error",
+          lang === "hu"
+            ? "Adj meg egy érvényes nyilvános linket"
+            : "Please enter a valid public link"
+        );
+        els.videoUrl.focus();
+        return;
+      }
+
+      els.videoUrl.value = normalized;
+      incrementCounter();
+      window.open(normalized, "_blank", "noopener,noreferrer");
+      updateClipboardStatus(
+        "ok",
+        lang === "hu"
+          ? "Link megnyitva új lapon"
+          : "Link opened in a new tab"
+      );
+    }
+
+    function clearInput() {
+      els.videoUrl.value = "";
+      const lang = document.documentElement.lang || "en";
+      updateClipboardStatus(
+        "warn",
+        lang === "hu"
+          ? "Mező törölve — új link beilleszthető"
+          : "Field cleared — ready for a new link"
+      );
+    }
+
+    function detectInstalledState() {
+      isInstalled =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true;
+    }
+
+    function wireEvents() {
+      els.langSelect.addEventListener("change", e => applyTranslations(e.target.value));
+      els.pasteBtn.addEventListener("click", () => pasteFromClipboard(true));
+      els.openBtn.addEventListener("click", openUrl);
+      els.clearBtn.addEventListener("click", clearInput);
+
+      els.videoUrl.addEventListener("keydown", e => {
+        if (e.key === "Enter") openUrl();
+      });
+
+      els.installButtons.forEach(btn => {
+        if (!btn) return;
+        btn.addEventListener("click", tryInstall);
+      });
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        updateInstallUI();
+      });
+
+      window.addEventListener("appinstalled", () => {
+        deferredPrompt = null;
+        isInstalled = true;
+        updateInstallUI();
+      });
+
+      window.addEventListener("focus", () => pasteFromClipboard(false));
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          pasteFromClipboard(false);
+          detectInstalledState();
+          updateInstallUI();
         }
+      });
+    }
 
-        function setStatus(message, type = '') {
-            els.status.className = 'status' + (type ? ' ' + type : '');
-            els.status.innerHTML = message;
-        }
+    function init() {
+      setAppLinks();
+      detectInstalledState();
+      els.year.textContent = new Date().getFullYear();
+      setCounter(getCounter());
 
-        function getVisitCount() {
-            return parseInt(localStorage.getItem(STORAGE_KEYS.counter) || '0', 10);
-        }
+      const savedLang = localStorage.getItem(LANG_KEY) || "en";
+      applyTranslations(savedLang);
+      wireEvents();
+      pasteFromClipboard(false);
+      updateInstallUI();
+    }
 
-        function updateVisitCounter() {
-            const now = Date.now();
-            const lastVisit = parseInt(localStorage.getItem(STORAGE_KEYS.lastVisit) || '0', 10);
-            let count = getVisitCount();
-
-            if (!lastVisit || now - lastVisit > VISIT_COOLDOWN_MS) {
-                count += 1;
-                localStorage.setItem(STORAGE_KEYS.counter, String(count));
-                localStorage.setItem(STORAGE_KEYS.lastVisit, String(now));
-            }
-
-            els.visitCount.textContent = count;
-        }
-
-        function saveToHistory(url) {
-            let history = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
-
-            history = history.filter(item => item !== url);
-            history.unshift(url);
-
-            if (history.length > 8) history = history.slice(0, 8);
-
-            localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(history));
-            renderHistory();
-        }
-
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
-
-            if (!history.length) {
-                els.historyList.innerHTML = `<div class="empty-note">${escapeHtml(t('emptyHistory', 'No history yet.'))}</div>`;
-                return;
-            }
-
-            els.historyList.innerHTML = history.map(url => `
-                <div class="hist-item">
-                    <div class="hist-url">${escapeHtml(url)}</div>
-                    <button class="history-link" type="button" onclick="reopenHistoryItem('${encodeURIComponent(url)}')">
-                        ${escapeHtml(t('openAgain', 'Open again'))}
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function clearHistory() {
-            localStorage.removeItem(STORAGE_KEYS.history);
-            renderHistory();
-            setStatus(t('historyCleared', 'History cleared.'), 'ok');
-        }
-
-        function escapeHtml(str) {
-            return String(str)
-                .replaceAll('&', '&amp;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;')
-                .replaceAll('"', '&quot;')
-                .replaceAll("'", '&#39;');
-        }
-
-        function escapeAttribute(str) {
-            return String(str)
-                .replaceAll('&', '&amp;')
-                .replaceAll('"', '&quot;')
-                .replaceAll("'", '&#39;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;');
-        }
-
-        function extractYouTubeId(url) {
-            try {
-                if (url.includes('shorts/')) {
-                    return url.split('shorts/')[1].split(/[?&]/)[0];
-                }
-                if (url.includes('v=')) {
-                    return url.split('v=')[1].split('&')[0];
-                }
-                return url.split('/').pop().split(/[?&]/)[0];
-            } catch {
-                return '';
-            }
-        }
-
-        function showYouTubePlayer(videoId, originalUrl) {
-            const embedUrl = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1';
-            els.ytFrame.src = embedUrl;
-            els.playerCard.style.display = 'block';
-            els.inputCard.style.display = 'none';
-            saveToHistory(originalUrl);
-        }
-
-        function hideYouTubePlayer() {
-            els.ytFrame.src = '';
-            els.playerCard.style.display = 'none';
-            els.inputCard.style.display = 'block';
-            setStatus('');
-        }
-
-        function openExternal(url) {
-            const newTab = window.open(url, '_blank');
-
-            if (!newTab) {
-                setStatus(
-                    `${escapeHtml(t('blockedOpen', 'Blocked! Click here to open it.'))}<br><a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer" style="color:white;font-weight:800;">${escapeHtml(t('openLinkText', 'CLICK HERE TO OPEN'))}</a>`,
-                    'error'
-                );
-                return;
-            }
-
-            setStatus(t('successOpen', 'Opened successfully!'), 'ok');
-            els.urlInput.value = '';
-        }
-
-        function handleGo(urlOverride = null) {
-            const url = (urlOverride || els.urlInput.value).trim();
-
-            if (!url) {
-                setStatus(t('emptyField', 'Error: empty field!'), 'error');
-                return;
-            }
-
-            setStatus(t('starting', 'Starting...'));
-
-            if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                setStatus(t('ytLoading', 'Loading YouTube...'));
-                const videoId = extractYouTubeId(url);
-
-                if (!videoId) {
-                    setStatus(t('unknownLink', 'Unknown link. Trying to open it...'), 'error');
-                    return;
-                }
-
-                showYouTubePlayer(videoId, url);
-                return;
-            }
-
-            if (
-                url.includes('facebook.com') ||
-                url.includes('fb.watch') ||
-                url.includes('tiktok.com') ||
-                url.includes('instagram.com')
-            ) {
-                setStatus(t('directOpen', 'Opening directly...'));
-                saveToHistory(url);
-                openExternal(url);
-                return;
-            }
-
-            setStatus(t('unknownLink', 'Unknown link. Trying to open it...'));
-            saveToHistory(url);
-            openExternal(url);
-        }
-
-        async function pasteFromClipboard() {
-            try {
-                const text = await navigator.clipboard.readText();
-                if (text) {
-                    els.urlInput.value = text.trim();
-                    setStatus(t('pasted', 'Link pasted.'), 'ok');
-                } else {
-                    setStatus(t('pasteFail', 'Paste failed.'), 'error');
-                }
-            } catch {
-                setStatus(t('pasteFail', 'Paste failed.'), 'error');
-            }
-        }
-
-        async function tryAutoPasteFromClipboard() {
-            try {
-                if (!navigator.clipboard || !navigator.clipboard.readText) return;
-
-                const text = (await navigator.clipboard.readText()).trim();
-                if (!text) return;
-
-                const looksLikeUrl =
-                    text.startsWith('http://') ||
-                    text.startsWith('https://') ||
-                    text.includes('youtube.com') ||
-                    text.includes('youtu.be') ||
-                    text.includes('tiktok.com') ||
-                    text.includes('facebook.com') ||
-                    text.includes('fb.watch') ||
-                    text.includes('instagram.com');
-
-                if (!looksLikeUrl) return;
-
-                if (!els.urlInput.value.trim()) {
-                    els.urlInput.value = text;
-                    setStatus(t('pasted', 'Link pasted.'), 'ok');
-                }
-            } catch (error) {
-                // maradjon csendben
-            }
-        }
-
-        function reopenHistoryItem(encodedUrl) {
-            const url = decodeURIComponent(encodedUrl);
-            els.urlInput.value = url;
-            handleGo(url);
-        }
-
-        function isRunningStandalone() {
-            return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        }
-
-        function updateInstallButtonVisibility() {
-            if (deferredInstallPrompt && !isRunningStandalone()) {
-                els.installBtn.hidden = false;
-            } else {
-                els.installBtn.hidden = true;
-            }
-        }
-
-        window.reopenHistoryItem = reopenHistoryItem;
-
-        els.goBtn.addEventListener('click', () => handleGo());
-        els.backBtn.addEventListener('click', hideYouTubePlayer);
-        els.pasteBtn.addEventListener('click', pasteFromClipboard);
-        els.clearHistoryBtn.addEventListener('click', clearHistory);
-        els.langSelect.addEventListener('change', (event) => loadLanguage(event.target.value));
-
-        els.installBtn.addEventListener('click', async () => {
-            if (!deferredInstallPrompt) return;
-
-            deferredInstallPrompt.prompt();
-            try {
-                await deferredInstallPrompt.userChoice;
-            } catch (error) {
-                // nincs teendő
-            }
-
-            deferredInstallPrompt = null;
-            updateInstallButtonVisibility();
-        });
-
-        window.addEventListener('beforeinstallprompt', (event) => {
-            event.preventDefault();
-            deferredInstallPrompt = event;
-            updateInstallButtonVisibility();
-        });
-
-        window.addEventListener('appinstalled', () => {
-            deferredInstallPrompt = null;
-            updateInstallButtonVisibility();
-        });
-
-        window.addEventListener('focus', tryAutoPasteFromClipboard);
-
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                tryAutoPasteFromClipboard();
-            }
-        });
-
-        (async function init() {
-            updateVisitCounter();
-            await loadLanguage(currentLang);
-            renderHistory();
-            updateInstallButtonVisibility();
-            tryAutoPasteFromClipboard();
-        })();
-    </script>
+    init();
+  </script>
 </body>
 </html>
