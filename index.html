@@ -86,6 +86,26 @@
             text-transform: uppercase;
         }
 
+        .top-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .install-btn {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            border-radius: 14px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            backdrop-filter: blur(12px);
+        }
+
         .lang-area {
             display: flex;
             align-items: center;
@@ -111,8 +131,8 @@
             outline: none;
             appearance: none;
             -webkit-appearance: none;
-            padding-right: 16px;
             cursor: pointer;
+            min-width: 54px;
         }
 
         .lang-select option {
@@ -183,12 +203,6 @@
             margin-bottom: 14px;
         }
 
-        .section-title,
-        .section-sub,
-        .footer-note {
-            display: none;
-        }
-
         textarea {
             width: 100%;
             min-height: 120px;
@@ -239,13 +253,24 @@
         .secondary-btn:active,
         .history-link:active,
         .back-btn:active,
-        .clear-btn:active {
+        .clear-btn:active,
+        .install-btn:active {
             transform: scale(0.985);
         }
 
         .play-icon {
-            font-size: 20px;
-            line-height: 1;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+        }
+
+        .play-icon svg {
+            width: 24px;
+            height: 24px;
+            display: block;
         }
 
         .secondary-btn {
@@ -383,9 +408,27 @@
             padding-bottom: 8px;
         }
 
+        [hidden] {
+            display: none !important;
+        }
+
         @media (max-width: 420px) {
             .hero-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: stretch;
+            }
+
+            .top-actions {
+                align-items: stretch;
+            }
+
+            .lang-area,
+            .install-btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -398,15 +441,19 @@
                 <div class="brand-sub" id="brandSub">BETA</div>
             </div>
 
-            <div class="lang-area">
-                <span class="lang-icon">🌐</span>
-                <select id="langSelect" class="lang-select" aria-label="Language selector">
-                    <option value="hu">HU</option>
-                    <option value="en">EN</option>
-                    <option value="nl">NL</option>
-                    <option value="ro">RO</option>
-                    <option value="pl">PL</option>
-                </select>
+            <div class="top-actions">
+                <button id="installBtn" class="install-btn" type="button" hidden>Telepítés</button>
+
+                <div class="lang-area">
+                    <span class="lang-icon">🌐</span>
+                    <select id="langSelect" class="lang-select" aria-label="Language selector">
+                        <option value="hu">HU</option>
+                        <option value="en">EN</option>
+                        <option value="nl">NL</option>
+                        <option value="ro">RO</option>
+                        <option value="pl">PL</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -431,16 +478,20 @@
         </div>
 
         <div class="card input-card" id="inputCard">
-            <div class="section-title" id="mainTitle"></div>
-            <div class="section-sub" id="mainSub"></div>
-
             <textarea id="urlInput" placeholder="Másold be a linket ide..."></textarea>
 
             <div class="action-row">
                 <button id="goBtn" class="play-btn" type="button">
-    <span class="play-icon">👁</span>
-    <span id="playBtnText">INDÍTÁS</span>
-</button>
+                    <span class="play-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.5 12C3.8 7.9 7.5 5.5 12 5.5C16.5 5.5 20.2 7.9 22.5 12C20.2 16.1 16.5 18.5 12 18.5C7.5 18.5 3.8 16.1 1.5 12Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+                            <circle cx="12" cy="12" r="3.8" stroke="white" stroke-width="1.8"/>
+                            <path d="M11 9.8L14.6 12L11 14.2V9.8Z" fill="white"/>
+                        </svg>
+                    </span>
+                    <span id="playBtnText">INDÍTÁS</span>
+                </button>
+
                 <button id="pasteBtn" class="secondary-btn" type="button">PASTE</button>
             </div>
 
@@ -477,13 +528,12 @@
         const els = {
             brandSub: document.getElementById('brandSub'),
             langSelect: document.getElementById('langSelect'),
+            installBtn: document.getElementById('installBtn'),
             counterLabel: document.getElementById('counterLabel'),
             counterNote: document.getElementById('counterNote'),
             langBoxLabel: document.getElementById('langBoxLabel'),
             currentLangText: document.getElementById('currentLangText'),
             langSubnote: document.getElementById('langSubnote'),
-            mainTitle: document.getElementById('mainTitle'),
-            mainSub: document.getElementById('mainSub'),
             urlInput: document.getElementById('urlInput'),
             playBtnText: document.getElementById('playBtnText'),
             pasteBtn: document.getElementById('pasteBtn'),
@@ -502,6 +552,7 @@
 
         let currentLang = detectInitialLanguage();
         let dict = {};
+        let deferredInstallPrompt = null;
 
         function detectInitialLanguage() {
             const saved = localStorage.getItem(STORAGE_KEYS.lang);
@@ -541,13 +592,11 @@
             document.documentElement.lang = currentLang;
 
             els.brandSub.textContent = 'BETA';
-            els.counterLabel.textContent = t('counterLabel', 'Visits');
+            els.counterLabel.textContent = t('counterLabel', 'Views');
             els.counterNote.textContent = t('counterNote', 'The counter does not increase on every refresh.');
             els.langBoxLabel.textContent = t('langBoxLabel', 'Language');
             els.currentLangText.textContent = '🌐 ' + currentLang.toUpperCase();
             els.langSubnote.textContent = t('langSubnote', 'Hungarian browser → Hungarian UI, everything else → English.');
-            els.mainTitle.textContent = '';
-            els.mainSub.textContent = '';
             els.urlInput.placeholder = t('textareaPlaceholder', 'Paste the link here...');
             els.playBtnText.textContent = t('playBtnText', 'PLAY');
             els.pasteBtn.textContent = t('pasteBtn', 'PASTE');
@@ -555,6 +604,7 @@
             els.historyTitle.textContent = t('historyTitle', 'History');
             els.clearHistoryBtn.textContent = t('clearHistoryBtn', 'Clear history');
             els.footerText.textContent = t('footerText', 'Powered by StZoo');
+            els.installBtn.textContent = t('installBtnText', 'Install app');
 
             renderHistory();
         }
@@ -734,10 +784,50 @@
             }
         }
 
+        async function tryAutoPasteFromClipboard() {
+            try {
+                if (!navigator.clipboard || !navigator.clipboard.readText) return;
+
+                const text = (await navigator.clipboard.readText()).trim();
+                if (!text) return;
+
+                const looksLikeUrl =
+                    text.startsWith('http://') ||
+                    text.startsWith('https://') ||
+                    text.includes('youtube.com') ||
+                    text.includes('youtu.be') ||
+                    text.includes('tiktok.com') ||
+                    text.includes('facebook.com') ||
+                    text.includes('fb.watch') ||
+                    text.includes('instagram.com');
+
+                if (!looksLikeUrl) return;
+
+                if (!els.urlInput.value.trim()) {
+                    els.urlInput.value = text;
+                    setStatus(t('pasted', 'Link pasted.'), 'ok');
+                }
+            } catch (error) {
+                // maradjon csendben
+            }
+        }
+
         function reopenHistoryItem(encodedUrl) {
             const url = decodeURIComponent(encodedUrl);
             els.urlInput.value = url;
             handleGo(url);
+        }
+
+        function isRunningStandalone() {
+            return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        }
+
+        function updateInstallButtonVisibility() {
+            if (deferredInstallPrompt && !isRunningStandalone()) {
+                els.installBtn.hidden = false;
+            } else {
+                els.installBtn.hidden = true;
+            }
         }
 
         window.reopenHistoryItem = reopenHistoryItem;
@@ -748,10 +838,45 @@
         els.clearHistoryBtn.addEventListener('click', clearHistory);
         els.langSelect.addEventListener('change', (event) => loadLanguage(event.target.value));
 
+        els.installBtn.addEventListener('click', async () => {
+            if (!deferredInstallPrompt) return;
+
+            deferredInstallPrompt.prompt();
+            try {
+                await deferredInstallPrompt.userChoice;
+            } catch (error) {
+                // nincs teendő
+            }
+
+            deferredInstallPrompt = null;
+            updateInstallButtonVisibility();
+        });
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            updateInstallButtonVisibility();
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            updateInstallButtonVisibility();
+        });
+
+        window.addEventListener('focus', tryAutoPasteFromClipboard);
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                tryAutoPasteFromClipboard();
+            }
+        });
+
         (async function init() {
             updateVisitCounter();
             await loadLanguage(currentLang);
             renderHistory();
+            updateInstallButtonVisibility();
+            tryAutoPasteFromClipboard();
         })();
     </script>
 </body>
