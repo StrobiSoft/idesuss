@@ -747,3 +747,295 @@
             if (browserLang.startsWith('pl')) return 'pl';
             return 'en';
         }
+                async function loadLanguage(lang) {
+            try {
+                const response = await fetch(`${lang}.json.txt`, { cache: 'no-cache' });
+                if (!response.ok) throw new Error(`Language file not found: ${lang}`);
+                dict = await response.json();
+                currentLang = lang;
+                localStorage.setItem(STORAGE_KEYS.lang, lang);
+                els.langSelect.value = lang;
+                applyLanguage();
+            } catch (error) {
+                console.error(error);
+                if (lang !== 'en') {
+                    await loadLanguage('en');
+                }
+            }
+        }
+
+        function t(key, fallback = '') {
+            return dict[key] || fallback || key;
+        }
+
+        function applyLanguage() {
+            document.documentElement.lang = currentLang;
+            document.getElementById('aboutCloseBtn').textContent = t('aboutCloseBtn', 'OK');
+
+            els.brandSub.textContent = '';
+            els.counterLabel.textContent = t('counterLabel', 'Views');
+            els.counterNote.textContent = t('counterNote', 'The counter does not increase on every refresh.');
+            els.langBoxLabel.textContent = t('langBoxLabel', 'Language');
+            els.currentLangText.textContent = '🌐 ' + currentLang.toUpperCase();
+            els.langSubnote.textContent = t('langSubnote', 'Hungarian browser → Hungarian UI, everything else → English.');
+            els.urlInput.placeholder = t('textareaPlaceholder', 'Paste the link here...');
+            els.playBtnText.textContent = t('playBtnText', 'PLAY');
+            els.pasteBtn.textContent = t('pasteBtn', 'PASTE');
+            els.shareBtn.textContent = t('shareBtn', 'SHARE');
+            els.clearInputBtn.textContent = t('clearInputBtn', 'CLEAR');
+            els.backBtn.textContent = t('backBtn', 'BACK');
+            els.historyTitle.textContent = t('historyTitle', 'History');
+            els.clearHistoryBtn.textContent = t('clearHistoryBtn', 'Clear history');
+            els.footerText.textContent = t('footerText', 'Powered by StZoo');
+            els.aboutLink.textContent = t('aboutLink', 'About');
+            els.aboutTitle.textContent = t('aboutTitle', 'About');
+            els.aboutText.textContent = t(
+                'aboutText',
+                'The creation of Idesüss was inspired by a very old friend of mine. Partly his mindset, habits and unique way of seeing things started this whole page in me. He is a little paranoid, a little lazy, so for a while the page almost got the name “Lazy Driver”. In the end it became Idesüss, and I do not regret that at all. It came much closer to the mood I wanted this whole thing to represent, while making sure I would not hurt the person who inspired the idea.'
+            );
+            updateInstallButtonsText();
+            renderHistory();
+        }
+
+        function setStatus(message, type = '') {
+            els.status.className = 'status' + (type ? ' ' + type : '');
+            els.status.innerHTML = message;
+        }
+
+        function getVisitCount() {
+            return parseInt(localStorage.getItem(STORAGE_KEYS.counter) || '0', 10);
+        }
+
+        function updateVisitCounter() {
+            const now = Date.now();
+            const lastVisit = parseInt(localStorage.getItem(STORAGE_KEYS.lastVisit) || '0', 10);
+            let count = getVisitCount();
+
+            if (!lastVisit || now - lastVisit > VISIT_COOLDOWN_MS) {
+                count += 1;
+                localStorage.setItem(STORAGE_KEYS.counter, String(count));
+                localStorage.setItem(STORAGE_KEYS.lastVisit, String(now));
+            }
+
+            els.visitCount.textContent = count;
+        }
+
+        function getHistory() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
+                return Array.isArray(parsed) ? parsed : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveHistoryArray(history) {
+            localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(history));
+        }
+
+        function getSourceFromUrl(url) {
+            if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
+            if (url.includes('tiktok.com')) return 'TikTok';
+            if (url.includes('instagram.com')) return 'Instagram';
+            if (url.includes('facebook.com') || url.includes('fb.watch')) return 'Facebook';
+            return 'Link';
+        }
+
+        function extractYouTubeId(url) {
+            try {
+                if (url.includes('shorts/')) {
+                    return url.split('shorts/')[1].split(/[?&]/)[0];
+                }
+                if (url.includes('v=')) {
+                    return url.split('v=')[1].split('&')[0];
+                }
+                if (url.includes('youtu.be/')) {
+                    return url.split('youtu.be/')[1].split(/[?&]/)[0];
+                }
+                return url.split('/').pop().split(/[?&]/)[0];
+            } catch {
+                return '';
+            }
+        }
+
+        function makeSvgThumb(label) {
+            const svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200">
+                    <defs>
+                        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+                            <stop offset="0%" stop-color="#0ea5e9"/>
+                            <stop offset="100%" stop-color="#1e293b"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="320" height="200" rx="20" fill="url(#g)"/>
+                    <circle cx="255" cy="50" r="42" fill="rgba(255,255,255,0.08)"/>
+                    <circle cx="60" cy="155" r="52" fill="rgba(255,255,255,0.06)"/>
+                    <text x="24" y="118" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="700">${label}</text>
+                </svg>
+            `;
+            return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+        }
+
+        function getThumbForUrl(url) {
+            const source = getSourceFromUrl(url);
+            if (source === 'YouTube') {
+                const videoId = extractYouTubeId(url);
+                if (videoId) return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            }
+            return makeSvgThumb(source);
+        }
+
+        function buildHistoryItem(url) {
+            const source = getSourceFromUrl(url);
+            return {
+                url,
+                source,
+                thumb: getThumbForUrl(url),
+                title: source + ' • ' + url
+            };
+        }
+
+        function saveToHistory(url) {
+            let history = getHistory();
+
+            history = history.filter(item => (typeof item === 'string' ? item : item.url) !== url);
+            history.unshift(buildHistoryItem(url));
+
+            if (history.length > 8) history = history.slice(0, 8);
+
+            saveHistoryArray(history);
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const history = getHistory();
+
+            if (!history.length) {
+                els.historyList.innerHTML = `<div class="empty-note">${escapeHtml(t('emptyHistory', 'No history yet.'))}</div>`;
+                return;
+            }
+
+            els.historyList.innerHTML = history.map((item, index) => {
+                const safeItem = typeof item === 'string' ? buildHistoryItem(item) : item;
+                return `
+                    <div class="hist-item">
+                        <img class="hist-thumb" src="${escapeAttribute(safeItem.thumb)}" alt="${escapeAttribute(safeItem.source)} preview" loading="lazy">
+                        <div class="hist-body">
+                            <div class="hist-meta">
+                                <span class="hist-badge">${escapeHtml(safeItem.source)}</span>
+                            </div>
+                            <div class="hist-title">${escapeHtml(safeItem.title || safeItem.url)}</div>
+                            <div class="hist-url">${escapeHtml(safeItem.url)}</div>
+                            <div class="hist-actions">
+                                <button class="history-link" type="button" onclick="reopenHistoryItem(${index})">
+                                    ${escapeHtml(t('openAgain', 'Open again'))}
+                                </button>
+                                <button class="history-share" type="button" onclick="shareHistoryItem(${index})">
+                                    ${escapeHtml(t('shareBtn', 'Share'))}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearHistory() {
+            localStorage.removeItem(STORAGE_KEYS.history);
+            renderHistory();
+            setStatus(t('historyCleared', 'History cleared.'), 'ok');
+        }
+
+        function clearInputField() {
+            els.urlInput.value = '';
+            els.urlInput.focus();
+            setStatus(t('inputCleared', 'Field cleared.'), 'ok');
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        function escapeAttribute(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;');
+        }
+
+        function showYouTubePlayer(videoId, originalUrl) {
+            const embedUrl = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1';
+            els.ytFrame.src = embedUrl;
+            els.playerCard.style.display = 'block';
+            els.inputCard.style.display = 'none';
+            saveToHistory(originalUrl);
+        }
+
+        function hideYouTubePlayer() {
+            els.ytFrame.src = '';
+            els.playerCard.style.display = 'none';
+            els.inputCard.style.display = 'block';
+            setStatus('');
+        }
+
+        function openExternal(url) {
+            const newTab = window.open(url, '_blank');
+
+            if (!newTab) {
+                setStatus(
+                    `${escapeHtml(t('blockedOpen', 'Blocked! Click here to open it.'))}<br><a href="${escapeAttribute(url)}" target="_blank" rel="noopener noreferrer" style="color:white;font-weight:800;">${escapeHtml(t('openLinkText', 'CLICK HERE TO OPEN'))}</a>`,
+                    'error'
+                );
+                return;
+            }
+
+            setStatus(t('successOpen', 'Opened successfully!'), 'ok');
+            els.urlInput.value = '';
+        }
+
+        function handleGo(urlOverride = null) {
+            const url = (urlOverride || els.urlInput.value).trim();
+
+            if (!url) {
+                setStatus(t('emptyField', 'Error: empty field!'), 'error');
+                return;
+            }
+
+            setStatus(t('starting', 'Starting...'));
+
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                setStatus(t('ytLoading', 'Loading YouTube...'));
+                const videoId = extractYouTubeId(url);
+
+                if (!videoId) {
+                    setStatus(t('unknownLink', 'Unknown link. Trying to open it...'), 'error');
+                    return;
+                }
+
+                showYouTubePlayer(videoId, url);
+                return;
+            }
+
+            if (
+                url.includes('facebook.com') ||
+                url.includes('fb.watch') ||
+                url.includes('tiktok.com') ||
+                url.includes('instagram.com')
+            ) {
+                setStatus(t('directOpen', 'Opening directly...'));
+                saveToHistory(url);
+                openExternal(url);
+                return;
+            }
+
+            setStatus(t('unknownLink', 'Unknown link. Trying to open it...'));
+            saveToHistory(url);
+            openExternal(url);
+        }
