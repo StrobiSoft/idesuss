@@ -7,4 +7,5 @@
   "aboutLink": "About",
   "aboutTitle": "About",
   "aboutText": "The creation of Idesüss was inspired by a very old friend of mine. His way of thinking, habits, and unique perspective started this whole idea. He is a bit paranoid and a bit lazy — so for a while the project was almost called “Lazy Driver.” In the end it became Idesüss, and I do not regret that. It feels much closer to the tone and intention I wanted to represent."
+  "aboutCloseBtn": "OK"
 }
