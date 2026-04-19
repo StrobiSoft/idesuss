@@ -983,12 +983,19 @@
         }
 
         function showYouTubePlayer(videoId, originalUrl) {
-            const embedUrl = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1';
-            els.ytFrame.src = embedUrl;
-            els.playerCard.style.display = 'block';
-            els.inputCard.style.display = 'none';
-            saveToHistory(originalUrl);
-        }
+    const embedUrl = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1';
+
+    // teljes reset
+    els.ytFrame.src = '';
+    els.ytFrame.removeAttribute('src');
+
+    requestAnimationFrame(() => {
+        els.ytFrame.src = embedUrl;
+        els.playerCard.style.display = 'block';
+        els.inputCard.style.display = 'none';
+        saveToHistory(originalUrl);
+    });
+}
 
         function hideYouTubePlayer() {
             els.ytFrame.src = '';
