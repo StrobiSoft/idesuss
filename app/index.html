@@ -1212,34 +1212,30 @@
         });
 
         (async function init() {
-            
-            // 🔥 EZT IDE TEDD (LEGELSŐNEK)
-
     const params = new URLSearchParams(window.location.search);
 
-    const sharedUrl = params.get('url');
+    const rawShared =
+        params.get('url') ||
+        params.get('text') ||
+        params.get('title') ||
+        '';
+
+    const sharedMatch = rawShared.match(/https?:\/\/[^\s]+/i);
+    const sharedUrl = sharedMatch ? sharedMatch[0] : '';
 
     if (sharedUrl) {
-
         els.urlInput.value = sharedUrl;
-
         handleGo(sharedUrl);
-
-        return; // ⛔ MEGÁLLÍT MINDENT (ez a kulcs!)
-
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
     }
 
-    // 👇 csak EZUTÁN jöjjön a többi
-
     updateVisitCounter();
-
     await loadLanguage(currentLang);
-
     renderHistory();
-
     updateInstallButtonVisibility();
-
     tryAutoPasteFromClipboard();
+})();
 
 })()
             updateVisitCounter();
