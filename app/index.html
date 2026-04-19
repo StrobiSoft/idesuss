@@ -331,13 +331,30 @@
         }
 
         .player-frame {
-            width: 100%;
-            aspect-ratio: 9 / 16;
-            border: none;
-            border-radius: 18px;
-            background: #000;
-            display: block;
-        }
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border: none;
+    border-radius: 18px;
+    background: #000;
+    display: block;
+}
+
+/* Fekvő tablet / fekvő nézet */
+@media (orientation: landscape) {
+    .player-frame {
+        aspect-ratio: 16 / 9;
+    }
+}
+
+/* Fullscreen esetén ne maradjon portré dobozban */
+.player-frame:fullscreen,
+.player-frame:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+    aspect-ratio: auto;
+    border-radius: 0;
+    background: #000;
+}
 
         .back-btn {
             width: 100%;
