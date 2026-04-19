@@ -559,7 +559,19 @@
         [hidden] {
             display: none !important;
         }
+        @media (orientation: landscape) and (min-width: 700px) {
+    .app {
+        max-width: min(1100px, calc(100vw - 32px));
+    }
 
+    .hero-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .player-frame {
+        aspect-ratio: 16 / 9;
+    }
+}
         @media (max-width: 420px) {
             .hero-grid {
                 grid-template-columns: 1fr;
