@@ -1,5 +1,5 @@
-const CACHE_NAME = "idesuss-v8";
-const CACHE_NAME = "idesuss-v8";
+const CACHE_NAME = "idesuss-v3";
+const CACHE_NAME = "idesuss-v3";
 
 const urlsToCache = [
   "/app/",
