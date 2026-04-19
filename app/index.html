@@ -1039,3 +1039,194 @@
             saveToHistory(url);
             openExternal(url);
         }
+                async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    els.urlInput.value = text.trim();
+                    setStatus(t('pasted', 'Link pasted.'), 'ok');
+                } else {
+                    setStatus(t('pasteFail', 'Paste failed.'), 'error');
+                }
+            } catch {
+                setStatus(t('pasteFail', 'Paste failed.'), 'error');
+            }
+        }
+
+        async function tryAutoPasteFromClipboard() {
+            try {
+                if (!navigator.clipboard || !navigator.clipboard.readText) return;
+
+                const text = (await navigator.clipboard.readText()).trim();
+                if (!text) return;
+
+                const looksLikeUrl =
+                    text.startsWith('http://') ||
+                    text.startsWith('https://') ||
+                    text.includes('youtube.com') ||
+                    text.includes('youtu.be') ||
+                    text.includes('tiktok.com') ||
+                    text.includes('facebook.com') ||
+                    text.includes('fb.watch') ||
+                    text.includes('instagram.com');
+
+                if (!looksLikeUrl) return;
+
+                if (!els.urlInput.value.trim()) {
+                    els.urlInput.value = text;
+                    setStatus(t('pasted', 'Link pasted.'), 'ok');
+                }
+            } catch (error) {
+                // maradjon csendben
+            }
+        }
+
+        async function shareUrl(urlToShare = '') {
+            const shareTarget = (urlToShare || els.urlInput.value || window.location.href).trim();
+
+            if (!shareTarget) {
+                setStatus(t('shareEmpty', 'Nothing to share yet.'), 'warn');
+                return;
+            }
+
+            const shareData = {
+                title: 'Idesüss',
+                text: t('shareText', 'Shared from Idesüss'),
+                url: shareTarget
+            };
+
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    setStatus(t('shareOk', 'Shared successfully.'), 'ok');
+                    return;
+                }
+
+                await navigator.clipboard.writeText(shareTarget);
+                setStatus(t('shareFallback', 'Share not available here — link copied.'), 'ok');
+            } catch (error) {
+                if (error && error.name === 'AbortError') return;
+                setStatus(t('shareFail', 'Share failed.'), 'error');
+            }
+        }
+
+        function reopenHistoryItem(index) {
+            const history = getHistory();
+            const item = history[index];
+            if (!item) return;
+            const safeItem = typeof item === 'string' ? buildHistoryItem(item) : item;
+            els.urlInput.value = safeItem.url;
+            handleGo(safeItem.url);
+        }
+
+        function shareHistoryItem(index) {
+            const history = getHistory();
+            const item = history[index];
+            if (!item) return;
+            const safeItem = typeof item === 'string' ? buildHistoryItem(item) : item;
+            shareUrl(safeItem.url);
+        }
+
+        function isRunningStandalone() {
+            return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        }
+
+        function getInstallButtons() {
+            return Array.from(document.querySelectorAll('.js-install-trigger'));
+        }
+
+        function updateInstallButtonsText() {
+            installButtons = getInstallButtons();
+            const label = t('installBtnText', 'Install app');
+            installButtons.forEach(btn => {
+                btn.textContent = label;
+            });
+        }
+
+        function updateInstallButtonVisibility() {
+            installButtons = getInstallButtons();
+            const canShowInstall = Boolean(deferredInstallPrompt) && !isRunningStandalone();
+
+            installButtons.forEach(btn => {
+                btn.hidden = !canShowInstall;
+            });
+        }
+
+        function openAboutModal() {
+            els.aboutModal.classList.add('show');
+            els.aboutModal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeAboutModal() {
+            els.aboutModal.classList.remove('show');
+            els.aboutModal.setAttribute('aria-hidden', 'true');
+        }
+
+        window.reopenHistoryItem = reopenHistoryItem;
+        window.shareHistoryItem = shareHistoryItem;
+
+        els.goBtn.addEventListener('click', () => handleGo());
+        els.backBtn.addEventListener('click', hideYouTubePlayer);
+        els.pasteBtn.addEventListener('click', pasteFromClipboard);
+        els.shareBtn.addEventListener('click', () => shareUrl());
+        els.clearInputBtn.addEventListener('click', clearInputField);
+        els.clearHistoryBtn.addEventListener('click', clearHistory);
+        els.langSelect.addEventListener('change', (event) => loadLanguage(event.target.value));
+        els.aboutLink.addEventListener('click', openAboutModal);
+        els.aboutCloseBtn.addEventListener('click', closeAboutModal);
+
+        els.aboutModal.addEventListener('click', (event) => {
+            if (event.target === els.aboutModal) closeAboutModal();
+        });
+
+        document.addEventListener('click', (event) => {
+            const trigger = event.target.closest('.js-install-trigger');
+            if (!trigger) return;
+
+            if (!deferredInstallPrompt) return;
+
+            deferredInstallPrompt.prompt();
+            deferredInstallPrompt.userChoice.finally(() => {
+                deferredInstallPrompt = null;
+                updateInstallButtonVisibility();
+            });
+        });
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            updateInstallButtonVisibility();
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            updateInstallButtonVisibility();
+        });
+
+        window.addEventListener('focus', tryAutoPasteFromClipboard);
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                tryAutoPasteFromClipboard();
+            }
+        });
+
+        (async function init() {
+            updateVisitCounter();
+            await loadLanguage(currentLang);
+            renderHistory();
+            updateInstallButtonVisibility();
+            tryAutoPasteFromClipboard();
+        })();
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+              .then(reg => console.log('SW OK'))
+              .catch(err => console.error('SW HIBA:', err));
+          });
+        }
+    </script>
+</body>
+</html>
