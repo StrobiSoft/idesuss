@@ -1,1 +1,10 @@
-{ "playBtnText": "INDÍTÁS", "footerText": "Powered by StZoo" }
+{
+  "textareaPlaceholder": "Másold be a linket ide...",
+  "playBtnText": "INDÍTÁS",
+  "pasteBtn": "BEILLESZTÉS",
+  "shareBtn": "MEGOSZTÁS",
+  "clearInputBtn": "TÖRLÉS",
+  "aboutLink": "Névjegy",
+  "aboutTitle": "Névjegy",
+  "aboutText": "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása indította el bennem ezt az egészet. Egy kicsit paranoiás, egy kicsit lusta figura — ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit ezzel az oldallal képviselni szerettem volna."
+}
