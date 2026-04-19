@@ -772,7 +772,8 @@
 
         function applyLanguage() {
             document.documentElement.lang = currentLang;
-document.getElementById('aboutCloseBtn').textContent = t('aboutCloseBtn', 'OK');
+            document.getElementById('aboutCloseBtn').textContent = t('aboutCloseBtn', 'OK');
+            
             els.brandSub.textContent = '';
             els.counterLabel.textContent = t('counterLabel', 'Views');
             els.counterNote.textContent = t('counterNote', 'The counter does not increase on every refresh.');
