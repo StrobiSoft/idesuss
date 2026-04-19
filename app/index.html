@@ -2,11 +2,13 @@
 <html lang="hu">
 <head>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
-<link rel="shortcut icon" href="/favicon.png">
-<link rel="apple-touch-icon" href="/favicon.png">
-   <link rel="icon" href="/favicon.png"> <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="icon" href="/favicon.png">
+    <link rel="manifest" href="./manifest.json">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Idesüss</title>
+    <title>Idesüss™</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -25,6 +27,7 @@
             --accent-2: #38bdf8;
             --ok: #22c55e;
             --danger: #f87171;
+            --warn: #fbbf24;
             --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
             --radius-xl: 28px;
             --radius-lg: 20px;
@@ -79,6 +82,13 @@
             font-size: 28px;
             font-weight: 800;
             letter-spacing: 0.2px;
+        }
+
+        .tm {
+            font-size: 11px;
+            vertical-align: super;
+            margin-left: 2px;
+            opacity: 0.9;
         }
 
         .brand-sub {
@@ -233,10 +243,11 @@
             display: flex;
             gap: 12px;
             margin-top: 14px;
+            flex-wrap: wrap;
         }
 
         .play-btn {
-            flex: 1;
+            flex: 1 1 100%;
             border: none;
             border-radius: 20px;
             padding: 18px 16px;
@@ -255,9 +266,11 @@
         .play-btn:active,
         .secondary-btn:active,
         .history-link:active,
+        .history-share:active,
         .back-btn:active,
         .clear-btn:active,
-        .install-btn:active {
+        .install-btn:active,
+        .footer-link:active {
             transform: scale(0.985);
         }
 
@@ -286,6 +299,8 @@
             font-weight: 700;
             cursor: pointer;
             min-width: 88px;
+            height: 52px;
+            flex: 1 1 calc(33.333% - 8px);
         }
 
         .status {
@@ -303,6 +318,10 @@
 
         .status.ok {
             color: var(--ok);
+        }
+
+        .status.warn {
+            color: var(--warn);
         }
 
         .player-card {
@@ -369,30 +388,90 @@
         }
 
         .hist-item {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            gap: 12px;
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--line-soft);
             border-radius: 16px;
             padding: 12px;
         }
 
+        .hist-thumb {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            border-radius: 12px;
+            object-fit: cover;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .hist-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .hist-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .hist-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            background: rgba(14,165,233,0.14);
+            color: #dbeafe;
+            border: 1px solid rgba(56,189,248,0.18);
+        }
+
         .hist-url {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.35;
+            word-break: break-all;
+        }
+
+        .hist-title {
             font-size: 13px;
             color: var(--text);
             line-height: 1.4;
-            word-break: break-all;
-            margin-bottom: 10px;
+            font-weight: 700;
         }
 
-        .history-link {
-            width: 100%;
+        .hist-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .history-link,
+        .history-share {
+            flex: 1 1 110px;
             border: none;
             border-radius: 14px;
-            padding: 12px;
-            background: rgba(14,165,233,0.14);
+            padding: 10px 12px;
             color: #fff;
             font-size: 13px;
             font-weight: 800;
             cursor: pointer;
+        }
+
+        .history-link {
+            background: rgba(14,165,233,0.14);
+        }
+
+        .history-share {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--line);
         }
 
         .empty-note {
@@ -404,11 +483,78 @@
 
         .footer {
             margin-top: 20px;
-            text-align: center;
+            padding-bottom: 8px;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
             font-size: 12px;
             color: rgba(255,255,255,0.40);
             letter-spacing: 0.5px;
-            padding-bottom: 8px;
+        }
+
+        .footer-link {
+            color: rgba(255,255,255,0.62);
+            text-decoration: none;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .footer-link:hover {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .about-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.72);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 1000;
+        }
+
+        .about-modal.show {
+            display: flex;
+        }
+
+        .about-card {
+            width: min(100%, 430px);
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .about-title {
+            margin: 0 0 10px;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .about-text {
+            margin: 0 0 16px;
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .about-close {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
         }
 
         [hidden] {
@@ -433,6 +579,14 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .secondary-btn {
+                flex-basis: 100%;
+            }
+
+            .hist-item {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -440,12 +594,12 @@
     <div class="app">
         <div class="topbar">
             <div class="brand">
-                <div class="brand-title">Idesüss</div>
-                <div class="brand-sub" id="brandSub">BETA</div>
+                <div class="brand-title">Idesüss<span class="tm">™</span></div>
+                <div class="brand-sub" id="brandSub"></div>
             </div>
 
             <div class="top-actions">
-                <button id="installBtn" class="install-btn" type="button" hidden>Telepítés</button>
+                <button id="installBtn" class="install-btn js-install-trigger" type="button" hidden>Telepítés</button>
 
                 <div class="lang-area">
                     <span class="lang-icon">🌐</span>
@@ -496,6 +650,8 @@
                 </button>
 
                 <button id="pasteBtn" class="secondary-btn" type="button">PASTE</button>
+                <button id="shareBtn" class="secondary-btn" type="button">MEGOSZTÁS</button>
+                <button id="clearInputBtn" class="secondary-btn" type="button">TÖRLÉS</button>
             </div>
 
             <div id="status" class="status"></div>
@@ -514,7 +670,22 @@
             <div id="historyList" class="history-list"></div>
         </div>
 
-        <div class="footer" id="footerText">Powered by StZoo</div>
+        <div class="footer">
+            <div class="footer-inner">
+                <a id="aboutLink" class="footer-link">Névjegy</a>
+                <div id="footerText">Powered by StZoo</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="about-modal" aria-hidden="true">
+        <div class="about-card">
+            <h3 class="about-title" id="aboutTitle">Névjegy</h3>
+            <p class="about-text" id="aboutText">
+                Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem.
+            </p>
+            <button id="aboutCloseBtn" class="about-close" type="button">Rendben</button>
+        </div>
     </div>
 
     <script>
@@ -540,10 +711,17 @@
             urlInput: document.getElementById('urlInput'),
             playBtnText: document.getElementById('playBtnText'),
             pasteBtn: document.getElementById('pasteBtn'),
+            shareBtn: document.getElementById('shareBtn'),
+            clearInputBtn: document.getElementById('clearInputBtn'),
             backBtn: document.getElementById('backBtn'),
             historyTitle: document.getElementById('historyTitle'),
             clearHistoryBtn: document.getElementById('clearHistoryBtn'),
             footerText: document.getElementById('footerText'),
+            aboutLink: document.getElementById('aboutLink'),
+            aboutModal: document.getElementById('aboutModal'),
+            aboutTitle: document.getElementById('aboutTitle'),
+            aboutText: document.getElementById('aboutText'),
+            aboutCloseBtn: document.getElementById('aboutCloseBtn'),
             status: document.getElementById('status'),
             historyList: document.getElementById('historyList'),
             visitCount: document.getElementById('visitCount'),
@@ -556,6 +734,7 @@
         let currentLang = detectInitialLanguage();
         let dict = {};
         let deferredInstallPrompt = null;
+        let installButtons = [];
 
         function detectInitialLanguage() {
             const saved = localStorage.getItem(STORAGE_KEYS.lang);
@@ -594,7 +773,7 @@
         function applyLanguage() {
             document.documentElement.lang = currentLang;
 
-            els.brandSub.textContent = 'BETA';
+            els.brandSub.textContent = '';
             els.counterLabel.textContent = t('counterLabel', 'Views');
             els.counterNote.textContent = t('counterNote', 'The counter does not increase on every refresh.');
             els.langBoxLabel.textContent = t('langBoxLabel', 'Language');
@@ -603,12 +782,19 @@
             els.urlInput.placeholder = t('textareaPlaceholder', 'Paste the link here...');
             els.playBtnText.textContent = t('playBtnText', 'PLAY');
             els.pasteBtn.textContent = t('pasteBtn', 'PASTE');
+            els.shareBtn.textContent = t('shareBtn', 'SHARE');
+            els.clearInputBtn.textContent = t('clearInputBtn', 'CLEAR');
             els.backBtn.textContent = t('backBtn', 'BACK');
             els.historyTitle.textContent = t('historyTitle', 'History');
             els.clearHistoryBtn.textContent = t('clearHistoryBtn', 'Clear history');
             els.footerText.textContent = t('footerText', 'Powered by StZoo');
-            els.installBtn.textContent = t('installBtnText', 'Install app');
-
+            els.aboutLink.textContent = t('aboutLink', 'About');
+            els.aboutTitle.textContent = t('aboutTitle', 'About');
+            els.aboutText.textContent = t(
+                'aboutText',
+                'The creation of Idesüss was inspired by a very old friend of mine. Partly his mindset, habits and unique way of seeing things started this whole page in me. He is a little paranoid, a little lazy, so for a while the page almost got the name “Lazy Driver”. In the end it became Idesüss, and I do not regret that at all. It came much closer to the mood I wanted this whole thing to represent, while making sure I would not hurt the person who inspired the idea.'
+            );
+            updateInstallButtonsText();
             renderHistory();
         }
 
@@ -635,40 +821,136 @@
             els.visitCount.textContent = count;
         }
 
-        function saveToHistory(url) {
-            let history = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
+        function getHistory() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
+                return Array.isArray(parsed) ? parsed : [];
+            } catch {
+                return [];
+            }
+        }
 
-            history = history.filter(item => item !== url);
-            history.unshift(url);
+        function saveHistoryArray(history) {
+            localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(history));
+        }
+
+        function getSourceFromUrl(url) {
+            if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
+            if (url.includes('tiktok.com')) return 'TikTok';
+            if (url.includes('instagram.com')) return 'Instagram';
+            if (url.includes('facebook.com') || url.includes('fb.watch')) return 'Facebook';
+            return 'Link';
+        }
+
+        function extractYouTubeId(url) {
+            try {
+                if (url.includes('shorts/')) {
+                    return url.split('shorts/')[1].split(/[?&]/)[0];
+                }
+                if (url.includes('v=')) {
+                    return url.split('v=')[1].split('&')[0];
+                }
+                if (url.includes('youtu.be/')) {
+                    return url.split('youtu.be/')[1].split(/[?&]/)[0];
+                }
+                return url.split('/').pop().split(/[?&]/)[0];
+            } catch {
+                return '';
+            }
+        }
+
+        function makeSvgThumb(label) {
+            const svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200">
+                    <defs>
+                        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+                            <stop offset="0%" stop-color="#0ea5e9"/>
+                            <stop offset="100%" stop-color="#1e293b"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="320" height="200" rx="20" fill="url(#g)"/>
+                    <circle cx="255" cy="50" r="42" fill="rgba(255,255,255,0.08)"/>
+                    <circle cx="60" cy="155" r="52" fill="rgba(255,255,255,0.06)"/>
+                    <text x="24" y="118" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="700">${label}</text>
+                </svg>
+            `;
+            return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+        }
+
+        function getThumbForUrl(url) {
+            const source = getSourceFromUrl(url);
+            if (source === 'YouTube') {
+                const videoId = extractYouTubeId(url);
+                if (videoId) return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            }
+            return makeSvgThumb(source);
+        }
+
+        function buildHistoryItem(url) {
+            const source = getSourceFromUrl(url);
+            return {
+                url,
+                source,
+                thumb: getThumbForUrl(url),
+                title: source + ' • ' + url
+            };
+        }
+
+        function saveToHistory(url) {
+            let history = getHistory();
+
+            history = history.filter(item => (typeof item === 'string' ? item : item.url) !== url);
+            history.unshift(buildHistoryItem(url));
 
             if (history.length > 8) history = history.slice(0, 8);
 
-            localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(history));
+            saveHistoryArray(history);
             renderHistory();
         }
 
         function renderHistory() {
-            const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.history) || '[]');
+            const history = getHistory();
 
             if (!history.length) {
                 els.historyList.innerHTML = `<div class="empty-note">${escapeHtml(t('emptyHistory', 'No history yet.'))}</div>`;
                 return;
             }
 
-            els.historyList.innerHTML = history.map(url => `
-                <div class="hist-item">
-                    <div class="hist-url">${escapeHtml(url)}</div>
-                    <button class="history-link" type="button" onclick="reopenHistoryItem('${encodeURIComponent(url)}')">
-                        ${escapeHtml(t('openAgain', 'Open again'))}
-                    </button>
-                </div>
-            `).join('');
+            els.historyList.innerHTML = history.map((item, index) => {
+                const safeItem = typeof item === 'string' ? buildHistoryItem(item) : item;
+                return `
+                    <div class="hist-item">
+                        <img class="hist-thumb" src="${escapeAttribute(safeItem.thumb)}" alt="${escapeAttribute(safeItem.source)} preview" loading="lazy">
+                        <div class="hist-body">
+                            <div class="hist-meta">
+                                <span class="hist-badge">${escapeHtml(safeItem.source)}</span>
+                            </div>
+                            <div class="hist-title">${escapeHtml(safeItem.title || safeItem.url)}</div>
+                            <div class="hist-url">${escapeHtml(safeItem.url)}</div>
+                            <div class="hist-actions">
+                                <button class="history-link" type="button" onclick="reopenHistoryItem(${index})">
+                                    ${escapeHtml(t('openAgain', 'Open again'))}
+                                </button>
+                                <button class="history-share" type="button" onclick="shareHistoryItem(${index})">
+                                    ${escapeHtml(t('shareBtn', 'Share'))}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function clearHistory() {
             localStorage.removeItem(STORAGE_KEYS.history);
             renderHistory();
             setStatus(t('historyCleared', 'History cleared.'), 'ok');
+        }
+
+        function clearInputField() {
+            els.urlInput.value = '';
+            els.urlInput.focus();
+            setStatus(t('inputCleared', 'Field cleared.'), 'ok');
         }
 
         function escapeHtml(str) {
@@ -687,20 +969,6 @@
                 .replaceAll("'", '&#39;')
                 .replaceAll('<', '&lt;')
                 .replaceAll('>', '&gt;');
-        }
-
-        function extractYouTubeId(url) {
-            try {
-                if (url.includes('shorts/')) {
-                    return url.split('shorts/')[1].split(/[?&]/)[0];
-                }
-                if (url.includes('v=')) {
-                    return url.split('v=')[1].split('&')[0];
-                }
-                return url.split('/').pop().split(/[?&]/)[0];
-            } catch {
-                return '';
-            }
         }
 
         function showYouTubePlayer(videoId, originalUrl) {
@@ -815,44 +1083,115 @@
             }
         }
 
-        function reopenHistoryItem(encodedUrl) {
-            const url = decodeURIComponent(encodedUrl);
-            els.urlInput.value = url;
-            handleGo(url);
+        async function shareUrl(urlToShare = '') {
+            const shareTarget = (urlToShare || els.urlInput.value || window.location.href).trim();
+
+            if (!shareTarget) {
+                setStatus(t('shareEmpty', 'Nothing to share yet.'), 'warn');
+                return;
+            }
+
+            const shareData = {
+                title: 'Idesüss',
+                text: t('shareText', 'Shared from Idesüss'),
+                url: shareTarget
+            };
+
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    setStatus(t('shareOk', 'Shared successfully.'), 'ok');
+                    return;
+                }
+
+                await navigator.clipboard.writeText(shareTarget);
+                setStatus(t('shareFallback', 'Share not available here — link copied.'), 'ok');
+            } catch (error) {
+                if (error && error.name === 'AbortError') return;
+                setStatus(t('shareFail', 'Share failed.'), 'error');
+            }
+        }
+
+        function reopenHistoryItem(index) {
+            const history = getHistory();
+            const item = history[index];
+            if (!item) return;
+            const safeItem = typeof item === 'string' ? buildHistoryItem(item) : item;
+            els.urlInput.value = safeItem.url;
+            handleGo(safeItem.url);
+        }
+
+        function shareHistoryItem(index) {
+            const history = getHistory();
+            const item = history[index];
+            if (!item) return;
+            const safeItem = typeof item === 'string' ? buildHistoryItem(item) : item;
+            shareUrl(safeItem.url);
         }
 
         function isRunningStandalone() {
             return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
         }
 
+        function getInstallButtons() {
+            return Array.from(document.querySelectorAll('.js-install-trigger'));
+        }
+
+        function updateInstallButtonsText() {
+            installButtons = getInstallButtons();
+            const label = t('installBtnText', 'Install app');
+            installButtons.forEach(btn => {
+                btn.textContent = label;
+            });
+        }
+
         function updateInstallButtonVisibility() {
-            if (deferredInstallPrompt && !isRunningStandalone()) {
-                els.installBtn.hidden = false;
-            } else {
-                els.installBtn.hidden = true;
-            }
+            installButtons = getInstallButtons();
+            const canShowInstall = Boolean(deferredInstallPrompt) && !isRunningStandalone();
+
+            installButtons.forEach(btn => {
+                btn.hidden = !canShowInstall;
+            });
+        }
+
+        function openAboutModal() {
+            els.aboutModal.classList.add('show');
+            els.aboutModal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeAboutModal() {
+            els.aboutModal.classList.remove('show');
+            els.aboutModal.setAttribute('aria-hidden', 'true');
         }
 
         window.reopenHistoryItem = reopenHistoryItem;
+        window.shareHistoryItem = shareHistoryItem;
 
         els.goBtn.addEventListener('click', () => handleGo());
         els.backBtn.addEventListener('click', hideYouTubePlayer);
         els.pasteBtn.addEventListener('click', pasteFromClipboard);
+        els.shareBtn.addEventListener('click', () => shareUrl());
+        els.clearInputBtn.addEventListener('click', clearInputField);
         els.clearHistoryBtn.addEventListener('click', clearHistory);
         els.langSelect.addEventListener('change', (event) => loadLanguage(event.target.value));
+        els.aboutLink.addEventListener('click', openAboutModal);
+        els.aboutCloseBtn.addEventListener('click', closeAboutModal);
 
-        els.installBtn.addEventListener('click', async () => {
+        els.aboutModal.addEventListener('click', (event) => {
+            if (event.target === els.aboutModal) closeAboutModal();
+        });
+
+        document.addEventListener('click', (event) => {
+            const trigger = event.target.closest('.js-install-trigger');
+            if (!trigger) return;
+
             if (!deferredInstallPrompt) return;
 
             deferredInstallPrompt.prompt();
-            try {
-                await deferredInstallPrompt.userChoice;
-            } catch (error) {
-                // nincs teendő
-            }
-
-            deferredInstallPrompt = null;
-            updateInstallButtonVisibility();
+            deferredInstallPrompt.userChoice.finally(() => {
+                deferredInstallPrompt = null;
+                updateInstallButtonVisibility();
+            });
         });
 
         window.addEventListener('beforeinstallprompt', (event) => {
@@ -882,14 +1221,14 @@
             tryAutoPasteFromClipboard();
         })();
     </script>
-   <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(reg => console.log('SW OK'))
-      .catch(err => console.error('SW HIBA:', err));
-  });
-}
-</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+              .then(reg => console.log('SW OK'))
+              .catch(err => console.error('SW HIBA:', err));
+          });
+        }
+    </script>
 </body>
 </html>
