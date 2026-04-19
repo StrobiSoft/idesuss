@@ -1212,6 +1212,36 @@
         });
 
         (async function init() {
+            
+            // 🔥 EZT IDE TEDD (LEGELSŐNEK)
+
+    const params = new URLSearchParams(window.location.search);
+
+    const sharedUrl = params.get('url');
+
+    if (sharedUrl) {
+
+        els.urlInput.value = sharedUrl;
+
+        handleGo(sharedUrl);
+
+        return; // ⛔ MEGÁLLÍT MINDENT (ez a kulcs!)
+
+    }
+
+    // 👇 csak EZUTÁN jöjjön a többi
+
+    updateVisitCounter();
+
+    await loadLanguage(currentLang);
+
+    renderHistory();
+
+    updateInstallButtonVisibility();
+
+    tryAutoPasteFromClipboard();
+
+})()
             updateVisitCounter();
             await loadLanguage(currentLang);
             renderHistory();
