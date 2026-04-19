@@ -30,8 +30,11 @@
       --danger: #c53030;
       --shadow: 0 10px 28px rgba(22, 44, 77, 0.08);
       --radius: 18px;
-      --maxw: 1180px;
-      --header-h: 76px;
+      --maxw: 1240px;
+      --header-h: 88px;
+      --hero-blue-1: #0f49d8;
+      --hero-blue-2: #3b82f6;
+      --hero-blue-3: #8fd2ff;
     }
 
     * { box-sizing: border-box; }
@@ -77,7 +80,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 12px 0;
+      padding: 14px 0;
     }
 
     .brand-wrap {
@@ -89,9 +92,9 @@
     }
 
     .brand-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
       object-fit: cover;
       display: block;
       flex: 0 0 auto;
@@ -104,79 +107,97 @@
     }
 
     .brand-title {
-      font-size: clamp(2rem, 4vw, 3rem);
+      font-size: clamp(2.2rem, 4.4vw, 3.4rem);
       font-weight: 900;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.05em;
       margin: 0;
-      line-height: 0.96;
-      color: #0f2744;
+      line-height: 0.94;
+      color: #102542;
       white-space: nowrap;
+    }
+
+    .tm-mark {
+      font-size: 0.42em;
+      vertical-align: super;
+      margin-left: 4px;
+      font-weight: 900;
+      letter-spacing: 0;
     }
 
     .brand-subtitle {
       margin: 8px 0 0;
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 1rem;
       white-space: nowrap;
-    }
-
-    .tm-mark {
-      font-size: 0.32em;
-      vertical-align: super;
-      margin-left: 2px;
-      font-weight: 800;
-      opacity: 0.9;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
       justify-content: flex-end;
       flex: 0 0 auto;
     }
 
+    .header-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 50px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
     .lang-select {
       appearance: none;
-      border: 1px solid var(--line);
-      background: var(--surface);
+      border: none;
+      background: transparent;
       color: var(--text);
-      padding: 11px 14px;
-      border-radius: 12px;
-      font-size: 0.96rem;
-      font-weight: 600;
+      font-size: 0.98rem;
+      font-weight: 700;
       cursor: pointer;
-      min-width: 155px;
+      outline: none;
+      min-width: 150px;
+    }
+
+    .lang-select option {
+      color: #000;
+    }
+
+    .clock-chip {
+      min-width: 112px;
+      font-variant-numeric: tabular-nums;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
     }
 
     .btn {
       appearance: none;
       border: 1px solid transparent;
-      border-radius: 12px;
-      padding: 12px 18px;
-      font-size: 0.96rem;
-      font-weight: 700;
+      border-radius: 14px;
+      padding: 12px 20px;
+      font-size: 0.98rem;
+      font-weight: 800;
       cursor: pointer;
       transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-height: 46px;
+      min-height: 48px;
       white-space: nowrap;
     }
 
     .btn:hover:not(:disabled) {
       transform: translateY(-1px);
-    }
-
-    .btn:disabled,
-    .btn[aria-disabled="true"] {
-      cursor: not-allowed;
-      opacity: 0.62;
-      transform: none;
-      box-shadow: none;
     }
 
     .btn-primary {
@@ -185,214 +206,308 @@
       box-shadow: 0 10px 22px rgba(13, 91, 215, 0.18);
     }
 
-    .btn-primary:hover:not(:disabled) {
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-    }
-
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--text);
-      border-color: var(--line);
-    }
-
     .btn-soft {
       background: var(--primary-soft);
       color: var(--primary);
       border-color: #cfe0ff;
     }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border-color: var(--line);
+    .section {
+      padding: 34px 0;
     }
 
     .hero {
-      padding: 44px 0 22px;
+      padding: 28px 0 22px;
+    }
+
+    .hero-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 26px 60px rgba(13, 58, 140, 0.18);
+      background:
+        radial-gradient(circle at 15% 30%, rgba(255,255,255,0.16), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(255,255,255,0.18), transparent 28%),
+        linear-gradient(135deg, var(--hero-blue-1) 0%, var(--hero-blue-2) 48%, var(--hero-blue-3) 100%);
+    }
+
+    .hero-shell::before {
+      content: "";
+      position: absolute;
+      inset: auto -10% -22% -10%;
+      height: 62%;
+      background:
+        radial-gradient(ellipse at center, rgba(255,255,255,0.18), transparent 58%),
+        repeating-radial-gradient(
+          ellipse at center,
+          rgba(255,255,255,0.09) 0 8%,
+          rgba(255,255,255,0.02) 8% 16%
+        );
+      opacity: 0.55;
+      pointer-events: none;
     }
 
     .hero-grid {
+      position: relative;
+      z-index: 1;
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 32px;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: stretch;
+      padding: 28px;
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      color: #fff;
+    }
+
+    .hero-brand {
+      display: flex;
       align-items: center;
+      gap: 16px;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid #d7e5ff;
-      background: #f6f9ff;
-      color: var(--primary);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      margin-bottom: 14px;
+    .hero-brand-logo {
+      width: 66px;
+      height: 66px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      padding: 6px;
     }
 
-    .hero h1 {
-      margin: 0 0 14px;
-      font-size: clamp(2.4rem, 6vw, 4.7rem);
-      line-height: 0.98;
-      letter-spacing: -0.04em;
-    }
-
-    .hero p.lead {
+    .hero-brand-title {
       margin: 0;
-      font-size: clamp(1.03rem, 2.3vw, 1.2rem);
-      color: var(--muted);
-      max-width: 700px;
+      font-size: clamp(2.8rem, 5vw, 4.8rem);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .hero-brand-title .tm-mark {
+      font-size: 0.36em;
+      margin-left: 6px;
+      font-weight: 900;
+      opacity: 0.96;
+    }
+
+    .hero-brand-sub {
+      margin: 10px 0 0;
+      font-size: 1.08rem;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .hero-lead {
+      margin: 0;
+      max-width: 560px;
+      font-size: clamp(1.26rem, 2.2vw, 1.72rem);
+      line-height: 1.28;
+      color: rgba(255,255,255,0.96);
+      font-weight: 700;
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 22px;
+      gap: 14px;
+      margin-top: 8px;
     }
 
-    .hero-meta {
+    .hero-webapp-btn {
+      min-width: 320px;
+      min-height: 82px;
+      padding: 18px 28px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #1f64ff 0%, #4fa0ff 100%);
+      color: #fff;
+      box-shadow: 0 18px 34px rgba(18, 84, 221, 0.28);
+      font-size: clamp(1.2rem, 2vw, 1.65rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      border: 1px solid rgba(255,255,255,0.24);
+    }
+
+    .hero-miniapp {
+      background: rgba(255,255,255,0.84);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.32);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: 0 18px 50px rgba(20, 55, 125, 0.22);
+    }
+
+    .miniapp-title {
+      margin: 0 0 10px;
+      font-size: clamp(1.55rem, 2.2vw, 2.1rem);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      color: #17324d;
+    }
+
+    .miniapp-subtitle {
+      margin: 0 0 20px;
+      color: #4f6480;
+      font-size: 1rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #17324d;
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid #cfdbe8;
+      background: rgba(255,255,255,0.92);
+      border-radius: 16px;
+      padding: 16px 18px;
+      font-size: 1rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .input:focus {
+      border-color: #7baeff;
+      box-shadow: 0 0 0 4px rgba(13, 91, 215, 0.08);
+      background: #ffffff;
+    }
+
+    .input-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .miniapp-btn {
+      min-width: 132px;
+      min-height: 52px;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+        .status-bar {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 18px;
+      margin-top: 8px;
     }
 
-    .hero-chip {
-      border-radius: 999px;
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       padding: 10px 14px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      color: var(--muted);
-      font-weight: 600;
-      font-size: 0.93rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid #d8e6f7;
+      color: #5e748d;
+      font-weight: 700;
+      font-size: 0.92rem;
     }
 
-    .hero-visual {
-      background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
-      border: 1px solid #dce6f3;
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #94a9c2;
+      flex: 0 0 auto;
     }
 
-    .visual-top {
+    .status-ok .status-dot { background: var(--success); }
+    .status-warn .status-dot { background: var(--warning); }
+    .status-error .status-dot { background: var(--danger); }
+
+    .hero-bottom {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 28px 22px;
+      flex-wrap: wrap;
+    }
+
+    .hero-banner {
+      flex: 1 1 620px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px 16px;
-      border-bottom: 1px solid #e3ebf5;
-      background: #fbfdff;
+      min-height: 64px;
+      padding: 12px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(255,255,255,0.36);
+      backdrop-filter: blur(12px);
+      color: #1f3860;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
     }
 
-    .visual-dots {
+    .hero-banner-text {
       display: flex;
-      gap: 6px;
-    }
-
-    .visual-dots span {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #d3deeb;
-    }
-
-    .visual-url {
-      font-size: 0.88rem;
-      color: var(--muted);
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .visual-body {
-      padding: 20px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .mock-nav,
-    .mock-panel,
-    .mock-banner,
-    .mock-row {
-      border-radius: 16px;
-      border: 1px solid #dde7f2;
-      background: white;
-    }
-
-    .mock-nav {
-      display: flex;
-      justify-content: space-between;
-      padding: 14px;
-      font-weight: 700;
-      color: var(--muted);
-    }
-
-    .mock-banner {
-      padding: 18px;
-      background: linear-gradient(135deg, #eef5ff, #ffffff 62%, #fff1db);
-      color: var(--text);
-      font-weight: 800;
-    }
-
-    .mock-panel {
-      padding: 16px;
-    }
-
-    .mock-input {
-      height: 50px;
-      border: 1px solid #d9e4f1;
-      border-radius: 12px;
-      background: #f9fbfe;
-      margin-bottom: 12px;
-      display: grid;
       align-items: center;
-      padding: 0 14px;
-      color: #8aa0b8;
-      font-size: 0.92rem;
-      font-weight: 600;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1rem;
     }
 
-    .mock-row {
+    .hero-banner-icon {
+      font-size: 1.2rem;
+    }
+
+    .hero-banner-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.56);
+      border: 1px solid rgba(31,56,96,0.12);
+      font-weight: 800;
+      color: #2d5189;
+      white-space: nowrap;
+    }
+
+    .hero-footer-links {
+      flex: 0 0 auto;
+      min-width: 280px;
       display: flex;
-      gap: 10px;
-      padding: 0;
-      background: transparent;
-      border: none;
-    }
-
-    .mock-btn {
-      height: 42px;
-      border-radius: 12px;
-      flex: 1;
-      background: #eef4ff;
-      border: 1px solid #d6e4ff;
-      display: grid;
-      place-items: center;
-      color: var(--primary);
-      font-size: 0.88rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: rgba(255,255,255,0.94);
+      font-size: 1rem;
       font-weight: 700;
     }
 
-    .mock-btn.primary {
-      background: linear-gradient(135deg, var(--primary), #2f7cf0);
-      border-color: transparent;
+    .hero-footer-links a {
+      color: rgba(255,255,255,0.94);
+    }
+
+    .hero-footer-links .powered {
+      font-weight: 900;
       color: #fff;
     }
 
-    .section {
-      padding: 30px 0;
-      scroll-margin-top: calc(var(--header-h) + 14px);
-    }
-
-    .section-band {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-      border-top: 1px solid rgba(215, 224, 234, 0.7);
-      border-bottom: 1px solid rgba(215, 224, 234, 0.7);
+    .content-section {
+      padding: 34px 0;
     }
 
     .section-head {
@@ -422,71 +537,16 @@
       font-size: 1rem;
     }
 
-    .ad-shell {
-      border: 1px dashed #bfd0e6;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,251,255,0.95)),
-        linear-gradient(90deg, rgba(13,91,215,0.05), rgba(255,181,71,0.05));
-      border-radius: 18px;
-      padding: 12px;
-      box-shadow: var(--shadow);
-    }
-
-    .ad-label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .ad-banner {
-      min-height: 110px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      background: linear-gradient(135deg, #f6c768 0%, #f7b243 25%, #0d5bd7 70%, #7dc6ff 100%);
-      color: white;
-      font-weight: 800;
-      font-size: clamp(1.1rem, 2.2vw, 2rem);
-      padding: 18px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .ad-banner::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 40%, rgba(255,255,255,0.2), transparent 18%),
-        radial-gradient(circle at 78% 30%, rgba(255,255,255,0.18), transparent 24%);
-      pointer-events: none;
-    }
-
-    .ad-banner span {
-      position: relative;
-      z-index: 1;
-    }
-
-    .miniapp-layout {
+    .info-grid {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: 24px;
       align-items: start;
     }
 
-    .miniapp-main,
-    .miniapp-side,
+    .info-card,
     .feature-box,
     .about-grid > article,
-    .cta-panel,
     .footer-card {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -494,94 +554,40 @@
       box-shadow: var(--shadow);
     }
 
-    .miniapp-main {
+    .info-card {
       padding: 22px;
     }
 
-    .miniapp-side {
+    .feature-box {
       padding: 18px;
-      display: grid;
-      gap: 14px;
     }
 
-    .miniapp-title {
-      margin: 0 0 8px;
-      font-size: 1.5rem;
-      letter-spacing: -0.02em;
+    .counter-panel {
+      background: linear-gradient(180deg, #f8fbff, #ffffff);
+      border: 1px solid #dbe7f3;
+      border-radius: 16px;
+      padding: 16px;
     }
 
-    .miniapp-subtitle {
-      margin: 0 0 16px;
+    .counter-label {
       color: var(--muted);
-    }
-
-    .field {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .field label {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    .input {
-      width: 100%;
-      border: 1px solid #cfdbe8;
-      background: #fbfdff;
-      border-radius: 14px;
-      padding: 15px 16px;
-      font-size: 1rem;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    .counter-value {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
     }
 
-    .input:focus {
-      border-color: #7baeff;
-      box-shadow: 0 0 0 4px rgba(13, 91, 215, 0.08);
-      background: #ffffff;
-    }
-
-    .input-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .status-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: #f7fbff;
-      border: 1px solid #d8e6f7;
+    .counter-note {
       color: var(--muted);
-      font-weight: 700;
       font-size: 0.92rem;
     }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #94a9c2;
-      flex: 0 0 auto;
-    }
-
-    .status-ok .status-dot { background: var(--success); }
-    .status-warn .status-dot { background: var(--warning); }
-    .status-error .status-dot { background: var(--danger); }
 
     .support-list,
     .how-list {
@@ -615,33 +621,6 @@
       flex: 0 0 auto;
       background: var(--primary-soft);
       color: var(--primary);
-    }
-
-    .counter-panel {
-      background: linear-gradient(180deg, #f8fbff, #ffffff);
-      border: 1px solid #dbe7f3;
-      border-radius: 16px;
-      padding: 16px;
-    }
-
-    .counter-label {
-      color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .counter-value {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.04em;
-      margin-bottom: 8px;
-    }
-
-    .counter-note {
-      color: var(--muted);
-      font-size: 0.92rem;
     }
 
     .about-grid {
@@ -684,29 +663,6 @@
       line-height: 1.65;
     }
 
-    .cta-panel {
-      padding: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      background:
-        linear-gradient(180deg, #ffffff, #f8fbff),
-        var(--surface);
-    }
-
-    .cta-panel h3 {
-      margin: 0 0 8px;
-      font-size: clamp(1.35rem, 2.6vw, 2rem);
-      letter-spacing: -0.03em;
-    }
-
-    .cta-panel p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 650px;
-    }
-
     .footer {
       padding: 16px 0 36px;
     }
@@ -714,265 +670,139 @@
     .footer-card {
       padding: 22px;
     }
-            <div class="footer-top">
-          <div class="footer-brand">
-            <h3>Idesüss™</h3>
-            <p data-i18n="footerDesc">
-              Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.
-            </p>
-          </div>
 
-          <div class="footer-links">
-            <a href="#miniapp" data-i18n="tryMiniApp">Mini app kipróbálása</a>
-            <a id="footerOpenAppLink" href="https://idesuss.net/app" data-i18n="openApp">App megnyitása</a>
-            <a href="#about" data-i18n="aboutLink">Névjegy</a>
-          </div>
-        </div>
-
-        <div class="footer-bottom">
-          <div>© <span id="year"></span> Idesüss™</div>
-          <div class="powered">Powered by StZoo</div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <div id="installOverlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#ffffff; color:#17324d; width:min(100%, 360px); border-radius:20px; box-shadow:0 18px 50px rgba(0,0,0,0.18); padding:20px;">
-      <div id="installOverlayTitle" style="font-size:1.1rem; font-weight:800; margin-bottom:10px;">Idesüss telepítése</div>
-      <div id="installOverlayText" style="color:#5e748d; line-height:1.5; margin-bottom:16px;">
-        iPhone vagy iPad esetén nyomd meg a Megosztás gombot, majd válaszd a Főképernyőhöz adás lehetőséget.
-      </div>
-      <button id="closeInstallOverlayBtn" class="btn btn-primary" type="button" style="width:100%;">OK</button>
-    </div>
-  </div>
-
-  <script>
-    const APP_URL = "https://idesuss.net/app";
-    const COUNTER_KEY = "idesuss_open_count";
-    const LANG_KEY = "idesuss_lang";
-
-    let deferredPrompt = null;
-    let isInstalled = false;
-
-    const dict = {
-      hu: {
-        brandSubtitle: "Főoldal + mini app élmény",
-        openApp: "App megnyitása",
-        install: "Telepítés",
-        howItWorks: "Hogyan működik",
-        tryMiniApp: "Mini app kipróbálása",
-        paste: "Beillesztés",
-        open: "Megnyitás",
-        clear: "Törlés",
-        aboutLink: "Névjegy",
-        footerDesc: "Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.",
-        installGuideTitle: "Idesüss telepítése",
-        installGuideText: "iPhone vagy iPad esetén nyomd meg a Megosztás gombot, majd válaszd a Főképernyőhöz adás lehetőséget.",
-        installAvailable: "A telepítés elérhető",
-        installInstalled: "Az app már telepítve van",
-        installNotAvailable: "A telepítés most nem érhető el",
-        clipboardReady: "Link észlelve",
-        invalidUrl: "Adj meg egy érvényes linket",
-        openedNewTab: "Megnyitva új lapon",
-        fieldCleared: "Mező törölve"
-      },
-
-      en: {
-        brandSubtitle: "Homepage + mini app experience",
-        openApp: "Open App",
-        install: "Install",
-        howItWorks: "How It Works",
-        tryMiniApp: "Try Mini App",
-        paste: "Paste",
-        open: "Open",
-        clear: "Clear",
-        aboutLink: "About",
-        footerDesc: "Homepage + mini app entry point for supported public video links.",
-        installGuideTitle: "Install Idesüss",
-        installGuideText: "On iPhone or iPad, tap Share then Add to Home Screen.",
-        installAvailable: "Installation available",
-        installInstalled: "Already installed",
-        installNotAvailable: "Installation not available",
-        clipboardReady: "Link detected",
-        invalidUrl: "Enter a valid link",
-        openedNewTab: "Opened in new tab",
-        fieldCleared: "Field cleared"
-      },
-
-      ro: {
-        brandSubtitle: "Pagină principală + mini aplicație",
-        openApp: "Deschide aplicația",
-        install: "Instalare",
-        howItWorks: "Cum funcționează",
-        tryMiniApp: "Testează mini aplicația",
-        paste: "Lipește",
-        open: "Deschide",
-        clear: "Șterge",
-        aboutLink: "Despre",
-        footerDesc: "Pagină principală + acces rapid pentru linkuri video publice.",
-      },
-
-      pl: {
-        brandSubtitle: "Strona główna + mini aplikacja",
-        openApp: "Otwórz aplikację",
-        install: "Zainstaluj",
-        howItWorks: "Jak to działa",
-        tryMiniApp: "Wypróbuj mini aplikację",
-        paste: "Wklej",
-        open: "Otwórz",
-        clear: "Wyczyść",
-        aboutLink: "O projekcie",
-        footerDesc: "Strona główna + szybki dostęp do publicznych linków wideo.",
-      },
-
-      nl: {
-        brandSubtitle: "Homepage + mini app ervaring",
-        openApp: "App openen",
-        install: "Installeren",
-        howItWorks: "Hoe werkt het",
-        tryMiniApp: "Mini app proberen",
-        paste: "Plakken",
-        open: "Openen",
-        clear: "Wissen",
-        aboutLink: "Over",
-        footerDesc: "Homepage + toegangspunt voor openbare videolinks.",
-      }
-    };
     .footer-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  padding-bottom: 18px;
-  border-bottom: 1px solid #e0e8f2;
-  margin-bottom: 18px;
-}
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #e0e8f2;
+      margin-bottom: 18px;
+    }
 
-.footer-brand h3 {
-  margin: 0 0 6px;
-  font-size: 1.2rem;
-}
+    .footer-brand h3 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+    }
 
-.footer-brand p {
-  margin: 0;
-  color: var(--muted);
-}
+    .footer-brand p {
+      margin: 0;
+      color: var(--muted);
+    }
 
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-.footer-links a,
-.footer-links button {
-  border: 1px solid var(--line);
-  background: #fbfdff;
-  color: var(--text);
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-weight: 700;
-  cursor: pointer;
-  font: inherit;
-}
+    .footer-links a {
+      border: 1px solid var(--line);
+      background: #fbfdff;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font: inherit;
+    }
 
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
 
-.powered {
-  font-weight: 800;
-  color: var(--primary);
-}
+    .powered {
+      font-weight: 800;
+      color: var(--primary);
+    }
 
-.small-note {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
+    .small-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
 
-.hidden {
-  display: none !important;
-}
+    .hidden {
+      display: none !important;
+    }
 
-.sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .info-grid,
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
 
-@media (max-width: 980px) {
-  .hero-grid,
-  .miniapp-layout,
-  .about-grid,
-  .cta-panel {
-    grid-template-columns: 1fr;
-  }
+      .hero-webapp-btn {
+        min-width: 0;
+        width: 100%;
+      }
+    }
 
-  .cta-panel {
-    align-items: flex-start;
-  }
-}
+    @media (max-width: 760px) {
+      :root { --header-h: 92px; }
 
-@media (max-width: 760px) {
-  :root { --header-h: 86px; }
+      .container {
+        width: min(var(--maxw), calc(100% - 20px));
+      }
 
-  .container {
-    width: min(var(--maxw), calc(100% - 22px));
-  }
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
 
-  .header-inner {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+      .header-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
 
-  .header-actions {
-    width: 100%;
-    justify-content: stretch;
-  }
+      .header-actions > * {
+        flex: 1 1 auto;
+      }
 
-  .header-actions > * {
-    flex: 1 1 auto;
-  }
+      .header-chip,
+      .btn,
+      .lang-select {
+        width: 100%;
+      }
 
-  .brand-subtitle,
-  .hero-meta {
-    white-space: normal;
-  }
+      .hero-grid {
+        padding: 20px;
+      }
 
-  .hero {
-    padding-top: 28px;
-  }
+      .hero-bottom {
+        padding: 0 20px 18px;
+      }
 
-  .hero-actions,
-  .input-actions,
-  .footer-links {
-    flex-direction: column;
-  }
+      .hero-brand {
+        align-items: flex-start;
+      }
 
-  .btn,
-  .lang-select,
-  .footer-links a,
-  .footer-links button {
-    width: 100%;
-  }
+      .hero-brand-logo {
+        width: 58px;
+        height: 58px;
+      }
 
-  .visual-url {
-    max-width: 180px;
-  }
-}
+      .miniapp-btn {
+        width: 100%;
+      }
+
+      .input-actions,
+      .status-bar,
+      .footer-links {
+        flex-direction: column;
+      }
+
+      .hero-footer-links {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -987,187 +817,119 @@
       </a>
 
       <div class="header-actions">
-        <label class="sr-only" for="langSelect">Nyelv</label>
-        <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
-          <option value="hu">🇭🇺 Magyar</option>
-          <option value="en">🇬🇧 English</option>
-          <option value="nl">🇳🇱 Nederlands</option>
-          <option value="ro">🇷🇴 Română</option>
-          <option value="pl">🇵🇱 Polski</option>
-        </select>
+        <div class="header-chip">
+          <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
+            <option value="hu">🇭🇺 Magyar</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="nl">🇳🇱 Nederlands</option>
+            <option value="ro">🇷🇴 Română</option>
+            <option value="pl">🇵🇱 Polski</option>
+          </select>
+        </div>
 
-        <a id="headerOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
-          <span data-i18n="openApp">App megnyitása</span>
-        </a>
-
+        <div class="header-chip clock-chip">
+          <span id="headerClock">00:00</span>
+        </div>
       </div>
     </div>
   </header>
 
   <main id="top">
     <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <div class="eyebrow" data-i18n="eyebrow">Nyilvános linkek. Tisztább elérés. Gyorsabb folyamat.</div>
-          <h1 data-i18n="heroTitle">Nyisd meg a nyilvános videólinkeket letisztultabban</h1>
-          <p class="lead" data-i18n="heroLead">
-            Az Idesüss egy könnyű, mobilbarát webes felület, amellyel a támogatott nyilvános videólinkeket gyorsabban, egyszerűbben és kevesebb zavaró elemmel lehet megnyitni.
-          </p>
-
-          <div class="hero-actions">
-            <a id="heroOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
-              <span data-i18n="openApp">App megnyitása</span>
-            </a>
-
-
-            <a class="btn btn-soft" href="#miniapp">
-              <span data-i18n="tryMiniApp">Mini app kipróbálása</span>
-            </a>
-
-            <a class="btn btn-ghost" href="#how">
-              <span data-i18n="howItWorks">Hogyan működik</span>
-            </a>
-          </div>
-
-          <div class="hero-meta">
-            <div class="hero-chip" data-i18n="chipPublicOnly">Csak nyilvános linkek</div>
-            <div class="hero-chip" data-i18n="chipMobileFriendly">Mobilbarát</div>
-            <div class="hero-chip" data-i18n="chipFastEntry">Gyors belépés az appba</div>
-          </div>
-        </div>
-
-        <div class="hero-visual" aria-hidden="true">
-          <div class="visual-top">
-            <div class="visual-dots"><span></span><span></span><span></span></div>
-            <div class="visual-url">https://idesuss.net</div>
-          </div>
-          <div class="visual-body">
-            <div class="mock-nav">
-              <span>Idesüss™</span>
-              <span data-i18n="mockNavRight">Mini app előnézet</span>
-            </div>
-            <div class="mock-banner" data-i18n="mockBannerTop">Főoldal + mini app + jövőbeli bővítési helyek</div>
-            <div class="mock-panel">
-              <div class="mock-input" data-i18n="mockInput">Nyilvános link beillesztése…</div>
-              <div class="mock-row">
-                <div class="mock-btn" data-i18n="paste">Beillesztés</div>
-                <div class="mock-btn" data-i18n="clear">Törlés</div>
-                <div class="mock-btn primary" data-i18n="open">Megnyitás</div>
-              </div>
-            </div>
-            <div class="mock-banner" data-i18n="mockBannerBottom">Powered by StZoo</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-band" id="ad-top">
       <div class="container">
-        <div class="ad-shell">
-          <div class="ad-label">
-            <span data-i18n="advertisement">Hirdetés</span>
-            <span class="small-note" data-i18n="adPlaceholderSmall">Fenntartott hely jövőbeli partner tartalomnak</span>
-          </div>
-          <a href="#contact" class="ad-banner">
-            <span data-i18n="adBannerText">Itt lehet a hirdetésed</span>
-          </a>
-        </div>
-      </div>
-    </section>
+        <div class="hero-shell">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <div>
+                <div class="hero-brand">
+                  <img src="/favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
+                  <div>
+                    <h1 class="hero-brand-title">Idesüss<span class="tm-mark">™</span></h1>
+                    <p class="hero-brand-sub" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
+                  </div>
+                </div>
 
-    <section class="section" id="miniapp">
-      <div class="container">
-        <div class="section-head">
-          <div class="section-kicker" data-i18n="miniAppKicker">Mini app</div>
-          <h2 class="section-title" data-i18n="miniAppTitle">Próbáld ki közvetlenül a főoldalon</h2>
-          <p class="section-desc" data-i18n="miniAppDesc">
-            Illessz be ide egy támogatott nyilvános linket, nyisd meg azonnal, vagy lépj át a dedikált app-felületre egy fókuszáltabb élményért.
-          </p>
-        </div>
-
-        <div class="miniapp-layout">
-          <div class="miniapp-main">
-            <h3 class="miniapp-title" data-i18n="inputTitle">Illessz be egy nyilvános videólinket</h3>
-            <p class="miniapp-subtitle" data-i18n="inputSubtitle">
-              TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.
-            </p>
-
-            <div class="field">
-              <label for="videoUrl" data-i18n="inputLabel">Nyilvános videó URL</label>
-              <input
-                id="videoUrl"
-                class="input"
-                type="url"
-                inputmode="url"
-                autocomplete="off"
-                spellcheck="false"
-                placeholder="https://..."
-              />
-            </div>
-
-            <div class="input-actions">
-              <button id="pasteBtn" class="btn btn-secondary" type="button" data-i18n="paste">Beillesztés</button>
-              <button id="openBtn" class="btn btn-primary" type="button" data-i18n="open">Megnyitás</button>
-              <button id="clearBtn" class="btn btn-ghost" type="button" data-i18n="clear">Törlés</button>
-            </div>
-
-            <div class="status-bar">
-              <div id="clipboardStatus" class="status-pill">
-                <span class="status-dot"></span>
-                <span data-i18n="clipboardChecking">Vágólap ellenőrzése…</span>
+                <p class="hero-lead" data-i18n="heroLead">
+                  Próbáld ki közvetlenül a főoldalon népszerű minialkalmazásunkat!
+                </p>
               </div>
 
-              <div id="installStatus" class="status-pill">
-                <span class="status-dot"></span>
-                <span data-i18n="installStateUnknown">Telepítési állapot betöltése…</span>
-              </div>
-
-              <div class="status-pill status-ok">
-                <span class="status-dot"></span>
-                <span data-i18n="publicLinksOnly">Csak nyilvános linkek</span>
-              </div>
-            </div>
-          </div>
-
-          <aside class="miniapp-side">
-            <div class="counter-panel">
-              <div class="counter-label" data-i18n="counterLabel">Megnyitott linkek</div>
-              <div id="openCounter" class="counter-value">0</div>
-              <div class="counter-note" data-i18n="counterNote">
-                Helyben tárolva ezen az eszközön a gyors követéshez.
-              </div>
-            </div>
-
-            <div class="feature-box" style="padding: 16px;">
-              <h3 style="margin:0 0 12px;" data-i18n="supportedTitle">Támogatott források</h3>
-              <ul class="support-list">
-                <li class="support-item"><span class="support-icon">TT</span><span data-i18n="supportedTiktok">TikTok nyilvános linkek</span></li>
-                <li class="support-item"><span class="support-icon">YT</span><span data-i18n="supportedYoutube">YouTube linkek és shortok</span></li>
-                <li class="support-item"><span class="support-icon">IG</span><span data-i18n="supportedInstagram">Instagram nyilvános reel linkek</span></li>
-                <li class="support-item"><span class="support-icon">FB</span><span data-i18n="supportedFacebook">Facebook nyilvános videók</span></li>
-              </ul>
-            </div>
-
-            <div class="feature-box" style="padding: 16px;">
-              <h3 style="margin:0 0 12px;" data-i18n="quickActionsTitle">Gyors műveletek</h3>
-              <div class="input-actions" style="margin:0;">
-                <a id="sideOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
-                  <span data-i18n="openFullApp">Teljes app megnyitása</span>
+              <div class="hero-actions">
+                <a id="heroOpenAppBtn" class="btn hero-webapp-btn" href="https://idesuss.net/app">
+                  <span data-i18n="openWebapp">Webapp megnyitása</span>
                 </a>
               </div>
             </div>
-          </aside>
+
+            <div class="hero-miniapp">
+              <h3 class="miniapp-title" data-i18n="inputTitle">Illessz be egy nyilvános videólinket</h3>
+              <p class="miniapp-subtitle" data-i18n="inputSubtitle">
+                TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.
+              </p>
+
+              <div class="field">
+                <label for="videoUrl" data-i18n="inputLabel">Nyilvános videó URL</label>
+                <input
+                  id="videoUrl"
+                  class="input"
+                  type="url"
+                  inputmode="url"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div class="input-actions">
+                <button id="pasteBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="paste">Beillesztés</button>
+                <button id="openBtn" class="btn miniapp-btn btn-primary" type="button" data-i18n="open">Megnyitás</button>
+                <button id="clearBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="clear">Törlés</button>
+              </div>
+
+              <div class="status-bar">
+                <div id="clipboardStatus" class="status-pill">
+                  <span class="status-dot"></span>
+                  <span data-i18n="clipboardChecking">Vágólap ellenőrzése…</span>
+                </div>
+
+                <div id="installStatus" class="status-pill">
+                  <span class="status-dot"></span>
+                  <span data-i18n="installStateUnknown">Telepítési állapot betöltése…</span>
+                </div>
+
+                <div class="status-pill status-ok">
+                  <span class="status-dot"></span>
+                  <span data-i18n="publicLinksOnly">Csak nyilvános linkek</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-bottom">
+            <div class="hero-banner">
+              <div class="hero-banner-text">
+                <span class="hero-banner-icon">🪄</span>
+                <span data-i18n="heroBannerText">Egyes Android eszközök nem támogatják!</span>
+              </div>
+              <a href="#how" class="hero-banner-link" data-i18n="heroBannerLink">Részletek</a>
+            </div>
+
+            <div class="hero-footer-links">
+              <a href="#about" data-i18n="aboutLink">Névjegy</a>
+              <span class="powered">Powered by StZoo</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-band" id="how">
+    <section class="content-section" id="how">
       <div class="container">
         <div class="section-head">
           <div class="section-kicker" data-i18n="howKicker">Működés</div>
           <h2 class="section-title" data-i18n="howTitle">Három egyszerű lépés</h2>
           <p class="section-desc" data-i18n="howDesc">
-            A főoldal maradjon használható és tiszta, miközben a dedikált app a gyorsabb, fókuszáltabb felület marad.
+            A főoldal maradjon használható és tiszta, miközben a dedikált webapp a gyorsabb, fókuszáltabb felület marad.
           </p>
         </div>
 
@@ -1189,97 +951,588 @@
           <li class="how-item">
             <span class="how-num">3</span>
             <div>
-              <strong data-i18n="step3Title">Átlépés a teljes appba bármikor</strong><br />
-              <span class="small-note" data-i18n="step3Text">Használd a dedikált Idesüss app felületet, ha fókuszáltabb mobilos munkafolyamatot szeretnél.</span>
+              <strong data-i18n="step3Title">Átlépés a webappba bármikor</strong><br />
+              <span class="small-note" data-i18n="step3Text">Használd a dedikált Idesüss webapp felületet, ha fókuszáltabb mobilos munkafolyamatot szeretnél.</span>
             </div>
           </li>
         </ul>
       </div>
     </section>
+        <section class="content-section">
+      <div class="container info-grid">
+        <div class="info-card">
+          <div class="section-head">
+            <div class="section-kicker" data-i18n="supportedKicker">Támogatás</div>
+            <h2 class="section-title" data-i18n="supportedTitle">Támogatott források</h2>
+            <p class="section-desc" data-i18n="supportedDesc">
+              Nyilvános linkekhez optimalizált, egyszerű belépőpont a leggyakoribb videóforrásokhoz.
+            </p>
+          </div>
 
-    <section class="section" id="about">
+          <ul class="support-list">
+            <li class="support-item"><span class="support-icon">TT</span><span data-i18n="supportedTiktok">TikTok nyilvános linkek</span></li>
+            <li class="support-item"><span class="support-icon">YT</span><span data-i18n="supportedYoutube">YouTube linkek és shortok</span></li>
+            <li class="support-item"><span class="support-icon">IG</span><span data-i18n="supportedInstagram">Instagram nyilvános reel linkek</span></li>
+            <li class="support-item"><span class="support-icon">FB</span><span data-i18n="supportedFacebook">Facebook nyilvános videók</span></li>
+          </ul>
+        </div>
+
+        <div class="feature-box">
+          <div class="counter-panel">
+            <div class="counter-label" data-i18n="counterLabel">Megnyitott linkek</div>
+            <div id="openCounter" class="counter-value">0</div>
+            <div class="counter-note" data-i18n="counterNote">
+              Helyben tárolva ezen az eszközön a gyors követéshez.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="about">
       <div class="container">
         <div class="section-head">
           <div class="section-kicker" data-i18n="aboutKicker">Névjegy</div>
           <h2 class="section-title" data-i18n="aboutTitle">Főoldal, profil és gyakorlati belépőpont egy helyen</h2>
           <p class="section-desc" data-i18n="aboutDesc">
-            Az Idesüss.net célja, hogy világosan bemutassa a projektet, önmagában is használható maradjon, és egy érintéssel átvezesse a látogatót a dedikált app-élménybe.
+            Az Idesüss.net célja, hogy világosan bemutassa a projektet, önmagában is használható maradjon, és egy érintéssel átvezesse a látogatót a dedikált webapp-élménybe.
           </p>
         </div>
 
         <div class="about-grid">
           <article>
             <h3 data-i18n="aboutCard1Title">Tiszta profil</h3>
-            <p data-i18n="aboutCard1Text">
-              Profibb főoldali megjelenés, közvetlen magyarázattal arról, mi az Idesüss és mire való.
-            </p>
+            <p data-i18n="aboutCard1Text">Profibb főoldali megjelenés, közvetlen magyarázattal arról, mi az Idesüss és mire való.</p>
           </article>
           <article>
             <h3 data-i18n="aboutCard2Title">Használható főoldal</h3>
-            <p data-i18n="aboutCard2Text">
-              Nem csak landing page: a látogató már innen is beilleszthet és megnyithat támogatott nyilvános linkeket.
-            </p>
+            <p data-i18n="aboutCard2Text">Nem csak landing page: a látogató már innen is beilleszthet és megnyithat támogatott nyilvános linkeket.</p>
           </article>
           <article>
             <h3 data-i18n="aboutCard3Title">Jövőálló elrendezés</h3>
-            <p data-i18n="aboutCard3Text">
-              Hirdetési blokkok, bővíthető szekciók, nyelvváltás és telepítési támogatás már eleve benne van a szerkezetben.
-            </p>
+            <p data-i18n="aboutCard3Text">Bannerhely, nyelvváltás, óra és miniapp már eleve benne van a szerkezetben.</p>
           </article>
         </div>
 
         <div class="about-story">
           <h3 data-i18n="aboutStoryTitle">Az ötlet háttere</h3>
           <p data-i18n="aboutStoryText">
-            Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem.
+            Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna.
           </p>
         </div>
       </div>
     </section>
-        <script>
-      const LANG_KEY = "idesuss_lang";
+  </main>
 
-      const dict = window.dict || {};
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-card">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <h3>Idesüss<span class="tm-mark">™</span></h3>
+            <p data-i18n="footerDesc">Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.</p>
+          </div>
 
-      function applyTranslations(lang) {
-        const active = dict[lang] ? lang : "hu";
-        document.documentElement.lang = active;
-        document.getElementById("langSelect").value = active;
-        localStorage.setItem(LANG_KEY, active);
+          <div class="footer-links">
+            <a href="#how" data-i18n="howItWorks">Hogyan működik</a>
+            <a href="#about" data-i18n="aboutLink">Névjegy</a>
+            <a id="footerOpenAppLink" href="https://idesuss.net/app" data-i18n="openWebapp">Webapp megnyitása</a>
+          </div>
+        </div>
 
-        document.querySelectorAll("[data-i18n]").forEach(node => {
-          const key = node.getAttribute("data-i18n");
-          if (dict[active] && dict[active][key]) {
-            node.textContent = dict[active][key];
-          }
-        });
+        <div class="footer-bottom">
+          <div>© <span id="year"></span> Idesüss<span class="tm-mark">™</span></div>
+          <div class="powered">Powered by StZoo</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const APP_URL = "https://idesuss.net/app";
+    const COUNTER_KEY = "idesuss_open_count";
+    const LANG_KEY = "idesuss_lang";
+
+    const dict = {
+      hu: {
+        brandSubtitle: "Főoldal + mini app élmény",
+        heroLead: "Próbáld ki közvetlenül a főoldalon népszerű minialkalmazásunkat!",
+        openWebapp: "Webapp megnyitása",
+        inputTitle: "Illessz be egy nyilvános videólinket",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.",
+        inputLabel: "Nyilvános videó URL",
+        paste: "Beillesztés",
+        open: "Megnyitás",
+        clear: "Törlés",
+        clipboardChecking: "Vágólap ellenőrzése…",
+        installStateUnknown: "Telepítési állapot betöltése…",
+        publicLinksOnly: "Csak nyilvános linkek",
+        heroBannerText: "Egyes Android eszközök nem támogatják!",
+        heroBannerLink: "Részletek",
+        aboutLink: "Névjegy",
+        howKicker: "Működés",
+        howTitle: "Három egyszerű lépés",
+        howDesc: "A főoldal maradjon használható és tiszta, miközben a dedikált webapp a gyorsabb, fókuszáltabb felület marad.",
+        step1Title: "Link beillesztése vagy automatikus felismerése",
+        step1Text: "Az oldal megpróbálhat támogatott linket olvasni a vágólapról automatikusan.",
+        step2Title: "Azonnali megnyitás",
+        step2Text: "A mini app közvetlenül megnyitja a linket, és közben helyben számolja a sikeres megnyitásokat.",
+        step3Title: "Átlépés a webappba bármikor",
+        step3Text: "Használd a dedikált Idesüss webapp felületet, ha fókuszáltabb mobilos munkafolyamatot szeretnél.",
+        supportedKicker: "Támogatás",
+        supportedTitle: "Támogatott források",
+        supportedDesc: "Nyilvános linkekhez optimalizált, egyszerű belépőpont a leggyakoribb videóforrásokhoz.",
+        supportedTiktok: "TikTok nyilvános linkek",
+        supportedYoutube: "YouTube linkek és shortok",
+        supportedInstagram: "Instagram nyilvános reel linkek",
+        supportedFacebook: "Facebook nyilvános videók",
+        counterLabel: "Megnyitott linkek",
+        counterNote: "Helyben tárolva ezen az eszközön a gyors követéshez.",
+        aboutKicker: "Névjegy",
+        aboutTitle: "Főoldal, profil és gyakorlati belépőpont egy helyen",
+        aboutDesc: "Az Idesüss.net célja, hogy világosan bemutassa a projektet, önmagában is használható maradjon, és egy érintéssel átvezesse a látogatót a dedikált webapp-élménybe.",
+        aboutCard1Title: "Tiszta profil",
+        aboutCard1Text: "Profibb főoldali megjelenés, közvetlen magyarázattal arról, mi az Idesüss és mire való.",
+        aboutCard2Title: "Használható főoldal",
+        aboutCard2Text: "Nem csak landing page: a látogató már innen is beilleszthet és megnyithat támogatott nyilvános linkeket.",
+        aboutCard3Title: "Jövőálló elrendezés",
+        aboutCard3Text: "Bannerhely, nyelvváltás, óra és miniapp már eleve benne van a szerkezetben.",
+        aboutStoryTitle: "Az ötlet háttere",
+        aboutStoryText: "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna.",
+        footerDesc: "Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.",
+        howItWorks: "Hogyan működik",
+        clipboardEmpty: "A vágólap jelenleg üres",
+        clipboardUnsupported: "A vágólap olvasása itt nem támogatott",
+        clipboardReady: "Link észlelve — készen áll a megnyitásra",
+        clipboardNoSupported: "Nem találtam támogatott linket a vágólapon",
+        clipboardNoAccess: "A vágólaphoz most nincs hozzáférés",
+        clipboardNotLink: "A vágólap tartalma nem tűnik linknek",
+        fieldCleared: "Mező törölve — új link beilleszthető",
+        invalidUrl: "Adj meg egy érvényes nyilvános linket",
+        openedNewTab: "Link megnyitva új lapon"
+      },
+      en: {
+        brandSubtitle: "Homepage + mini app experience",
+        heroLead: "Try our popular mini application directly on the homepage!",
+        openWebapp: "Open Webapp",
+        inputTitle: "Paste a public video link",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.",
+        inputLabel: "Public video URL",
+        paste: "Paste",
+        open: "Open",
+        clear: "Clear",
+        clipboardChecking: "Checking clipboard…",
+        installStateUnknown: "Install status loading…",
+        publicLinksOnly: "Public links only",
+        heroBannerText: "Some Android devices may not support it!",
+        heroBannerLink: "Details",
+        aboutLink: "About",
+        howKicker: "How it works",
+        howTitle: "Three simple steps",
+        howDesc: "Keep the homepage useful and clean, while the dedicated webapp remains the faster, more focused interface.",
+        step1Title: "Paste or auto-detect a link",
+        step1Text: "The page can try to read a supported link from your clipboard automatically.",
+        step2Title: "Open it instantly",
+        step2Text: "The mini app opens the link directly, while also counting successful opens locally.",
+        step3Title: "Move to the webapp anytime",
+        step3Text: "Use the dedicated Idesüss webapp when you want a more focused mobile workflow.",
+        supportedKicker: "Support",
+        supportedTitle: "Supported sources",
+        supportedDesc: "A simple entry point optimized for public links from the most common video sources.",
+        supportedTiktok: "TikTok public links",
+        supportedYoutube: "YouTube links and shorts",
+        supportedInstagram: "Instagram public reels",
+        supportedFacebook: "Facebook public videos",
+        counterLabel: "Opened links",
+        counterNote: "Stored locally on this device for quick tracking.",
+        aboutKicker: "About",
+        aboutTitle: "Homepage, profile and practical entry point in one place",
+        aboutDesc: "Idesüss.net is designed to introduce the project clearly, stay usable on its own, and connect visitors to the dedicated webapp experience with a single tap.",
+        aboutCard1Title: "Clear profile",
+        aboutCard1Text: "A more professional homepage presence with a direct explanation of what Idesüss is and what it is for.",
+        aboutCard2Title: "Useful homepage",
+        aboutCard2Text: "Not just a landing page: visitors can already paste and open supported public links from here.",
+        aboutCard3Title: "Future-ready layout",
+        aboutCard3Text: "Banner space, language switching, clock and mini app are already built into the structure.",
+        aboutStoryTitle: "Behind the idea",
+        aboutStoryText: "The creation of Idesüss was inspired by a very old friend of mine. Partly his mindset, habits and unique way of seeing things started this whole page in me. He is a little paranoid, a little lazy, so for a while the page almost got the name “Lazy Driver”. In the end it became Idesüss, and I do not regret that at all. It came much closer to the mood and intention I wanted this whole thing to represent.",
+        footerDesc: "Homepage + mini app entry point for supported public video links.",
+        howItWorks: "How It Works",
+        clipboardEmpty: "Clipboard is currently empty",
+        clipboardUnsupported: "Clipboard reading is not supported here",
+        clipboardReady: "Link detected — ready to open",
+        clipboardNoSupported: "No supported link found in clipboard",
+        clipboardNoAccess: "Clipboard access is not available right now",
+        clipboardNotLink: "Clipboard content does not look like a link",
+        fieldCleared: "Field cleared — ready for a new link",
+        invalidUrl: "Please enter a valid public link",
+        openedNewTab: "Link opened in a new tab"
+      },
+      nl: {
+        brandSubtitle: "Homepage + mini app ervaring",
+        heroLead: "Probeer onze populaire mini-app direct op de homepage!",
+        openWebapp: "Webapp openen",
+        inputTitle: "Plak een openbare videolink",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook-video en andere ondersteunde openbare links.",
+        inputLabel: "Openbare video-URL",
+        paste: "Plakken",
+        open: "Openen",
+        clear: "Wissen",
+        clipboardChecking: "Klembord controleren…",
+        installStateUnknown: "Installatiestatus laden…",
+        publicLinksOnly: "Alleen openbare links",
+        heroBannerText: "Sommige Android-apparaten ondersteunen dit niet!",
+        heroBannerLink: "Details",
+        aboutLink: "Over",
+        howKicker: "Werking",
+        howTitle: "Drie eenvoudige stappen",
+        howDesc: "De homepage blijft bruikbaar en schoon, terwijl de speciale webapp de snellere en meer gefocuste interface blijft.",
+        step1Title: "Link plakken of automatisch herkennen",
+        step1Text: "De pagina kan automatisch een ondersteunde link van je klembord proberen te lezen.",
+        step2Title: "Direct openen",
+        step2Text: "De mini-app opent de link direct en telt succesvolle openingen lokaal mee.",
+        step3Title: "Ga altijd naar de webapp",
+        step3Text: "Gebruik de speciale Idesüss-webapp als je een meer gefocuste mobiele workflow wilt.",
+        supportedKicker: "Ondersteuning",
+        supportedTitle: "Ondersteunde bronnen",
+        supportedDesc: "Een eenvoudige toegang, geoptimaliseerd voor openbare links van de meest gebruikte videobronnen.",
+        supportedTiktok: "TikTok openbare links",
+        supportedYoutube: "YouTube-links en shorts",
+        supportedInstagram: "Instagram openbare reels",
+        supportedFacebook: "Facebook openbare video's",
+        counterLabel: "Geopende links",
+        counterNote: "Lokaal opgeslagen op dit apparaat voor snelle opvolging.",
+        aboutKicker: "Over",
+        aboutTitle: "Homepage, profiel en praktisch toegangspunt op één plek",
+        aboutDesc: "Idesüss.net is ontworpen om het project duidelijk te presenteren, zelfstandig bruikbaar te blijven en bezoekers met één tik naar de speciale webapp-ervaring te leiden.",
+        aboutCard1Title: "Duidelijk profiel",
+        aboutCard1Text: "Een professionelere homepage met een directe uitleg over wat Idesüss is en waarvoor het dient.",
+        aboutCard2Title: "Bruikbare homepage",
+        aboutCard2Text: "Niet alleen een landingspagina: bezoekers kunnen hier al ondersteunde openbare links plakken en openen.",
+        aboutCard3Title: "Toekomstbestendige lay-out",
+        aboutCard3Text: "Bannerplaats, taalwissel, klok en mini-app zijn al in de structuur ingebouwd.",
+        aboutStoryTitle: "Achter het idee",
+        aboutStoryText: "Het ontstaan van Idesüss werd geïnspireerd door een zeer oude goede vriend van mij. Mede door zijn manier van denken, gewoonten en unieke kijk op dingen begon ik aan deze site te denken. Een beetje paranoïde, een beetje lui, daarom was “Luie Chauffeur” een tijdlang bijna de naam. Uiteindelijk werd het Idesüss, en daar heb ik geen spijt van.",
+        footerDesc: "Homepage + mini app toegangspunt voor ondersteunde openbare videolinks.",
+        howItWorks: "Hoe werkt het",
+        clipboardEmpty: "Het klembord is momenteel leeg",
+        clipboardUnsupported: "Lezen van het klembord wordt hier niet ondersteund",
+        clipboardReady: "Link gedetecteerd — klaar om te openen",
+        clipboardNoSupported: "Geen ondersteunde link gevonden op het klembord",
+        clipboardNoAccess: "Geen toegang tot het klembord op dit moment",
+        clipboardNotLink: "De inhoud van het klembord lijkt geen link te zijn",
+        fieldCleared: "Veld gewist — klaar voor een nieuwe link",
+        invalidUrl: "Voer een geldige openbare link in",
+        openedNewTab: "Link geopend in een nieuw tabblad"
+      },
+      ro: {
+        brandSubtitle: "Pagină principală + experiență mini aplicație",
+        heroLead: "Încearcă direct pe pagina principală mini-aplicația noastră populară!",
+        openWebapp: "Deschide webapp-ul",
+        inputTitle: "Lipește un link video public",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, videoclip Facebook și alte linkuri publice acceptate.",
+        inputLabel: "URL video public",
+        paste: "Lipește",
+        open: "Deschide",
+        clear: "Șterge",
+        clipboardChecking: "Se verifică clipboard-ul…",
+        installStateUnknown: "Se încarcă starea instalării…",
+        publicLinksOnly: "Doar linkuri publice",
+        heroBannerText: "Unele dispozitive Android nu îl acceptă!",
+        heroBannerLink: "Detalii",
+        aboutLink: "Despre",
+        howKicker: "Funcționare",
+        howTitle: "Trei pași simpli",
+        howDesc: "Pagina principală rămâne curată și utilă, în timp ce webapp-ul dedicat rămâne interfața mai rapidă și mai concentrată.",
+        step1Title: "Lipește sau detectează automat un link",
+        step1Text: "Pagina poate încerca să citească automat un link acceptat din clipboard.",
+        step2Title: "Deschide instant",
+        step2Text: "Mini-aplicația deschide direct linkul și numără local deschiderile reușite.",
+        step3Title: "Treci oricând la webapp",
+        step3Text: "Folosește webapp-ul dedicat Idesüss dacă vrei un flux mobil mai concentrat.",
+        supportedKicker: "Suport",
+        supportedTitle: "Surse acceptate",
+        supportedDesc: "Punct de intrare simplu, optimizat pentru linkuri publice din cele mai comune surse video.",
+        supportedTiktok: "Linkuri publice TikTok",
+        supportedYoutube: "Linkuri și shorts YouTube",
+        supportedInstagram: "Reel-uri publice Instagram",
+        supportedFacebook: "Videoclipuri publice Facebook",
+        counterLabel: "Linkuri deschise",
+        counterNote: "Stocate local pe acest dispozitiv pentru urmărire rapidă.",
+        aboutKicker: "Despre",
+        aboutTitle: "Pagină principală, profil și punct practic de intrare într-un singur loc",
+        aboutDesc: "Idesüss.net este conceput pentru a prezenta clar proiectul, pentru a rămâne util de unul singur și pentru a conduce vizitatorul spre experiența webapp-ului dedicat cu o singură atingere.",
+        aboutCard1Title: "Profil clar",
+        aboutCard1Text: "O prezență mai profesionistă pe pagina principală, cu explicație directă despre ce este Idesüss și la ce servește.",
+        aboutCard2Title: "Pagină principală utilă",
+        aboutCard2Text: "Nu este doar un landing page: vizitatorii pot deja lipi și deschide de aici linkuri publice acceptate.",
+        aboutCard3Title: "Structură pregătită pentru viitor",
+        aboutCard3Text: "Spațiu pentru banner, schimbare limbă, ceas și mini-aplicație deja integrate în structură.",
+        aboutStoryTitle: "Povestea ideii",
+        aboutStoryText: "Nașterea Idesüss a fost inspirată de un foarte vechi prieten bun de-al meu. În parte datorită felului său de a gândi, obiceiurilor sale și modului său aparte de a vedea lucrurile am început să mă gândesc la această pagină. Puțin paranoic, puțin leneș, așa că pentru o vreme numele „Șoferul Leneș” a fost foarte aproape. În cele din urmă a devenit Idesüss și nu am regretat deloc asta. A ajuns mult mai aproape de atmosfera și intenția pe care voiam să o reprezinte.",
+        footerDesc: "Pagină principală + punct de intrare mini app pentru linkuri video publice acceptate.",
+        howItWorks: "Cum funcționează",
+        clipboardEmpty: "Clipboard-ul este gol momentan",
+        clipboardUnsupported: "Citirea clipboard-ului nu este acceptată aici",
+        clipboardReady: "Link detectat — gata de deschidere",
+        clipboardNoSupported: "Nu am găsit un link acceptat în clipboard",
+        clipboardNoAccess: "Clipboard-ul nu este accesibil momentan",
+        clipboardNotLink: "Conținutul clipboard-ului nu pare a fi un link",
+        fieldCleared: "Câmp șters — gata pentru un nou link",
+        invalidUrl: "Introdu un link public valid",
+        openedNewTab: "Link deschis într-o filă nouă"
+      },
+      pl: {
+        brandSubtitle: "Strona główna + mini aplikacja",
+        heroLead: "Wypróbuj naszą popularną miniaplikację bezpośrednio na stronie głównej!",
+        openWebapp: "Otwórz webapp",
+        inputTitle: "Wklej publiczny link wideo",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, wideo Facebook i inne obsługiwane publiczne linki.",
+        inputLabel: "Publiczny adres URL wideo",
+        paste: "Wklej",
+        open: "Otwórz",
+        clear: "Wyczyść",
+        clipboardChecking: "Sprawdzanie schowka…",
+        installStateUnknown: "Ładowanie stanu instalacji…",
+        publicLinksOnly: "Tylko publiczne linki",
+        heroBannerText: "Niektóre urządzenia z Androidem tego nie obsługują!",
+        heroBannerLink: "Szczegóły",
+        aboutLink: "O projekcie",
+        howKicker: "Działanie",
+        howTitle: "Trzy proste kroki",
+        howDesc: "Strona główna pozostaje użyteczna i czysta, a dedykowany webapp pozostaje szybszym i bardziej skupionym interfejsem.",
+        step1Title: "Wklej lub wykryj link automatycznie",
+        step1Text: "Strona może spróbować automatycznie odczytać obsługiwany link ze schowka.",
+        step2Title: "Otwórz natychmiast",
+        step2Text: "Miniaplikacja otwiera link bezpośrednio i lokalnie zlicza udane otwarcia.",
+        step3Title: "Przejdź do webapp w dowolnym momencie",
+        step3Text: "Użyj dedykowanego webapp Idesüss, jeśli chcesz bardziej skupionego mobilnego workflow.",
+        supportedKicker: "Obsługa",
+        supportedTitle: "Obsługiwane źródła",
+        supportedDesc: "Prosty punkt wejścia zoptymalizowany pod publiczne linki z najczęstszych źródeł wideo.",
+        supportedTiktok: "Publiczne linki TikTok",
+        supportedYoutube: "Linki i shorts YouTube",
+        supportedInstagram: "Publiczne reels Instagram",
+        supportedFacebook: "Publiczne filmy Facebook",
+        counterLabel: "Otwarte linki",
+        counterNote: "Przechowywane lokalnie na tym urządzeniu dla szybkiego śledzenia.",
+        aboutKicker: "O projekcie",
+        aboutTitle: "Strona główna, profil i praktyczny punkt wejścia w jednym miejscu",
+        aboutDesc: "Idesüss.net ma jasno przedstawiać projekt, pozostać samodzielnie użyteczny i jednym stuknięciem prowadzić użytkownika do dedykowanego webapp.",
+        aboutCard1Title: "Czytelny profil",
+        aboutCard1Text: "Bardziej profesjonalna strona główna z bezpośrednim wyjaśnieniem, czym jest Idesüss i do czego służy.",
+        aboutCard2Title: "Użyteczna strona główna",
+        aboutCard2Text: "To nie tylko landing page: odwiedzający mogą już stąd wklejać i otwierać obsługiwane publiczne linki.",
+        aboutCard3Title: "Układ gotowy na przyszłość",
+        aboutCard3Text: "Miejsce na banner, zmiana języka, zegar i miniaplikacja są już wbudowane w strukturę.",
+        aboutStoryTitle: "Historia pomysłu",
+        aboutStoryText: "Powstanie Idesüss zostało zainspirowane przez mojego bardzo starego, dobrego przyjaciela. Częściowo przez jego sposób myślenia, przyzwyczajenia i szczególne spojrzenie na świat zacząłem myśleć o tej stronie. Trochę paranoiczny, trochę leniwy, więc przez pewien czas nazwa „Leniwy Kierowca” była bardzo blisko. Ostatecznie zostało Idesüss i wcale tego nie żałuję. To znacznie lepiej oddaje klimat i intencję, które chciałem tą stroną przekazać.",
+        footerDesc: "Strona główna + punkt wejścia mini app dla obsługiwanych publicznych linków wideo.",
+        howItWorks: "Jak to działa",
+        clipboardEmpty: "Schowek jest obecnie pusty",
+        clipboardUnsupported: "Odczyt schowka nie jest tutaj obsługiwany",
+        clipboardReady: "Wykryto link — gotowe do otwarcia",
+        clipboardNoSupported: "Nie znaleziono obsługiwanego linku w schowku",
+        clipboardNoAccess: "Brak dostępu do schowka w tej chwili",
+        clipboardNotLink: "Zawartość schowka nie wygląda na link",
+        fieldCleared: "Pole wyczyszczone — gotowe na nowy link",
+        invalidUrl: "Wprowadź prawidłowy publiczny link",
+        openedNewTab: "Link otwarto w nowej karcie"
       }
+    };
 
-      function initLanguage() {
-        const saved = localStorage.getItem(LANG_KEY);
+    const els = {
+      langSelect: document.getElementById("langSelect"),
+      headerClock: document.getElementById("headerClock"),
+      videoUrl: document.getElementById("videoUrl"),
+      pasteBtn: document.getElementById("pasteBtn"),
+      openBtn: document.getElementById("openBtn"),
+      clearBtn: document.getElementById("clearBtn"),
+      clipboardStatus: document.getElementById("clipboardStatus"),
+      installStatus: document.getElementById("installStatus"),
+      openCounter: document.getElementById("openCounter"),
+      year: document.getElementById("year"),
+      appLinks: [
+        document.getElementById("heroOpenAppBtn"),
+        document.getElementById("footerOpenAppLink")
+      ]
+    };
 
-        if (saved && dict[saved]) {
-          applyTranslations(saved);
-        } else {
-          applyTranslations("hu");
-        }
-      }
+    function setAppLinks() {
+      els.appLinks.forEach(link => {
+        if (link) link.href = APP_URL;
+      });
+    }
 
-      document.getElementById("langSelect").addEventListener("change", (e) => {
-        applyTranslations(e.target.value);
+    function applyTranslations(lang) {
+      const active = dict[lang] ? lang : "hu";
+      document.documentElement.lang = active;
+      els.langSelect.value = active;
+      localStorage.setItem(LANG_KEY, active);
+
+      document.querySelectorAll("[data-i18n]").forEach(node => {
+        const key = node.getAttribute("data-i18n");
+        const value = dict[active][key];
+        if (value) node.textContent = value;
       });
 
-      // ===== INIT =====
-      initLanguage();
-    </script>
-    <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then(() => console.log("Root SW OK"))
-      .catch(err => console.error("Root SW HIBA:", err));
-  });
-}
-</script>
+      els.videoUrl.placeholder = "https://...";
+    }
+
+    function getCounter() {
+      return Number(localStorage.getItem(COUNTER_KEY) || 0);
+    }
+
+    function setCounter(value) {
+      localStorage.setItem(COUNTER_KEY, String(value));
+      els.openCounter.textContent = String(value);
+    }
+
+    function incrementCounter() {
+      setCounter(getCounter() + 1);
+    }
+
+    function looksLikeUrl(text) {
+      if (!text || typeof text !== "string") return false;
+      try {
+        const url = new URL(text.trim());
+        return ["http:", "https:"].includes(url.protocol);
+      } catch {
+        return false;
+      }
+    }
+
+    function updateClipboardStatus(type, text) {
+      els.clipboardStatus.className = "status-pill";
+      if (type === "ok") els.clipboardStatus.classList.add("status-ok");
+      if (type === "warn") els.clipboardStatus.classList.add("status-warn");
+      if (type === "error") els.clipboardStatus.classList.add("status-error");
+
+      els.clipboardStatus.innerHTML = `
+        <span class="status-dot"></span>
+        <span>${text}</span>
+      `;
+    }
+
+    function updateInstallStatus(type, text) {
+      els.installStatus.className = "status-pill";
+      if (type === "ok") els.installStatus.classList.add("status-ok");
+      if (type === "warn") els.installStatus.classList.add("status-warn");
+      if (type === "error") els.installStatus.classList.add("status-error");
+
+      els.installStatus.innerHTML = `
+        <span class="status-dot"></span>
+        <span>${text}</span>
+      `;
+    }
+
+    async function pasteFromClipboard(force = false) {
+      const lang = document.documentElement.lang || "hu";
+
+      if (!navigator.clipboard?.readText) {
+        updateClipboardStatus("warn", dict[lang].clipboardUnsupported);
+        return;
+      }
+
+      try {
+        const text = (await navigator.clipboard.readText()).trim();
+
+        if (!text) {
+          updateClipboardStatus("warn", dict[lang].clipboardEmpty);
+          return;
+        }
+
+        if (looksLikeUrl(text)) {
+          els.videoUrl.value = text;
+          updateClipboardStatus("ok", dict[lang].clipboardReady);
+          return;
+        }
+
+        if (force) {
+          els.videoUrl.value = text;
+          updateClipboardStatus("warn", dict[lang].clipboardNotLink);
+        } else {
+          updateClipboardStatus("warn", dict[lang].clipboardNoSupported);
+        }
+      } catch {
+        updateClipboardStatus("warn", dict[lang].clipboardNoAccess);
+      }
+    }
+
+    function normalizeUrl(value) {
+      const raw = value.trim();
+      if (!raw) return "";
+      if (/^https?:\/\//i.test(raw)) return raw;
+      return "https://" + raw;
+    }
+
+    function openUrl() {
+      const lang = document.documentElement.lang || "hu";
+      const normalized = normalizeUrl(els.videoUrl.value);
+
+      if (!normalized || !looksLikeUrl(normalized)) {
+        updateClipboardStatus("error", dict[lang].invalidUrl);
+        els.videoUrl.focus();
+        return;
+      }
+
+      els.videoUrl.value = normalized;
+      incrementCounter();
+      window.open(normalized, "_blank", "noopener,noreferrer");
+      updateClipboardStatus("ok", dict[lang].openedNewTab);
+    }
+
+    function clearInput() {
+      const lang = document.documentElement.lang || "hu";
+      els.videoUrl.value = "";
+      updateClipboardStatus("warn", dict[lang].fieldCleared);
+      els.videoUrl.focus();
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      els.headerClock.textContent = `${hh}:${mm}`;
+    }
+
+    function wireEvents() {
+      els.langSelect.addEventListener("change", e => applyTranslations(e.target.value));
+      els.pasteBtn.addEventListener("click", () => pasteFromClipboard(true));
+      els.openBtn.addEventListener("click", openUrl);
+      els.clearBtn.addEventListener("click", clearInput);
+
+      els.videoUrl.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          openUrl();
+        }
+      });
+
+      window.addEventListener("focus", () => pasteFromClipboard(false));
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          pasteFromClipboard(false);
+        }
+      });
+    }
+
+    function init() {
+      setAppLinks();
+      els.year.textContent = new Date().getFullYear();
+      setCounter(getCounter());
+
+      const savedLang = localStorage.getItem(LANG_KEY) || "hu";
+      applyTranslations(savedLang);
+      wireEvents();
+      pasteFromClipboard(false);
+      updateInstallStatus("warn", dict[savedLang]?.installStateUnknown || dict.hu.installStateUnknown);
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
+    init();
+  </script>
 </body>
 </html>
