@@ -1,11 +1,29 @@
 {
+  "counterLabel": "Bezoeken",
+  "counterNote": "De teller wordt niet bij elke refresh verhoogd.",
+  "langBoxLabel": "Taal",
+  "langSubnote": "Hongaarse browser → Hongaarse interface, anders → Engels.",
+
   "textareaPlaceholder": "Plak hier de link...",
   "playBtnText": "START",
   "pasteBtn": "PLAKKEN",
   "shareBtn": "DELEN",
   "clearInputBtn": "WISSEN",
+
+  "backBtn": "TERUG",
+
+  "historyTitle": "Geschiedenis",
+  "clearHistoryBtn": "Geschiedenis wissen",
+  "emptyHistory": "Nog geen geschiedenis.",
+  "openAgain": "Opnieuw openen",
+  "historyCleared": "Geschiedenis gewist.",
+
+  "installBtnText": "Installeren",
+
   "aboutLink": "Over",
   "aboutTitle": "Over",
-  "aboutText": "Het idee achter Idesüss werd geïnspireerd door een zeer oude vriend. Zijn manier van denken, gewoontes en unieke kijk op dingen brachten dit concept op gang. Hij is een beetje paranoïde en een beetje lui — daarom heette het project bijna “Luie Chauffeur”. Uiteindelijk werd het Idesüss, en dat past veel beter bij de sfeer en bedoeling van het project."
-  "aboutCloseBtn": "OK"
+  "aboutText": "Het idee achter Idesüss werd geïnspireerd door een zeer oude vriend. Zijn manier van denken, gewoonten en unieke kijk op dingen brachten dit project tot leven. Hij is een beetje paranoïde en een beetje vreemd — daarom heette het project bijna 'Luie Chauffeur'. Uiteindelijk past Idesüss veel beter bij de sfeer en het doel.",
+  "aboutCloseBtn": "OK",
+
+  "footerText": "Powered by StZoo"
 }
