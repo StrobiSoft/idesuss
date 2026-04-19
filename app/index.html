@@ -325,10 +325,15 @@
         }
 
         .player-card {
-            padding: 14px;
-            margin-bottom: 14px;
-            display: none;
-        }
+    padding: 14px;
+    margin-bottom: 14px;
+    display: none;
+}
+
+.player-card:has(.player-frame:fullscreen),
+.player-card:has(.player-frame:-webkit-full-screen) {
+    padding: 0;
+}
 
         .player-frame {
     width: 100%;
