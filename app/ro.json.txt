@@ -1,11 +1,29 @@
 {
+  "counterLabel": "Vizualizări",
+  "counterNote": "Contorul nu crește la fiecare reîmprospătare.",
+  "langBoxLabel": "Limbă",
+  "langSubnote": "Browser maghiar → interfață maghiară, altfel → engleză.",
+
   "textareaPlaceholder": "Lipește linkul aici...",
   "playBtnText": "PORNEȘTE",
-  "pasteBtn": "LIPEȘTE",
-  "shareBtn": "DISTRIBUIE",
+  "pasteBtn": "LIPIRE",
+  "shareBtn": "PARTAJEAZĂ",
   "clearInputBtn": "ȘTERGE",
+
+  "backBtn": "ÎNAPOI",
+
+  "historyTitle": "Istoric",
+  "clearHistoryBtn": "Șterge istoricul",
+  "emptyHistory": "Nu există istoric.",
+  "openAgain": "Deschide din nou",
+  "historyCleared": "Istoricul a fost șters.",
+
+  "installBtnText": "Instalează",
+
   "aboutLink": "Despre",
   "aboutTitle": "Despre",
-  "aboutText": "Crearea Idesüss a fost inspirată de un prieten foarte vechi. Modul lui de gândire, obiceiurile și perspectiva lui unică au declanșat această idee. Este puțin paranoic și puțin leneș — de aceea proiectul aproape s-a numit „Șoferul leneș”. În final a devenit Idesüss, iar asta reflectă mult mai bine intenția și atmosfera dorită."
-  "aboutCloseBtn": "OK"
+  "aboutText": "Ideea din spatele Idesüss a fost inspirată de un prieten foarte vechi. Modul lui de a gândi, obiceiurile și perspectiva lui unică au dat naștere acestui proiect. Este puțin paranoic și puțin ciudat — proiectul aproape s-a numit 'Șofer leneș'. În final, Idesüss se potrivește mult mai bine.",
+  "aboutCloseBtn": "OK",
+
+  "footerText": "Powered by StZoo"
 }
