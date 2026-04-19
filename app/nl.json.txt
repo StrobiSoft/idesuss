@@ -7,4 +7,5 @@
   "aboutLink": "Over",
   "aboutTitle": "Over",
   "aboutText": "Het idee achter Idesüss werd geïnspireerd door een zeer oude vriend. Zijn manier van denken, gewoontes en unieke kijk op dingen brachten dit concept op gang. Hij is een beetje paranoïde en een beetje lui — daarom heette het project bijna “Luie Chauffeur”. Uiteindelijk werd het Idesüss, en dat past veel beter bij de sfeer en bedoeling van het project."
+  "aboutCloseBtn": "OK"
 }
