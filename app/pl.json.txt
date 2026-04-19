@@ -7,4 +7,5 @@
   "aboutLink": "O aplikacji",
   "aboutTitle": "O aplikacji",
   "aboutText": "Powstanie Idesüss zostało zainspirowane przez bardzo starego przyjaciela. Jego sposób myślenia, nawyki i unikalne spojrzenie zapoczątkowały cały pomysł. Jest trochę paranoiczny i trochę leniwy — dlatego przez chwilę projekt miał nazywać się „Lenivy kierowca”. Ostatecznie powstał Idesüss i lepiej oddaje zamierzony klimat."
+  "aboutCloseBtn": "OK"
 }
