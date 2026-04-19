@@ -1246,3 +1246,41 @@
         </div>
       </div>
     </section>
+        <script>
+      const LANG_KEY = "idesuss_lang";
+
+      const dict = window.dict || {};
+
+      function applyTranslations(lang) {
+        const active = dict[lang] ? lang : "hu";
+        document.documentElement.lang = active;
+        document.getElementById("langSelect").value = active;
+        localStorage.setItem(LANG_KEY, active);
+
+        document.querySelectorAll("[data-i18n]").forEach(node => {
+          const key = node.getAttribute("data-i18n");
+          if (dict[active] && dict[active][key]) {
+            node.textContent = dict[active][key];
+          }
+        });
+      }
+
+      function initLanguage() {
+        const saved = localStorage.getItem(LANG_KEY);
+
+        if (saved && dict[saved]) {
+          applyTranslations(saved);
+        } else {
+          applyTranslations("hu");
+        }
+      }
+
+      document.getElementById("langSelect").addEventListener("change", (e) => {
+        applyTranslations(e.target.value);
+      });
+
+      // ===== INIT =====
+      initLanguage();
+    </script>
+</body>
+</html>
