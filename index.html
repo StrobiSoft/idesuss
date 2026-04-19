@@ -1282,5 +1282,14 @@
       // ===== INIT =====
       initLanguage();
     </script>
+    <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js")
+      .then(() => console.log("Root SW OK"))
+      .catch(err => console.error("Root SW HIBA:", err));
+  });
+}
+</script>
 </body>
 </html>
