@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Idesüss — Homepage</title>
+  <title>Idesüss — Főoldal</title>
   <meta
     name="description"
-    content="Idesüss is a lightweight web interface to open public video links in a cleaner, faster and more accessible way."
+    content="Az Idesüss egy könnyű webes felület nyilvános videólinkek tisztább, gyorsabb és egyszerűbb megnyitásához."
   />
   <meta name="theme-color" content="#0d5bd7" />
   <link rel="manifest" href="manifest.webmanifest" />
@@ -34,13 +34,8 @@
       --header-h: 76px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -101,10 +96,6 @@
       flex: 0 0 auto;
       box-shadow: var(--shadow);
       background: white;
-    }
-
-    .brand-mark {
-      display: none !important;
     }
 
     .brand-text {
@@ -346,12 +337,18 @@
       border-radius: 12px;
       background: #f9fbfe;
       margin-bottom: 12px;
+      display: grid;
+      align-items: center;
+      padding: 0 14px;
+      color: #8aa0b8;
+      font-size: 0.92rem;
+      font-weight: 600;
     }
 
     .mock-row {
       display: flex;
       gap: 10px;
-      padding: 10px;
+      padding: 0;
       background: transparent;
       border: none;
     }
@@ -362,11 +359,17 @@
       flex: 1;
       background: #eef4ff;
       border: 1px solid #d6e4ff;
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      font-size: 0.88rem;
+      font-weight: 700;
     }
 
     .mock-btn.primary {
       background: linear-gradient(135deg, var(--primary), #2f7cf0);
       border-color: transparent;
+      color: #fff;
     }
 
     .section {
@@ -564,17 +567,9 @@
       flex: 0 0 auto;
     }
 
-    .status-ok .status-dot {
-      background: var(--success);
-    }
-
-    .status-warn .status-dot {
-      background: var(--warning);
-    }
-
-    .status-error .status-dot {
-      background: var(--danger);
-    }
+    .status-ok .status-dot { background: var(--success); }
+    .status-warn .status-dot { background: var(--warning); }
+    .status-error .status-dot { background: var(--danger); }
 
     .support-list,
     .how-list {
@@ -655,6 +650,26 @@
     .about-grid p {
       margin: 0;
       color: var(--muted);
+    }
+
+    .about-story {
+      margin-top: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .about-story h3 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+    }
+
+    .about-story p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
     }
 
     .cta-panel {
@@ -776,9 +791,7 @@
     }
 
     @media (max-width: 760px) {
-      :root {
-        --header-h: 86px;
-      }
+      :root { --header-h: 86px; }
 
       .container {
         width: min(var(--maxw), calc(100% - 22px));
@@ -829,31 +842,31 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="#top" class="brand-wrap" aria-label="Idesüss homepage">
+      <a href="#top" class="brand-wrap" aria-label="Idesüss főoldal">
         <img src="/favicon.png" alt="Idesüss logo" class="brand-logo" />
         <div class="brand-text">
           <h2 class="brand-title">Idesüss</h2>
-          <p class="brand-subtitle" data-i18n="brandSubtitle">Homepage + mini app experience</p>
+          <p class="brand-subtitle" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
         </div>
       </a>
 
       <div class="header-actions">
-        <label class="sr-only" for="langSelect">Language</label>
-        <select id="langSelect" class="lang-select" aria-label="Language selector">
-          <option value="en">English</option>
+        <label class="sr-only" for="langSelect">Nyelv</label>
+        <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
           <option value="hu">Magyar</option>
+          <option value="en">English</option>
         </select>
 
         <a id="headerOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
-          <span data-i18n="openApp">Open App</span>
+          <span data-i18n="openApp">App megnyitása</span>
         </a>
 
-        <button id="headerInstallBtn" class="btn btn-secondary" type="button">
-          <span data-i18n="install">Install</span>
+        <button class="btn btn-secondary js-install-trigger" type="button">
+          <span data-i18n="install">Telepítés</span>
         </button>
 
         <a class="btn btn-ghost" href="#how">
-          <span data-i18n="howItWorks">How It Works</span>
+          <span data-i18n="howItWorks">Hogyan működik</span>
         </a>
       </div>
     </div>
@@ -863,30 +876,30 @@
     <section class="hero">
       <div class="container hero-grid">
         <div>
-          <div class="eyebrow" data-i18n="eyebrow">Public links. Cleaner access. Faster flow.</div>
-          <h1 data-i18n="heroTitle">Open public video links in a cleaner way</h1>
+          <div class="eyebrow" data-i18n="eyebrow">Nyilvános linkek. Tisztább elérés. Gyorsabb folyamat.</div>
+          <h1 data-i18n="heroTitle">Nyisd meg a nyilvános videólinkeket letisztultabban</h1>
           <p class="lead" data-i18n="heroLead">
-            Idesüss gives you a light, mobile-friendly web interface for opening supported public video links quickly, simply and with less clutter.
+            Az Idesüss egy könnyű, mobilbarát webes felület, amellyel a támogatott nyilvános videólinkeket gyorsabban, egyszerűbben és kevesebb zavaró elemmel lehet megnyitni.
           </p>
 
           <div class="hero-actions">
             <a id="heroOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
-              <span data-i18n="openApp">Open App</span>
+              <span data-i18n="openApp">App megnyitása</span>
             </a>
 
-            <button id="heroInstallBtn" class="btn btn-secondary" type="button">
-              <span data-i18n="install">Install</span>
+            <button class="btn btn-secondary js-install-trigger" type="button">
+              <span data-i18n="install">Telepítés</span>
             </button>
 
             <a class="btn btn-soft" href="#miniapp">
-              <span data-i18n="tryMiniApp">Try Mini App</span>
+              <span data-i18n="tryMiniApp">Mini app kipróbálása</span>
             </a>
           </div>
 
           <div class="hero-meta">
-            <div class="hero-chip" data-i18n="chipPublicOnly">Public links only</div>
-            <div class="hero-chip" data-i18n="chipMobileFriendly">Mobile-friendly</div>
-            <div class="hero-chip" data-i18n="chipFastEntry">Fast entry point to the app</div>
+            <div class="hero-chip" data-i18n="chipPublicOnly">Csak nyilvános linkek</div>
+            <div class="hero-chip" data-i18n="chipMobileFriendly">Mobilbarát</div>
+            <div class="hero-chip" data-i18n="chipFastEntry">Gyors belépés az appba</div>
           </div>
         </div>
 
@@ -898,17 +911,18 @@
           <div class="visual-body">
             <div class="mock-nav">
               <span>Idesüss</span>
-              <span>EN | Install</span>
+              <span data-i18n="mockNavRight">Mini app előnézet</span>
             </div>
-            <div class="mock-banner">Homepage facelift + mini app + ad spaces</div>
+            <div class="mock-banner" data-i18n="mockBannerTop">Főoldal + mini app + jövőbeli bővítési helyek</div>
             <div class="mock-panel">
-              <div class="mock-input"></div>
+              <div class="mock-input" data-i18n="mockInput">Nyilvános link beillesztése…</div>
               <div class="mock-row">
-                <div class="mock-btn"></div>
-                <div class="mock-btn primary"></div>
+                <div class="mock-btn" data-i18n="paste">Beillesztés</div>
+                <div class="mock-btn" data-i18n="clear">Törlés</div>
+                <div class="mock-btn primary" data-i18n="open">Megnyitás</div>
               </div>
             </div>
-            <div class="mock-banner">Powered by StZoo</div>
+            <div class="mock-banner" data-i18n="mockBannerBottom">Powered by StZoo</div>
           </div>
         </div>
       </div>
@@ -918,11 +932,11 @@
       <div class="container">
         <div class="ad-shell">
           <div class="ad-label">
-            <span data-i18n="advertisement">Advertisement</span>
-            <span class="small-note" data-i18n="adPlaceholderSmall">Reserved spot for future partner content</span>
+            <span data-i18n="advertisement">Hirdetés</span>
+            <span class="small-note" data-i18n="adPlaceholderSmall">Fenntartott hely jövőbeli partner tartalomnak</span>
           </div>
           <a href="#contact" class="ad-banner">
-            <span data-i18n="adBannerText">Your ad can live here</span>
+            <span data-i18n="adBannerText">Itt lehet a hirdetésed</span>
           </a>
         </div>
       </div>
@@ -932,21 +946,21 @@
       <div class="container">
         <div class="section-head">
           <div class="section-kicker" data-i18n="miniAppKicker">Mini app</div>
-          <h2 class="section-title" data-i18n="miniAppTitle">Try it directly on the homepage</h2>
+          <h2 class="section-title" data-i18n="miniAppTitle">Próbáld ki közvetlenül a főoldalon</h2>
           <p class="section-desc" data-i18n="miniAppDesc">
-            Paste a supported public link here, open it right away, or continue to the dedicated app-style interface for a more focused experience.
+            Illessz be ide egy támogatott nyilvános linket, nyisd meg azonnal, vagy lépj át a dedikált app-felületre egy fókuszáltabb élményért.
           </p>
         </div>
 
         <div class="miniapp-layout">
           <div class="miniapp-main">
-            <h3 class="miniapp-title" data-i18n="inputTitle">Paste a public video link below</h3>
+            <h3 class="miniapp-title" data-i18n="inputTitle">Illessz be egy nyilvános videólinket</h3>
             <p class="miniapp-subtitle" data-i18n="inputSubtitle">
-              TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.
+              TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.
             </p>
 
             <div class="field">
-              <label for="videoUrl" data-i18n="inputLabel">Public video URL</label>
+              <label for="videoUrl" data-i18n="inputLabel">Nyilvános videó URL</label>
               <input
                 id="videoUrl"
                 class="input"
@@ -959,56 +973,56 @@
             </div>
 
             <div class="input-actions">
-              <button id="pasteBtn" class="btn btn-secondary" type="button" data-i18n="paste">Paste</button>
-              <button id="openBtn" class="btn btn-primary" type="button" data-i18n="open">Open</button>
-              <button id="clearBtn" class="btn btn-ghost" type="button" data-i18n="clear">Clear</button>
+              <button id="pasteBtn" class="btn btn-secondary" type="button" data-i18n="paste">Beillesztés</button>
+              <button id="openBtn" class="btn btn-primary" type="button" data-i18n="open">Megnyitás</button>
+              <button id="clearBtn" class="btn btn-ghost" type="button" data-i18n="clear">Törlés</button>
             </div>
 
             <div class="status-bar">
               <div id="clipboardStatus" class="status-pill">
                 <span class="status-dot"></span>
-                <span data-i18n="clipboardChecking">Clipboard checking…</span>
+                <span data-i18n="clipboardChecking">Vágólap ellenőrzése…</span>
               </div>
 
               <div id="installStatus" class="status-pill">
                 <span class="status-dot"></span>
-                <span data-i18n="installStateUnknown">Install status loading…</span>
+                <span data-i18n="installStateUnknown">Telepítési állapot betöltése…</span>
               </div>
 
               <div class="status-pill status-ok">
                 <span class="status-dot"></span>
-                <span data-i18n="publicLinksOnly">Public links only</span>
+                <span data-i18n="publicLinksOnly">Csak nyilvános linkek</span>
               </div>
             </div>
           </div>
 
           <aside class="miniapp-side">
             <div class="counter-panel">
-              <div class="counter-label" data-i18n="counterLabel">Links opened</div>
+              <div class="counter-label" data-i18n="counterLabel">Megnyitott linkek</div>
               <div id="openCounter" class="counter-value">0</div>
               <div class="counter-note" data-i18n="counterNote">
-                Stored locally on this device for quick tracking.
+                Helyben tárolva ezen az eszközön a gyors követéshez.
               </div>
             </div>
 
             <div class="feature-box" style="padding: 16px;">
-              <h3 style="margin:0 0 12px;" data-i18n="supportedTitle">Supported sources</h3>
+              <h3 style="margin:0 0 12px;" data-i18n="supportedTitle">Támogatott források</h3>
               <ul class="support-list">
-                <li class="support-item"><span class="support-icon">TT</span><span data-i18n="supportedTiktok">TikTok public links</span></li>
-                <li class="support-item"><span class="support-icon">YT</span><span data-i18n="supportedYoutube">YouTube links and shorts</span></li>
-                <li class="support-item"><span class="support-icon">IG</span><span data-i18n="supportedInstagram">Instagram public reels</span></li>
-                <li class="support-item"><span class="support-icon">FB</span><span data-i18n="supportedFacebook">Facebook public videos</span></li>
+                <li class="support-item"><span class="support-icon">TT</span><span data-i18n="supportedTiktok">TikTok nyilvános linkek</span></li>
+                <li class="support-item"><span class="support-icon">YT</span><span data-i18n="supportedYoutube">YouTube linkek és shortok</span></li>
+                <li class="support-item"><span class="support-icon">IG</span><span data-i18n="supportedInstagram">Instagram nyilvános reel linkek</span></li>
+                <li class="support-item"><span class="support-icon">FB</span><span data-i18n="supportedFacebook">Facebook nyilvános videók</span></li>
               </ul>
             </div>
 
             <div class="feature-box" style="padding: 16px;">
-              <h3 style="margin:0 0 12px;" data-i18n="quickActionsTitle">Quick actions</h3>
+              <h3 style="margin:0 0 12px;" data-i18n="quickActionsTitle">Gyors műveletek</h3>
               <div class="input-actions" style="margin:0;">
                 <a id="sideOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
-                  <span data-i18n="openFullApp">Open full app</span>
+                  <span data-i18n="openFullApp">Teljes app megnyitása</span>
                 </a>
-                <button id="sideInstallBtn" class="btn btn-secondary" type="button">
-                  <span data-i18n="installPwa">Install PWA</span>
+                <button class="btn btn-secondary js-install-trigger" type="button">
+                  <span data-i18n="installPwa">PWA telepítése</span>
                 </button>
               </div>
             </div>
@@ -1020,10 +1034,10 @@
     <section class="section section-band" id="how">
       <div class="container">
         <div class="section-head">
-          <div class="section-kicker" data-i18n="howKicker">How it works</div>
-          <h2 class="section-title" data-i18n="howTitle">Three simple steps</h2>
+          <div class="section-kicker" data-i18n="howKicker">Működés</div>
+          <h2 class="section-title" data-i18n="howTitle">Három egyszerű lépés</h2>
           <p class="section-desc" data-i18n="howDesc">
-            Keep the homepage useful and clean, while the dedicated app remains the faster, more focused interface.
+            A főoldal maradjon használható és tiszta, miközben a dedikált app a gyorsabb, fókuszáltabb felület marad.
           </p>
         </div>
 
@@ -1031,22 +1045,22 @@
           <li class="how-item">
             <span class="how-num">1</span>
             <div>
-              <strong data-i18n="step1Title">Paste or auto-detect a link</strong><br />
-              <span class="small-note" data-i18n="step1Text">The page can try to read a supported link from your clipboard automatically.</span>
+              <strong data-i18n="step1Title">Link beillesztése vagy automatikus felismerése</strong><br />
+              <span class="small-note" data-i18n="step1Text">Az oldal megpróbálhat támogatott linket olvasni a vágólapról automatikusan.</span>
             </div>
           </li>
           <li class="how-item">
             <span class="how-num">2</span>
             <div>
-              <strong data-i18n="step2Title">Open it instantly</strong><br />
-              <span class="small-note" data-i18n="step2Text">The mini app opens the link directly, while also counting successful opens locally.</span>
+              <strong data-i18n="step2Title">Azonnali megnyitás</strong><br />
+              <span class="small-note" data-i18n="step2Text">A mini app közvetlenül megnyitja a linket, és közben helyben számolja a sikeres megnyitásokat.</span>
             </div>
           </li>
           <li class="how-item">
             <span class="how-num">3</span>
             <div>
-              <strong data-i18n="step3Title">Move to the full app anytime</strong><br />
-              <span class="small-note" data-i18n="step3Text">Use the dedicated Idesüss app interface when you want a more focused mobile workflow.</span>
+              <strong data-i18n="step3Title">Átlépés a teljes appba bármikor</strong><br />
+              <span class="small-note" data-i18n="step3Text">Használd a dedikált Idesüss app felületet, ha fókuszáltabb mobilos munkafolyamatot szeretnél.</span>
             </div>
           </li>
         </ul>
@@ -1056,32 +1070,39 @@
     <section class="section" id="about">
       <div class="container">
         <div class="section-head">
-          <div class="section-kicker" data-i18n="aboutKicker">About</div>
-          <h2 class="section-title" data-i18n="aboutTitle">Homepage, profile and practical entry point in one place</h2>
+          <div class="section-kicker" data-i18n="aboutKicker">Névjegy</div>
+          <h2 class="section-title" data-i18n="aboutTitle">Főoldal, profil és gyakorlati belépőpont egy helyen</h2>
           <p class="section-desc" data-i18n="aboutDesc">
-            Idesüss.net is designed to introduce the project clearly, stay usable on its own, and connect visitors to the dedicated app-style experience with a single tap.
+            Az Idesüss.net célja, hogy világosan bemutassa a projektet, önmagában is használható maradjon, és egy érintéssel átvezesse a látogatót a dedikált app-élménybe.
           </p>
         </div>
 
         <div class="about-grid">
           <article>
-            <h3 data-i18n="aboutCard1Title">Clear profile</h3>
+            <h3 data-i18n="aboutCard1Title">Tiszta profil</h3>
             <p data-i18n="aboutCard1Text">
-              A more professional homepage presence with a direct explanation of what Idesüss is and what it is for.
+              Profibb főoldali megjelenés, közvetlen magyarázattal arról, mi az Idesüss és mire való.
             </p>
           </article>
           <article>
-            <h3 data-i18n="aboutCard2Title">Useful homepage</h3>
+            <h3 data-i18n="aboutCard2Title">Használható főoldal</h3>
             <p data-i18n="aboutCard2Text">
-              Not just a landing page: visitors can already paste and open supported public links from here.
+              Nem csak landing page: a látogató már innen is beilleszthet és megnyithat támogatott nyilvános linkeket.
             </p>
           </article>
           <article>
-            <h3 data-i18n="aboutCard3Title">Future-ready layout</h3>
+            <h3 data-i18n="aboutCard3Title">Jövőálló elrendezés</h3>
             <p data-i18n="aboutCard3Text">
-              Ad-ready sections, expandable blocks, language switching and install support are already built into the structure.
+              Hirdetési blokkok, bővíthető szekciók, nyelvváltás és telepítési támogatás már eleve benne van a szerkezetben.
             </p>
           </article>
+        </div>
+
+        <div class="about-story">
+          <h3 data-i18n="aboutStoryTitle">Az ötlet háttere</h3>
+          <p data-i18n="aboutStoryText">
+            Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem.
+          </p>
         </div>
       </div>
     </section>
@@ -1090,11 +1111,11 @@
       <div class="container">
         <div class="ad-shell">
           <div class="ad-label">
-            <span data-i18n="advertisement">Advertisement</span>
-            <span class="small-note" data-i18n="adFriendly">Friendly placeholder for now, monetizable later</span>
+            <span data-i18n="advertisement">Hirdetés</span>
+            <span class="small-note" data-i18n="adFriendly">Egyelőre baráti helykitöltő, később monetizálható</span>
           </div>
           <a href="#contact" class="ad-banner" style="background: linear-gradient(135deg, #edf4ff 0%, #dbe9ff 40%, #fff0d1 100%); color: var(--text);">
-            <span data-i18n="adBannerMid">A dedicated place for banners, partners or project promos</span>
+            <span data-i18n="adBannerMid">Külön hely bannereknek, partnereknek vagy projektajánlóknak</span>
           </a>
         </div>
       </div>
@@ -1104,17 +1125,17 @@
       <div class="container">
         <div class="cta-panel">
           <div>
-            <h3 data-i18n="ctaTitle">Want the faster mobile experience?</h3>
+            <h3 data-i18n="ctaTitle">Kell a gyorsabb mobilos élmény?</h3>
             <p data-i18n="ctaText">
-              Use the dedicated Idesüss app interface for a cleaner, more focused workflow. The homepage stays informative and useful, while the app stays fast and tool-like.
+              Használd a dedikált Idesüss app felületet letisztultabb, fókuszáltabb munkafolyamathoz. A főoldal marad informatív és használható, az app pedig gyors és eszközszerű.
             </p>
           </div>
           <div class="hero-actions" style="margin-top:0;">
             <a id="ctaOpenAppBtn" class="btn btn-primary" href="https://idesuss.net/app">
-              <span data-i18n="goToApp">Go to Idesüss App</span>
+              <span data-i18n="goToApp">Ugrás az Idesüss Appba</span>
             </a>
-            <button id="ctaInstallBtn" class="btn btn-secondary" type="button">
-              <span data-i18n="install">Install</span>
+            <button class="btn btn-secondary js-install-trigger" type="button">
+              <span data-i18n="install">Telepítés</span>
             </button>
           </div>
         </div>
@@ -1124,20 +1145,20 @@
     <section class="section" id="contact">
       <div class="container">
         <div class="section-head">
-          <div class="section-kicker" data-i18n="contactKicker">Contact / ad spot</div>
-          <h2 class="section-title" data-i18n="contactTitle">Reserved blocks for future placements</h2>
+          <div class="section-kicker" data-i18n="contactKicker">Kapcsolat / hirdetési hely</div>
+          <h2 class="section-title" data-i18n="contactTitle">Fenntartott blokkok későbbi elhelyezésekhez</h2>
           <p class="section-desc" data-i18n="contactDesc">
-            These sections can later hold banner ads, partner mentions, internal promotions or other clickable content without redesigning the homepage.
+            Ezek a részek később bannereket, partnermegjelenéseket, saját promókat vagy más kattintható tartalmat fogadhatnak újratervezés nélkül.
           </p>
         </div>
 
         <div class="ad-shell">
           <div class="ad-label">
-            <span data-i18n="advertisement">Advertisement</span>
-            <span class="small-note" data-i18n="contactMini">Expandable placement area</span>
+            <span data-i18n="advertisement">Hirdetés</span>
+            <span class="small-note" data-i18n="contactMini">Bővíthető elhelyezési terület</span>
           </div>
           <a href="#top" class="ad-banner" style="min-height: 140px;">
-            <span data-i18n="adBannerBottom">Clickable homepage section ready for future content</span>
+            <span data-i18n="adBannerBottom">Kattintható főoldali szekció jövőbeli tartalomhoz</span>
           </a>
         </div>
       </div>
@@ -1151,15 +1172,15 @@
           <div class="footer-brand">
             <h3>Idesüss</h3>
             <p data-i18n="footerDesc">
-              Homepage + mini app entry point for supported public video links.
+              Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.
             </p>
           </div>
 
           <div class="footer-links">
-            <a href="#miniapp" data-i18n="tryMiniApp">Try Mini App</a>
-            <a id="footerOpenAppLink" href="https://idesuss.net/app" data-i18n="openApp">Open App</a>
-            <button id="footerInstallBtn" type="button" data-i18n="install">Install</button>
-            <a href="#about" data-i18n="aboutLink">About</a>
+            <a href="#miniapp" data-i18n="tryMiniApp">Mini app kipróbálása</a>
+            <a id="footerOpenAppLink" href="https://idesuss.net/app" data-i18n="openApp">App megnyitása</a>
+            <button class="js-install-trigger" type="button" data-i18n="install">Telepítés</button>
+            <a href="#about" data-i18n="aboutLink">Névjegy</a>
           </div>
         </div>
 
@@ -1173,9 +1194,9 @@
 
   <div id="installOverlay" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
     <div style="background:#ffffff; color:#17324d; width:min(100%, 360px); border-radius:20px; box-shadow:0 18px 50px rgba(0,0,0,0.18); padding:20px;">
-      <div id="installOverlayTitle" style="font-size:1.1rem; font-weight:800; margin-bottom:10px;">Install Idesüss</div>
+      <div id="installOverlayTitle" style="font-size:1.1rem; font-weight:800; margin-bottom:10px;">Idesüss telepítése</div>
       <div id="installOverlayText" style="color:#5e748d; line-height:1.5; margin-bottom:16px;">
-        On iPhone or iPad, tap Share, then choose Add to Home Screen.
+        iPhone vagy iPad esetén nyomd meg a Megosztás gombot, majd válaszd a Főképernyőhöz adás lehetőséget.
       </div>
       <button id="closeInstallOverlayBtn" class="btn btn-primary" type="button" style="width:100%;">OK</button>
     </div>
@@ -1190,77 +1211,6 @@
     let isInstalled = false;
 
     const dict = {
-      en: {
-        brandSubtitle: "Homepage + mini app experience",
-        eyebrow: "Public links. Cleaner access. Faster flow.",
-        heroTitle: "Open public video links in a cleaner way",
-        heroLead: "Idesüss gives you a light, mobile-friendly web interface for opening supported public video links quickly, simply and with less clutter.",
-        openApp: "Open App",
-        install: "Install",
-        howItWorks: "How It Works",
-        tryMiniApp: "Try Mini App",
-        chipPublicOnly: "Public links only",
-        chipMobileFriendly: "Mobile-friendly",
-        chipFastEntry: "Fast entry point to the app",
-        advertisement: "Advertisement",
-        adPlaceholderSmall: "Reserved spot for future partner content",
-        adBannerText: "Your ad can live here",
-        miniAppKicker: "Mini app",
-        miniAppTitle: "Try it directly on the homepage",
-        miniAppDesc: "Paste a supported public link here, open it right away, or continue to the dedicated app-style interface for a more focused experience.",
-        inputTitle: "Paste a public video link below",
-        inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.",
-        inputLabel: "Public video URL",
-        paste: "Paste",
-        open: "Open",
-        clear: "Clear",
-        clipboardChecking: "Clipboard checking…",
-        installStateUnknown: "Install status loading…",
-        publicLinksOnly: "Public links only",
-        counterLabel: "Links opened",
-        counterNote: "Stored locally on this device for quick tracking.",
-        supportedTitle: "Supported sources",
-        supportedTiktok: "TikTok public links",
-        supportedYoutube: "YouTube links and shorts",
-        supportedInstagram: "Instagram public reels",
-        supportedFacebook: "Facebook public videos",
-        quickActionsTitle: "Quick actions",
-        openFullApp: "Open full app",
-        installPwa: "Install PWA",
-        howKicker: "How it works",
-        howTitle: "Three simple steps",
-        howDesc: "Keep the homepage useful and clean, while the dedicated app remains the faster, more focused interface.",
-        step1Title: "Paste or auto-detect a link",
-        step1Text: "The page can try to read a supported link from your clipboard automatically.",
-        step2Title: "Open it instantly",
-        step2Text: "The mini app opens the link directly, while also counting successful opens locally.",
-        step3Title: "Move to the full app anytime",
-        step3Text: "Use the dedicated Idesüss app interface when you want a more focused mobile workflow.",
-        aboutKicker: "About",
-        aboutTitle: "Homepage, profile and practical entry point in one place",
-        aboutDesc: "Idesüss.net is designed to introduce the project clearly, stay usable on its own, and connect visitors to the dedicated app-style experience with a single tap.",
-        aboutCard1Title: "Clear profile",
-        aboutCard1Text: "A more professional homepage presence with a direct explanation of what Idesüss is and what it is for.",
-        aboutCard2Title: "Useful homepage",
-        aboutCard2Text: "Not just a landing page: visitors can already paste and open supported public links from here.",
-        aboutCard3Title: "Future-ready layout",
-        aboutCard3Text: "Ad-ready sections, expandable blocks, language switching and install support are already built into the structure.",
-        adFriendly: "Friendly placeholder for now, monetizable later",
-        adBannerMid: "A dedicated place for banners, partners or project promos",
-        ctaTitle: "Want the faster mobile experience?",
-        ctaText: "Use the dedicated Idesüss app interface for a cleaner, more focused workflow. The homepage stays informative and useful, while the app stays fast and tool-like.",
-        goToApp: "Go to Idesüss App",
-        contactKicker: "Contact / ad spot",
-        contactTitle: "Reserved blocks for future placements",
-        contactDesc: "These sections can later hold banner ads, partner mentions, internal promotions or other clickable content without redesigning the homepage.",
-        contactMini: "Expandable placement area",
-        adBannerBottom: "Clickable homepage section ready for future content",
-        footerDesc: "Homepage + mini app entry point for supported public video links.",
-        aboutLink: "About",
-        installGuideTitle: "Install Idesüss",
-        installGuideText: "On iPhone or iPad, tap Share, then choose Add to Home Screen.",
-        installNotAvailable: "Installation is not available right now"
-      },
       hu: {
         brandSubtitle: "Főoldal + mini app élmény",
         eyebrow: "Nyilvános linkek. Tisztább elérés. Gyorsabb folyamat.",
@@ -1316,6 +1266,8 @@
         aboutCard2Text: "Nem csak landing page: a látogató már innen is beilleszthet és megnyithat támogatott nyilvános linkeket.",
         aboutCard3Title: "Jövőálló elrendezés",
         aboutCard3Text: "Hirdetési blokkok, bővíthető szekciók, nyelvváltás és telepítési támogatás már eleve benne van a szerkezetben.",
+        aboutStoryTitle: "Az ötlet háttere",
+        aboutStoryText: "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem.",
         adFriendly: "Egyelőre baráti helykitöltő, később monetizálható",
         adBannerMid: "Külön hely bannereknek, partnereknek vagy projektajánlóknak",
         ctaTitle: "Kell a gyorsabb mobilos élmény?",
@@ -1330,7 +1282,110 @@
         aboutLink: "Névjegy",
         installGuideTitle: "Idesüss telepítése",
         installGuideText: "iPhone vagy iPad esetén nyomd meg a Megosztás gombot, majd válaszd a Főképernyőhöz adás lehetőséget.",
-        installNotAvailable: "A telepítés most nem érhető el"
+        installNotAvailable: "A telepítés most nem érhető el",
+        installAvailable: "A telepítés elérhető",
+        installInstalled: "Az app már telepítve van",
+        mockNavRight: "Mini app előnézet",
+        mockBannerTop: "Főoldal + mini app + jövőbeli bővítési helyek",
+        mockInput: "Nyilvános link beillesztése…",
+        mockBannerBottom: "Powered by StZoo",
+        clipboardEmpty: "A vágólap jelenleg üres",
+        clipboardUnsupported: "A vágólap olvasása itt nem támogatott",
+        clipboardReady: "Link észlelve — készen áll a megnyitásra",
+        clipboardNoSupported: "Nem találtam támogatott linket a vágólapon",
+        clipboardNoAccess: "A vágólaphoz most nincs hozzáférés",
+        clipboardNotLink: "A vágólap tartalma nem tűnik linknek",
+        fieldCleared: "Mező törölve — új link beilleszthető",
+        invalidUrl: "Adj meg egy érvényes nyilvános linket",
+        openedNewTab: "Link megnyitva új lapon"
+      },
+      en: {
+        brandSubtitle: "Homepage + mini app experience",
+        eyebrow: "Public links. Cleaner access. Faster flow.",
+        heroTitle: "Open public video links in a cleaner way",
+        heroLead: "Idesüss gives you a light, mobile-friendly web interface for opening supported public video links quickly, simply and with less clutter.",
+        openApp: "Open App",
+        install: "Install",
+        howItWorks: "How It Works",
+        tryMiniApp: "Try Mini App",
+        chipPublicOnly: "Public links only",
+        chipMobileFriendly: "Mobile-friendly",
+        chipFastEntry: "Fast entry point to the app",
+        advertisement: "Advertisement",
+        adPlaceholderSmall: "Reserved spot for future partner content",
+        adBannerText: "Your ad can live here",
+        miniAppKicker: "Mini app",
+        miniAppTitle: "Try it directly on the homepage",
+        miniAppDesc: "Paste a supported public link here, open it right away, or continue to the dedicated app-style interface for a more focused experience.",
+        inputTitle: "Paste a public video link below",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.",
+        inputLabel: "Public video URL",
+        paste: "Paste",
+        open: "Open",
+        clear: "Clear",
+        clipboardChecking: "Clipboard checking…",
+        installStateUnknown: "Install status loading…",
+        publicLinksOnly: "Public links only",
+        counterLabel: "Links opened",
+        counterNote: "Stored locally on this device for quick tracking.",
+        supportedTitle: "Supported sources",
+        supportedTiktok: "TikTok public links",
+        supportedYoutube: "YouTube links and shorts",
+        supportedInstagram: "Instagram public reels",
+        supportedFacebook: "Facebook public videos",
+        quickActionsTitle: "Quick actions",
+        openFullApp: "Open full app",
+        installPwa: "Install PWA",
+        howKicker: "How it works",
+        howTitle: "Three simple steps",
+        howDesc: "Keep the homepage useful and clean, while the dedicated app remains the faster, more focused interface.",
+        step1Title: "Paste or auto-detect a link",
+        step1Text: "The page can try to read a supported link from your clipboard automatically.",
+        step2Title: "Open it instantly",
+        step2Text: "The mini app opens the link directly, while also counting successful opens locally.",
+        step3Title: "Move to the full app anytime",
+        step3Text: "Use the dedicated Idesüss app interface when you want a more focused mobile workflow.",
+        aboutKicker: "About",
+        aboutTitle: "Homepage, profile and practical entry point in one place",
+        aboutDesc: "Idesüss.net is designed to introduce the project clearly, stay usable on its own, and connect visitors to the dedicated app-style experience with a single tap.",
+        aboutCard1Title: "Clear profile",
+        aboutCard1Text: "A more professional homepage presence with a direct explanation of what Idesüss is and what it is for.",
+        aboutCard2Title: "Useful homepage",
+        aboutCard2Text: "Not just a landing page: visitors can already paste and open supported public links from here.",
+        aboutCard3Title: "Future-ready layout",
+        aboutCard3Text: "Ad-ready sections, expandable blocks, language switching and install support are already built into the structure.",
+        aboutStoryTitle: "Behind the idea",
+        aboutStoryText: "The creation of Idesüss was inspired by a very old friend of mine. Partly his mindset, habits and unique way of seeing things started this whole page in me. He is a little paranoid, a little lazy, so for a while the page almost got the name “Lazy Driver”. In the end it became Idesüss, and I do not regret that at all. It came much closer to the mood and intention I wanted this whole thing to represent, while making sure I would not hurt the person who inspired the idea.",
+        adFriendly: "Friendly placeholder for now, monetizable later",
+        adBannerMid: "A dedicated place for banners, partners or project promos",
+        ctaTitle: "Want the faster mobile experience?",
+        ctaText: "Use the dedicated Idesüss app interface for a cleaner, more focused workflow. The homepage stays informative and useful, while the app stays fast and tool-like.",
+        goToApp: "Go to Idesüss App",
+        contactKicker: "Contact / ad spot",
+        contactTitle: "Reserved blocks for future placements",
+        contactDesc: "These sections can later hold banner ads, partner mentions, internal promotions or other clickable content without redesigning the homepage.",
+        contactMini: "Expandable placement area",
+        adBannerBottom: "Clickable homepage section ready for future content",
+        footerDesc: "Homepage + mini app entry point for supported public video links.",
+        aboutLink: "About",
+        installGuideTitle: "Install Idesüss",
+        installGuideText: "On iPhone or iPad, tap Share, then choose Add to Home Screen.",
+        installNotAvailable: "Installation is not available right now",
+        installAvailable: "Installation is available",
+        installInstalled: "The app is already installed",
+        mockNavRight: "Mini app preview",
+        mockBannerTop: "Homepage + mini app + future expansion spaces",
+        mockInput: "Paste a public link…",
+        mockBannerBottom: "Powered by StZoo",
+        clipboardEmpty: "Clipboard is currently empty",
+        clipboardUnsupported: "Clipboard reading is not supported here",
+        clipboardReady: "Link detected — ready to open",
+        clipboardNoSupported: "No supported link found in clipboard",
+        clipboardNoAccess: "Clipboard access is not available right now",
+        clipboardNotLink: "Clipboard content does not look like a link",
+        fieldCleared: "Field cleared — ready for a new link",
+        invalidUrl: "Please enter a valid public link",
+        openedNewTab: "Link opened in a new tab"
       }
     };
 
@@ -1348,13 +1403,7 @@
       installOverlayTitle: document.getElementById("installOverlayTitle"),
       installOverlayText: document.getElementById("installOverlayText"),
       closeInstallOverlayBtn: document.getElementById("closeInstallOverlayBtn"),
-      installButtons: [
-        document.getElementById("headerInstallBtn"),
-        document.getElementById("heroInstallBtn"),
-        document.getElementById("sideInstallBtn"),
-        document.getElementById("ctaInstallBtn"),
-        document.getElementById("footerInstallBtn")
-      ],
+      installButtons: Array.from(document.querySelectorAll(".js-install-trigger")),
       appLinks: [
         document.getElementById("headerOpenAppBtn"),
         document.getElementById("heroOpenAppBtn"),
@@ -1375,9 +1424,9 @@
     }
 
     function showInstallOverlay() {
-      const lang = document.documentElement.lang || "en";
-      els.installOverlayTitle.textContent = dict[lang]?.installGuideTitle || dict.en.installGuideTitle;
-      els.installOverlayText.textContent = dict[lang]?.installGuideText || dict.en.installGuideText;
+      const lang = document.documentElement.lang || "hu";
+      els.installOverlayTitle.textContent = dict[lang]?.installGuideTitle || dict.hu.installGuideTitle;
+      els.installOverlayText.textContent = dict[lang]?.installGuideText || dict.hu.installGuideText;
       els.installOverlay.classList.remove("hidden");
       els.installOverlay.style.display = "flex";
     }
@@ -1388,7 +1437,7 @@
     }
 
     function applyTranslations(lang) {
-      const active = dict[lang] ? lang : "en";
+      const active = dict[lang] ? lang : "hu";
       document.documentElement.lang = active;
       els.langSelect.value = active;
       localStorage.setItem(LANG_KEY, active);
@@ -1454,29 +1503,29 @@
     }
 
     function getInstallLabelState() {
-      const lang = document.documentElement.lang || "en";
+      const lang = document.documentElement.lang || "hu";
 
       if (isInstalled) {
         return lang === "hu"
-          ? { button: "Telepítve", status: "Az app már telepítve van", type: "ok", disabled: true }
-          : { button: "Installed", status: "The app is already installed", type: "ok", disabled: true };
+          ? { button: "Telepítve", status: dict.hu.installInstalled, type: "ok", disabled: true }
+          : { button: "Installed", status: dict.en.installInstalled, type: "ok", disabled: true };
       }
 
       if (deferredPrompt) {
         return lang === "hu"
-          ? { button: "Telepítés", status: "A telepítés elérhető", type: "ok", disabled: false }
-          : { button: "Install", status: "Installation is available", type: "ok", disabled: false };
+          ? { button: "Telepítés", status: dict.hu.installAvailable, type: "ok", disabled: false }
+          : { button: "Install", status: dict.en.installAvailable, type: "ok", disabled: false };
       }
 
       if (isIOS()) {
         return lang === "hu"
-          ? { button: "Telepítés", status: "Telepítés útmutató iPhone/iPad eszközre", type: "warn", disabled: false }
+          ? { button: "Telepítés", status: "Telepítési útmutató iPhone/iPad eszközre", type: "warn", disabled: false }
           : { button: "Install", status: "Install instructions for iPhone/iPad", type: "warn", disabled: false };
       }
 
       return lang === "hu"
-        ? { button: "Telepítés", status: "A telepítés most nem érhető el", type: "warn", disabled: true }
-        : { button: "Install", status: "Installation is not available right now", type: "warn", disabled: true };
+        ? { button: "Telepítés", status: dict.hu.installNotAvailable, type: "warn", disabled: true }
+        : { button: "Install", status: dict.en.installNotAvailable, type: "warn", disabled: true };
     }
 
     function updateInstallUI() {
@@ -1485,8 +1534,14 @@
         if (!btn) return;
         btn.disabled = state.disabled;
         btn.setAttribute("aria-disabled", String(state.disabled));
-        btn.textContent = state.button;
         btn.title = state.status;
+
+        const span = btn.querySelector("[data-i18n]");
+        if (span) {
+          span.textContent = state.button;
+        } else {
+          btn.textContent = state.button;
+        }
       });
       updateInstallStatus(state.type, state.status);
     }
@@ -1509,23 +1564,18 @@
         return;
       }
 
-      const lang = document.documentElement.lang || "en";
+      const lang = document.documentElement.lang || "hu";
       updateInstallStatus(
         "warn",
-        dict[lang]?.installNotAvailable || dict.en.installNotAvailable
+        dict[lang]?.installNotAvailable || dict.hu.installNotAvailable
       );
     }
 
     async function pasteFromClipboard(force = false) {
-      const lang = document.documentElement.lang || "en";
+      const lang = document.documentElement.lang || "hu";
 
       if (!navigator.clipboard?.readText) {
-        updateClipboardStatus(
-          "warn",
-          lang === "hu"
-            ? "A vágólap olvasása itt nem támogatott"
-            : "Clipboard reading is not supported here"
-        );
+        updateClipboardStatus("warn", dict[lang].clipboardUnsupported);
         return;
       }
 
@@ -1533,49 +1583,24 @@
         const text = (await navigator.clipboard.readText()).trim();
 
         if (!text) {
-          updateClipboardStatus(
-            "warn",
-            lang === "hu"
-              ? "A vágólap jelenleg üres"
-              : "Clipboard is currently empty"
-          );
+          updateClipboardStatus("warn", dict[lang].clipboardEmpty);
           return;
         }
 
         if (looksLikeUrl(text)) {
           els.videoUrl.value = text;
-          updateClipboardStatus(
-            "ok",
-            lang === "hu"
-              ? "Link észlelve — készen áll a megnyitásra"
-              : "Link detected — ready to open"
-          );
+          updateClipboardStatus("ok", dict[lang].clipboardReady);
           return;
         }
 
         if (force) {
           els.videoUrl.value = text;
-          updateClipboardStatus(
-            "warn",
-            lang === "hu"
-              ? "A vágólap tartalma nem tűnik linknek"
-              : "Clipboard content does not look like a link"
-          );
+          updateClipboardStatus("warn", dict[lang].clipboardNotLink);
         } else {
-          updateClipboardStatus(
-            "warn",
-            lang === "hu"
-              ? "Nem találtam támogatott linket a vágólapon"
-              : "No supported link found in clipboard"
-          );
+          updateClipboardStatus("warn", dict[lang].clipboardNoSupported);
         }
       } catch {
-        updateClipboardStatus(
-          "warn",
-          lang === "hu"
-            ? "A vágólaphoz most nincs hozzáférés"
-            : "Clipboard access is not available right now"
-        );
+        updateClipboardStatus("warn", dict[lang].clipboardNoAccess);
       }
     }
 
@@ -1587,16 +1612,11 @@
     }
 
     function openUrl() {
-      const lang = document.documentElement.lang || "en";
+      const lang = document.documentElement.lang || "hu";
       const normalized = normalizeUrl(els.videoUrl.value);
 
       if (!normalized || !looksLikeUrl(normalized)) {
-        updateClipboardStatus(
-          "error",
-          lang === "hu"
-            ? "Adj meg egy érvényes nyilvános linket"
-            : "Please enter a valid public link"
-        );
+        updateClipboardStatus("error", dict[lang].invalidUrl);
         els.videoUrl.focus();
         return;
       }
@@ -1604,23 +1624,14 @@
       els.videoUrl.value = normalized;
       incrementCounter();
       window.open(normalized, "_blank", "noopener,noreferrer");
-      updateClipboardStatus(
-        "ok",
-        lang === "hu"
-          ? "Link megnyitva új lapon"
-          : "Link opened in a new tab"
-      );
+      updateClipboardStatus("ok", dict[lang].openedNewTab);
     }
 
     function clearInput() {
       els.videoUrl.value = "";
-      const lang = document.documentElement.lang || "en";
-      updateClipboardStatus(
-        "warn",
-        lang === "hu"
-          ? "Mező törölve — új link beilleszthető"
-          : "Field cleared — ready for a new link"
-      );
+      const lang = document.documentElement.lang || "hu";
+      updateClipboardStatus("warn", dict[lang].fieldCleared);
+      els.videoUrl.focus();
     }
 
     function detectInstalledState() {
@@ -1643,9 +1654,10 @@
         }
       });
 
-      els.installButtons.forEach(btn => {
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest(".js-install-trigger");
         if (!btn) return;
-        btn.addEventListener("click", tryInstall);
+        tryInstall();
       });
 
       els.closeInstallOverlayBtn.addEventListener("click", closeInstallOverlay);
@@ -1677,13 +1689,20 @@
       });
     }
 
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .catch(err => console.error("SW registration failed:", err));
+      });
+    }
+
     function init() {
       setAppLinks();
       detectInstalledState();
       els.year.textContent = new Date().getFullYear();
       setCounter(getCounter());
 
-      const savedLang = localStorage.getItem(LANG_KEY) || "en";
+      const savedLang = localStorage.getItem(LANG_KEY) || "hu";
       applyTranslations(savedLang);
       wireEvents();
       pasteFromClipboard(false);
