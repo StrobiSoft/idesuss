@@ -998,11 +998,12 @@
 }
 
         function hideYouTubePlayer() {
-            els.ytFrame.src = '';
-            els.playerCard.style.display = 'none';
-            els.inputCard.style.display = 'block';
-            setStatus('');
-        }
+    els.ytFrame.src = '';
+    els.ytFrame.removeAttribute('src');
+    els.playerCard.style.display = 'none';
+    els.inputCard.style.display = 'block';
+    setStatus('');
+}
 
         function openExternal(url) {
             const newTab = window.open(url, '_blank');
