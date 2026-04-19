@@ -1,11 +1,29 @@
 {
+  "counterLabel": "Látogatások",
+  "counterNote": "A számláló nem nő minden frissítésre.",
+  "langBoxLabel": "Nyelv",
+  "langSubnote": "Magyar böngésző → magyar felület, minden más → angol.",
+
   "textareaPlaceholder": "Másold be a linket ide...",
   "playBtnText": "INDÍTÁS",
   "pasteBtn": "BEILLESZTÉS",
   "shareBtn": "MEGOSZTÁS",
   "clearInputBtn": "TÖRLÉS",
+
+  "backBtn": "VISSZA",
+
+  "historyTitle": "Előzmények",
+  "clearHistoryBtn": "Előzmények törlése",
+  "emptyHistory": "Még nincs előzmény.",
+  "openAgain": "Újra megnyitás",
+  "historyCleared": "Előzmények törölve.",
+
+  "installBtnText": "Telepítés",
+
   "aboutLink": "Névjegy",
   "aboutTitle": "Névjegy",
-  "aboutText": "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása indította el bennem ezt az egészet. Egy kicsit paranoiás, egy kicsit lusta figura — ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit ezzel az oldallal képviselni szerettem volna."
-  "aboutCloseBtn": "Rendben"
+  "aboutText": "Az Idesüss ötlete egy nagyon régi barátom inspirációjából született. Az ő gondolkodása, szokásai és egyedi látásmódja indította el ezt a projektet. Egy kicsit paranoiás és egy kicsit furcsa – ezért a projekt neve majdnem „Lusta Sofőr” lett. Végül az Idesüss név sokkal jobban passzolt a hangulathoz és a célhoz.",
+  "aboutCloseBtn": "Rendben",
+
+  "footerText": "Powered by StZoo"
 }
