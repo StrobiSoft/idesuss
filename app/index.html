@@ -337,17 +337,23 @@
 
         .player-frame {
     width: 100%;
-    aspect-ratio: 9 / 16;
+    height: 70vh;
     border: none;
     border-radius: 18px;
     background: #000;
     display: block;
+    aspect-ratio: auto;
 }
 
-/* Fekvő tablet / fekvő nézet */
+@media (orientation: portrait) {
+    .player-frame {
+        height: 70vh;
+    }
+}
+
 @media (orientation: landscape) {
     .player-frame {
-        aspect-ratio: 16 / 9;
+        height: 88vh;
     }
 }
 
