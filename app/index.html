@@ -1211,7 +1211,14 @@
             }
         });
 
-        (async function init() {
+        let sharedLaunchHandled = false;
+
+(async function init() {
+    updateVisitCounter();
+    await loadLanguage(currentLang);
+    renderHistory();
+    updateInstallButtonVisibility();
+
     const params = new URLSearchParams(window.location.search);
 
     const rawShared =
@@ -1224,18 +1231,15 @@
     const sharedUrl = sharedMatch ? sharedMatch[0] : '';
 
     if (sharedUrl) {
+        sharedLaunchHandled = true;
         els.urlInput.value = sharedUrl;
         handleGo(sharedUrl);
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
     }
 
-    updateVisitCounter();
-    await loadLanguage(currentLang);
-    renderHistory();
-    updateInstallButtonVisibility();
     tryAutoPasteFromClipboard();
-        })();
+})();
     </script>
     <script>
         if ('serviceWorker' in navigator) {
