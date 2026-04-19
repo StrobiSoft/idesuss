@@ -3,9 +3,9 @@
   "short_name": "Idesüss",
   "start_url": "/app/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "orientation": "any",
   "icons": [
     {
       "src": "/favicon.png",
