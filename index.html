@@ -400,7 +400,8 @@
       font-size: 1rem;
       font-weight: 800;
     }
-        .status-bar {
+
+    .status-bar {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -698,7 +699,8 @@
       gap: 10px;
     }
 
-    .footer-links a {
+    .footer-links a,
+    .footer-links button {
       border: 1px solid var(--line);
       background: #fbfdff;
       color: var(--text);
@@ -707,6 +709,12 @@
       font-weight: 700;
       cursor: pointer;
       font: inherit;
+    }
+
+    .footer-links button:hover,
+    .footer-links a:hover {
+      background: #f3f8ff;
+      border-color: #cfe0ff;
     }
 
     .footer-bottom {
@@ -824,6 +832,7 @@
             <option value="nl">🇳🇱 Nederlands</option>
             <option value="ro">🇷🇴 Română</option>
             <option value="pl">🇵🇱 Polski</option>
+            <option value="hr">🇭🇷 Hrvatski</option>
           </select>
         </div>
 
@@ -904,8 +913,7 @@
               </div>
             </div>
           </div>
-
-          <div class="hero-bottom">
+                    <div class="hero-bottom">
             <div class="hero-banner">
               <div class="hero-banner-text">
                 <span class="hero-banner-icon">🪄</span>
@@ -958,7 +966,8 @@
         </ul>
       </div>
     </section>
-        <section class="content-section">
+
+    <section class="content-section">
       <div class="container info-grid">
         <div class="info-card">
           <div class="section-head">
@@ -1017,7 +1026,7 @@
         <div class="about-story">
           <h3 data-i18n="aboutStoryTitle">Az ötlet háttere</h3>
           <p data-i18n="aboutStoryText">
-            'Az Idesüss megszületését egy nagyon régi, jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem.'
+            Az Idesüss megszületését egy nagyon régi, jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem.
           </p>
         </div>
       </div>
@@ -1037,6 +1046,7 @@
             <a href="#how" data-i18n="howItWorks">Hogyan működik</a>
             <a href="#about" data-i18n="aboutLink">Névjegy</a>
             <a id="footerOpenAppLink" href="https://idesuss.net/app" data-i18n="openWebapp">Webapp megnyitása</a>
+            <button id="shareBtn" type="button" data-i18n="shareButton">Megosztás</button>
           </div>
         </div>
 
@@ -1050,6 +1060,7 @@
 
   <script>
     const APP_URL = "https://idesuss.net/app";
+    const SITE_URL = "https://idesuss.net";
     const COUNTER_KEY = "idesuss_open_count";
     const LANG_KEY = "idesuss_lang";
 
@@ -1101,6 +1112,11 @@
         aboutStoryText: "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna.",
         footerDesc: "Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.",
         howItWorks: "Hogyan működik",
+        shareButton: "Megosztás",
+        shareTitle: "Idesüss Player",
+        shareText: "Nézd a nyilvános videólinkeket egyszerűbben, gyorsabban és bejelentkezési kényszer nélkül az Idesüss oldalon.",
+        shareCopied: "Megosztási szöveg és link kimásolva",
+        shareFailed: "A megosztás most nem sikerült",
         clipboardEmpty: "A vágólap jelenleg üres",
         clipboardUnsupported: "A vágólap olvasása itt nem támogatott",
         clipboardReady: "Link észlelve — készen áll a megnyitásra",
@@ -1158,6 +1174,11 @@
         aboutStoryText: "The creation of Idesüss was inspired by a very old friend of mine. Partly his mindset, habits and unique way of seeing things started this whole page in me. He is a little paranoid, a little lazy, so for a while the page almost got the name “Lazy Driver”. In the end it became Idesüss, and I do not regret that at all. It came much closer to the mood and intention I wanted this whole thing to represent.",
         footerDesc: "Homepage + mini app entry point for supported public video links.",
         howItWorks: "How It Works",
+        shareButton: "Share",
+        shareTitle: "Idesüss Player",
+        shareText: "Watch public video links in a simpler, faster way and without forced login on Idesüss.",
+        shareCopied: "Share text and link copied",
+        shareFailed: "Sharing failed this time",
         clipboardEmpty: "Clipboard is currently empty",
         clipboardUnsupported: "Clipboard reading is not supported here",
         clipboardReady: "Link detected — ready to open",
@@ -1168,7 +1189,7 @@
         invalidUrl: "Please enter a valid public link",
         openedNewTab: "Link opened in a new tab"
       },
-      nl: {
+            nl: {
         brandSubtitle: "Homepage + mini app ervaring",
         heroLead: "Probeer onze populaire mini-app direct op de homepage!",
         openWebapp: "Webapp openen",
@@ -1215,6 +1236,11 @@
         aboutStoryText: "Het ontstaan van Idesüss werd geïnspireerd door een zeer oude goede vriend van mij. Mede door zijn manier van denken, gewoonten en unieke kijk op dingen begon ik aan deze site te denken. Een beetje paranoïde, een beetje lui, daarom was “Luie Chauffeur” een tijdlang bijna de naam. Uiteindelijk werd het Idesüss, en daar heb ik geen spijt van.",
         footerDesc: "Homepage + mini app toegangspunt voor ondersteunde openbare videolinks.",
         howItWorks: "Hoe werkt het",
+        shareButton: "Delen",
+        shareTitle: "Idesüss Player",
+        shareText: "Bekijk openbare videolinks eenvoudiger, sneller en zonder verplichte login via Idesüss.",
+        shareCopied: "Deeltekst en link gekopieerd",
+        shareFailed: "Delen is deze keer mislukt",
         clipboardEmpty: "Het klembord is momenteel leeg",
         clipboardUnsupported: "Lezen van het klembord wordt hier niet ondersteund",
         clipboardReady: "Link gedetecteerd — klaar om te openen",
@@ -1272,6 +1298,11 @@
         aboutStoryText: "Nașterea Idesüss a fost inspirată de un foarte vechi prieten bun de-al meu. În parte datorită felului său de a gândi, obiceiurilor sale și modului său aparte de a vedea lucrurile am început să mă gândesc la această pagină. Puțin paranoic, puțin leneș, așa că pentru o vreme numele „Șoferul Leneș” a fost foarte aproape. În cele din urmă a devenit Idesüss și nu am regretat deloc asta. A ajuns mult mai aproape de atmosfera și intenția pe care voiam să o reprezinte.",
         footerDesc: "Pagină principală + punct de intrare mini app pentru linkuri video publice acceptate.",
         howItWorks: "Cum funcționează",
+        shareButton: "Distribuie",
+        shareTitle: "Idesüss Player",
+        shareText: "Urmărește linkuri video publice mai simplu, mai rapid și fără autentificare forțată cu Idesüss.",
+        shareCopied: "Textul de distribuire și linkul au fost copiate",
+        shareFailed: "Distribuirea nu a reușit de această dată",
         clipboardEmpty: "Clipboard-ul este gol momentan",
         clipboardUnsupported: "Citirea clipboard-ului nu este acceptată aici",
         clipboardReady: "Link detectat — gata de deschidere",
@@ -1329,6 +1360,11 @@
         aboutStoryText: "Powstanie Idesüss zostało zainspirowane przez mojego bardzo starego, dobrego przyjaciela. Częściowo przez jego sposób myślenia, przyzwyczajenia i szczególne spojrzenie na świat zacząłem myśleć o tej stronie. Trochę paranoiczny, trochę leniwy, więc przez pewien czas nazwa „Leniwy Kierowca” była bardzo blisko. Ostatecznie zostało Idesüss i wcale tego nie żałuję. To znacznie lepiej oddaje klimat i intencję, które chciałem tą stroną przekazać.",
         footerDesc: "Strona główna + punkt wejścia mini app dla obsługiwanych publicznych linków wideo.",
         howItWorks: "Jak to działa",
+        shareButton: "Udostępnij",
+        shareTitle: "Idesüss Player",
+        shareText: "Oglądaj publiczne linki wideo prościej, szybciej i bez wymuszonego logowania z Idesüss.",
+        shareCopied: "Skopiowano tekst udostępniania i link",
+        shareFailed: "Udostępnianie tym razem się nie powiodło",
         clipboardEmpty: "Schowek jest obecnie pusty",
         clipboardUnsupported: "Odczyt schowka nie jest tutaj obsługiwany",
         clipboardReady: "Wykryto link — gotowe do otwarcia",
@@ -1338,6 +1374,68 @@
         fieldCleared: "Pole wyczyszczone — gotowe na nowy link",
         invalidUrl: "Wprowadź prawidłowy publiczny link",
         openedNewTab: "Link otwarto w nowej karcie"
+      },
+      hr: {
+        brandSubtitle: "Početna stranica + mini app iskustvo",
+        heroLead: "Isprobaj našu popularnu mini aplikaciju izravno na početnoj stranici!",
+        openWebapp: "Otvori webapp",
+        inputTitle: "Zalijepi javni video link",
+        inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook video i drugi podržani javni linkovi.",
+        inputLabel: "Javni video URL",
+        paste: "Zalijepi",
+        open: "Otvori",
+        clear: "Obriši",
+        clipboardChecking: "Provjera međuspremnika…",
+        installStateUnknown: "Učitavanje statusa instalacije…",
+        publicLinksOnly: "Samo javni linkovi",
+        heroBannerText: "Neki Android uređaji možda ovo ne podržavaju!",
+        heroBannerLink: "Detalji",
+        aboutLink: "O projektu",
+        howKicker: "Kako radi",
+        howTitle: "Tri jednostavna koraka",
+        howDesc: "Početna stranica ostaje čista i korisna, dok posvećeni webapp ostaje brže i fokusiranije sučelje.",
+        step1Title: "Zalijepi ili automatski prepoznaj link",
+        step1Text: "Stranica može pokušati automatski pročitati podržani link iz međuspremnika.",
+        step2Title: "Odmah otvori",
+        step2Text: "Mini aplikacija izravno otvara link i lokalno broji uspješna otvaranja.",
+        step3Title: "Prijeđi na webapp bilo kada",
+        step3Text: "Koristi posvećeni Idesüss webapp kada želiš fokusiraniji mobilni radni tijek.",
+        supportedKicker: "Podrška",
+        supportedTitle: "Podržani izvori",
+        supportedDesc: "Jednostavna ulazna točka optimizirana za javne linkove s najčešćih video izvora.",
+        supportedTiktok: "TikTok javni linkovi",
+        supportedYoutube: "YouTube linkovi i shorts",
+        supportedInstagram: "Instagram javni reelovi",
+        supportedFacebook: "Facebook javni videozapisi",
+        counterLabel: "Otvoreni linkovi",
+        counterNote: "Pohranjeno lokalno na ovom uređaju za brzo praćenje.",
+        aboutKicker: "O projektu",
+        aboutTitle: "Početna stranica, profil i praktična ulazna točka na jednom mjestu",
+        aboutDesc: "Idesüss.net je osmišljen da jasno predstavi projekt, ostane samostalno upotrebljiv i jednim dodirom odvede posjetitelja do posvećenog webapp iskustva.",
+        aboutCard1Title: "Jasan profil",
+        aboutCard1Text: "Profesionalniji izgled početne stranice s izravnim objašnjenjem što je Idesüss i čemu služi.",
+        aboutCard2Title: "Korisna početna stranica",
+        aboutCard2Text: "Nije samo landing page: posjetitelji već odavde mogu zalijepiti i otvoriti podržane javne linkove.",
+        aboutCard3Title: "Raspored spreman za budućnost",
+        aboutCard3Text: "Prostor za banner, promjena jezika, sat i mini aplikacija već su ugrađeni u strukturu.",
+        aboutStoryTitle: "Pozadina ideje",
+        aboutStoryText: "Nastanak Idesüssa inspirirao je jedan moj vrlo stari dobar prijatelj. Djelomično zbog njegova načina razmišljanja, navika i posebnog pogleda na svijet počeo sam razmišljati o ovoj stranici. Pomalo paranoičan, pomalo lijen lik, pa je jedno vrijeme naziv “Lijeni Vozač” bio vrlo blizu. Na kraju je postao Idesüss i nimalo ne žalim zbog toga. To je mnogo bliže atmosferi i namjeri koju sam želio da ova stranica predstavlja.",
+        footerDesc: "Početna stranica + mini app ulazna točka za podržane javne video linkove.",
+        howItWorks: "Kako radi",
+        shareButton: "Podijeli",
+        shareTitle: "Idesüss Player",
+        shareText: "Gledaj javne video linkove jednostavnije, brže i bez prisilne prijave uz Idesüss.",
+        shareCopied: "Tekst za dijeljenje i link su kopirani",
+        shareFailed: "Dijeljenje ovaj put nije uspjelo",
+        clipboardEmpty: "Međuspremnik je trenutno prazan",
+        clipboardUnsupported: "Čitanje međuspremnika ovdje nije podržano",
+        clipboardReady: "Link prepoznat — spremno za otvaranje",
+        clipboardNoSupported: "Nisam pronašao podržani link u međuspremniku",
+        clipboardNoAccess: "Pristup međuspremniku trenutno nije dostupan",
+        clipboardNotLink: "Sadržaj međuspremnika ne izgleda kao link",
+        fieldCleared: "Polje je obrisano — spremno za novi link",
+        invalidUrl: "Unesi valjan javni link",
+        openedNewTab: "Link je otvoren u novoj kartici"
       }
     };
 
@@ -1348,6 +1446,7 @@
       pasteBtn: document.getElementById("pasteBtn"),
       openBtn: document.getElementById("openBtn"),
       clearBtn: document.getElementById("clearBtn"),
+      shareBtn: document.getElementById("shareBtn"),
       clipboardStatus: document.getElementById("clipboardStatus"),
       installStatus: document.getElementById("installStatus"),
       openCounter: document.getElementById("openCounter"),
@@ -1357,8 +1456,7 @@
         document.getElementById("footerOpenAppLink")
       ]
     };
-
-    function setAppLinks() {
+        function setAppLinks() {
       els.appLinks.forEach(link => {
         if (link) link.href = APP_URL;
       });
@@ -1489,6 +1587,34 @@
       els.videoUrl.focus();
     }
 
+    async function shareSite() {
+      const lang = document.documentElement.lang || "hu";
+      const d = dict[lang] || dict.hu;
+      const payload = {
+        title: d.shareTitle,
+        text: d.shareText,
+        url: SITE_URL
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(payload);
+          return;
+        }
+
+        const fallbackText = `${payload.title}\n${payload.text}\n${payload.url}`;
+
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(fallbackText);
+          updateClipboardStatus("ok", d.shareCopied);
+        } else {
+          updateClipboardStatus("warn", `${d.shareCopied}: ${payload.url}`);
+        }
+      } catch {
+        updateClipboardStatus("warn", d.shareFailed);
+      }
+    }
+
     function updateClock() {
       const now = new Date();
       const hh = String(now.getHours()).padStart(2, "0");
@@ -1501,6 +1627,7 @@
       els.pasteBtn.addEventListener("click", () => pasteFromClipboard(true));
       els.openBtn.addEventListener("click", openUrl);
       els.clearBtn.addEventListener("click", clearInput);
+      els.shareBtn.addEventListener("click", shareSite);
 
       els.videoUrl.addEventListener("keydown", e => {
         if (e.key === "Enter") {
