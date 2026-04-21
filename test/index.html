@@ -1724,6 +1724,11 @@
   const SUPABASE_URL = "https://nakayucfiurazdacgyoxu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
 
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
   function escapeHtml(value) {
     return String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -1731,33 +1736,68 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
-      }
-      async function testSupabaseReal() {
-  const mount = document.getElementById("community-test-output");
-
-  try {
-    const { data, error } = await supabaseClient
-      .from("posts")
-      .select("*")
-      .limit(1);
-
-    if (error) throw error;
-
-    mount.innerHTML = `
-      <h2>Supabase teszt</h2>
-      <p style="color:green; font-weight:700;">Kapcsolat OK ✅</p>
-      <pre>${JSON.stringify(data, null, 2)}</pre>
-    `;
-  } catch (err) {
-    mount.innerHTML = `
-      <h2>Supabase teszt</h2>
-      <p style="color:red; font-weight:700;">Hiba történt</p>
-      <pre>${err.message}</pre>
-    `;
   }
-}
 
-window.addEventListener("load", testSupabaseReal);
+  function ensureTestMount() {
+    const mountId = "community-test-output";
+    let mount = document.getElementById(mountId);
+
+    if (!mount) {
+      mount = document.createElement("section");
+      mount.id = mountId;
+      mount.style.margin = "24px 0";
+      mount.style.padding = "20px";
+      mount.style.borderRadius = "20px";
+      mount.style.background = "#ffffff";
+      mount.style.border = "1px solid #d7e0ea";
+      mount.style.boxShadow = "0 10px 28px rgba(22, 44, 77, 0.08)";
+
+      const aboutSection = document.getElementById("about");
+      const main = document.querySelector("main");
+
+      if (aboutSection && aboutSection.parentNode) {
+        aboutSection.parentNode.insertBefore(mount, aboutSection);
+      } else if (main) {
+        main.appendChild(mount);
+      } else {
+        document.body.appendChild(mount);
+      }
+    }
+
+    return mount;
+  }
+
+  async function testSupabaseReal() {
+    const mount = ensureTestMount();
+
+    mount.innerHTML = `
+      <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+      <p>Teszt folyamatban...</p>
+    `;
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("posts")
+        .select("*")
+        .limit(1);
+
+      if (error) throw error;
+
+      mount.innerHTML = `
+        <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+        <p style="color:green; font-weight:700;">Kapcsolat OK ✅</p>
+        <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${escapeHtml(JSON.stringify(data, null, 2))}</pre>
+      `;
+    } catch (error) {
+      mount.innerHTML = `
+        <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+        <p style="color:#c53030; font-weight:700;">Hiba történt</p>
+        <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${escapeHtml(error.message || String(error))}</pre>
+      `;
+    }
+  }
+
+  window.addEventListener("load", testSupabaseReal);
 </script>
 </body>
 </html>
