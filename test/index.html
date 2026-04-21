@@ -1720,12 +1720,23 @@
     init();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-  const SUPABASE_URL = "https://nakayucfiurazdacgyoxu.supabase.co"
-  const SUPABASE_ANON_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG"
+  const SUPABASE_URL = "https://nakayucfiurazdacgyoxu.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
 
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
   async function loadCommunityTest() {
     const mountId = "community-test-output";
@@ -1741,74 +1752,103 @@
       mount.style.border = "1px solid #d7e0ea";
       mount.style.boxShadow = "0 10px 28px rgba(22, 44, 77, 0.08)";
 
-      const anchor = document.querySelector("#about") || document.querySelector("main");
-      if (anchor && anchor.parentNode) {
-        anchor.parentNode.insertBefore(mount, anchor);
+      const aboutSection = document.getElementById("about");
+      const main = document.querySelector("main");
+
+      if (aboutSection && aboutSection.parentNode) {
+        aboutSection.parentNode.insertBefore(mount, aboutSection);
+      } else if (main) {
+        main.appendChild(mount);
       } else {
         document.body.appendChild(mount);
       }
     }
 
-    mount.innerHTML = "<h2 style='margin:0 0 14px;'>Supabase teszt</h2><p>Betöltés...</p>";
+    mount.innerHTML = `
+      <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+      <p>Kapcsolódás ellenőrzése...</p>
+    `;
 
     try {
+      const ping = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+        method: "GET",
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+
+      if (!ping.ok) {
+        throw new Error(`REST kapcsolat hiba: ${ping.status} ${ping.statusText}`);
+      }
+
       const { data: posts, error: postsError } = await supabaseClient
         .from("posts")
         .select("id, created_at, user_id, text")
         .order("created_at", { ascending: false });
 
-      if (postsError) throw postsError;
+      if (postsError) {
+        throw postsError;
+      }
 
       const { data: comments, error: commentsError } = await supabaseClient
         .from("comments")
         .select("id, created_at, post_id, user_id, text")
         .order("created_at", { ascending: true });
 
-      if (commentsError) throw commentsError;
-
-      if (!posts || posts.length === 0) {
-        mount.innerHTML = `
-          <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-          <p>Nincs még megjeleníthető poszt.</p>
-        `;
-        return;
+      if (commentsError) {
+        throw commentsError;
       }
 
       const commentsByPost = {};
       for (const comment of comments || []) {
-        if (!commentsByPost[comment.post_id]) commentsByPost[comment.post_id] = [];
+        if (!commentsByPost[comment.post_id]) {
+          commentsByPost[comment.post_id] = [];
+        }
         commentsByPost[comment.post_id].push(comment);
       }
 
-      const html = posts.map(post => {
-        const postComments = commentsByPost[post.id] || [];
-        const commentsHtml = postComments.length
-          ? `<ul style="margin:12px 0 0 18px; padding:0;">
-              ${postComments.map(comment => `
-                <li style="margin:8px 0;">
-                  <div style="font-weight:700;">${escapeHtml(comment.text || "(üres komment)")}</div>
-                  <div style="font-size:0.9rem; color:#5e748d;">comment id: ${escapeHtml(comment.id)}</div>
-                </li>
-              `).join("")}
-            </ul>`
-          : `<p style="margin:12px 0 0; color:#5e748d;">Ehhez a poszthoz még nincs komment.</p>`;
-
-        return `
-          <article style="padding:16px; border:1px solid #d7e0ea; border-radius:16px; margin:0 0 16px; background:#f8fbff;">
-            <div style="font-weight:800; font-size:1.05rem; margin-bottom:8px;">
-              ${escapeHtml(post.text || "(üres poszt)")}
-            </div>
-            <div style="font-size:0.9rem; color:#5e748d;">
-              post id: ${escapeHtml(post.id)}
-            </div>
-            ${commentsHtml}
-          </article>
+      if (!posts || posts.length === 0) {
+        mount.innerHTML = `
+          <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+          <p>Nincs még poszt az adatbázisban.</p>
         `;
-      }).join("");
+        return;
+      }
 
       mount.innerHTML = `
         <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-        ${html}
+        ${posts.map(post => {
+          const postComments = commentsByPost[post.id] || [];
+          return `
+            <article style="padding:16px; border:1px solid #d7e0ea; border-radius:16px; margin:0 0 16px; background:#f8fbff;">
+              <div style="font-weight:800; font-size:1.05rem; margin-bottom:8px;">
+                ${escapeHtml(post.text || "(üres poszt)")}
+              </div>
+              <div style="font-size:0.9rem; color:#5e748d; margin-bottom:10px;">
+                post id: ${escapeHtml(post.id)}
+              </div>
+
+              ${
+                postComments.length
+                  ? `
+                    <div style="font-weight:700; margin-bottom:8px;">Kommentek:</div>
+                    <ul style="margin:0 0 0 18px; padding:0;">
+                      ${postComments.map(comment => `
+                        <li style="margin:8px 0;">
+                          <div>${escapeHtml(comment.text || "(üres komment)")}</div>
+                          <div style="font-size:0.85rem; color:#5e748d;">
+                            comment id: ${escapeHtml(comment.id)}
+                          </div>
+                        </li>
+                      `).join("")}
+                    </ul>
+                  `
+                  : `<p style="margin:0; color:#5e748d;">Ehhez a poszthoz még nincs komment.</p>`
+              }
+            </article>
+          `;
+        }).join("")}
       `;
     } catch (err) {
       mount.innerHTML = `
@@ -1817,15 +1857,6 @@
         <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${escapeHtml(err.message || String(err))}</pre>
       `;
     }
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
   }
 
   window.addEventListener("load", loadCommunityTest);
