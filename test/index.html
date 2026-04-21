@@ -1724,11 +1724,6 @@
   const SUPABASE_URL = "https://nakayucfiurazdacgyoxu.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
 
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
-
   function escapeHtml(value) {
     return String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -1738,7 +1733,7 @@
       .replaceAll("'", "&#039;");
   }
 
-  async function loadCommunityTest() {
+  async function basicSupabasePing() {
     const mountId = "community-test-output";
     let mount = document.getElementById(mountId);
 
@@ -1766,122 +1761,27 @@
 
     mount.innerHTML = `
       <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-      <p>Kapcsolódás ellenőrzése...</p>
+      <p>Teszt folyamatban...</p>
     `;
 
     try {
-      const ping = await fetch(`${SUPABASE_URL}/rest/v1/`, {
-        method: "GET",
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`
-        }
-      });
-
-      if (!ping.ok) {
-        throw new Error(`REST kapcsolat hiba: ${ping.status} ${ping.statusText}`);
-      }
-
-      const { data: posts, error: postsError } = await supabaseClient
-        .from("posts")
-        .select("id, created_at, user_id, text")
-        .order("created_at", { ascending: false });
-
-      if (postsError) {
-        throw postsError;
-      }
-
-      const { data: comments, error: commentsError } = await supabaseClient
-        .from("comments")
-        .select("id, created_at, post_id, user_id, text")
-        .order("created_at", { ascending: true });
-
-      if (commentsError) {
-        throw commentsError;
-      }
-
-      const commentsByPost = {};
-      for (const comment of comments || []) {
-        if (!commentsByPost[comment.post_id]) {
-          commentsByPost[comment.post_id] = [];
-        }
-        commentsByPost[comment.post_id].push(comment);
-      }
-
-      if (!posts || posts.length === 0) {
-        mount.innerHTML = `
-          <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-          <p>Nincs még poszt az adatbázisban.</p>
-        `;
-        return;
-      }
-
-      mount.innerHTML = `
-        <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-        ${posts.map(post => {
-          const postComments = commentsByPost[post.id] || [];
-          return `
-            <article style="padding:16px; border:1px solid #d7e0ea; border-radius:16px; margin:0 0 16px; background:#f8fbff;">
-              <div style="font-weight:800; font-size:1.05rem; margin-bottom:8px;">
-                ${escapeHtml(post.text || "(üres poszt)")}
-              </div>
-              <div style="font-size:0.9rem; color:#5e748d; margin-bottom:10px;">
-                post id: ${escapeHtml(post.id)}
-              </div>
-
-              ${
-                postComments.length
-                  ? `
-                    <div style="font-weight:700; margin-bottom:8px;">Kommentek:</div>
-                    <ul style="margin:0 0 0 18px; padding:0;">
-                      ${postComments.map(comment => `
-                        <li style="margin:8px 0;">
-                          <div>${escapeHtml(comment.text || "(üres komment)")}</div>
-                          <div style="font-size:0.85rem; color:#5e748d;">
-                            comment id: ${escapeHtml(comment.id)}
-                          </div>
-                        </li>
-                      `).join("")}
-                    </ul>
-                  `
-                  : `<p style="margin:0; color:#5e748d;">Ehhez a poszthoz még nincs komment.</p>`
-              }
-            </article>
-          `;
-        }).join("")}
-      `;
-    } catch (err) {
-      mount.innerHTML = `
-        <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-        <p style="color:#c53030; font-weight:700;">Hiba történt a lekérésnél.</p>
-        <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${escapeHtml(err.message || String(err))}</pre>
-      `;
-    }
-  }
-<script>
-  async function basicSupabasePing() {
-    const mount = document.getElementById("community-test-output");
-    try {
-      const res = await fetch("https://nakayucfiurazdacgyoxu.supabase.co");
+      const res = await fetch(SUPABASE_URL);
       const text = await res.text();
-      if (mount) {
-        mount.innerHTML = `
-          <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-          <p style="color:green; font-weight:700;">A domain elérhető.</p>
-          <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${text.slice(0, 300)}</pre>
-        `;
-      }
+
+      mount.innerHTML = `
+        <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+        <p style="color:green; font-weight:700;">A domain elérhető.</p>
+        <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${escapeHtml(text.slice(0, 300))}</pre>
+      `;
     } catch (err) {
-      if (mount) {
-        mount.innerHTML = `
-          <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-          <p style="color:#c53030; font-weight:700;">A Supabase domain sem érhető el erről a böngészőről.</p>
-          <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${String(err)}</pre>
-        `;
-      }
+      mount.innerHTML = `
+        <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+        <p style="color:#c53030; font-weight:700;">A Supabase domain sem érhető el erről a böngészőről.</p>
+        <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${escapeHtml(String(err))}</pre>
+      `;
     }
   }
-</script>
+
   window.addEventListener("load", basicSupabasePing);
 </script>
 </body>
