@@ -1736,7 +1736,7 @@
   const mount = document.getElementById("community-test-output");
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from("posts")
       .select("*")
       .limit(1);
