@@ -1858,7 +1858,30 @@
       `;
     }
   }
-
+<script>
+  async function basicSupabasePing() {
+    const mount = document.getElementById("community-test-output");
+    try {
+      const res = await fetch("https://nakayucfiurazdacgyoxu.supabase.co");
+      const text = await res.text();
+      if (mount) {
+        mount.innerHTML = `
+          <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+          <p style="color:green; font-weight:700;">A domain elérhető.</p>
+          <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${text.slice(0, 300)}</pre>
+        `;
+      }
+    } catch (err) {
+      if (mount) {
+        mount.innerHTML = `
+          <h2 style="margin:0 0 14px;">Supabase teszt</h2>
+          <p style="color:#c53030; font-weight:700;">A Supabase domain sem érhető el erről a böngészőről.</p>
+          <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${String(err)}</pre>
+        `;
+      }
+    }
+  }
+</script>
   window.addEventListener("load", loadCommunityTest);
 </script>
 </body>
