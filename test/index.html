@@ -1730,59 +1730,33 @@
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
+      .replaceAll("'", "&#
+      async function testSupabaseReal() {
+  const mount = document.getElementById("community-test-output");
 
-  async function basicSupabasePing() {
-    const mountId = "community-test-output";
-    let mount = document.getElementById(mountId);
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .limit(1);
 
-    if (!mount) {
-      mount = document.createElement("section");
-      mount.id = mountId;
-      mount.style.margin = "24px 0";
-      mount.style.padding = "20px";
-      mount.style.borderRadius = "20px";
-      mount.style.background = "#ffffff";
-      mount.style.border = "1px solid #d7e0ea";
-      mount.style.boxShadow = "0 10px 28px rgba(22, 44, 77, 0.08)";
-
-      const aboutSection = document.getElementById("about");
-      const main = document.querySelector("main");
-
-      if (aboutSection && aboutSection.parentNode) {
-        aboutSection.parentNode.insertBefore(mount, aboutSection);
-      } else if (main) {
-        main.appendChild(mount);
-      } else {
-        document.body.appendChild(mount);
-      }
-    }
+    if (error) throw error;
 
     mount.innerHTML = `
-      <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-      <p>Teszt folyamatban...</p>
+      <h2>Supabase teszt</h2>
+      <p style="color:green; font-weight:700;">Kapcsolat OK ✅</p>
+      <pre>${JSON.stringify(data, null, 2)}</pre>
     `;
-
-    try {
-      const res = await fetch(SUPABASE_URL);
-      const text = await res.text();
-
-      mount.innerHTML = `
-        <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-        <p style="color:green; font-weight:700;">A domain elérhető.</p>
-        <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${escapeHtml(text.slice(0, 300))}</pre>
-      `;
-    } catch (err) {
-      mount.innerHTML = `
-        <h2 style="margin:0 0 14px;">Supabase teszt</h2>
-        <p style="color:#c53030; font-weight:700;">A Supabase domain sem érhető el erről a böngészőről.</p>
-        <pre style="white-space:pre-wrap; word-break:break-word; color:#5e748d;">${escapeHtml(String(err))}</pre>
-      `;
-    }
+  } catch (err) {
+    mount.innerHTML = `
+      <h2>Supabase teszt</h2>
+      <p style="color:red; font-weight:700;">Hiba történt</p>
+      <pre>${err.message}</pre>
+    `;
   }
+}
 
-  window.addEventListener("load", basicSupabasePing);
+window.addEventListener("load", testSupabaseReal);
 </script>
 </body>
 </html>
