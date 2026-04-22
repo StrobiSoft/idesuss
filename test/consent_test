@@ -1,1 +1,389 @@
-.
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supabase Auth Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: none;
+      background: #0d5bd7;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #334155;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .status {
+      font-family: monospace;
+      font-size: 14px;
+      white-space: pre-line;
+      opacity: 0.95;
+    }
+
+    .muted {
+      opacity: 0.75;
+      font-size: 14px;
+    }
+
+    #posts {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .date {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+
+    .author {
+      font-size: 12px;
+      opacity: 0.75;
+      margin-bottom: 8px;
+    }
+
+    .text {
+      font-size: 18px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>/test – smart auth + posts</h1>
+
+    <div class="panel">
+      <div class="row" style="margin-bottom:10px;">
+        <input id="email" type="email" placeholder="Email cím">
+        <input id="password" type="password" placeholder="Jelszó">
+      </div>
+
+      <div class="row" style="margin-bottom:12px;">
+        <button id="authBtn">Belépés / Regisztráció</button>
+        <button id="logoutBtn" class="secondary">Kilépés</button>
+      </div>
+
+      <div class="muted" id="authInfo">Nincs bejelentkezett user.</div>
+      <div class="muted" style="margin-top:8px;">
+        Az okos gomb először belépést próbál. Ha nincs ilyen user, regisztrál.
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <input id="newPost" placeholder="Írj valamit..." disabled>
+        <button id="sendBtn" disabled>Küldés</button>
+      </div>
+      <div class="muted" style="margin-top:10px;">
+        Posztolni csak bejelentkezés után lehet.
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="status" id="status"></div>
+    </div>
+
+    <div id="posts"></div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const statusBox = document.getElementById("status");
+    const postsBox = document.getElementById("posts");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const authBtn = document.getElementById("authBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const authInfo = document.getElementById("authInfo");
+    const newPostInput = document.getElementById("newPost");
+    const sendBtn = document.getElementById("sendBtn");
+
+    let currentUser = null;
+
+    function setStatus(lines) {
+      statusBox.textContent = Array.isArray(lines) ? lines.join("\n") : lines;
+    }
+
+    function renderAuthState() {
+      if (currentUser) {
+        authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
+        newPostInput.disabled = false;
+        sendBtn.disabled = false;
+        authBtn.disabled = true;
+      } else {
+        authInfo.textContent = "Nincs bejelentkezett user.";
+        newPostInput.disabled = true;
+        sendBtn.disabled = true;
+        authBtn.disabled = false;
+      }
+    }
+
+    async function refreshSession() {
+      const { data, error } = await supabaseClient.auth.getUser();
+
+      if (error) {
+        currentUser = null;
+      } else {
+        currentUser = data?.user ?? null;
+      }
+
+      renderAuthState();
+    }
+
+    async function loadPosts() {
+      setStatus([
+        "1. Script elindult",
+        "2. URL beállítva",
+        "3. Key beállítva",
+        "4. Supabase kliens létrejött",
+        "5. Session ellenőrzés...",
+        currentUser ? "6. User: " + (currentUser.email || currentUser.id) : "6. User: nincs",
+        "7. Lekérés indul..."
+      ]);
+
+      const { data, error } = await supabaseClient
+        .from("posts")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setStatus([
+          "1. Script elindult",
+          "2. URL beállítva",
+          "3. Key beállítva",
+          "4. Supabase kliens létrejött",
+          "5. Session ellenőrzés...",
+          currentUser ? "6. User: " + (currentUser.email || currentUser.id) : "6. User: nincs",
+          "7. Lekérés indul...",
+          "SUPABASE HIBA: " + error.message
+        ]);
+        return;
+      }
+
+      setStatus([
+        "1. Script elindult",
+        "2. URL beállítva",
+        "3. Key beállítva",
+        "4. Supabase kliens létrejött",
+        "5. Session ellenőrzés...",
+        currentUser ? "6. User: " + (currentUser.email || currentUser.id) : "6. User: nincs",
+        "7. Lekérés indul...",
+        "8. Lekért rekordok száma: " + data.length
+      ]);
+
+      postsBox.innerHTML = "";
+
+      data.forEach(post => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const date = post.created_at
+          ? new Date(post.created_at).toLocaleString("hu-HU")
+          : "Nincs dátum";
+
+        card.innerHTML = `
+          <div class="date">${date}</div>
+          <div class="author">user_id: ${post.user_id || "nincs"}</div>
+          <div class="text">${post.text || "Nincs szöveg"}</div>
+        `;
+
+        postsBox.appendChild(card);
+      });
+    }
+
+    async function smartAuth() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        alert("Adj meg email címet és jelszót.");
+        return;
+      }
+
+      authBtn.disabled = true;
+      authBtn.textContent = "Ellenőrzés...";
+
+      // 1. először belépést próbál
+      let loginResult = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (!loginResult.error) {
+        await refreshSession();
+        await loadPosts();
+        authBtn.textContent = "Belépés / Regisztráció";
+        return;
+      }
+
+      // 2. ha nincs user / invalid credentials, megpróbál regisztrálni
+      const msg = (loginResult.error.message || "").toLowerCase();
+
+      const shouldTrySignup =
+        msg.includes("invalid login credentials") ||
+        msg.includes("email not confirmed") ||
+        msg.includes("invalid credentials");
+
+      if (!shouldTrySignup) {
+        alert("Belépési hiba: " + loginResult.error.message);
+        authBtn.disabled = false;
+        authBtn.textContent = "Belépés / Regisztráció";
+        return;
+      }
+
+      authBtn.textContent = "Regisztráció...";
+
+      const signUpResult = await supabaseClient.auth.signUp({
+        email,
+        password
+      });
+
+      if (signUpResult.error) {
+        alert("Regisztrációs hiba: " + signUpResult.error.message);
+        authBtn.disabled = false;
+        authBtn.textContent = "Belépés / Regisztráció";
+        return;
+      }
+
+      alert("Új user létrehozva. Most próbálj újra belépni ugyanazzal az emaillel és jelszóval.");
+      authBtn.disabled = false;
+      authBtn.textContent = "Belépés / Regisztráció";
+
+      await refreshSession();
+      await loadPosts();
+    }
+
+    async function signOut() {
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        alert("Kilépési hiba: " + error.message);
+        return;
+      }
+
+      await refreshSession();
+      await loadPosts();
+    }
+
+    async function addPost() {
+      const text = newPostInput.value.trim();
+
+      if (!currentUser) {
+        alert("Előbb jelentkezz be.");
+        return;
+      }
+
+      if (!text) {
+        alert("Írj be valamit.");
+        return;
+      }
+
+      sendBtn.disabled = true;
+      sendBtn.textContent = "Küldés...";
+
+      const { error } = await supabaseClient
+        .from("posts")
+        .insert([{
+          text,
+          user_id: currentUser.id
+        }]);
+
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Küldés";
+
+      if (error) {
+        alert("Insert hiba: " + error.message);
+        return;
+      }
+
+      newPostInput.value = "";
+      await loadPosts();
+    }
+
+    authBtn.addEventListener("click", smartAuth);
+    logoutBtn.addEventListener("click", signOut);
+    sendBtn.addEventListener("click", addPost);
+
+    newPostInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") addPost();
+    });
+
+    supabaseClient.auth.onAuthStateChange(async () => {
+      await refreshSession();
+      await loadPosts();
+    });
+
+    (async function init() {
+      await refreshSession();
+      await loadPosts();
+    })();
+  </script>
+</body>
+</html>
