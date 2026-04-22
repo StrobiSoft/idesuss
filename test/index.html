@@ -16,7 +16,7 @@
     }
 
     .wrap {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
     }
 
@@ -26,6 +26,16 @@
       padding: 16px;
       margin-bottom: 18px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
     }
 
     .row {
@@ -63,9 +73,34 @@
       background: #16a34a;
     }
 
+    button.warning {
+      background: #7c3aed;
+    }
+
     button:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+    }
+
+    .big-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .big-actions button {
+      min-width: 200px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .muted {
+      opacity: 0.8;
+      font-size: 14px;
+      line-height: 1.45;
     }
 
     .status {
@@ -75,10 +110,18 @@
       opacity: 0.95;
     }
 
-    .muted {
-      opacity: 0.8;
+    .error-box {
+      margin-top: 10px;
+      color: #fecaca;
       font-size: 14px;
-      line-height: 1.45;
+      min-height: 20px;
+    }
+
+    .success-box {
+      margin-top: 10px;
+      color: #bbf7d0;
+      font-size: 14px;
+      min-height: 20px;
     }
 
     .consent-row {
@@ -136,31 +179,12 @@
       word-break: break-word;
     }
 
-    .error-box {
-      margin-top: 10px;
-      color: #fecaca;
-      font-size: 14px;
-      min-height: 20px;
-    }
-
-    h1 {
-      margin: 0 0 16px;
-      font-size: 24px;
-    }
-
-    .auth-actions {
+    .auth-footer {
+      margin-top: 12px;
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin: 12px 0;
       align-items: center;
-    }
-
-    .register-note {
-      width: 100%;
-      margin-top: 2px;
-      opacity: 0.8;
-      font-size: 14px;
     }
   </style>
 </head>
@@ -169,33 +193,74 @@
     <h1>/test – auth + consent + posts</h1>
 
     <div class="panel">
-      <div class="row" style="margin-bottom:10px;">
-        <input id="email" type="email" placeholder="Email cím">
-        <input id="password" type="password" placeholder="Jelszó">
+      <div id="authChoiceView">
+        <h2>Folytatás</h2>
+        <div class="muted">
+          Válaszd ki, hogy már van fiókod, vagy most szeretnél regisztrálni.
+        </div>
+
+        <div class="big-actions">
+          <button id="showLoginBtn">Van már fiókom</button>
+          <button id="showRegisterBtn" class="register">Új vagyok itt</button>
+        </div>
       </div>
 
-      <div class="consent-row">
-        <input id="consentCheckbox" type="checkbox">
-        <label for="consentCheckbox">
-          Elolvastam és elfogadom a
-          <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-          és a
-          <a href="/terms.html" target="_blank" rel="noopener noreferrer">Felhasználási feltételek</a>
-          tartalmát.
-        </label>
+      <div id="loginView" class="hidden">
+        <h2>Belépés</h2>
+
+        <div class="row" style="margin-bottom:10px;">
+          <input id="loginEmail" type="email" placeholder="Email cím">
+          <input id="loginPassword" type="password" placeholder="Jelszó">
+        </div>
+
+        <div class="auth-footer">
+          <button id="loginBtn">Belépés</button>
+          <button id="backFromLoginBtn" class="secondary">Vissza</button>
+          <button id="forgotBtn" class="warning">Elfelejtett jelszó</button>
+        </div>
+
+        <div class="error-box" id="loginError"></div>
+        <div class="success-box" id="loginSuccess"></div>
       </div>
 
-      <div class="error-box" id="consentError"></div>
+      <div id="registerView" class="hidden">
+        <h2>Regisztráció</h2>
 
-      <div class="auth-actions">
-        <button id="loginBtn">Belépés</button>
-        <button id="logoutBtn" class="secondary">Kilépés</button>
+        <div class="row" style="margin-bottom:10px;">
+          <input id="registerEmail" type="email" placeholder="Email cím">
+          <input id="registerPassword" type="password" placeholder="Jelszó">
+        </div>
 
-        <div class="register-note">Nincs még fiókod?</div>
-        <button id="registerBtn" class="register">Regisztráció</button>
+        <div class="row" style="margin-bottom:10px;">
+          <input id="registerPassword2" type="password" placeholder="Jelszó megerősítése">
+        </div>
+
+        <div class="consent-row">
+          <input id="consentCheckbox" type="checkbox">
+          <label for="consentCheckbox">
+            Elolvastam és elfogadom a
+            <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+            és a
+            <a href="/terms.html" target="_blank" rel="noopener noreferrer">Felhasználási feltételek</a>
+            tartalmát.
+          </label>
+        </div>
+
+        <div class="auth-footer">
+          <button id="registerBtn" class="register">Regisztráció</button>
+          <button id="backFromRegisterBtn" class="secondary">Vissza</button>
+        </div>
+
+        <div class="error-box" id="registerError"></div>
+        <div class="success-box" id="registerSuccess"></div>
       </div>
+
+      <hr style="border:none;height:1px;background:rgba(255,255,255,0.12);margin:18px 0;">
 
       <div class="muted" id="authInfo">Nincs bejelentkezett user.</div>
+      <div class="auth-footer">
+        <button id="logoutBtn" class="secondary">Kilépés</button>
+      </div>
     </div>
 
     <div class="panel">
@@ -217,35 +282,65 @@
 
   <script>
     const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
+    const SUPABASE_KEY = "IDE_ILLESZD_BE_A_TELJES_sb_publishable_KULCSOT";
 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const statusBox = document.getElementById("status");
-    const postsBox = document.getElementById("posts");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
+    const authChoiceView = document.getElementById("authChoiceView");
+    const loginView = document.getElementById("loginView");
+    const registerView = document.getElementById("registerView");
+
+    const showLoginBtn = document.getElementById("showLoginBtn");
+    const showRegisterBtn = document.getElementById("showRegisterBtn");
+    const backFromLoginBtn = document.getElementById("backFromLoginBtn");
+    const backFromRegisterBtn = document.getElementById("backFromRegisterBtn");
+
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
     const loginBtn = document.getElementById("loginBtn");
+    const forgotBtn = document.getElementById("forgotBtn");
+
+    const registerEmail = document.getElementById("registerEmail");
+    const registerPassword = document.getElementById("registerPassword");
+    const registerPassword2 = document.getElementById("registerPassword2");
     const registerBtn = document.getElementById("registerBtn");
+    const consentCheckbox = document.getElementById("consentCheckbox");
+
+    const loginError = document.getElementById("loginError");
+    const loginSuccess = document.getElementById("loginSuccess");
+    const registerError = document.getElementById("registerError");
+    const registerSuccess = document.getElementById("registerSuccess");
+
     const logoutBtn = document.getElementById("logoutBtn");
     const authInfo = document.getElementById("authInfo");
+
     const newPostInput = document.getElementById("newPost");
     const sendBtn = document.getElementById("sendBtn");
-    const consentCheckbox = document.getElementById("consentCheckbox");
-    const consentError = document.getElementById("consentError");
+
+    const statusBox = document.getElementById("status");
+    const postsBox = document.getElementById("posts");
 
     let currentUser = null;
 
+    function showView(viewName) {
+      authChoiceView.classList.add("hidden");
+      loginView.classList.add("hidden");
+      registerView.classList.add("hidden");
+
+      if (viewName === "choice") authChoiceView.classList.remove("hidden");
+      if (viewName === "login") loginView.classList.remove("hidden");
+      if (viewName === "register") registerView.classList.remove("hidden");
+    }
+
+    function clearMessages() {
+      loginError.textContent = "";
+      loginSuccess.textContent = "";
+      registerError.textContent = "";
+      registerSuccess.textContent = "";
+    }
+
     function setStatus(lines) {
       statusBox.textContent = Array.isArray(lines) ? lines.join("\n") : lines;
-    }
-
-    function setConsentError(message = "") {
-      consentError.textContent = message;
-    }
-
-    function hasConsent() {
-      return consentCheckbox.checked;
     }
 
     function renderAuthState() {
@@ -253,14 +348,10 @@
         authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
         newPostInput.disabled = false;
         sendBtn.disabled = false;
-        loginBtn.disabled = true;
-        registerBtn.disabled = true;
       } else {
         authInfo.textContent = "Nincs bejelentkezett user.";
         newPostInput.disabled = true;
         sendBtn.disabled = true;
-        loginBtn.disabled = false;
-        registerBtn.disabled = false;
       }
     }
 
@@ -338,18 +429,13 @@
     }
 
     async function login() {
-      setConsentError("");
+      clearMessages();
 
-      if (!hasConsent()) {
-        setConsentError("A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.");
-        return;
-      }
-
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
+      const email = loginEmail.value.trim();
+      const password = loginPassword.value;
 
       if (!email || !password) {
-        alert("Adj meg email címet és jelszót.");
+        loginError.textContent = "Adj meg email címet és jelszót.";
         return;
       }
 
@@ -363,14 +449,15 @@
         });
 
         if (error) {
-          alert("Belépési hiba: " + error.message);
+          loginError.textContent = "Belépési hiba: " + error.message;
           return;
         }
 
+        loginSuccess.textContent = "Sikeres belépés.";
         await refreshSession();
         await loadPosts();
       } catch (err) {
-        alert("Hiba: " + err.message);
+        loginError.textContent = "Hiba: " + err.message;
       } finally {
         loginBtn.disabled = false;
         loginBtn.textContent = "Belépés";
@@ -378,18 +465,24 @@
     }
 
     async function register() {
-      setConsentError("");
+      clearMessages();
 
-      if (!hasConsent()) {
-        setConsentError("A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.");
+      const email = registerEmail.value.trim();
+      const password = registerPassword.value;
+      const password2 = registerPassword2.value;
+
+      if (!email || !password || !password2) {
+        registerError.textContent = "Minden mezőt tölts ki.";
         return;
       }
 
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
+      if (password !== password2) {
+        registerError.textContent = "A két jelszó nem egyezik.";
+        return;
+      }
 
-      if (!email || !password) {
-        alert("Adj meg email címet és jelszót.");
+      if (!consentCheckbox.checked) {
+        registerError.textContent = "A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.";
         return;
       }
 
@@ -404,23 +497,50 @@
 
         if (error) {
           if ((error.message || "").toLowerCase().includes("already registered")) {
-            alert("Ez az email már regisztrálva van. Kérlek jelentkezz be.");
+            registerError.textContent = "Ez az email már regisztrálva van. Kérlek lépj be.";
           } else {
-            alert("Regisztrációs hiba: " + error.message);
+            registerError.textContent = "Regisztrációs hiba: " + error.message;
           }
           return;
         }
 
-        alert("Sikeres regisztráció. Most jelentkezz be.");
+        registerSuccess.textContent = "Sikeres regisztráció. Most jelentkezz be.";
+        showView("login");
+        loginEmail.value = email;
+        loginPassword.value = password;
       } catch (err) {
-        alert("Hiba: " + err.message);
+        registerError.textContent = "Hiba: " + err.message;
       } finally {
         registerBtn.disabled = false;
         registerBtn.textContent = "Regisztráció";
       }
     }
 
+    async function resetPassword() {
+      clearMessages();
+
+      const email = loginEmail.value.trim();
+
+      if (!email) {
+        loginError.textContent = "Az elfelejtett jelszóhoz add meg az email címedet.";
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: "https://idesuss.net/test/"
+      });
+
+      if (error) {
+        loginError.textContent = "Jelszó-visszaállítási hiba: " + error.message;
+        return;
+      }
+
+      loginSuccess.textContent = "Elküldtük a jelszó-visszaállító emailt.";
+    }
+
     async function signOut() {
+      clearMessages();
+
       const { error } = await supabaseClient.auth.signOut();
 
       if (error) {
@@ -430,6 +550,7 @@
 
       await refreshSession();
       await loadPosts();
+      showView("choice");
     }
 
     async function addPost() {
@@ -467,8 +588,29 @@
       await loadPosts();
     }
 
+    showLoginBtn.addEventListener("click", () => {
+      clearMessages();
+      showView("login");
+    });
+
+    showRegisterBtn.addEventListener("click", () => {
+      clearMessages();
+      showView("register");
+    });
+
+    backFromLoginBtn.addEventListener("click", () => {
+      clearMessages();
+      showView("choice");
+    });
+
+    backFromRegisterBtn.addEventListener("click", () => {
+      clearMessages();
+      showView("choice");
+    });
+
     loginBtn.addEventListener("click", login);
     registerBtn.addEventListener("click", register);
+    forgotBtn.addEventListener("click", resetPassword);
     logoutBtn.addEventListener("click", signOut);
     sendBtn.addEventListener("click", addPost);
 
@@ -482,6 +624,7 @@
     });
 
     (async function init() {
+      showView("choice");
       await refreshSession();
       await loadPosts();
     })();
