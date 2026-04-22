@@ -186,7 +186,6 @@
       const { data, error } = await supabaseClient.auth.getUser();
 
       if (error) {
-        console.error(error);
         currentUser = null;
       } else {
         currentUser = data?.user ?? null;
@@ -275,7 +274,7 @@
         return;
       }
 
-      alert("Regisztráció elküldve. Ha a projekt email megerősítést kér, nézd meg a postaládát.");
+      alert("Regisztráció elküldve. Ha email megerősítés kell, nézd meg a postaládát.");
       await refreshSession();
       await loadPosts();
     }
