@@ -34,7 +34,15 @@
   </style>
 </head>
 <body>
-
+<div style="padding:20px;">
+  <input id="newPost" placeholder="Írj valamit..."
+    style="width:70%;padding:10px;border-radius:10px;border:none;">
+    
+  <button onclick="addPost()"
+    style="padding:10px 16px;border-radius:10px;border:none;background:#0d5bd7;color:white;">
+    Küldés
+  </button>
+</div>
 <div id="posts"></div>
 
 <script>
