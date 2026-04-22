@@ -45,77 +45,75 @@
 <div class="container" id="posts"></div>
 
 <script>
-  const container = document.getElementById("posts");
+const container = document.getElementById("posts");
 
-  function debug(msg, color = "white") {
-    console.log(msg);
-    const p = document.createElement("div");
-    p.style.color = color;
-    p.style.padding = "8px";
-    p.style.fontFamily = "monospace";
-    p.style.fontSize = "14px";
-    p.textContent = msg;
-    container.appendChild(p);
-  }
+function debug(msg, color = "white") {
+  console.log(msg);
+  const p = document.createElement("p");
+  p.style.color = color;
+  p.textContent = msg;
+  container.appendChild(p);
+}
 
-  debug("Script elindult", "lime");
+debug("Script elindult", "lightgreen");
 
-  const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
-const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
+const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
+const SUPABASE_KEY = "IDE_A_TE_TELJES_KULCSOD";
 
-  if (!SUPABASE_URL || SUPABASE_URL.includes("IDE_JÖN")) {
-    debug("HIBA: nincs kitöltve a SUPABASE_URL", "red");
-  }
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  if (!SUPABASE_KEY || SUPABASE_KEY.includes("IDE_JÖN")) {
-    debug("HIBA: nincs kitöltve a SUPABASE_KEY", "red");
-  }
+debug("Supabase kliens létrejött", "cyan");
 
+(async () => {
   try {
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    debug("Supabase kliens létrejött", "cyan");
+    debug("Lekérés indul...", "orange");
 
-    async function loadPosts() {
-      debug("Lekérés indul...", "yellow");
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-      const { data, error } = await supabaseClient
-        .from("posts")
-        .select("*");
-
-      if (error) {
-        debug("SUPABASE HIBA: " + error.message, "red");
-        return;
-      }
-
-      debug("Lekért rekordok száma: " + data.length, "lime");
-
-      if (data.length === 0) {
-        debug("Nincs adat a posts táblában.", "orange");
-        return;
-      }
-
-      data.forEach(post => {
-        const card = document.createElement("div");
-        card.style.background = "rgba(255,255,255,0.08)";
-        card.style.borderRadius = "14px";
-        card.style.padding = "12px";
-        card.style.margin = "10px 0";
-        card.innerHTML = `
-          <div style="font-weight:700; font-size:18px; margin-bottom:6px;">
-            ${post.title || "Nincs cím"}
-          </div>
-          <div style="opacity:.85;">
-            ${post.content || ""}
-          </div>
-        `;
-        container.appendChild(card);
-      });
+    if (error) {
+      debug("SUPABASE HIBA: " + error.message, "red");
+      return;
     }
 
-    loadPosts();
-  } catch (e) {
-    debug("JS HIBA: " + e.message, "red");
+    debug("Lekért rekordok száma: " + data.length, "lightgreen");
+
+    container.innerHTML = "";
+
+    if (!data || data.length === 0) {
+      debug("Nincs adat a posts táblában.", "orange");
+      return;
+    }
+
+    data.forEach(post => {
+      const card = document.createElement("div");
+      card.style.background = "rgba(255,255,255,0.08)";
+      card.style.borderRadius = "14px";
+      card.style.padding = "12px";
+      card.style.margin = "10px 0";
+      card.style.boxShadow = "0 10px 30px rgba(0,0,0,0.25)";
+
+      const date = post.created_at
+        ? new Date(post.created_at).toLocaleString("hu-HU")
+        : "Nincs dátum";
+
+      card.innerHTML = `
+        <div style="font-size:12px; opacity:.7; margin-bottom:8px;">
+          ${date}
+        </div>
+        <div style="font-size:18px; font-weight:700;">
+          ${post.text || "Nincs szöveg"}
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  } catch (err) {
+    debug("JS HIBA: " + err.message, "red");
   }
+})();
 </script>
 
 </body>
