@@ -28,16 +28,6 @@
       backdrop-filter: blur(6px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
-
-    .title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .content {
-      opacity: 0.8;
-    }
   </style>
 </head>
 <body>
@@ -58,7 +48,7 @@ function debug(msg, color = "white") {
 debug("Script elindult", "lightgreen");
 
 const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
-const SUPABASE_KEY = "IDE_A_TE_TELJES_KULCSOD";
+const SUPABASE_KEY = "IDE_MASOLD_BE_A_TE_TELJES_SB_PUBLISHABLE_KULCSODAT";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -89,11 +79,7 @@ debug("Supabase kliens létrejött", "cyan");
 
     data.forEach(post => {
       const card = document.createElement("div");
-      card.style.background = "rgba(255,255,255,0.08)";
-      card.style.borderRadius = "14px";
-      card.style.padding = "12px";
-      card.style.margin = "10px 0";
-      card.style.boxShadow = "0 10px 30px rgba(0,0,0,0.25)";
+      card.className = "card";
 
       const date = post.created_at
         ? new Date(post.created_at).toLocaleString("hu-HU")
