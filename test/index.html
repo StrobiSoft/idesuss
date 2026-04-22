@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supabase Test</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui;
+      background: #0f172a;
+      color: white;
+    }
+
+    .container {
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .content {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="posts"></div>
+
+<script>
+  const SUPABASE_URL = "IDE_JÖN_A_URL";
+  const SUPABASE_KEY = "IDE_JÖN_A_ANON_KEY";
+
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function loadPosts() {
+    const { data, error } = await supabaseClient
+      .from("posts")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.error("Hiba:", error);
+      return;
+    }
+
+    const container = document.getElementById("posts");
+    container.innerHTML = "";
+
+    data.forEach(post => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="title">${post.title || "Nincs cím"}</div>
+        <div class="content">${post.content || ""}</div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  loadPosts();
+</script>
+
+</body>
+</html>
