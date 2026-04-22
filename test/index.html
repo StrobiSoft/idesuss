@@ -4,102 +4,103 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Supabase Test</title>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
     body {
       margin: 0;
-      font-family: system-ui;
+      padding: 20px;
+      font-family: system-ui, sans-serif;
       background: #0f172a;
       color: white;
     }
 
-    .container {
-      padding: 20px;
+    #posts {
       display: grid;
       gap: 16px;
+    }
+
+    .debug {
+      font-family: monospace;
+      font-size: 16px;
+      margin: 6px 0;
     }
 
     .card {
       padding: 16px;
       border-radius: 16px;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
   </style>
 </head>
 <body>
 
-<div class="container" id="posts"></div>
+<div id="posts"></div>
 
 <script>
-const container = document.getElementById("posts");
+  const container = document.getElementById("posts");
 
-function debug(msg, color = "white") {
-  console.log(msg);
-  const p = document.createElement("p");
-  p.style.color = color;
-  p.textContent = msg;
-  container.appendChild(p);
-}
-
-debug("Script elindult", "lightgreen");
-
-const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
-const SUPABASE_KEY = "IDE_MASOLD_BE_A_TE_TELJES_SB_PUBLISHABLE_KULCSODAT";
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-debug("Supabase kliens létrejött", "cyan");
-
-(async () => {
-  try {
-    debug("Lekérés indul...", "orange");
-
-    const { data, error } = await supabase
-      .from("posts")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      debug("SUPABASE HIBA: " + error.message, "red");
-      return;
-    }
-
-    debug("Lekért rekordok száma: " + data.length, "lightgreen");
-
-    container.innerHTML = "";
-
-    if (!data || data.length === 0) {
-      debug("Nincs adat a posts táblában.", "orange");
-      return;
-    }
-
-    data.forEach(post => {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      const date = post.created_at
-        ? new Date(post.created_at).toLocaleString("hu-HU")
-        : "Nincs dátum";
-
-      card.innerHTML = `
-        <div style="font-size:12px; opacity:.7; margin-bottom:8px;">
-          ${date}
-        </div>
-        <div style="font-size:18px; font-weight:700;">
-          ${post.text || "Nincs szöveg"}
-        </div>
-      `;
-
-      container.appendChild(card);
-    });
-  } catch (err) {
-    debug("JS HIBA: " + err.message, "red");
+  function debug(msg, color = "white") {
+    const p = document.createElement("div");
+    p.className = "debug";
+    p.style.color = color;
+    p.textContent = msg;
+    container.appendChild(p);
   }
-})();
+
+  debug("1. Script elindult", "lime");
+
+  try {
+    const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
+    const SUPABASE_KEY = "IDE_MASOLD_BE_A_TE_TELJES_SB_PUBLISHABLE_KULCSODAT";
+
+    debug("2. URL beállítva", "cyan");
+    debug("3. Key beállítva", "cyan");
+
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    debug("4. Supabase kliens létrejött", "yellow");
+
+    async function run() {
+      debug("5. Lekérés indul...", "orange");
+
+      const { data, error } = await client
+        .from("posts")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        debug("SUPABASE HIBA: " + error.message, "red");
+        return;
+      }
+
+      debug("6. Lekért rekordok száma: " + data.length, "lightgreen");
+
+      if (!data || data.length === 0) {
+        debug("Nincs adat a posts táblában.", "orange");
+        return;
+      }
+
+      data.forEach(post => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const date = post.created_at
+          ? new Date(post.created_at).toLocaleString("hu-HU")
+          : "Nincs dátum";
+
+        card.innerHTML = `
+          <div style="font-size:12px;opacity:.7;margin-bottom:8px;">${date}</div>
+          <div style="font-size:18px;font-weight:700;">${post.text || "Nincs szöveg"}</div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    run();
+  } catch (e) {
+    debug("JS HIBA: " + e.message, "red");
+  }
 </script>
 
 </body>
