@@ -1,1 +1,184 @@
-.
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supabase Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+
+    .composer {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .composer input {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
+
+    .composer button {
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: none;
+      background: #0d5bd7;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .status {
+      font-family: monospace;
+      font-size: 14px;
+      margin-bottom: 16px;
+      white-space: pre-line;
+    }
+
+    #posts {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .date {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+
+    .text {
+      font-size: 18px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="composer">
+    <input id="newPost" placeholder="Írj valamit..." />
+    <button id="sendBtn">Küldés</button>
+  </div>
+
+  <div class="status" id="status"></div>
+  <div id="posts"></div>
+
+  <script>
+    const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
+
+    const statusBox = document.getElementById("status");
+    const postsBox = document.getElementById("posts");
+    const input = document.getElementById("newPost");
+    const sendBtn = document.getElementById("sendBtn");
+
+    function setStatus(lines) {
+      statusBox.textContent = Array.isArray(lines) ? lines.join("\n") : lines;
+    }
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadPosts() {
+      setStatus([
+        "1. Script elindult",
+        "2. URL beállítva",
+        "3. Key beállítva",
+        "4. Supabase kliens létrejött",
+        "5. Lekérés indul..."
+      ]);
+
+      const { data, error } = await supabaseClient
+        .from("posts")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setStatus([
+          "1. Script elindult",
+          "2. URL beállítva",
+          "3. Key beállítva",
+          "4. Supabase kliens létrejött",
+          "5. Lekérés indul...",
+          "SUPABASE HIBA: " + error.message
+        ]);
+        return;
+      }
+
+      setStatus([
+        "1. Script elindult",
+        "2. URL beállítva",
+        "3. Key beállítva",
+        "4. Supabase kliens létrejött",
+        "5. Lekérés indul...",
+        "6. Lekért rekordok száma: " + data.length
+      ]);
+
+      postsBox.innerHTML = "";
+
+      data.forEach(post => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const date = post.created_at
+          ? new Date(post.created_at).toLocaleString("hu-HU")
+          : "Nincs dátum";
+
+        card.innerHTML = `
+          <div class="date">${date}</div>
+          <div class="text">${post.text || "Nincs szöveg"}</div>
+        `;
+
+        postsBox.appendChild(card);
+      });
+    }
+
+    async function addPost() {
+      const text = input.value.trim();
+
+      if (!text) {
+        alert("Írj be valamit.");
+        return;
+      }
+
+      sendBtn.disabled = true;
+      sendBtn.textContent = "Küldés...";
+
+      const { error } = await supabaseClient
+        .from("posts")
+        .insert([{ text }]);
+
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Küldés";
+
+      if (error) {
+        alert("Insert hiba: " + error.message);
+        return;
+      }
+
+      input.value = "";
+      await loadPosts();
+    }
+
+    sendBtn.addEventListener("click", addPost);
+    loadPosts();
+  </script>
+
+</body>
+</html>
