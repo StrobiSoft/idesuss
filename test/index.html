@@ -113,7 +113,7 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>/test – login + posts</h1>
+    <h1>/test – smart auth + posts</h1>
 
     <div class="panel">
       <div class="row" style="margin-bottom:10px;">
@@ -122,12 +122,14 @@
       </div>
 
       <div class="row" style="margin-bottom:12px;">
-        <button id="signupBtn">Regisztráció</button>
-        <button id="loginBtn">Belépés</button>
+        <button id="authBtn">Belépés / Regisztráció</button>
         <button id="logoutBtn" class="secondary">Kilépés</button>
       </div>
 
       <div class="muted" id="authInfo">Nincs bejelentkezett user.</div>
+      <div class="muted" style="margin-top:8px;">
+        Az okos gomb először belépést próbál. Ha nincs ilyen user, regisztrál.
+      </div>
     </div>
 
     <div class="panel">
@@ -157,8 +159,7 @@
     const postsBox = document.getElementById("posts");
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
-    const signupBtn = document.getElementById("signupBtn");
-    const loginBtn = document.getElementById("loginBtn");
+    const authBtn = document.getElementById("authBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const authInfo = document.getElementById("authInfo");
     const newPostInput = document.getElementById("newPost");
@@ -175,10 +176,12 @@
         authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
         newPostInput.disabled = false;
         sendBtn.disabled = false;
+        authBtn.disabled = true;
       } else {
         authInfo.textContent = "Nincs bejelentkezett user.";
         newPostInput.disabled = true;
         sendBtn.disabled = true;
+        authBtn.disabled = false;
       }
     }
 
@@ -255,7 +258,7 @@
       });
     }
 
-    async function signUp() {
+    async function smartAuth() {
       const email = emailInput.value.trim();
       const password = passwordInput.value;
 
@@ -264,39 +267,54 @@
         return;
       }
 
-      const { error } = await supabaseClient.auth.signUp({
+      authBtn.disabled = true;
+      authBtn.textContent = "Ellenőrzés...";
+
+      // 1. először belépést próbál
+      let loginResult = await supabaseClient.auth.signInWithPassword({
         email,
         password
       });
 
-      if (error) {
-        alert("Regisztrációs hiba: " + error.message);
+      if (!loginResult.error) {
+        await refreshSession();
+        await loadPosts();
+        authBtn.textContent = "Belépés / Regisztráció";
         return;
       }
 
-      alert("Regisztráció elküldve. Ha email megerősítés kell, nézd meg a postaládát.");
-      await refreshSession();
-      await loadPosts();
-    }
+      // 2. ha nincs user / invalid credentials, megpróbál regisztrálni
+      const msg = (loginResult.error.message || "").toLowerCase();
 
-    async function signIn() {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
+      const shouldTrySignup =
+        msg.includes("invalid login credentials") ||
+        msg.includes("email not confirmed") ||
+        msg.includes("invalid credentials");
 
-      if (!email || !password) {
-        alert("Adj meg email címet és jelszót.");
+      if (!shouldTrySignup) {
+        alert("Belépési hiba: " + loginResult.error.message);
+        authBtn.disabled = false;
+        authBtn.textContent = "Belépés / Regisztráció";
         return;
       }
 
-      const { error } = await supabaseClient.auth.signInWithPassword({
+      authBtn.textContent = "Regisztráció...";
+
+      const signUpResult = await supabaseClient.auth.signUp({
         email,
         password
       });
 
-      if (error) {
-        alert("Belépési hiba: " + error.message);
+      if (signUpResult.error) {
+        alert("Regisztrációs hiba: " + signUpResult.error.message);
+        authBtn.disabled = false;
+        authBtn.textContent = "Belépés / Regisztráció";
         return;
       }
+
+      alert("Új user létrehozva. Most próbálj újra belépni ugyanazzal az emaillel és jelszóval.");
+      authBtn.disabled = false;
+      authBtn.textContent = "Belépés / Regisztráció";
 
       await refreshSession();
       await loadPosts();
@@ -349,8 +367,7 @@
       await loadPosts();
     }
 
-    signupBtn.addEventListener("click", signUp);
-    loginBtn.addEventListener("click", signIn);
+    authBtn.addEventListener("click", smartAuth);
     logoutBtn.addEventListener("click", signOut);
     sendBtn.addEventListener("click", addPost);
 
