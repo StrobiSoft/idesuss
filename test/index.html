@@ -429,40 +429,41 @@
     }
 
     async function login() {
-      clearMessages();
+  clearMessages();
 
-      const email = loginEmail.value.trim();
-      const password = loginPassword.value;
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
 
-      if (!email || !password) {
-        loginError.textContent = "Adj meg email címet és jelszót.";
-        return;
-      }
+  if (!email || !password) {
+    loginError.textContent = "Adj meg email címet és jelszót.";
+    return;
+  }
 
-      loginBtn.disabled = true;
-      loginBtn.textContent = "Belépés...";
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Belépés...";
 
-      try {
-        const { error } = await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
-        if (error) {
-          loginError.textContent = "Belépési hiba: " + error.message;
-          return;
-        }
-
-        loginSuccess.textContent = "Sikeres belépés.";
-        await refreshSession();
-        await loadPosts();
-      } catch (err) {
-        loginError.textContent = "Hiba: " + err.message;
-      } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = "Belépés";
-      }
+    if (error) {
+      loginError.textContent = "Belépési hiba: " + error.message;
+      return;
     }
+
+    loginSuccess.textContent = "Sikeres belépés.";
+    currentUser = data?.user ?? null;
+    await refreshSession();
+    await loadPosts();
+  } catch (err) {
+    loginError.textContent = "Hiba: " + err.message;
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Belépés";
+  }
+}
 
     async function register() {
       clearMessages();
