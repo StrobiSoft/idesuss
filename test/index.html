@@ -34,7 +34,9 @@
       flex-wrap: wrap;
     }
 
-    input {
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
       flex: 1;
       min-width: 220px;
       padding: 12px 14px;
@@ -70,8 +72,32 @@
     }
 
     .muted {
-      opacity: 0.75;
+      opacity: 0.8;
       font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 12px 0 4px;
+    }
+
+    .consent-row input[type="checkbox"] {
+      margin-top: 3px;
+      transform: scale(1.15);
+    }
+
+    .consent-row label {
+      font-size: 14px;
+      opacity: 0.95;
+      line-height: 1.45;
+    }
+
+    a {
+      color: #93c5fd;
+      text-decoration: underline;
     }
 
     #posts {
@@ -105,6 +131,13 @@
       word-break: break-word;
     }
 
+    .error-box {
+      margin-top: 10px;
+      color: #fecaca;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
     h1 {
       margin: 0 0 16px;
       font-size: 24px;
@@ -113,7 +146,7 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>/test – smart auth + posts</h1>
+    <h1>/test – smart auth + consent + posts</h1>
 
     <div class="panel">
       <div class="row" style="margin-bottom:10px;">
@@ -121,7 +154,20 @@
         <input id="password" type="password" placeholder="Jelszó">
       </div>
 
-      <div class="row" style="margin-bottom:12px;">
+      <div class="consent-row">
+        <input id="consentCheckbox" type="checkbox">
+        <label for="consentCheckbox">
+          Elolvastam és elfogadom a
+          <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+          és a
+          <a href="/terms.html" target="_blank" rel="noopener noreferrer">Felhasználási feltételek</a>
+          tartalmát.
+        </label>
+      </div>
+
+      <div class="error-box" id="consentError"></div>
+
+      <div class="row" style="margin:12px 0 12px;">
         <button id="authBtn">Belépés / Regisztráció</button>
         <button id="logoutBtn" class="secondary">Kilépés</button>
       </div>
@@ -134,7 +180,7 @@
 
     <div class="panel">
       <div class="row">
-        <input id="newPost" placeholder="Írj valamit..." disabled>
+        <input id="newPost" type="text" placeholder="Írj valamit..." disabled>
         <button id="sendBtn" disabled>Küldés</button>
       </div>
       <div class="muted" style="margin-top:10px;">
@@ -151,7 +197,7 @@
 
   <script>
     const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
+    const SUPABASE_KEY = "IDE_ILLESZD_BE_A_TELJES_sb_publishable_KULCSOT";
 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -164,11 +210,21 @@
     const authInfo = document.getElementById("authInfo");
     const newPostInput = document.getElementById("newPost");
     const sendBtn = document.getElementById("sendBtn");
+    const consentCheckbox = document.getElementById("consentCheckbox");
+    const consentError = document.getElementById("consentError");
 
     let currentUser = null;
 
     function setStatus(lines) {
       statusBox.textContent = Array.isArray(lines) ? lines.join("\n") : lines;
+    }
+
+    function setConsentError(message = "") {
+      consentError.textContent = message;
+    }
+
+    function hasConsent() {
+      return consentCheckbox.checked;
     }
 
     function renderAuthState() {
@@ -259,6 +315,13 @@
     }
 
     async function smartAuth() {
+      setConsentError("");
+
+      if (!hasConsent()) {
+        setConsentError("A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.");
+        return;
+      }
+
       const email = emailInput.value.trim();
       const password = passwordInput.value;
 
@@ -270,7 +333,6 @@
       authBtn.disabled = true;
       authBtn.textContent = "Ellenőrzés...";
 
-      // 1. először belépést próbál
       let loginResult = await supabaseClient.auth.signInWithPassword({
         email,
         password
@@ -283,7 +345,6 @@
         return;
       }
 
-      // 2. ha nincs user / invalid credentials, megpróbál regisztrálni
       const msg = (loginResult.error.message || "").toLowerCase();
 
       const shouldTrySignup =
