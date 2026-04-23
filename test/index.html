@@ -565,76 +565,51 @@
     }
 
     async function addPost() {
-      if (!currentUser) {
-  alert("Még nem vagy teljesen bejelentkezve. Várj 1-2 másodpercet.");
-  return;
-}
-      const text = newPostInput.value.trim();
+  const text = newPostInput.value.trim();
 
-      const { data } = await supabaseClient.auth.getUser();
-const user = data?.user;
+  if (!text) {
+    alert("Írj be valamit.");
+    return;
+  }
 
-if (!user) {
-  alert("Nincs user session.");
-  return;
-}
+  sendBtn.disabled = true;
+  sendBtn.textContent = "Küldés...";
 
-      if (!text) {
-        alert("Írj be valamit.");
-        return;
-      }
+  try {
+    // 🔥 mindig friss user lekérés
+    const { data: authData, error: authError } = await supabaseClient.auth.getUser();
 
-      sendBtn.disabled = true;
-      sendBtn.textContent = "Küldés...";
-
-      const { error } = await supabaseClient
-        .from("posts")
-        .insert([{
-          text,
-          user_id: currentUser.id
-        }]);
-
-      sendBtn.disabled = false;
-      sendBtn.textContent = "Küldés";
-
-      if (error) {
-        alert("Insert hiba: " + error.message);
-        return;
-      }
-
-      newPostInput.value = "";
-      await loadPosts();
+    if (authError || !authData?.user) {
+      alert("Nincs érvényes user session.");
+      return;
     }
 
-    showLoginBtn.addEventListener("click", () => {
-      clearMessages();
-      showView("login");
-    });
+    const user = authData.user;
 
-    showRegisterBtn.addEventListener("click", () => {
-      clearMessages();
-      showView("register");
-    });
+    console.log("USER ID:", user.id);
 
-    backFromLoginBtn.addEventListener("click", () => {
-      clearMessages();
-      showView("choice");
-    });
+    const { error } = await supabaseClient
+      .from("posts")
+      .insert([{
+        text,
+        user_id: user.id   // 💥 EZ A LÉNYEG
+      }]);
 
-    backFromRegisterBtn.addEventListener("click", () => {
-      clearMessages();
-      showView("choice");
-    });
+    if (error) {
+      alert("Insert hiba: " + error.message);
+      return;
+    }
 
-    loginBtn.addEventListener("click", login);
-    registerBtn.addEventListener("click", register);
-    forgotBtn.addEventListener("click", resetPassword);
-    logoutBtn.addEventListener("click", signOut);
-    sendBtn.addEventListener("click", addPost);
+    newPostInput.value = "";
+    await loadPosts();
 
-    newPostInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") addPost();
-    });
+  } catch (err) {
+    alert("Hiba: " + err.message);
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Küldés";
+  }
+}
 
     (async function init() {
       showView("choice");
