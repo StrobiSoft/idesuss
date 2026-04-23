@@ -464,52 +464,65 @@
     }
 
     async function register() {
-      clearMessages();
+  clearMessages();
 
-      const email = registerEmail.value.trim();
-      const password = registerPassword.value;
-      const password2 = registerPassword2.value;
+  const email = registerEmail.value.trim();
+  const password = registerPassword.value;
+  const password2 = registerPassword2.value;
 
-      if (!email || !password || !password2) {
-        registerError.textContent = "Minden mezőt tölts ki.";
-        return;
-      }
+  if (!email || !password || !password2) {
+    registerError.textContent = "Minden mezőt tölts ki.";
+    return;
+  }
 
-      if (password !== password2) {
-        registerError.textContent = "A két jelszó nem egyezik.";
-        return;
-      }
+  if (password !== password2) {
+    registerError.textContent = "A két jelszó nem egyezik.";
+    return;
+  }
 
-      if (!consentCheckbox.checked) {
-        registerError.textContent = "A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.";
-        return;
-      }
+  if (!consentCheckbox.checked) {
+    registerError.textContent = "A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.";
+    return;
+  }
 
-      registerBtn.disabled = true;
-      registerBtn.textContent = "Regisztráció...";
+  registerBtn.disabled = true;
+  registerBtn.textContent = "Regisztráció...";
 
-      try {
-        const { error } = await supabaseClient.auth.signUp({
-          email,
-          password
-        });
+  try {
+    const signupPromise = supabaseClient.auth.signUp({
+      email,
+      password
+    });
 
-        if (error) {
-          registerError.textContent = "Regisztrációs hiba: " + error.message;
-          return;
-        }
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("TIMEOUT_SIGNUP")), 8000)
+    );
 
-        registerSuccess.textContent = "Sikeres regisztráció. Most jelentkezz be.";
-        showView("login");
-        loginEmail.value = email;
-        loginPassword.value = "";
-      } catch (err) {
-        registerError.textContent = "Hiba: " + err.message;
-      } finally {
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Regisztráció";
-      }
+    const result = await Promise.race([signupPromise, timeoutPromise]);
+
+    if (result.error) {
+      registerError.textContent = "Regisztrációs hiba: " + result.error.message;
+      return;
     }
+
+    registerSuccess.textContent = "Sikeres regisztráció. Most jelentkezz be.";
+    showView("login");
+    loginEmail.value = email;
+    loginPassword.value = "";
+  } catch (err) {
+    if (err.message === "TIMEOUT_SIGNUP") {
+      registerSuccess.textContent = "A regisztráció valószínűleg létrejött a háttérben. Próbálj meg belépni.";
+      showView("login");
+      loginEmail.value = email;
+      loginPassword.value = "";
+    } else {
+      registerError.textContent = "Hiba: " + err.message;
+    }
+  } finally {
+    registerBtn.disabled = false;
+    registerBtn.textContent = "Regisztráció";
+  }
+}
 
     async function resetPassword() {
       clearMessages();
