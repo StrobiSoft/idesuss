@@ -466,54 +466,53 @@
 }
 
     async function register() {
-  clearMessages();
+  clearMessage();
 
-  const email = registerEmail.value.trim();
-  const password = registerPassword.value;
-  const password2 = registerPassword2.value;
-
-  if (!email || !password || !password2) {
-    registerError.textContent = "Minden mezőt tölts ki.";
-    return;
-  }
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  const password2 = password2Input.value;
 
   if (password !== password2) {
-    registerError.textContent = "A két jelszó nem egyezik.";
+    showMessage("A jelszavak nem egyeznek!");
     return;
   }
 
   if (!consentCheckbox.checked) {
-    registerError.textContent = "A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.";
+    showMessage("El kell fogadnod a feltételeket!");
     return;
   }
 
   registerBtn.disabled = true;
-  registerBtn.textContent = "Regisztráció...";
+  registerBtn.innerText = "Regisztráció...";
 
   try {
-    const { data, error } = await supabaseClient.auth.signUp({
+    // 1. regisztráció
+    const { error } = await supabaseClient.auth.signUp({
       email,
       password
     });
 
-    if (error) {
-      registerError.textContent = "Regisztrációs hiba: " + error.message;
-      return;
-    }
+    if (error) throw error;
 
-    registerSuccess.textContent = "Sikeres regisztráció. Most jelentkezz be.";
-    await refreshSession();
-    await loadPosts();
+    // 2. AUTO LOGIN (EZ A LÉNYEG!)
+    const { error: loginError } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
 
-    showView("login");
-    loginEmail.value = email;
-    loginPassword.value = "";
+    if (loginError) throw loginError;
+
+    showMessage("Sikeres regisztráció!");
+
+    await updateUser();
+
   } catch (err) {
-    registerError.textContent = "Hiba: " + err.message;
-  } finally {
-    registerBtn.disabled = false;
-    registerBtn.textContent = "Regisztráció";
+    showMessage(err.message);
   }
+
+  registerBtn.disabled = false;
+  registerBtn.innerText = "Regisztráció";
 }
 
     async function resetPassword() {
