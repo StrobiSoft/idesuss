@@ -584,29 +584,24 @@
     }
 
     const user = authData.user;
-    console.log("AUTH USER:", user);
+    alert("USER ID: " + user.id);
 
     const { data, error } = await supabaseClient
       .from("posts")
       .insert([{ text }])
       .select();
 
-    console.log("INSERT DATA:", data);
-    console.log("INSERT ERROR:", error);
-
     if (error) {
-      alert("Insert hiba: " + error.message);
+      alert("INSERT HIBA: " + error.message);
       return;
     }
 
-    alert("Poszt elmentve.");
+    alert("INSERT OK: " + JSON.stringify(data));
 
     newPostInput.value = "";
-    await refreshSession();
     await loadPosts();
-
   } catch (err) {
-    alert("Hiba: " + err.message);
+    alert("CATCH HIBA: " + err.message);
   } finally {
     sendBtn.disabled = false;
     sendBtn.textContent = "Küldés";
