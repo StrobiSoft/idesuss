@@ -503,7 +503,8 @@
 
     if (loginError) throw loginError;
 
-    showMessage("Sikeres regisztráció!");
+    showMessage("Sikeres regisztráció! Most jelentkezz be.");
+showView("login");
 
     await updateUser();
 
