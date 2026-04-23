@@ -486,7 +486,6 @@
   registerBtn.innerText = "Regisztráció...";
 
   try {
-    // 1. regisztráció
     const { error } = await supabaseClient.auth.signUp({
       email,
       password
@@ -494,26 +493,15 @@
 
     if (error) throw error;
 
-    // 2. AUTO LOGIN (EZ A LÉNYEG!)
-    const { error: loginError } =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-    if (loginError) throw loginError;
-
     showMessage("Sikeres regisztráció! Most jelentkezz be.");
-showView("login");
-
-    await updateUser();
+    showView("login");
 
   } catch (err) {
     showMessage(err.message);
+  } finally {
+    registerBtn.disabled = false;
+    registerBtn.innerText = "Regisztráció";
   }
-
-  registerBtn.disabled = false;
-  registerBtn.innerText = "Regisztráció";
 }
 
     async function resetPassword() {
