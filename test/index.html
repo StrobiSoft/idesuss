@@ -454,7 +454,6 @@
         loginSuccess.textContent = "Sikeres belépés.";
         await refreshSession();
         await loadPosts();
-        showView("choice");
       } catch (err) {
         loginError.textContent = "Hiba: " + err.message;
       } finally {
