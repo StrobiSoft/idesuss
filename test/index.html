@@ -565,6 +565,10 @@
     }
 
     async function addPost() {
+      if (!currentUser) {
+  alert("Még nem vagy teljesen bejelentkezve. Várj 1-2 másodpercet.");
+  return;
+}
       const text = newPostInput.value.trim();
 
       if (!currentUser) {
