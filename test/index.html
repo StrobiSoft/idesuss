@@ -591,9 +591,8 @@
     const { error } = await supabaseClient
       .from("posts")
       .insert([{
-        text,
-        user_id: user.id   // 💥 EZ A LÉNYEG
-      }]);
+  text
+}]);
 
     if (error) {
       alert("Insert hiba: " + error.message);
