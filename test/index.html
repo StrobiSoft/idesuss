@@ -581,7 +581,10 @@
 
     const { data, error } = await supabaseClient
       .from("posts")
-      .insert([{ text }])
+      .insert([{
+  text,
+  user_id: user.id
+}])
       .select();
 
     if (error) {
