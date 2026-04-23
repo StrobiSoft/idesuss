@@ -340,16 +340,18 @@
     }
 
     function renderAuthState() {
-      if (currentUser) {
-        authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
-        newPostInput.disabled = false;
-        sendBtn.disabled = false;
-      } else {
-        authInfo.textContent = "Nincs bejelentkezett user.";
-        newPostInput.disabled = true;
-        sendBtn.disabled = true;
-      }
-    }
+  if (currentUser) {
+    authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
+    newPostInput.disabled = false;
+    sendBtn.disabled = false;
+    authChoiceView.classList.add("hidden");
+  } else {
+    authInfo.textContent = "Nincs bejelentkezett user.";
+    newPostInput.disabled = true;
+    sendBtn.disabled = true;
+    authChoiceView.classList.remove("hidden");
+  }
+}
 
     async function refreshSession() {
       try {
