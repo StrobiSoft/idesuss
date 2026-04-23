@@ -502,10 +502,12 @@
     }
 
     registerSuccess.textContent = "Sikeres regisztráció. Most jelentkezz be.";
-    console.log("signup data:", data);
+    await refreshSession();
+    await loadPosts();
+
     showView("login");
     loginEmail.value = email;
-    loginPassword.value = password;
+    loginPassword.value = "";
   } catch (err) {
     registerError.textContent = "Hiba: " + err.message;
   } finally {
