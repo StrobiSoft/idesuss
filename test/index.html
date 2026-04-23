@@ -1,563 +1,611 @@
-<!-- 1/3 -->
-
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Idesüss Test</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-
-/* ===== AVATAR ===== */
-
-.avatar-circle {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.avatar-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ===== POST HEADER ===== */
-
-.post-head {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.post-name {
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.post-date {
-  font-size: 12px;
-  opacity: 0.6;
-}
-
-/* ===== POST TEXT ===== */
-
-.post-text {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-/* ===== COMMENTS ===== */
-
-.comments {
-  margin-top: 10px;
-  display: grid;
-  gap: 10px;
-}
-
-.comment {
-  padding: 10px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.06);
-}
-
-.comment-head {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.comment-name {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.comment-text {
-  font-size: 14px;
-  word-break: break-word;
-}
-
-/* ===== COMMENT INPUT ===== */
-
-.comment-input {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.comment-input input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-}
-
-/* ===== PROFILE PANEL ===== */
-
-.profile-panel {
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.06);
-}
-
-.profile-preview {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.profile-preview-name {
-  font-weight: 700;
-}
-
-/* ===== AVATAR GRID ===== */
-
-.avatar-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.avatar-option {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.avatar-option.selected {
-  outline: 2px solid #0d5bd7;
-}
-
-/* ===== TOAST ===== */
-
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  padding: 12px 18px;
-  border-radius: 12px;
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  z-index: 9999;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.25s ease;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-.toast.success { background: #166534; }
-.toast.error { background: #7f1d1d; }
-.toast.info { background: #1e40af; }
-
+body{margin:0;padding:20px;font-family:system-ui,sans-serif;background:#0f172a;color:#fff}
+.wrap{max-width:960px;margin:0 auto}
+.panel{background:rgba(255,255,255,.08);border-radius:16px;padding:16px;margin-bottom:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+h1{margin:0 0 16px;font-size:24px}
+h2{margin:0 0 12px;font-size:18px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+input[type="email"],input[type="password"],input[type="text"],input[type="url"]{flex:1;min-width:220px;padding:12px 14px;border-radius:12px;border:none;font-size:16px}
+button{padding:12px 18px;border-radius:12px;border:none;background:#0d5bd7;color:#fff;font-weight:700;cursor:pointer}
+button.secondary{background:#475569}
+button.register{background:#16a34a}
+button.warning{background:#7c3aed}
+button:disabled{opacity:.6;cursor:not-allowed}
+.big-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.hidden{display:none}
+.muted{opacity:.8;font-size:14px;line-height:1.45}
+.status{font-family:monospace;font-size:14px;white-space:pre-line;opacity:.95}
+.error-box{margin-top:10px;color:#fecaca;font-size:14px;min-height:20px}
+.success-box{margin-top:10px;color:#bbf7d0;font-size:14px;min-height:20px}
+.consent-row{display:flex;align-items:flex-start;gap:10px;margin:12px 0 4px}
+.consent-row input[type="checkbox"]{margin-top:3px;transform:scale(1.15);flex:0 0 auto}
+.consent-row label{font-size:14px;opacity:.95;line-height:1.45}
+.auth-footer{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+a{color:#93c5fd;text-decoration:underline}
+#posts{display:grid;gap:16px;margin-top:16px}
+.card{padding:16px;border-radius:16px;background:rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.post-head,.comment-head,.profile-preview{display:flex;align-items:center;gap:10px}
+.post-head{margin-bottom:10px}
+.post-name,.comment-name{font-weight:700}
+.post-date,.comment-date{font-size:12px;opacity:.7}
+.post-text{font-size:18px;font-weight:700;word-break:break-word;margin-bottom:12px}
+.avatar-circle,.comment-avatar-circle{border-radius:50%;background:rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 auto}
+.avatar-circle{width:52px;height:52px;font-size:28px}
+.comment-avatar-circle{width:34px;height:34px;font-size:18px}
+.avatar-circle img,.comment-avatar-circle img{width:100%;height:100%;object-fit:cover}
+.avatar-grid{display:grid;grid-template-columns:repeat(6,minmax(44px,1fr));gap:10px;margin-top:10px}
+.avatar-btn{height:48px;border-radius:12px;border:2px solid transparent;background:rgba(255,255,255,.08);font-size:24px;cursor:pointer;padding:0}
+.avatar-btn.selected{border-color:#93c5fd;background:rgba(59,130,246,.18)}
+.profile-preview{margin-top:12px;margin-bottom:10px}
+.profile-meta{display:flex;flex-direction:column;gap:2px}
+.comments{margin-top:12px;padding-left:10px;border-left:2px solid rgba(255,255,255,.1);display:grid;gap:10px}
+.comment{padding:10px;border-radius:12px;background:rgba(255,255,255,.05)}
+.comment-text{font-size:14px;margin-top:6px;word-break:break-word}
+.comment-input{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.comment-input input{flex:1;min-width:180px;padding:10px 12px;border-radius:10px;border:none;font-size:14px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);min-width:220px;max-width:calc(100vw - 32px);padding:12px 16px;border-radius:12px;color:#fff;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.35);z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{background:#166534}
+.toast.error{background:#991b1b}
+.toast.info{background:#1d4ed8}
 </style>
+</head>
+<body>
+<div class="wrap">
+<h1>/test – auth + profile + posts + comments</h1>
 
-
-<!-- PROFILE PANEL hozzáadása a HTML-ben (auth panel alá) -->
-
-<div class="profile-panel" id="profilePanel" style="display:none;">
-  <div class="profile-preview">
-    <div class="avatar-circle" id="profilePreviewAvatar">🙂</div>
-    <div class="profile-preview-name" id="profilePreviewName">Nicknév</div>
+<div class="panel">
+  <div id="authChoiceView">
+    <h2>Folytatás</h2>
+    <div class="muted">Válaszd ki, hogy már van fiókod, vagy most szeretnél regisztrálni.</div>
+    <div class="big-actions">
+      <button id="showLoginBtn">Van már fiókom</button>
+      <button id="showRegisterBtn" class="register">Új vagyok itt</button>
+    </div>
   </div>
 
-  <div class="row">
-    <input id="profileNickname" type="text" placeholder="Nicknév">
-    <input id="profileAvatarUrl" type="text" placeholder="Avatar URL (opcionális)">
+  <div id="loginView" class="hidden">
+    <h2>Belépés</h2>
+    <div class="row" style="margin-bottom:10px;">
+      <input id="loginEmail" type="email" placeholder="Email cím">
+      <input id="loginPassword" type="password" placeholder="Jelszó">
+    </div>
+    <div class="auth-footer">
+      <button id="loginBtn">Belépés</button>
+      <button id="backFromLoginBtn" class="secondary">Vissza</button>
+      <button id="forgotBtn" class="warning">Elfelejtett jelszó</button>
+    </div>
+    <div class="error-box" id="loginError"></div>
+    <div class="success-box" id="loginSuccess"></div>
   </div>
 
-  <div class="avatar-grid" id="profileAvatarGrid"></div>
+  <div id="registerView" class="hidden">
+    <h2>Regisztráció</h2>
+    <div class="row" style="margin-bottom:10px;">
+      <input id="registerEmail" type="email" placeholder="Email cím">
+      <input id="registerPassword" type="password" placeholder="Jelszó">
+    </div>
+    <div class="row" style="margin-bottom:10px;">
+      <input id="registerPassword2" type="password" placeholder="Jelszó megerősítése">
+      <input id="registerNickname" type="text" placeholder="Nicknév">
+    </div>
+    <div class="muted">Válassz avatart:</div>
+    <div id="registerAvatarGrid" class="avatar-grid"></div>
+    <div class="consent-row">
+      <input id="consentCheckbox" type="checkbox">
+      <label for="consentCheckbox">
+        Elolvastam és elfogadom a
+        <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+        és a
+        <a href="/terms.html" target="_blank" rel="noopener noreferrer">Felhasználási feltételek</a>
+        tartalmát.
+      </label>
+    </div>
+    <div class="auth-footer">
+      <button id="registerBtn" class="register">Regisztráció</button>
+      <button id="backFromRegisterBtn" class="secondary">Vissza</button>
+    </div>
+    <div class="error-box" id="registerError"></div>
+    <div class="success-box" id="registerSuccess"></div>
+  </div>
 
+  <div id="resetView" class="hidden">
+    <h2>Új jelszó beállítása</h2>
+    <div class="row" style="margin-bottom:10px;">
+      <input id="resetPassword1" type="password" placeholder="Új jelszó">
+      <input id="resetPassword2" type="password" placeholder="Új jelszó megerősítése">
+    </div>
+    <div class="auth-footer">
+      <button id="resetSaveBtn" class="warning">Új jelszó mentése</button>
+      <button id="backFromResetBtn" class="secondary">Vissza</button>
+    </div>
+    <div class="error-box" id="resetError"></div>
+    <div class="success-box" id="resetSuccess"></div>
+  </div>
+
+  <hr style="border:none;height:1px;background:rgba(255,255,255,.12);margin:18px 0;">
+  <div class="muted" id="authInfo">Nincs bejelentkezett user.</div>
   <div class="auth-footer">
-    <button id="saveProfileBtn">Mentés</button>
+    <button id="logoutBtn" class="secondary">Kilépés</button>
   </div>
 </div>
 
+<div id="profilePanel" class="panel hidden">
+  <h2>Profil</h2>
+  <div class="profile-preview">
+    <div id="profilePreviewAvatar" class="avatar-circle">🙂</div>
+    <div class="profile-meta">
+      <div id="profilePreviewName" style="font-weight:700;">Névtelen</div>
+      <div class="muted">A posztoknál és kommenteknél ez fog megjelenni.</div>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom:10px;">
+    <input id="profileNickname" type="text" placeholder="Nicknév">
+    <input id="profileAvatarUrl" type="url" placeholder="Avatar kép URL (opcionális)">
+  </div>
+  <div class="muted">Válassz alap avatart, ha nem szeretnél saját képet használni:</div>
+  <div id="profileAvatarGrid" class="avatar-grid"></div>
+  <div class="auth-footer">
+    <button id="saveProfileBtn" class="register">Profil mentése</button>
+  </div>
+</div>
 
-<!-- TOAST CONTAINER -->
+<div class="panel">
+  <div class="row">
+    <input id="newPost" type="text" placeholder="Írj valamit..." disabled>
+    <button id="sendBtn" disabled>Küldés</button>
+  </div>
+  <div class="muted" style="margin-top:10px;">Posztolni és kommentelni csak bejelentkezés után lehet.</div>
+</div>
+
+<div class="panel">
+  <div class="status" id="status"></div>
+</div>
+
+<div id="posts"></div>
+</div>
 
 <div id="toast" class="toast"></div>
-<!-- 2/3 -->
 
 <script>
+const SUPABASE_URL="https://nakayuciurazdacgyoxu.supabase.co";
+const SUPABASE_KEY="sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const AVATARS=["🚛","🛠️","⚙️","🔧","🛡️","🐺","🦅","🐻","🌹","🌸","🌺","🌼","🌷","💐","🦋","🐝","🙂","😎","🤖","🧠","🐱","🐶","🌙","⭐"];
 
-/* ===== TOAST ===== */
-function showToast(msg, type="info"){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className = "toast " + type + " show";
-  setTimeout(()=> t.classList.remove("show"), 2200);
+const authChoiceView=document.getElementById("authChoiceView");
+const loginView=document.getElementById("loginView");
+const registerView=document.getElementById("registerView");
+const resetView=document.getElementById("resetView");
+const showLoginBtn=document.getElementById("showLoginBtn");
+const showRegisterBtn=document.getElementById("showRegisterBtn");
+const backFromLoginBtn=document.getElementById("backFromLoginBtn");
+const backFromRegisterBtn=document.getElementById("backFromRegisterBtn");
+const backFromResetBtn=document.getElementById("backFromResetBtn");
+const loginEmail=document.getElementById("loginEmail");
+const loginPassword=document.getElementById("loginPassword");
+const loginBtn=document.getElementById("loginBtn");
+const forgotBtn=document.getElementById("forgotBtn");
+const registerEmail=document.getElementById("registerEmail");
+const registerPassword=document.getElementById("registerPassword");
+const registerPassword2=document.getElementById("registerPassword2");
+const registerNickname=document.getElementById("registerNickname");
+const registerBtn=document.getElementById("registerBtn");
+const registerAvatarGrid=document.getElementById("registerAvatarGrid");
+const consentCheckbox=document.getElementById("consentCheckbox");
+const resetPassword1=document.getElementById("resetPassword1");
+const resetPassword2=document.getElementById("resetPassword2");
+const resetSaveBtn=document.getElementById("resetSaveBtn");
+const loginError=document.getElementById("loginError");
+const loginSuccess=document.getElementById("loginSuccess");
+const registerError=document.getElementById("registerError");
+const registerSuccess=document.getElementById("registerSuccess");
+const resetError=document.getElementById("resetError");
+const resetSuccess=document.getElementById("resetSuccess");
+const logoutBtn=document.getElementById("logoutBtn");
+const authInfo=document.getElementById("authInfo");
+const profilePanel=document.getElementById("profilePanel");
+const profileNickname=document.getElementById("profileNickname");
+const profileAvatarUrl=document.getElementById("profileAvatarUrl");
+const profileAvatarGrid=document.getElementById("profileAvatarGrid");
+const profilePreviewAvatar=document.getElementById("profilePreviewAvatar");
+const profilePreviewName=document.getElementById("profilePreviewName");
+const saveProfileBtn=document.getElementById("saveProfileBtn");
+const newPostInput=document.getElementById("newPost");
+const sendBtn=document.getElementById("sendBtn");
+const statusBox=document.getElementById("status");
+const postsBox=document.getElementById("posts");
+const toastBox=document.getElementById("toast");
+let toastTimer=null;
+let currentUser=null;
+let selectedRegisterAvatar="🙂";
+let selectedProfileAvatar="🙂";
+
+function showToast(message,type="info"){
+  toastBox.textContent=message;
+  toastBox.className="toast "+type;
+  clearTimeout(toastTimer);
+  requestAnimationFrame(()=>{toastBox.classList.add("show")});
+  toastTimer=setTimeout(()=>{toastBox.classList.remove("show")},2500);
 }
 
-/* ===== ESCAPE ===== */
-function escapeHtml(str){
-  return (str || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;");
+function clearMessages(){
+  loginError.textContent="";
+  loginSuccess.textContent="";
+  registerError.textContent="";
+  registerSuccess.textContent="";
+  resetError.textContent="";
+  resetSuccess.textContent="";
 }
 
-/* ===== AVATAR OPTIONS ===== */
-const avatarList = [
-  "🙂","😎","🔥","🚀","🌸","🌹","💎","🦄","🐼","🐱","🐶","🦊","🐻","🐧","🐸","🦋"
-];
+function showView(viewName){
+  authChoiceView.classList.add("hidden");
+  loginView.classList.add("hidden");
+  registerView.classList.add("hidden");
+  resetView.classList.add("hidden");
+  if(viewName==="choice") authChoiceView.classList.remove("hidden");
+  if(viewName==="login") loginView.classList.remove("hidden");
+  if(viewName==="register") registerView.classList.remove("hidden");
+  if(viewName==="reset") resetView.classList.remove("hidden");
+}
 
-let selectedProfileAvatar = "🙂";
+function setStatus(lines){
+  statusBox.textContent=Array.isArray(lines)?lines.join("\n"):lines;
+}
 
-/* ===== RENDER AVATAR GRID ===== */
-function renderAvatarGrid(container, selected, onClick){
-  container.innerHTML = "";
-
-  avatarList.forEach(a=>{
-    const el = document.createElement("div");
-    el.className = "avatar-option" + (a===selected ? " selected":"");
-    el.textContent = a;
-
-    el.onclick = ()=>{
-      onClick(a);
-    };
-
-    container.appendChild(el);
+function renderAvatarGrid(container,selectedValue,onPick){
+  container.innerHTML="";
+  AVATARS.forEach((avatar)=>{
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="avatar-btn"+(avatar===selectedValue?" selected":"");
+    btn.textContent=avatar;
+    btn.addEventListener("click",()=>onPick(avatar));
+    container.appendChild(btn);
   });
 }
 
-/* ===== PROFILE PREVIEW ===== */
-function updateProfilePreview(){
-  const name = document.getElementById("profileNickname").value || "Nicknév";
-  const avatarUrl = document.getElementById("profileAvatarUrl").value;
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-  const avatarBox = document.getElementById("profilePreviewAvatar");
-  const nameBox = document.getElementById("profilePreviewName");
-
-  nameBox.textContent = name;
-
+function renderAvatarHtml(avatarUrl,avatarEmoji,className="avatar-circle"){
   if(avatarUrl){
-    avatarBox.innerHTML = `<img src="${avatarUrl}">`;
-  } else {
-    avatarBox.textContent = selectedProfileAvatar;
+    return `<div class="${className}"><img src="${escapeHtml(avatarUrl)}" alt="avatar"></div>`;
+  }
+  return `<div class="${className}">${escapeHtml(avatarEmoji || "🙂")}</div>`;
+}
+function renderAuthState(){
+  if(currentUser){
+    authInfo.textContent="Bejelentkezve: "+(currentUser.email||currentUser.id);
+    newPostInput.disabled=false;
+    sendBtn.disabled=false;
+    authChoiceView.classList.add("hidden");
+    profilePanel.classList.remove("hidden");
+  }else{
+    authInfo.textContent="Nincs bejelentkezett user.";
+    newPostInput.disabled=true;
+    sendBtn.disabled=true;
+    profilePanel.classList.add("hidden");
+    authChoiceView.classList.remove("hidden");
   }
 }
 
-/* ===== SAVE PROFILE ===== */
-async function saveProfile(){
-  const { data:authData } = await supabase.auth.getUser();
+async function refreshSession(){
+  const {data:{user}}=await supabaseClient.auth.getUser();
+  currentUser=user;
+  renderAuthState();
+  if(currentUser){
+    await loadProfile();
+  }
+}
 
-  if(!authData?.user){
-    showToast("Nincs user 😬","error");
+async function loadProfile(){
+  const {data,error}=await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id",currentUser.id)
+    .single();
+
+  if(error){
+    console.error("PROFILE LOAD ERROR:",error);
     return;
   }
 
-  const nickname = document.getElementById("profileNickname").value.trim();
-  const avatar_url = document.getElementById("profileAvatarUrl").value.trim();
+  profileNickname.value=data.nickname||"";
+  profileAvatarUrl.value=data.avatar_url||"";
+  selectedProfileAvatar=data.avatar_emoji||"🙂";
+
+  profilePreviewName.textContent=data.nickname||"Névtelen";
+  profilePreviewAvatar.innerHTML=renderAvatarHtml(data.avatar_url,data.avatar_emoji);
+
+  renderAvatarGrid(profileAvatarGrid,selectedProfileAvatar,(val)=>{
+    selectedProfileAvatar=val;
+    renderAvatarGrid(profileAvatarGrid,selectedProfileAvatar,arguments.callee);
+    profilePreviewAvatar.innerHTML=renderAvatarHtml(profileAvatarUrl.value,val);
+  });
+}
+
+async function saveProfile(){
+  const nickname=profileNickname.value.trim();
+  const avatarUrl=profileAvatarUrl.value.trim();
 
   if(!nickname){
-    showToast("Adj meg egy nicknevet 😏","error");
+    showToast("Adj meg egy nicknevet!","error");
     return;
   }
 
-  const { error } = await supabase
+  const {error}=await supabaseClient
     .from("profiles")
     .upsert({
-      id: authData.user.id,
-      nickname,
-      avatar_emoji: selectedProfileAvatar,
-      avatar_url: avatar_url || null
+      id:currentUser.id,
+      nickname:nickname,
+      avatar_url:avatarUrl||null,
+      avatar_emoji:selectedProfileAvatar
     });
 
   if(error){
-    console.error(error);
-    showToast("Profil mentési hiba 😬","error");
+    showToast("Profil mentési hiba","error");
     return;
   }
 
-  showToast("Profil mentve ✔","success");
+  showToast("Profil mentve","success");
+  await loadProfile();
 }
 
-/* ===== LOAD OWN PROFILE ===== */
-async function loadOwnProfile(){
-  const { data:authData } = await supabase.auth.getUser();
-  if(!authData?.user) return;
+async function loadPosts(){
+  setStatus(["Betöltés..."]);
 
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", authData.user.id)
-    .single();
-
-  if(error || !data) return;
-
-  document.getElementById("profileNickname").value = data.nickname || "";
-  document.getElementById("profileAvatarUrl").value = data.avatar_url || "";
-  selectedProfileAvatar = data.avatar_emoji || "🙂";
-
-  updateProfilePreview();
-}
-
-/* ===== LOAD COMMENTS ===== */
-async function loadComments(postId, container){
-
-  const { data, error } = await supabase
-    .from("comments")
-    .select(`
-      *,
-      profiles (
-        nickname,
-        avatar_emoji,
-        avatar_url
-      )
-    `)
-    .eq("post_id", postId)
-    .order("created_at",{ ascending:true });
+  const {data,error}=await supabaseClient
+    .from("posts")
+    .select("*,profiles(*)")
+    .order("created_at",{ascending:false});
 
   if(error){
-    console.error(error);
+    setStatus("HIBA: "+error.message);
     return;
   }
 
-  container.innerHTML = "";
+  postsBox.innerHTML="";
 
-  (data || []).forEach(c=>{
+  data.forEach(post=>{
+    const p=post.profiles||{};
+    const avatar=renderAvatarHtml(p.avatar_url,p.avatar_emoji);
+    const date=new Date(post.created_at).toLocaleString("hu-HU");
 
-    const p = Array.isArray(c.profiles)
-      ? c.profiles[0]
-      : c.profiles || {};
+    const div=document.createElement("div");
+    div.className="card";
 
-    const nick = p.nickname || "Névtelen";
-    const avatar = p.avatar_emoji || "🙂";
-
-    const el = document.createElement("div");
-    el.className = "comment";
-
-    el.innerHTML = `
-      <div class="comment-head">
-        <div class="avatar-circle">
-          ${p.avatar_url ? `<img src="${p.avatar_url}">` : escapeHtml(avatar)}
+    div.innerHTML=`
+      <div class="post-head">
+        ${avatar}
+        <div>
+          <div class="post-name">${escapeHtml(p.nickname||"Névtelen")}</div>
+          <div class="post-date">${date}</div>
         </div>
-        <div class="comment-name">${escapeHtml(nick)}</div>
+      </div>
+      <div class="post-text">${escapeHtml(post.text)}</div>
+      <div class="comments" id="comments-${post.id}"></div>
+      <div class="comment-input">
+        <input id="input-${post.id}" placeholder="Komment...">
+        <button onclick="addComment('${post.id}')">OK</button>
+      </div>
+    `;
+
+    postsBox.appendChild(div);
+    loadComments(post.id);
+  });
+
+  setStatus("Posztok betöltve: "+data.length);
+}
+
+async function loadComments(postId){
+  const {data}=await supabaseClient
+    .from("comments")
+    .select("*,profiles(*)")
+    .eq("post_id",postId)
+    .order("created_at",{ascending:true});
+
+  const box=document.getElementById("comments-"+postId);
+  box.innerHTML="";
+
+  data.forEach(c=>{
+    const p=c.profiles||{};
+    const avatar=renderAvatarHtml(p.avatar_url,p.avatar_emoji,"comment-avatar-circle");
+
+    const div=document.createElement("div");
+    div.className="comment";
+
+    div.innerHTML=`
+      <div class="comment-head">
+        ${avatar}
+        <div>
+          <div class="comment-name">${escapeHtml(p.nickname||"Névtelen")}</div>
+          <div class="comment-date">${new Date(c.created_at).toLocaleString("hu-HU")}</div>
+        </div>
       </div>
       <div class="comment-text">${escapeHtml(c.text)}</div>
     `;
 
-    container.appendChild(el);
+    box.appendChild(div);
   });
 }
 
-/* ===== COMMENT ADD ===== */
-async function addComment(postId, input, container){
-  const text = input.value.trim();
-
-  if(!text){
-    showToast("Üres komment? 😏","error");
-    return;
-  }
-
-  const { data:authData } = await supabase.auth.getUser();
-
-  if(!authData?.user){
-    showToast("Be kell jelentkezni 🙂","error");
-    return;
-  }
-
-  const { error } = await supabase
-    .from("comments")
-    .insert([{
-      post_id: postId,
-      user_id: authData.user.id,
-      text
-    }]);
-
-  if(error){
-    console.error(error);
-    showToast("Komment hiba 😬","error");
-    return;
-  }
-
-  input.value = "";
-  showToast("Komment mentve ✔","success");
-  await loadComments(postId, container);
-}
-
-</script>
-<!-- 3/3 -->
-
-<script>
-
-/* ===== ADD POST (PROFILE INTEGRATED) ===== */
 async function addPost(){
+  const text=newPostInput.value.trim();
+  if(!text){
+    showToast("Írj valamit!","error");
+    return;
+  }
 
-  const text = document.getElementById("postInput").value.trim();
+  const {data:{user}}=await supabaseClient.auth.getUser();
+
+  const {error}=await supabaseClient
+    .from("posts")
+    .insert([{text,user_id:user.id}]);
+
+  if(error){
+    showToast("Poszt hiba","error");
+    return;
+  }
+
+  showToast("Poszt mentve","success");
+  newPostInput.value="";
+  loadPosts();
+}
+
+async function addComment(postId){
+  const input=document.getElementById("input-"+postId);
+  const text=input.value.trim();
 
   if(!text){
-    showToast("Írj már valamit 😏","error");
+    showToast("Írj kommentet!","error");
     return;
   }
 
-  const { data:authData } = await supabase.auth.getUser();
+  const {data:{user}}=await supabaseClient.auth.getUser();
 
-  if(!authData?.user){
-    showToast("Be kell jelentkezni 🙂","error");
-    return;
-  }
-
-  const { error } = await supabase
-    .from("posts")
-    .insert([{
-      text,
-      user_id: authData.user.id
-    }]);
+  const {error}=await supabaseClient
+    .from("comments")
+    .insert([{text,post_id:postId,user_id:user.id}]);
 
   if(error){
-    console.error(error);
-    showToast("Poszt hiba 😬","error");
+    showToast("Komment hiba","error");
     return;
   }
 
-  document.getElementById("postInput").value = "";
-  showToast("Poszt mentve ✔","success");
-  await loadPosts();
+  showToast("Komment mentve","success");
+  input.value="";
+  loadComments(postId);
 }
+async function login(){
+  clearMessages();
 
-/* ===== LOAD POSTS (PROFILE + AVATAR) ===== */
-async function loadPosts(){
-
-  const { data, error } = await supabase
-    .from("posts")
-    .select(`
-      *,
-      profiles (
-        nickname,
-        avatar_emoji,
-        avatar_url
-      )
-    `)
-    .order("created_at",{ ascending:false });
-
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  const postsBox = document.getElementById("posts");
-  postsBox.innerHTML = "";
-
-  (data || []).forEach(post => {
-
-    const p = Array.isArray(post.profiles)
-      ? post.profiles[0]
-      : post.profiles || {};
-
-    const nick = p.nickname || "Névtelen";
-    const avatar = p.avatar_emoji || "🙂";
-
-    const date = post.created_at
-      ? new Date(post.created_at).toLocaleString("hu-HU")
-      : "";
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const commentsWrap = document.createElement("div");
-    commentsWrap.className = "comments";
-
-    const inputWrap = document.createElement("div");
-    inputWrap.className = "comment-input";
-
-    const input = document.createElement("input");
-    input.placeholder = "Komment...";
-
-    const btn = document.createElement("button");
-    btn.textContent = "OK";
-
-    btn.onclick = ()=> addComment(post.id, input, commentsWrap);
-
-    input.addEventListener("keydown",(e)=>{
-      if(e.key==="Enter"){
-        addComment(post.id, input, commentsWrap);
-      }
-    });
-
-    inputWrap.appendChild(input);
-    inputWrap.appendChild(btn);
-
-    card.innerHTML = `
-      <div class="post-head">
-        <div class="avatar-circle">
-          ${p.avatar_url ? `<img src="${p.avatar_url}">` : escapeHtml(avatar)}
-        </div>
-        <div>
-          <div class="post-name">${escapeHtml(nick)}</div>
-          <div class="post-date">${escapeHtml(date)}</div>
-        </div>
-      </div>
-
-      <div class="post-text">${escapeHtml(post.text)}</div>
-    `;
-
-    card.appendChild(inputWrap);
-    card.appendChild(commentsWrap);
-
-    postsBox.appendChild(card);
-
-    loadComments(post.id, commentsWrap);
+  const {data,error}=await supabaseClient.auth.signInWithPassword({
+    email:loginEmail.value.trim(),
+    password:loginPassword.value
   });
-}
 
-/* ===== AUTH STATE ===== */
-async function refreshSession(){
-  const { data } = await supabase.auth.getUser();
-
-  window.user = data?.user || null;
-
-  document.getElementById("profilePanel").style.display =
-    user ? "block" : "none";
-
-  document.getElementById("postInput").disabled = !user;
-  document.getElementById("sendBtn").disabled = !user;
-
-  if(user){
-    await loadOwnProfile();
+  if(error){
+    loginError.textContent=error.message;
+    showToast("Belépési hiba","error");
+    return;
   }
-}
 
-/* ===== INIT ===== */
-(async ()=>{
+  currentUser=data.user;
+  showToast("Belépve","success");
+
   await refreshSession();
   await loadPosts();
+}
 
-  renderAvatarGrid(
-    document.getElementById("profileAvatarGrid"),
-    selectedProfileAvatar,
-    function(a){
-      selectedProfileAvatar = a;
-      renderAvatarGrid(
-        document.getElementById("profileAvatarGrid"),
-        selectedProfileAvatar,
-        arguments.callee
-      );
-      updateProfilePreview();
-    }
+async function register(){
+  clearMessages();
+
+  if(!consentCheckbox.checked){
+    registerError.textContent="Fogadd el a feltételeket.";
+    return;
+  }
+
+  const {data,error}=await supabaseClient.auth.signUp({
+    email:registerEmail.value.trim(),
+    password:registerPassword.value
+  });
+
+  if(error){
+    registerError.textContent=error.message;
+    return;
+  }
+
+  await supabaseClient.from("profiles").insert([{
+    id:data.user.id,
+    nickname:registerNickname.value||"Névtelen",
+    avatar_emoji:selectedRegisterAvatar
+  }]);
+
+  showToast("Regisztráció OK","success");
+  showView("login");
+}
+
+async function resetPassword(){
+  const {error}=await supabaseClient.auth.resetPasswordForEmail(
+    loginEmail.value.trim(),
+    {redirectTo:window.location.href}
   );
-})();
 
+  if(error){
+    showToast("Email hiba","error");
+    return;
+  }
+
+  showToast("Email elküldve","success");
+}
+
+async function updatePassword(){
+  if(resetPassword1.value!==resetPassword2.value){
+    resetError.textContent="Nem egyezik";
+    return;
+  }
+
+  const {error}=await supabaseClient.auth.updateUser({
+    password:resetPassword1.value
+  });
+
+  if(error){
+    resetError.textContent=error.message;
+    return;
+  }
+
+  showToast("Jelszó frissítve","success");
+  showView("login");
+}
+
+async function signOut(){
+  await supabaseClient.auth.signOut();
+  currentUser=null;
+  renderAuthState();
+  showToast("Kilépve","info");
+}
+
+showLoginBtn.onclick=()=>showView("login");
+showRegisterBtn.onclick=()=>showView("register");
+backFromLoginBtn.onclick=()=>showView("choice");
+backFromRegisterBtn.onclick=()=>showView("choice");
+backFromResetBtn.onclick=()=>showView("login");
+
+loginBtn.onclick=login;
+registerBtn.onclick=register;
+forgotBtn.onclick=resetPassword;
+resetSaveBtn.onclick=updatePassword;
+logoutBtn.onclick=signOut;
+sendBtn.onclick=addPost;
+
+newPostInput.addEventListener("keydown",e=>{
+  if(e.key==="Enter") addPost();
+});
+
+renderAvatarGrid(registerAvatarGrid,selectedRegisterAvatar,(val)=>{
+  selectedRegisterAvatar=val;
+  renderAvatarGrid(registerAvatarGrid,val,arguments.callee);
+});
+
+(async()=>{
+  showView("choice");
+  await refreshSession();
+  await loadPosts();
+})();
 </script>
 </body>
 </html>
