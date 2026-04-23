@@ -576,7 +576,6 @@
   sendBtn.textContent = "Küldés...";
 
   try {
-    // 🔥 mindig friss user lekérés
     const { data: authData, error: authError } = await supabaseClient.auth.getUser();
 
     if (authError || !authData?.user) {
@@ -585,21 +584,25 @@
     }
 
     const user = authData.user;
+    console.log("AUTH USER:", user);
 
-    console.log("USER ID:", user.id);
-
-    const { error } = await supabaseClient
+    const { data, error } = await supabaseClient
       .from("posts")
-      .insert([{
-  text
-}]);
+      .insert([{ text }])
+      .select();
+
+    console.log("INSERT DATA:", data);
+    console.log("INSERT ERROR:", error);
 
     if (error) {
       alert("Insert hiba: " + error.message);
       return;
     }
 
+    alert("Poszt elmentve.");
+
     newPostInput.value = "";
+    await refreshSession();
     await loadPosts();
 
   } catch (err) {
