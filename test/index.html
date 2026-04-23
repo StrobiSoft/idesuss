@@ -586,8 +586,9 @@
       .select();
 
     if (error) {
-      return;
-    }
+  console.error("INSERT HIBA:", error);
+  return;
+}
 
 
     newPostInput.value = "";
