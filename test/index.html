@@ -576,7 +576,6 @@
     }
 
     const user = authData.user;
-    alert("USER ID: " + user.id);
 
     const { data, error } = await supabaseClient
       .from("posts")
@@ -591,7 +590,6 @@
       return;
     }
 
-    alert("INSERT OK: " + JSON.stringify(data));
 
     newPostInput.value = "";
     await loadPosts();
