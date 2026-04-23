@@ -608,6 +608,35 @@
     sendBtn.textContent = "Küldés";
   }
 }
+showLoginBtn.addEventListener("click", () => {
+  clearMessages();
+  showView("login");
+});
+
+showRegisterBtn.addEventListener("click", () => {
+  clearMessages();
+  showView("register");
+});
+
+backFromLoginBtn.addEventListener("click", () => {
+  clearMessages();
+  showView("choice");
+});
+
+backFromRegisterBtn.addEventListener("click", () => {
+  clearMessages();
+  showView("choice");
+});
+
+loginBtn.addEventListener("click", login);
+registerBtn.addEventListener("click", register);
+forgotBtn.addEventListener("click", resetPassword);
+logoutBtn.addEventListener("click", signOut);
+sendBtn.addEventListener("click", addPost);
+
+newPostInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addPost();
+});
 
     (async function init() {
       showView("choice");
