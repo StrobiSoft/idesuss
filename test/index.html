@@ -571,10 +571,13 @@
 }
       const text = newPostInput.value.trim();
 
-      if (!currentUser) {
-        alert("Előbb jelentkezz be.");
-        return;
-      }
+      const { data } = await supabaseClient.auth.getUser();
+const user = data?.user;
+
+if (!user) {
+  alert("Nincs user session.");
+  return;
+}
 
       if (!text) {
         alert("Írj be valamit.");
