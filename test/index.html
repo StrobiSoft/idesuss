@@ -355,18 +355,10 @@
 }
 
     async function refreshSession() {
-      try {
-        const { data, error } = await supabaseClient.auth.getUser();
-        if (error) {
-          currentUser = null;
-        } else {
-          currentUser = data?.user ?? null;
-        }
-      } catch {
-        currentUser = null;
-      }
-      renderAuthState();
-    }
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  currentUser = user;
+  renderAuthState();
+}
 
     async function loadPosts() {
       setStatus([
