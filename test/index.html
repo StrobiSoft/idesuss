@@ -183,6 +183,42 @@
       flex-wrap: wrap;
       align-items: center;
     }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      min-width: 220px;
+      max-width: calc(100vw - 32px);
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success {
+      background: #166534;
+    }
+
+    .toast.error {
+      background: #991b1b;
+    }
+
+    .toast.info {
+      background: #1d4ed8;
+    }
   </style>
 </head>
 <body>
@@ -259,8 +295,7 @@
         <button id="logoutBtn" class="secondary">Kilépés</button>
       </div>
     </div>
-
-    <div class="panel">
+        <div class="panel">
       <div class="row">
         <input id="newPost" type="text" placeholder="Írj valamit..." disabled>
         <button id="sendBtn" disabled>Küldés</button>
@@ -277,8 +312,10 @@
     <div id="posts"></div>
   </div>
 
+  <div id="toast" class="toast"></div>
+
   <script>
-      const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
+    const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
     const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -317,7 +354,25 @@
     const statusBox = document.getElementById("status");
     const postsBox = document.getElementById("posts");
 
+    const toastBox = document.getElementById("toast");
+    let toastTimer = null;
+
     let currentUser = null;
+
+    function showToast(message, type = "info") {
+      toastBox.textContent = message;
+      toastBox.className = "toast " + type;
+
+      clearTimeout(toastTimer);
+
+      requestAnimationFrame(() => {
+        toastBox.classList.add("show");
+      });
+
+      toastTimer = setTimeout(() => {
+        toastBox.classList.remove("show");
+      }, 2500);
+    }
 
     function showView(viewName) {
       authChoiceView.classList.add("hidden");
@@ -341,24 +396,24 @@
     }
 
     function renderAuthState() {
-  if (currentUser) {
-    authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
-    newPostInput.disabled = false;
-    sendBtn.disabled = false;
-    authChoiceView.classList.add("hidden");
-  } else {
-    authInfo.textContent = "Nincs bejelentkezett user.";
-    newPostInput.disabled = true;
-    sendBtn.disabled = true;
-    authChoiceView.classList.remove("hidden");
-  }
-}
+      if (currentUser) {
+        authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
+        newPostInput.disabled = false;
+        sendBtn.disabled = false;
+        authChoiceView.classList.add("hidden");
+      } else {
+        authInfo.textContent = "Nincs bejelentkezett user.";
+        newPostInput.disabled = true;
+        sendBtn.disabled = true;
+        authChoiceView.classList.remove("hidden");
+      }
+    }
 
     async function refreshSession() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  currentUser = user;
-  renderAuthState();
-}
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      currentUser = user;
+      renderAuthState();
+    }
 
     async function loadPosts() {
       setStatus([
@@ -447,10 +502,12 @@
 
         currentUser = data?.user ?? null;
         loginSuccess.textContent = "Sikeres belépés.";
+        showToast("Sikeres belépés.", "success");
         await refreshSession();
         await loadPosts();
       } catch (err) {
         loginError.textContent = "Hiba: " + err.message;
+        showToast("A belépés nem sikerült.", "error");
       } finally {
         loginBtn.disabled = false;
         loginBtn.textContent = "Belépés";
@@ -458,65 +515,68 @@
     }
 
     async function register() {
-  clearMessages();
+      clearMessages();
 
-  const email = registerEmail.value.trim();
-  const password = registerPassword.value;
-  const password2 = registerPassword2.value;
+      const email = registerEmail.value.trim();
+      const password = registerPassword.value;
+      const password2 = registerPassword2.value;
 
-  if (!email || !password || !password2) {
-    registerError.textContent = "Minden mezőt tölts ki.";
-    return;
-  }
+      if (!email || !password || !password2) {
+        registerError.textContent = "Minden mezőt tölts ki.";
+        return;
+      }
 
-  if (password !== password2) {
-    registerError.textContent = "A két jelszó nem egyezik.";
-    return;
-  }
+      if (password !== password2) {
+        registerError.textContent = "A két jelszó nem egyezik.";
+        return;
+      }
 
-  if (!consentCheckbox.checked) {
-    registerError.textContent = "A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.";
-    return;
-  }
+      if (!consentCheckbox.checked) {
+        registerError.textContent = "A folytatáshoz el kell fogadnod a Privacy Policy és a Felhasználási feltételek tartalmát.";
+        return;
+      }
 
-  registerBtn.disabled = true;
-  registerBtn.textContent = "Regisztráció...";
+      registerBtn.disabled = true;
+      registerBtn.textContent = "Regisztráció...";
 
-  try {
-    const signupPromise = supabaseClient.auth.signUp({
-      email,
-      password
-    });
+      try {
+        const signupPromise = supabaseClient.auth.signUp({
+          email,
+          password
+        });
 
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("TIMEOUT_SIGNUP")), 8000)
-    );
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("TIMEOUT_SIGNUP")), 8000)
+        );
 
-    const result = await Promise.race([signupPromise, timeoutPromise]);
+        const result = await Promise.race([signupPromise, timeoutPromise]);
 
-    if (result.error) {
-      registerError.textContent = "Regisztrációs hiba: " + result.error.message;
-      return;
+        if (result.error) {
+          registerError.textContent = "Regisztrációs hiba: " + result.error.message;
+          return;
+        }
+
+        registerSuccess.textContent = "Sikeres regisztráció. Most jelentkezz be.";
+        showToast("Sikeres regisztráció.", "success");
+        showView("login");
+        loginEmail.value = email;
+        loginPassword.value = "";
+      } catch (err) {
+        if (err.message === "TIMEOUT_SIGNUP") {
+          registerSuccess.textContent = "A regisztráció valószínűleg létrejött a háttérben. Próbálj meg belépni.";
+          showToast("A regisztráció valószínűleg létrejött.", "info");
+          showView("login");
+          loginEmail.value = email;
+          loginPassword.value = "";
+        } else {
+          registerError.textContent = "Hiba: " + err.message;
+          showToast("A regisztráció nem sikerült.", "error");
+        }
+      } finally {
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Regisztráció";
+      }
     }
-
-    registerSuccess.textContent = "Sikeres regisztráció. Most jelentkezz be.";
-    showView("login");
-    loginEmail.value = email;
-    loginPassword.value = "";
-  } catch (err) {
-    if (err.message === "TIMEOUT_SIGNUP") {
-      registerSuccess.textContent = "A regisztráció valószínűleg létrejött a háttérben. Próbálj meg belépni.";
-      showView("login");
-      loginEmail.value = email;
-      loginPassword.value = "";
-    } else {
-      registerError.textContent = "Hiba: " + err.message;
-    }
-  } finally {
-    registerBtn.disabled = false;
-    registerBtn.textContent = "Regisztráció";
-  }
-}
 
     async function resetPassword() {
       clearMessages();
@@ -534,10 +594,12 @@
 
       if (error) {
         loginError.textContent = "Jelszó-visszaállítási hiba: " + error.message;
+        showToast("A jelszó-visszaállítás nem sikerült.", "error");
         return;
       }
 
       loginSuccess.textContent = "Elküldtük a jelszó-visszaállító emailt.";
+      showToast("Jelszó-visszaállító email elküldve.", "success");
     }
 
     async function signOut() {
@@ -546,89 +608,94 @@
       const { error } = await supabaseClient.auth.signOut();
 
       if (error) {
-        alert("Kilépési hiba: " + error.message);
+        showToast("A kilépés nem sikerült.", "error");
         return;
       }
 
       currentUser = null;
+      showToast("Sikeres kilépés.", "success");
       await refreshSession();
       await loadPosts();
       showView("choice");
     }
 
     async function addPost() {
-  const text = newPostInput.value.trim();
+      const text = newPostInput.value.trim();
 
-  if (!text) {
-    alert("Írj be valamit.");
-    return;
-  }
+      if (!text) {
+        showToast("Írj be valamit.", "error");
+        return;
+      }
 
-  sendBtn.disabled = true;
-  sendBtn.textContent = "Küldés...";
+      sendBtn.disabled = true;
+      sendBtn.textContent = "Küldés...";
 
-  try {
-    const { data: authData, error: authError } = await supabaseClient.auth.getUser();
+      try {
+        const { data: authData, error: authError } = await supabaseClient.auth.getUser();
 
-    if (authError || !authData?.user) {
-      alert("Nincs érvényes user session.");
-      return;
+        if (authError || !authData?.user) {
+          showToast("Nincs érvényes user session.", "error");
+          return;
+        }
+
+        const user = authData.user;
+
+        const { data, error } = await supabaseClient
+          .from("posts")
+          .insert([{
+            text,
+            user_id: user.id
+          }])
+          .select();
+
+        if (error) {
+          console.error("INSERT HIBA:", error);
+          showToast("A poszt mentése nem sikerült.", "error");
+          return;
+        }
+
+        console.log("INSERT OK:", data);
+        showToast("Poszt elküldve.", "success");
+        newPostInput.value = "";
+        await loadPosts();
+      } catch (err) {
+        console.error("CATCH HIBA:", err);
+        showToast("Váratlan hiba történt.", "error");
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = "Küldés";
+      }
     }
 
-    const user = authData.user;
+    showLoginBtn.addEventListener("click", () => {
+      clearMessages();
+      showView("login");
+    });
 
-    const { data, error } = await supabaseClient
-      .from("posts")
-      .insert([{
-  text,
-  user_id: user.id
-}])
-      .select();
+    showRegisterBtn.addEventListener("click", () => {
+      clearMessages();
+      showView("register");
+    });
 
-    if (error) {
-  console.error("INSERT HIBA:", error);
-  return;
-}
+    backFromLoginBtn.addEventListener("click", () => {
+      clearMessages();
+      showView("choice");
+    });
 
+    backFromRegisterBtn.addEventListener("click", () => {
+      clearMessages();
+      showView("choice");
+    });
 
-    newPostInput.value = "";
-    await loadPosts();
-  } catch (err) {
-    alert("CATCH HIBA: " + err.message);
-  } finally {
-    sendBtn.disabled = false;
-    sendBtn.textContent = "Küldés";
-  }
-}
-showLoginBtn.addEventListener("click", () => {
-  clearMessages();
-  showView("login");
-});
+    loginBtn.addEventListener("click", login);
+    registerBtn.addEventListener("click", register);
+    forgotBtn.addEventListener("click", resetPassword);
+    logoutBtn.addEventListener("click", signOut);
+    sendBtn.addEventListener("click", addPost);
 
-showRegisterBtn.addEventListener("click", () => {
-  clearMessages();
-  showView("register");
-});
-
-backFromLoginBtn.addEventListener("click", () => {
-  clearMessages();
-  showView("choice");
-});
-
-backFromRegisterBtn.addEventListener("click", () => {
-  clearMessages();
-  showView("choice");
-});
-
-loginBtn.addEventListener("click", login);
-registerBtn.addEventListener("click", register);
-forgotBtn.addEventListener("click", resetPassword);
-logoutBtn.addEventListener("click", signOut);
-sendBtn.addEventListener("click", addPost);
-
-newPostInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addPost();
-});
+    newPostInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") addPost();
+    });
 
     (async function init() {
       showView("choice");
@@ -638,4 +705,3 @@ newPostInput.addEventListener("keydown", (e) => {
   </script>
 </body>
 </html>
-  
