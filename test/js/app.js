@@ -1,5 +1,6 @@
 async function init() {
   bindEvents();
+  initMenu();
   
   showView("choice");
   await refreshSession();
