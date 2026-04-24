@@ -343,7 +343,45 @@
     .toast.success { background: #166534; }
     .toast.error { background: #991b1b; }
     .toast.info { background: #1d4ed8; }
-  </style>
+    
+    
+  .menu-btn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  font-size: 24px;
+  background: rgba(255,255,255,0.1);
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100%;
+  background: #020617;
+  padding: 20px;
+  box-shadow: 10px 0 30px rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+.menu-header {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.menu-item {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.08);
+}
+</style>
 </head>
 <body>
   <div class="wrap">
