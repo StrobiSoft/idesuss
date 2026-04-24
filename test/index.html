@@ -594,20 +594,25 @@
     }
 
     function renderAuthState(){
-      if(currentUser){
-        authInfo.textContent="Bejelentkezve: "+(currentUser.email||currentUser.id);
-        newPostInput.disabled=false;
-        sendBtn.disabled=false;
-        authChoiceView.classList.add("hidden");
-        profilePanel.classList.remove("hidden");
-      }else{
-        authInfo.textContent="Nincs bejelentkezett user.";
-        newPostInput.disabled=true;
-        sendBtn.disabled=true;
-        profilePanel.classList.add("hidden");
-        authChoiceView.classList.remove("hidden");
-      }
-    }
+  authChoiceView.classList.add("hidden");
+  loginView.classList.add("hidden");
+  registerView.classList.add("hidden");
+  resetView.classList.add("hidden");
+
+  if(currentUser){
+    authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
+    newPostInput.disabled = false;
+    sendBtn.disabled = false;
+    profilePanel.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
+  }else{
+    authInfo.textContent = "Nincs bejelentkezett user.";
+    newPostInput.disabled = true;
+    sendBtn.disabled = true;
+    profilePanel.classList.add("hidden");
+    authChoiceView.classList.remove("hidden");
+  }
+}
 
     async function refreshSession(){
       const {data:{user}}=await supabaseClient.auth.getUser();
