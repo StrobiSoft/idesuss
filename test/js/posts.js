@@ -2,9 +2,9 @@ async function loadPosts() {
   setStatus("Posztok betöltése...");
 
   const { data, error } = await supabaseClient
-    .from("posts")
-    .select("*")
-    .order("created_at", { ascending: false });
+  .from("posts")
+  .select("*")
+  .order("created_at", { ascending: false });
 
   if (error) {
     setStatus("HIBA: " + error.message);
