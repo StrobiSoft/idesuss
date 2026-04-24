@@ -4,6 +4,7 @@ async function init() {
   
   showView("choice");
   await refreshSession();
+  updateMenuVisibility();
   await loadPosts();
   
   applyLang();
