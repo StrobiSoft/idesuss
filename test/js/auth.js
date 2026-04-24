@@ -5,16 +5,23 @@ function renderAuthState() {
   resetView.classList.add("hidden");
 
   if (currentUser) {
-    authInfo.textContent = "Bejelentkezve: " + (currentUser.email || currentUser.id);
+    authInfo.parentElement.classList.add("hidden");
+
     newPostInput.disabled = false;
     sendBtn.disabled = false;
     profilePanel.classList.remove("hidden");
   } else {
+    authInfo.parentElement.classList.remove("hidden");
+
     authInfo.textContent = "Nincs bejelentkezett user.";
     newPostInput.disabled = true;
     sendBtn.disabled = true;
     profilePanel.classList.add("hidden");
     authChoiceView.classList.remove("hidden");
+  }
+
+  if (typeof updateMenuVisibility === "function") {
+    updateMenuVisibility();
   }
 }
 
@@ -101,8 +108,7 @@ async function register() {
     await supabaseClient.from("profiles").upsert({
       id: data.user.id,
       nickname,
-      avatar_emoji: selectedRegisterAvatar,
-      avatar_url: null
+      avatar_emoji: selectedRegisterAvatar
     });
   }
 
