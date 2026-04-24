@@ -34,10 +34,11 @@ async function loadOwnProfile() {
     .single();
 
   if (error) {
-    console.error("PROFILE LOAD:", error);
-    showToast("Profil hiba", "error");
-    return;
-  }
+  console.error("PROFILE SAVE ERROR:", error);
+  showToast("Profil hiba: " + error.message, "error");
+  setStatus("PROFILE SAVE ERROR: " + error.message);
+  return;
+}
 
   profileNickname.value = data.nickname || "";
   profileAvatarUrl.value = data.avatar_url || "";
