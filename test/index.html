@@ -4,130 +4,119 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Idesüss Test</title>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    body{margin:0;padding:20px;font-family:system-ui;background:#0f172a;color:white}
-    .wrap{max-width:960px;margin:0 auto}
-    .panel{background:rgba(255,255,255,.08);border-radius:16px;padding:16px;margin-bottom:18px}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    input{flex:1;padding:12px;border-radius:12px;border:none}
-    button{padding:12px 18px;border-radius:12px;border:none;background:#0d5bd7;color:white}
-    .hidden{display:none}
-    .avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px}
-    .avatar-btn{height:48px;border-radius:12px;background:rgba(255,255,255,.08);font-size:24px}
-    .avatar-btn.selected{border:2px solid #93c5fd}
-    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);opacity:0}
-    .toast.show{opacity:1}
-  </style>
-</head>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
 
-<body>
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+    }
 
-<div class="wrap">
+    .panel {
+      background: rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
 
-  <h1>Idesüss</h1>
+    h1 {
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
 
-  <!-- AUTH -->
-  <div class="panel">
-    <div id="authChoiceView">
-      <button id="showLoginBtn">Belépés</button>
-      <button id="showRegisterBtn">Regisztráció</button>
-    </div>
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
 
-    <div id="loginView" class="hidden">
-      <input id="loginEmail" placeholder="Email">
-      <input id="loginPassword" placeholder="Jelszó">
-      <button id="loginBtn">Belép</button>
-    </div>
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-    <div id="registerView" class="hidden">
-      <input id="registerEmail" placeholder="Email">
-      <input id="registerPassword" placeholder="Jelszó">
-      <input id="registerPassword2" placeholder="Jelszó újra">
-      <input id="registerNickname" placeholder="Nick">
-      <div id="registerAvatarGrid" class="avatar-grid"></div>
-      <button id="registerBtn">Regisztráció</button>
-    </div>
-  </div>
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="url"] {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
 
-  <!-- PROFILE -->
-  <div id="profilePanel" class="panel hidden">
-    <input id="profileNickname" placeholder="Nick">
-    <input id="profileAvatarUrl" placeholder="Avatar URL">
-    <div id="profileAvatarGrid" class="avatar-grid"></div>
-    <button id="saveProfileBtn">Mentés</button>
-  </div>
+    button {
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: none;
+      background: #0d5bd7;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
-  <!-- POST -->
-  <div class="panel">
-    <input id="newPost" placeholder="Írj valamit...">
-    <button id="sendBtn">Küldés</button>
-  </div>
+    button.secondary {
+      background: #475569;
+    }
 
-  <div id="posts"></div>
+    button.register {
+      background: #16a34a;
+    }
 
-</div>
+    button.warning {
+      background: #7c3aed;
+    }
 
-<div id="toast" class="toast"></div>
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
-<script>
-const SUPABASE_URL="https://nakayuciurazdacgyoxu.supabase.co";
-const SUPABASE_KEY="sb_publishable_...";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    .big-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
 
-const AVATARS=["🚛","🛠️","🌹","🌸","🙂","😎"];
+    .hidden {
+      display: none;
+    }
 
-const showLoginBtn=document.getElementById("showLoginBtn");
-const showRegisterBtn=document.getElementById("showRegisterBtn");
-const loginView=document.getElementById("loginView");
-const registerView=document.getElementById("registerView");
+    .muted {
+      opacity: 0.8;
+      font-size: 14px;
+      line-height: 1.45;
+    }
 
-const loginBtn=document.getElementById("loginBtn");
-const registerBtn=document.getElementById("registerBtn");
-const sendBtn=document.getElementById("sendBtn");
+    .status {
+      font-family: monospace;
+      font-size: 14px;
+      white-space: pre-line;
+      opacity: 0.95;
+    }
 
-const newPostInput=document.getElementById("newPost");
-const postsBox=document.getElementById("posts");
+    .error-box {
+      margin-top: 10px;
+      color: #fecaca;
+      font-size: 14px;
+      min-height: 20px;
+    }
 
-const registerAvatarGrid=document.getElementById("registerAvatarGrid");
-const profileAvatarGrid=document.getElementById("profileAvatarGrid");
-
-let currentUser=null;
-let selectedRegisterAvatar="🙂";
-let selectedProfileAvatar="🙂";
-
-function renderAvatarGrid(container,selected,onPick){
-  container.innerHTML="";
-  AVATARS.forEach(a=>{
-    const b=document.createElement("button");
-    b.textContent=a;
-    b.className="avatar-btn"+(a===selected?" selected":"");
-    b.onclick=()=>onPick(a);
-    container.appendChild(b);
-  });
-}
-
-showLoginBtn.onclick=()=>loginView.classList.remove("hidden");
-showRegisterBtn.onclick=()=>registerView.classList.remove("hidden");
-
-renderAvatarGrid(registerAvatarGrid,selectedRegisterAvatar,a=>{
-  selectedRegisterAvatar=a;
-  renderAvatarGrid(registerAvatarGrid,a,arguments.callee);
-});
-
-renderAvatarGrid(profileAvatarGrid,selectedProfileAvatar,a=>{
-  selectedProfileAvatar=a;
-  renderAvatarGrid(profileAvatarGrid,a,arguments.callee);
-});
-</script>
-
-<script src="js/ui.js"></script>
-<script src="js/lang.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/posts.js"></script>
-<script src="js/app.js"></script>
-
-</body>
-</html>
+    .success-box {
+      margin-top: 10px;
+      color: #bbf7d0;
+      font-size: 14px;
+      min-height: 20px;
+    }
