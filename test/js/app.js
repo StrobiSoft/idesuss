@@ -8,8 +8,6 @@ async function init() {
   applyLang();
 }
 
-window.addEventListener("DOMContentLoaded", init);
-
 function bindEvents() {
   showLoginBtn.onclick = () => {
     clearMessages();
