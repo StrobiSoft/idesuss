@@ -67,11 +67,10 @@ async function saveProfile() {
   const { error } = await supabaseClient
     .from("profiles")
     .upsert({
-      id: currentUser.id,
-      nickname,
-      avatar_url: avatarUrl || null,
-      avatar_emoji: selectedProfileAvatar
-    });
+  id: currentUser.id,
+  nickname,
+  avatar_emoji: selectedProfileAvatar
+});
 
   if (error) {
     showToast("Profil hiba", "error");
