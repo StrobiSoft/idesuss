@@ -41,6 +41,7 @@ async function loadOwnProfile() {
 }
 
   profileNickname.value = data.nickname || "";
+  profileNickname.readOnly = true;
   profileAvatarUrl.value = data.avatar_url || "";
   selectedProfileAvatar = data.avatar_emoji || "🙂";
 
