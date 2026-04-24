@@ -1,5 +1,7 @@
-(async function init() {
+async function init() {
   showView("choice");
   await refreshSession();
   await loadPosts();
-})();
+}
+
+window.addEventListener("DOMContentLoaded", init);
