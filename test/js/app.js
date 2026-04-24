@@ -1,7 +1,10 @@
 async function init() {
+  bindEvents();
+  
   showView("choice");
   await refreshSession();
   await loadPosts();
+  
   applyLang();
 }
 function bindEvents() {
