@@ -681,7 +681,13 @@
 
       const {data,error}=await supabaseClient
         .from("posts")
-        .select("*,profiles(*)")
+        .select(`
+  *,
+  profiles:user_id (
+    username,
+    avatar_url
+  )
+`)
         .order("created_at",{ascending:false});
 
       if(error){
