@@ -31,7 +31,15 @@ async function refreshSession() {
   renderAuthState();
 
   if (currentUser && typeof loadOwnProfile === "function") {
-    await loadOwnProfile();
+    const profile = await loadOwnProfile();
+
+    const welcome = document.getElementById("welcomeTitle");
+
+    if (profile && profile.nickname) {
+      welcome.textContent = "Welcome dear " + profile.nickname + " 👋";
+    } else {
+      welcome.textContent = "Welcome dear User 👋";
+    }
   }
 }
 
