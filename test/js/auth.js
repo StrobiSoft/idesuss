@@ -40,9 +40,6 @@ async function refreshSession() {
     } else {
       welcome.textContent = "Welcome dear User 👋";
     }
-    if (typeof updateMenuVisibility === "function") {
-  updateMenuVisibility();
-}
   }
 }
 
