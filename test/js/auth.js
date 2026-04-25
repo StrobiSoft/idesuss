@@ -43,7 +43,7 @@ async function refreshSession() {
       if (profile && profile.nickname) {
         welcome.textContent = "Welcome dear " + profile.nickname + " 👋";
       } else {
-        welcome.textContent = "Welcome dear User 👋";
+        welcome.textContent = "Üdv, kedves " + profile.nickname + " 👋";
       }
     }
   }
