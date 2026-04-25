@@ -39,19 +39,27 @@ async function loadOwnProfile() {
   setStatus("PROFILE SAVE ERROR: " + error.message);
   return;
 }
+profileNickname.value = data.nickname || "";
+profileNickname.readOnly = true;
+profileAvatarUrl.value = data.avatar_url || "";
+selectedProfileAvatar = data.avatar_emoji || "🙂";
 
-  profileNickname.value = data.nickname || "";
-  profileNickname.readOnly = true;
-  profileAvatarUrl.value = data.avatar_url || "";
-  selectedProfileAvatar = data.avatar_emoji || "🙂";
+window.ownProfile = data;
 
+const welcomeTitle = document.getElementById("welcomeTitle");
+if (welcomeTitle) {
+  welcomeTitle.textContent = "Welcome dear " + (data.nickname || "User") + " 👋";
+}
+
+updateProfilePreview();
+
+renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, function pickProfileAvatar(val) {
+  selectedProfileAvatar = val;
+  renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, pickProfileAvatar);
   updateProfilePreview();
+});
 
-  renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, function pickProfileAvatar(val) {
-    selectedProfileAvatar = val;
-    renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, pickProfileAvatar);
-    updateProfilePreview();
-  });
+return data;
 }
 
 async function saveProfile() {
