@@ -1,3 +1,4 @@
+let cropper = null;
 function renderAvatarGrid(container, selectedValue, onPick) {
   container.innerHTML = "";
 
