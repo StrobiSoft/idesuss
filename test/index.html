@@ -123,3 +123,131 @@
       transform: scale(1.15);
       flex: 0 0 auto;
     }
+        .consent-row label {
+      font-size: 14px;
+      opacity: 0.95;
+      line-height: 1.45;
+    }
+
+    .avatar-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.10);
+      font-size: 28px;
+    }
+
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .avatar-btn {
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .avatar-btn.selected {
+      border: 2px solid #93c5fd;
+    }
+
+    .avatar-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .menu-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 1000;
+    }
+
+    .side-menu {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 260px;
+      height: 100%;
+      background: #020617;
+      padding: 20px;
+      z-index: 900;
+    }
+
+    .menu-item {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .welcome-title {
+      margin-left: 80px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="menuBtn" class="menu-btn hidden">☰</div>
+
+  <div id="sideMenu" class="side-menu hidden">
+    <div class="menu-header">Idesüss</div>
+
+    <button class="menu-item">🏠 Kezdőképernyő</button>
+    <button class="menu-item">👤 Profil</button>
+    <button class="menu-item">🌍 Community</button>
+    <button class="menu-item">📻 Rádió</button>
+    <button class="menu-item">⚙️ Beállítások</button>
+
+    <hr>
+
+    <button class="menu-item">🌐 Nyelv</button>
+    <button class="menu-item">🎨 Téma</button>
+    <button class="menu-item">🔑 Jelszó</button>
+
+    <hr>
+
+    <button class="menu-item" id="menuLogout">🚪 Kilépés</button>
+  </div>
+
+  <div class="wrap">
+    <h1 id="welcomeTitle" class="welcome-title">Welcome dear User 👋</h1>
+
+    <div class="panel">
+
+      <div id="authChoiceView">
+        <h2 data-i18n="continue">Folytatás</h2>
+        <div class="muted" data-i18n="continueText">
+          Válaszd ki, hogy már van fiókod, vagy most szeretnél regisztrálni.
+        </div>
+
+        <div class="big-actions">
+          <button id="showLoginBtn">Van már fiókom</button>
+          <button id="showRegisterBtn" class="register">Új vagyok itt</button>
+        </div>
+      </div>
+
+      <div id="loginView" class="hidden">
+        <h2>Belépés</h2>
+
+        <div class="row" style="margin-bottom:10px;">
+          <input id="loginEmail" type="email" placeholder="Email cím">
+          <input id="loginPassword" type="password" placeholder="Jelszó">
+        </div>
+
+        <div class="auth-footer">
+          <button id="loginBtn">Belépés</button>
+          <button id="backFromLoginBtn" class="secondary">Vissza</button>
+          <button id="forgotBtn" class="warning">Elfelejtett jelszó</button>
+        </div>
+
+        <div class="error-box" id="loginError"></div>
+        <div class="success-box" id="loginSuccess"></div>
+      </div>
