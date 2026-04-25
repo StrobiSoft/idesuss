@@ -251,3 +251,191 @@
         <div class="error-box" id="loginError"></div>
         <div class="success-box" id="loginSuccess"></div>
       </div>
+            <div id="registerView" class="hidden">
+        <h2>Regisztráció</h2>
+
+        <div class="row" style="margin-bottom:10px;">
+          <input id="registerEmail" type="email" placeholder="Email cím">
+          <input id="registerPassword" type="password" placeholder="Jelszó">
+        </div>
+
+        <div class="row" style="margin-bottom:10px;">
+          <input id="registerPassword2" type="password" placeholder="Jelszó megerősítése">
+          <input id="registerNickname" type="text" placeholder="Nicknév" minlength="3" maxlength="12">
+        </div>
+
+        <div class="muted">Válassz avatart:</div>
+        <div id="registerAvatarGrid" class="avatar-grid"></div>
+
+        <div class="consent-row">
+          <input id="consentCheckbox" type="checkbox">
+          <label for="consentCheckbox">Elfogadom a feltételeket</label>
+        </div>
+
+        <div class="auth-footer">
+          <button id="registerBtn" class="register">Regisztráció</button>
+          <button id="backFromRegisterBtn" class="secondary">Vissza</button>
+        </div>
+
+        <div class="error-box" id="registerError"></div>
+        <div class="success-box" id="registerSuccess"></div>
+      </div>
+
+      <div id="resetView" class="hidden">
+        <h2>Új jelszó</h2>
+
+        <div class="row">
+          <input id="resetPassword1" type="password" placeholder="Új jelszó">
+          <input id="resetPassword2" type="password" placeholder="Megerősítés">
+        </div>
+
+        <div class="auth-footer">
+          <button id="resetSaveBtn" class="warning">Mentés</button>
+          <button id="backFromResetBtn" class="secondary">Vissza</button>
+        </div>
+
+        <div id="resetError" class="error-box"></div>
+        <div id="resetSuccess" class="success-box"></div>
+      </div>
+
+      <div class="muted" id="authInfo">Nincs bejelentkezett user.</div>
+
+      <div class="auth-footer">
+        <button id="logoutBtn" class="secondary">Kilépés</button>
+      </div>
+    </div>
+
+    <!-- PROFILE PANEL -->
+    <div id="profilePanel" class="panel hidden">
+      <div class="profile-title-row">
+        <h2>Profil</h2>
+        <div id="profilePreviewName" class="profile-title-name">Név</div>
+      </div>
+
+      <div class="profile-preview">
+        <div id="profilePreviewAvatar" class="avatar-circle">🙂</div>
+      </div>
+
+      <div class="row">
+        <input id="profileNickname" type="text" placeholder="Nicknév" minlength="3" maxlength="12">
+        <input id="profileAvatarUrl" type="hidden">
+
+        <input id="avatarFileInput" type="file" accept="image/*" class="hidden">
+        <input id="avatarCameraInput" type="file" accept="image/*" capture="user" class="hidden">
+      </div>
+
+      <div class="avatar-actions">
+        <button id="chooseAvatarFileBtn" type="button" class="secondary">📁 Galéria</button>
+        <button id="takeAvatarPhotoBtn" type="button" class="secondary">📷 Kamera</button>
+      </div>
+
+      <div class="muted">Válassz alap avatart:</div>
+
+      <div id="profileAvatarGrid" class="avatar-grid"></div>
+
+      <div class="auth-footer">
+        <button id="saveProfileBtn" class="register">Profil mentése</button>
+      </div>
+    </div>
+
+    <!-- POST -->
+    <div class="panel">
+      <div class="row">
+        <input id="newPost" type="text" placeholder="Írj valamit..." disabled>
+        <button id="sendBtn" disabled>Küldés</button>
+      </div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="panel">
+      <div class="status" id="status"></div>
+    </div>
+
+    <!-- POSTS -->
+    <div id="posts"></div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+    <script>
+    const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const AVATARS = ["🚛","🛠️","⚙️","🔧","🛡️","🐺","🦅","🐻","🌹","🌸","🌺","🌼","🌷","💐","🦋","🐝","🙂","😎","🤖","🧠","🐱","🐶","🌙","⭐"];
+
+    const authChoiceView = document.getElementById("authChoiceView");
+    const loginView = document.getElementById("loginView");
+    const registerView = document.getElementById("registerView");
+    const resetView = document.getElementById("resetView");
+
+    const showLoginBtn = document.getElementById("showLoginBtn");
+    const showRegisterBtn = document.getElementById("showRegisterBtn");
+    const backFromLoginBtn = document.getElementById("backFromLoginBtn");
+    const backFromRegisterBtn = document.getElementById("backFromRegisterBtn");
+    const backFromResetBtn = document.getElementById("backFromResetBtn");
+
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const forgotBtn = document.getElementById("forgotBtn");
+
+    const registerEmail = document.getElementById("registerEmail");
+    const registerPassword = document.getElementById("registerPassword");
+    const registerPassword2 = document.getElementById("registerPassword2");
+    const registerNickname = document.getElementById("registerNickname");
+    const registerBtn = document.getElementById("registerBtn");
+    const registerAvatarGrid = document.getElementById("registerAvatarGrid");
+    const consentCheckbox = document.getElementById("consentCheckbox");
+
+    const resetPassword1 = document.getElementById("resetPassword1");
+    const resetPassword2 = document.getElementById("resetPassword2");
+    const resetSaveBtn = document.getElementById("resetSaveBtn");
+
+    const loginError = document.getElementById("loginError");
+    const loginSuccess = document.getElementById("loginSuccess");
+    const registerError = document.getElementById("registerError");
+    const registerSuccess = document.getElementById("registerSuccess");
+    const resetError = document.getElementById("resetError");
+    const resetSuccess = document.getElementById("resetSuccess");
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    const authInfo = document.getElementById("authInfo");
+
+    const profilePanel = document.getElementById("profilePanel");
+    const profileNickname = document.getElementById("profileNickname");
+    const profileAvatarUrl = document.getElementById("profileAvatarUrl");
+
+    const avatarFileInput = document.getElementById("avatarFileInput");
+    const avatarCameraInput = document.getElementById("avatarCameraInput");
+    const chooseAvatarFileBtn = document.getElementById("chooseAvatarFileBtn");
+    const takeAvatarPhotoBtn = document.getElementById("takeAvatarPhotoBtn");
+
+    const profileAvatarGrid = document.getElementById("profileAvatarGrid");
+    const profilePreviewAvatar = document.getElementById("profilePreviewAvatar");
+    const profilePreviewName = document.getElementById("profilePreviewName");
+    const saveProfileBtn = document.getElementById("saveProfileBtn");
+
+    const newPostInput = document.getElementById("newPost");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const statusBox = document.getElementById("status");
+    const postsBox = document.getElementById("posts");
+
+    const toastBox = document.getElementById("toast");
+    let toastTimer = null;
+
+    let currentUser = null;
+    let selectedRegisterAvatar = "🙂";
+    let selectedProfileAvatar = "🙂";
+  </script>
+
+  <script src="js/lang.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/posts.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
