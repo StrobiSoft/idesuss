@@ -41,7 +41,7 @@ async function refreshSession() {
     const welcome = document.getElementById("welcomeTitle");
     if (welcome) {
       if (profile && profile.nickname) {
-        welcome.textContent = "Welcome dear " + profile.nickname + " 👋";
+      welcome.textContent = "Üdv, kedves Felhasználó 👋";
       } else {
         welcome.textContent = "Üdv, kedves " + profile.nickname + " 👋";
       }
