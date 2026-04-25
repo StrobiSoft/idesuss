@@ -42,7 +42,7 @@ async function loadOwnProfile() {
 
   const welcomeTitle = document.getElementById("welcomeTitle");
   if (welcomeTitle) {
-    welcomeTitle.textContent = "Welcome dear " + (data.nickname || "User") + " 👋";
+  welcomeTitle.textContent = "Üdv, kedves " + (data.nickname || "Felhasználó") + " 👋";
   }
 
   updateProfilePreview();
