@@ -13,19 +13,13 @@ function renderAvatarGrid(container, selectedValue, onPick) {
 
 function updateProfilePreview() {
   const name = profileNickname.value.trim() || "Névtelen";
-  const url = profileAvatarUrl.value.trim();
 
   profilePreviewName.textContent = name;
-
-  if (url) {
-    profilePreviewAvatar.innerHTML = `<img src="${escapeHtml(url)}">`;
-  } else {
-    profilePreviewAvatar.textContent = selectedProfileAvatar;
-  }
+  profilePreviewAvatar.textContent = selectedProfileAvatar || "🙂";
 }
 
 async function loadOwnProfile() {
-  if (!currentUser) return;
+  if (!currentUser) return null;
 
   const { data, error } = await supabaseClient
     .from("profiles")
@@ -34,59 +28,67 @@ async function loadOwnProfile() {
     .single();
 
   if (error) {
-  console.error("PROFILE SAVE ERROR:", error);
-  showToast("Profil hiba: " + error.message, "error");
-  setStatus("PROFILE SAVE ERROR: " + error.message);
-  return;
-}
-profileNickname.value = data.nickname || "";
-profileNickname.readOnly = true;
-profileAvatarUrl.value = data.avatar_url || "";
-selectedProfileAvatar = data.avatar_emoji || "🙂";
+    console.error("PROFILE LOAD ERROR:", error);
+    showToast("Profil hiba: " + error.message, "error");
+    setStatus("PROFILE LOAD ERROR: " + error.message);
+    return null;
+  }
 
-window.ownProfile = data;
+  profileNickname.value = data.nickname || "";
+  profileNickname.readOnly = true;
+  selectedProfileAvatar = data.avatar_emoji || "🙂";
 
-const welcomeTitle = document.getElementById("welcomeTitle");
-if (welcomeTitle) {
-  welcomeTitle.textContent = "Welcome dear " + (data.nickname || "User") + " 👋";
-}
+  window.ownProfile = data;
 
-updateProfilePreview();
+  const welcomeTitle = document.getElementById("welcomeTitle");
+  if (welcomeTitle) {
+    welcomeTitle.textContent = "Welcome dear " + (data.nickname || "User") + " 👋";
+  }
 
-renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, function pickProfileAvatar(val) {
-  selectedProfileAvatar = val;
-  renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, pickProfileAvatar);
   updateProfilePreview();
-});
 
-return data;
+  renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, function pickProfileAvatar(val) {
+    selectedProfileAvatar = val;
+    renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, pickProfileAvatar);
+    updateProfilePreview();
+  });
+
+  if (typeof updateMenuVisibility === "function") {
+    updateMenuVisibility();
+  }
+
+  return data;
 }
 
 async function saveProfile() {
   if (!currentUser) return;
 
-  const nickname = profileNickname.value.trim();
-  const avatarUrl = profileAvatarUrl.value.trim();
-
-  if (!nickname) {
-    showToast("Adj meg nicknevet", "error");
-    return;
-  }
+  const avatarEmoji = selectedProfileAvatar || "🙂";
 
   const { error } = await supabaseClient
     .from("profiles")
-    .upsert({
-  id: currentUser.id,
-  nickname,
-  avatar_emoji: selectedProfileAvatar
-});
+    .update({
+      avatar_emoji: avatarEmoji
+    })
+    .eq("id", currentUser.id);
 
   if (error) {
-    showToast("Profil hiba", "error");
+    console.error("PROFILE SAVE ERROR:", error);
+    showToast("Profil hiba: " + error.message, "error");
+    setStatus("PROFILE SAVE ERROR: " + error.message);
     return;
   }
 
   showToast("Profil mentve", "success");
+
   await loadOwnProfile();
   await loadPosts();
+
+  if (typeof showHome === "function") {
+    showHome();
+  }
+
+  if (typeof updateMenuVisibility === "function") {
+    updateMenuVisibility();
+  }
 }
