@@ -13,10 +13,36 @@ function renderAvatarGrid(container, selectedValue, onPick) {
 
 function updateProfilePreview() {
   const name = profileNickname.value.trim() || "Névtelen";
-  const avatar = selectedProfileAvatar || window.ownProfile?.avatar_emoji || "🙂";
+  const avatarUrl = profileAvatarUrl.value.trim();
 
   profilePreviewName.textContent = name;
-  profilePreviewAvatar.textContent = avatar;
+
+  if (avatarUrl) {
+    profilePreviewAvatar.innerHTML = `<img src="${avatarUrl}" alt="Avatar">`;
+  } else {
+    profilePreviewAvatar.textContent =
+      selectedProfileAvatar || window.ownProfile?.avatar_emoji || "🙂";
+  }
+}
+
+function handleAvatarFile(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    showToast("Csak képfájl választható", "error");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    profileAvatarUrl.value = e.target.result;
+    selectedProfileAvatar = null;
+    updateProfilePreview();
+  };
+
+  reader.readAsDataURL(file);
 }
 
 async function loadOwnProfile() {
@@ -37,19 +63,22 @@ async function loadOwnProfile() {
 
   profileNickname.value = data.nickname || "";
   profileNickname.readOnly = true;
+
+  profileAvatarUrl.value = data.avatar_url || "";
   selectedProfileAvatar = data.avatar_emoji || "🙂";
 
   window.ownProfile = data;
 
   const welcomeTitle = document.getElementById("welcomeTitle");
-  if (welcomeTitle) {
-  welcomeTitle.textContent = welcomeText(data.nickname);
+  if (welcomeTitle && typeof welcomeText === "function") {
+    welcomeTitle.textContent = welcomeText(data.nickname);
   }
 
   updateProfilePreview();
 
   renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, function pickProfileAvatar(val) {
     selectedProfileAvatar = val;
+    profileAvatarUrl.value = "";
     renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, pickProfileAvatar);
     updateProfilePreview();
   });
@@ -64,12 +93,13 @@ async function loadOwnProfile() {
 async function saveProfile() {
   if (!currentUser) return;
 
-  const avatarEmoji = selectedProfileAvatar || "🙂";
+  const avatarUrl = profileAvatarUrl.value.trim();
 
   const { error } = await supabaseClient
     .from("profiles")
     .update({
-      avatar_emoji: avatarEmoji
+      avatar_emoji: avatarUrl ? null : selectedProfileAvatar,
+      avatar_url: avatarUrl || null
     })
     .eq("id", currentUser.id);
 
@@ -93,3 +123,16 @@ async function saveProfile() {
     updateMenuVisibility();
   }
 }
+
+chooseAvatarFileBtn.onclick = () => {
+  avatarFileInput.value = "";
+  avatarFileInput.click();
+};
+
+takeAvatarPhotoBtn.onclick = () => {
+  avatarCameraInput.value = "";
+  avatarCameraInput.click();
+};
+
+avatarFileInput.onchange = handleAvatarFile;
+avatarCameraInput.onchange = handleAvatarFile;
