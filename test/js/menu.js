@@ -1,6 +1,14 @@
 const menuBtn = document.getElementById("menuBtn");
 const sideMenu = document.getElementById("sideMenu");
 const menuLogout = document.getElementById("menuLogout");
+function updateMenuVisibility() {
+  if (currentUser && window.ownProfile?.nickname) {
+    menuBtn.classList.remove("hidden");
+  } else {
+    menuBtn.classList.add("hidden");
+    sideMenu.classList.add("hidden");
+  }
+}
 
 function initMenu() {
 
