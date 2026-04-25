@@ -259,3 +259,63 @@
         <button id="logoutBtn" class="secondary">Kilépés</button>
       </div>
     </div>
+        <!-- PROFILE PANEL -->
+    <div id="profilePanel" class="panel hidden">
+      <h2>Profil</h2>
+
+      <div class="profile-preview">
+        <div id="profilePreviewAvatar" class="avatar-circle">🙂</div>
+
+        <div class="profile-meta">
+          <!-- 👉 EZ LESZ AZ "APA" HELYE -->
+          <div id="profilePreviewName" style="font-weight:700; font-size:18px;">
+            Név
+          </div>
+        </div>
+      </div>
+
+      <!-- 👉 NICK + GOMBOK -->
+      <div class="row">
+        <input id="profileNickname" type="text" placeholder="Nicknév" minlength="3" maxlength="12">
+
+        <input id="profileAvatarUrl" type="hidden">
+
+        <!-- FILE INPUTOK -->
+        <input id="avatarFileInput" type="file" accept="image/*" class="hidden">
+        <input id="avatarCameraInput" type="file" accept="image/*" capture="user" class="hidden">
+      </div>
+
+      <!-- 👉 GOMBOK A NICK ALÁ KERÜLTEK -->
+      <div class="avatar-actions">
+        <button id="chooseAvatarFileBtn" type="button" class="secondary">📁 Galéria</button>
+        <button id="takeAvatarPhotoBtn" type="button" class="secondary">📷 Kamera</button>
+      </div>
+
+      <div class="muted">
+        Válassz alap avatart:
+      </div>
+
+      <div id="profileAvatarGrid" class="avatar-grid"></div>
+
+      <div class="auth-footer">
+        <button id="saveProfileBtn" class="register">Profil mentése</button>
+      </div>
+    </div>
+
+    <!-- POST -->
+    <div class="panel">
+      <div class="row">
+        <input id="newPost" type="text" placeholder="Írj valamit..." disabled>
+        <button id="sendBtn" disabled>Küldés</button>
+      </div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="panel">
+      <div class="status" id="status"></div>
+    </div>
+
+    <!-- POSTS -->
+    <div id="posts"></div>
+  </div>
+<div id="toast" class="toast"></div>
