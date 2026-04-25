@@ -13,12 +13,13 @@
       font-family: system-ui, sans-serif;
       background: #0f172a;
       color: white;
+    }
 
     .wrap {
-  max-width: 960px;
-  margin: 0 auto;
-  padding-top: 70px; /* 👈 EZ AZ ÚJ */
-}
+      max-width: 960px;
+      margin: 0 auto;
+      padding-top: 70px;
+    }
 
     .panel {
       background: rgba(255,255,255,0.08);
@@ -54,6 +55,10 @@
       border-radius: 12px;
       border: none;
       font-size: 16px;
+    }
+
+    input[type="hidden"] {
+      display: none;
     }
 
     button {
@@ -120,7 +125,8 @@
       font-size: 14px;
       min-height: 20px;
     }
-        .consent-row {
+
+    .consent-row {
       display: flex;
       align-items: flex-start;
       gap: 10px;
@@ -157,8 +163,7 @@
       gap: 16px;
       margin-top: 16px;
     }
-
-    .card {
+        .card {
       padding: 16px;
       border-radius: 16px;
       background: rgba(255,255,255,0.08);
@@ -224,7 +229,8 @@
       height: 100%;
       object-fit: cover;
     }
-        .avatar-grid {
+
+    .avatar-grid {
       display: grid;
       grid-template-columns: repeat(6, minmax(44px, 1fr));
       gap: 10px;
@@ -254,7 +260,14 @@
     .profile-meta {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 8px;
+    }
+
+    .avatar-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
     }
 
     .comments {
@@ -320,58 +333,55 @@
     .toast.success { background: #166534; }
     .toast.error { background: #991b1b; }
     .toast.info { background: #1d4ed8; }
-    
-    
-  .menu-btn {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  font-size: 24px;
-  background: rgba(255,255,255,0.1);
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  z-index: 1010;
-}
 
-.side-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 260px;
-  height: 100%;
-  background: #020617;
-  padding: 20px;
-  box-shadow: 10px 0 30px rgba(0,0,0,0.4);
-  z-index: 990;
-}
+    .menu-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      font-size: 24px;
+      background: rgba(255,255,255,0.1);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 1010;
+    }
 
-.menu-header {
-  font-size: 22px;
-  font-weight: 800;
-  margin-left: 64px;
-  margin-bottom: 22px;
-  line-height: 48px;
-}
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
+      background: #020617;
+      padding: 20px;
+      padding-top: 20px;
+      box-shadow: 10px 0 30px rgba(0,0,0,0.4);
+      z-index: 990;
+    }
 
-.side-menu {
-  padding-top: 20px;
-}
+    .menu-header {
+      font-size: 22px;
+      font-weight: 800;
+      margin-left: 64px;
+      margin-bottom: 22px;
+      line-height: 48px;
+    }
 
-.menu-item {
-  width: 100%;
-  text-align: left;
-  margin-bottom: 10px;
-  background: rgba(255,255,255,0.08);
-}
-.welcome-title {
-  margin-left: 86px;   /* hely a hamburgernek */
-  margin-top: 10px;
-  margin-bottom: 24px;
-  font-size: 24px;
-  line-height: 1.2;
-}
-</style>
+    .menu-item {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .welcome-title {
+      margin-left: 86px;
+      margin-top: 10px;
+      margin-bottom: 24px;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+  </style>
 </head>
 <body>
   <!-- HAMBURGER -->
@@ -398,9 +408,8 @@
   </div>
 
   <div class="wrap">
-      <h1 id="welcomeTitle" class="welcome-title">Welcome dear User 👋</h1>
-
-    <div class="panel">
+    <h1 id="welcomeTitle" class="welcome-title">Welcome dear User 👋</h1>
+        <div class="panel">
       <div id="authChoiceView">
         <h2 data-i18n="continue">Folytatás</h2>
         <div class="muted" data-i18n="continueText">
@@ -417,14 +426,14 @@
         <h2 data-i18n="login">Belépés</h2>
 
         <div class="row" style="margin-bottom:10px;">
-          <input id="loginEmail" type="email" data-i18n-placeholder="email" placeholder="Email cím">
-          <input id="loginPassword" type="password" data-i18n-placeholder="password" placeholder="Jelszó">
+          <input id="loginEmail" type="email" placeholder="Email cím">
+          <input id="loginPassword" type="password" placeholder="Jelszó">
         </div>
 
         <div class="auth-footer">
-          <button id="loginBtn" data-i18n="login">Belépés</button>
-          <button id="backFromLoginBtn" class="secondary" data-i18n="back">Vissza</button>
-          <button id="forgotBtn" class="warning" data-i18n="forgotPassword">Elfelejtett jelszó</button>
+          <button id="loginBtn">Belépés</button>
+          <button id="backFromLoginBtn" class="secondary">Vissza</button>
+          <button id="forgotBtn" class="warning">Elfelejtett jelszó</button>
         </div>
 
         <div class="error-box" id="loginError"></div>
@@ -432,35 +441,31 @@
       </div>
 
       <div id="registerView" class="hidden">
-        <h2 data-i18n="register">Regisztráció</h2>
+        <h2>Regisztráció</h2>
 
         <div class="row" style="margin-bottom:10px;">
-          <input id="registerEmail" type="email" data-i18n-placeholder="email" placeholder="Email cím">
-          <input id="registerPassword" type="password" data-i18n-placeholder="password" placeholder="Jelszó">
+          <input id="registerEmail" type="email" placeholder="Email cím">
+          <input id="registerPassword" type="password" placeholder="Jelszó">
         </div>
 
         <div class="row" style="margin-bottom:10px;">
-          <input id="registerPassword2" type="password" data-i18n-placeholder="passwordAgain" placeholder="Jelszó megerősítése">
-          <input id="registerNickname" type="text" data-i18n-placeholder="nickname" placeholder="Nicknév">
+          <input id="registerPassword2" type="password" placeholder="Jelszó megerősítése">
+          <input id="registerNickname" type="text" placeholder="Nicknév">
         </div>
 
-        <div class="muted" data-i18n="chooseAvatar">Válassz avatart:</div>
+        <div class="muted">Válassz avatart:</div>
         <div id="registerAvatarGrid" class="avatar-grid"></div>
 
         <div class="consent-row">
           <input id="consentCheckbox" type="checkbox">
           <label for="consentCheckbox">
-            Elolvastam és elfogadom a
-            <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-            és a
-            <a href="/terms.html" target="_blank" rel="noopener noreferrer">Felhasználási feltételek</a>
-            tartalmát.
+            Elfogadom a feltételeket
           </label>
         </div>
 
         <div class="auth-footer">
-          <button id="registerBtn" class="register" data-i18n="register">Regisztráció</button>
-          <button id="backFromRegisterBtn" class="secondary" data-i18n="back">Vissza</button>
+          <button id="registerBtn" class="register">Regisztráció</button>
+          <button id="backFromRegisterBtn" class="secondary">Vissza</button>
         </div>
 
         <div class="error-box" id="registerError"></div>
@@ -468,75 +473,69 @@
       </div>
 
       <div id="resetView" class="hidden">
-        <h2 data-i18n="newPassword">Új jelszó beállítása</h2>
+        <h2>Új jelszó</h2>
 
-        <div class="row" style="margin-bottom:10px;">
-          <input id="resetPassword1" type="password" data-i18n-placeholder="newPassword" placeholder="Új jelszó">
-          <input id="resetPassword2" type="password" data-i18n-placeholder="passwordAgain" placeholder="Új jelszó megerősítése">
+        <div class="row">
+          <input id="resetPassword1" type="password" placeholder="Új jelszó">
+          <input id="resetPassword2" type="password" placeholder="Megerősítés">
         </div>
 
         <div class="auth-footer">
-          <button id="resetSaveBtn" class="warning" data-i18n="saveNewPassword">Új jelszó mentése</button>
-          <button id="backFromResetBtn" class="secondary" data-i18n="back">Vissza</button>
+          <button id="resetSaveBtn" class="warning">Mentés</button>
+          <button id="backFromResetBtn" class="secondary">Vissza</button>
         </div>
 
-        <div class="error-box" id="resetError"></div>
-        <div class="success-box" id="resetSuccess"></div>
+        <div id="resetError" class="error-box"></div>
+        <div id="resetSuccess" class="success-box"></div>
       </div>
 
-      <hr style="border:none;height:1px;background:rgba(255,255,255,0.12);margin:18px 0;">
-
-      <div class="muted" id="authInfo">Nincs bejelentkezett user.</div>
-
       <div class="auth-footer">
-        <button id="logoutBtn" class="secondary" data-i18n="logout">Kilépés</button>
+        <button id="logoutBtn" class="secondary">Kilépés</button>
       </div>
     </div>
 
+    <!-- 🔥 JAVÍTOTT PROFILE PANEL -->
     <div id="profilePanel" class="panel hidden">
-      <h2 data-i18n="profile">Profil</h2>
+      <h2>Profil</h2>
 
       <div class="profile-preview">
         <div id="profilePreviewAvatar" class="avatar-circle">🙂</div>
-        
-        
-        <div class="auth-footer avatar-actions">
-  <button id="chooseAvatarFileBtn" type="button" class="secondary">📁 Galéria</button>
-  <button id="takeAvatarPhotoBtn" type="button" class="secondary">📷 Kamera</button>
-</div>
-<div class="profile-meta">
+
+        <div class="profile-meta">
+          <div id="profilePreviewName" style="font-weight:700;">Névtelen</div>
+
+          <!-- 🔥 GOMBOK JAVÍTOTT HELYEN (NINCS DUPLIKÁCIÓ) -->
+          <div class="avatar-actions">
+            <button id="chooseAvatarFileBtn" type="button" class="secondary">📁</button>
+            <button id="takeAvatarPhotoBtn" type="button" class="secondary">📷</button>
+          </div>
         </div>
       </div>
 
-      <div class="row" style="margin-bottom:10px;">
-        <input id="profileNickname" type="text" data-i18n-placeholder="nickname" placeholder="Nicknév">
-          <input id="profileAvatarUrl" type="hidden">
-          <input id="avatarFileInput" type="file" accept="image/*" class="hidden">
-<input id="avatarCameraInput" type="file" accept="image/*" capture="user" class="hidden">
+      <div class="row">
+        <input id="profileNickname" type="text" placeholder="Nicknév">
+        <input id="profileAvatarUrl" type="hidden">
 
-<div class="auth-footer">
-  <button id="chooseAvatarFileBtn" type="button" class="secondary">📁 Galéria</button>
-  <button id="takeAvatarPhotoBtn" type="button" class="secondary">📷 Kamera</button>
-</div>
+        <!-- 🔥 FONTOS: EZEK MARADNAK -->
+        <input id="avatarFileInput" type="file" accept="image/*" class="hidden">
+        <input id="avatarCameraInput" type="file" accept="image/*" capture="user" class="hidden">
       </div>
 
-      <div class="muted" data-i18n="chooseDefaultAvatar">
-        Válassz alap avatart, ha nem szeretnél saját képet használni:
+      <div class="muted">
+        Válassz alap avatart:
       </div>
 
       <div id="profileAvatarGrid" class="avatar-grid"></div>
 
       <div class="auth-footer">
-        <button id="saveProfileBtn" class="register" data-i18n="saveProfile">Profil mentése</button>
+        <button id="saveProfileBtn" class="register">Profil mentése</button>
       </div>
     </div>
-
-    <div class="panel">
+        <div class="panel">
       <div class="row">
-        <input id="newPost" type="text" data-i18n-placeholder="writeSomething" placeholder="Írj valamit..." disabled>
-        <button id="sendBtn" disabled data-i18n="send">Küldés</button>
+        <input id="newPost" type="text" placeholder="Írj valamit..." disabled>
+        <button id="sendBtn" disabled>Küldés</button>
       </div>
-
     </div>
 
     <div class="panel">
@@ -547,7 +546,8 @@
   </div>
 
   <div id="toast" class="toast"></div>
-    <script>
+
+  <script>
     const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
     const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
 
@@ -591,15 +591,16 @@
     const resetSuccess = document.getElementById("resetSuccess");
 
     const logoutBtn = document.getElementById("logoutBtn");
-    const authInfo = document.getElementById("authInfo");
 
     const profilePanel = document.getElementById("profilePanel");
     const profileNickname = document.getElementById("profileNickname");
     const profileAvatarUrl = document.getElementById("profileAvatarUrl");
+
     const avatarFileInput = document.getElementById("avatarFileInput");
-const avatarCameraInput = document.getElementById("avatarCameraInput");
-const chooseAvatarFileBtn = document.getElementById("chooseAvatarFileBtn");
-const takeAvatarPhotoBtn = document.getElementById("takeAvatarPhotoBtn");
+    const avatarCameraInput = document.getElementById("avatarCameraInput");
+    const chooseAvatarFileBtn = document.getElementById("chooseAvatarFileBtn");
+    const takeAvatarPhotoBtn = document.getElementById("takeAvatarPhotoBtn");
+
     const profileAvatarGrid = document.getElementById("profileAvatarGrid");
     const profilePreviewAvatar = document.getElementById("profilePreviewAvatar");
     const profilePreviewName = document.getElementById("profilePreviewName");
@@ -612,7 +613,6 @@ const takeAvatarPhotoBtn = document.getElementById("takeAvatarPhotoBtn");
     const postsBox = document.getElementById("posts");
 
     const toastBox = document.getElementById("toast");
-    let toastTimer = null;
 
     let currentUser = null;
     let selectedRegisterAvatar = "🙂";
@@ -626,5 +626,6 @@ const takeAvatarPhotoBtn = document.getElementById("takeAvatarPhotoBtn");
   <script src="js/posts.js"></script>
   <script src="js/menu.js"></script>
   <script src="js/app.js"></script>
+
 </body>
 </html>
