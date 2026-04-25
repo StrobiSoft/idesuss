@@ -39,6 +39,7 @@ async function refreshSession() {
       welcome.textContent = "Welcome dear " + profile.nickname + " 👋";
     } else {
       welcome.textContent = "Welcome dear User 👋";
+    }
     if (typeof updateMenuVisibility === "function") {
   updateMenuVisibility();
 }
