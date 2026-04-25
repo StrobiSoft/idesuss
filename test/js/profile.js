@@ -38,6 +38,27 @@ function handleAvatarFile(event) {
   const reader = new FileReader();
 
   reader.onload = function(e) {
+    profilePreviewAvatar.innerHTML = `<img id="cropImage" src="${e.target.result}">`;
+
+    const img = document.getElementById("cropImage");
+
+    if (cropper) cropper.destroy();
+
+    cropper = new Cropper(img, {
+      aspectRatio: 1,
+      viewMode: 1,
+      movable: true,
+      zoomable: true,
+      cropBoxResizable: true
+    });
+  };
+
+  reader.readAsDataURL(file);
+}
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
     profileAvatarUrl.value = e.target.result;
     selectedProfileAvatar = null;
     updateProfilePreview();
