@@ -13,9 +13,10 @@ function renderAvatarGrid(container, selectedValue, onPick) {
 
 function updateProfilePreview() {
   const name = profileNickname.value.trim() || "Névtelen";
+  const avatar = selectedProfileAvatar || window.ownProfile?.avatar_emoji || "🙂";
 
   profilePreviewName.textContent = name;
-  profilePreviewAvatar.textContent = selectedProfileAvatar || "🙂";
+  profilePreviewAvatar.textContent = avatar;
 }
 
 async function loadOwnProfile() {
