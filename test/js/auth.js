@@ -21,7 +21,9 @@ function renderAuthState() {
 
     const welcome = document.getElementById("welcomeTitle");
     if (welcome) {
-      welcome.textContent = "Welcome dear User 👋";
+      welcome.textContent = typeof welcomeText === "function"
+        ? welcomeText(null)
+        : "Üdv, kedves Felhasználó 👋";
     }
   }
 
@@ -40,11 +42,9 @@ async function refreshSession() {
 
     const welcome = document.getElementById("welcomeTitle");
     if (welcome) {
-      if (profile && profile.nickname) {
-      welcome.textContent = "Üdv, kedves Felhasználó 👋";
-      } else {
-        welcome.textContent = "Üdv, kedves " + profile.nickname + " 👋";
-      }
+      welcome.textContent = typeof welcomeText === "function"
+        ? welcomeText(profile?.nickname || null)
+        : "Üdv, kedves " + (profile?.nickname || "Felhasználó") + " 👋";
     }
   }
 
@@ -92,6 +92,11 @@ async function register() {
 
   if (!email || !password || !password2 || !nickname) {
     registerError.textContent = "Minden mezőt tölts ki.";
+    return;
+  }
+
+  if (nickname.length < 3 || nickname.length > 12) {
+    registerError.textContent = "A nicknév 3 és 12 karakter között lehet.";
     return;
   }
 
