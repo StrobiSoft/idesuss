@@ -18,6 +18,11 @@ function renderAuthState() {
     sendBtn.disabled = true;
     profilePanel.classList.add("hidden");
     authChoiceView.classList.remove("hidden");
+
+    const welcome = document.getElementById("welcomeTitle");
+    if (welcome) {
+      welcome.textContent = "Welcome dear User 👋";
+    }
   }
 
   if (typeof updateMenuVisibility === "function") {
@@ -34,12 +39,17 @@ async function refreshSession() {
     const profile = await loadOwnProfile();
 
     const welcome = document.getElementById("welcomeTitle");
-
-    if (profile && profile.nickname) {
-      welcome.textContent = "Welcome dear " + profile.nickname + " 👋";
-    } else {
-      welcome.textContent = "Welcome dear User 👋";
+    if (welcome) {
+      if (profile && profile.nickname) {
+        welcome.textContent = "Welcome dear " + profile.nickname + " 👋";
+      } else {
+        welcome.textContent = "Welcome dear User 👋";
+      }
     }
+  }
+
+  if (typeof updateMenuVisibility === "function") {
+    updateMenuVisibility();
   }
 }
 
@@ -187,8 +197,15 @@ async function saveNewPassword() {
 async function signOut() {
   await supabaseClient.auth.signOut();
   currentUser = null;
+  window.ownProfile = null;
+
   showToast("Kilépve", "info");
   renderAuthState();
+
+  if (typeof updateMenuVisibility === "function") {
+    updateMenuVisibility();
+  }
+
   await loadPosts();
   showView("choice");
 }
