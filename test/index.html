@@ -319,3 +319,86 @@
     <div id="posts"></div>
   </div>
 <div id="toast" class="toast"></div>
+  <script>
+    const SUPABASE_URL = "https://nakayuciurazdacgyoxu.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_N22j5vRDgiqKXasUbQT1dQ_KOyq6cfG";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const AVATARS = ["🚛","🛠️","⚙️","🔧","🛡️","🐺","🦅","🐻","🌹","🌸","🌺","🌼","🌷","💐","🦋","🐝","🙂","😎","🤖","🧠","🐱","🐶","🌙","⭐"];
+
+    const authChoiceView = document.getElementById("authChoiceView");
+    const loginView = document.getElementById("loginView");
+    const registerView = document.getElementById("registerView");
+    const resetView = document.getElementById("resetView");
+
+    const showLoginBtn = document.getElementById("showLoginBtn");
+    const showRegisterBtn = document.getElementById("showRegisterBtn");
+    const backFromLoginBtn = document.getElementById("backFromLoginBtn");
+    const backFromRegisterBtn = document.getElementById("backFromRegisterBtn");
+    const backFromResetBtn = document.getElementById("backFromResetBtn");
+
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const forgotBtn = document.getElementById("forgotBtn");
+
+    const registerEmail = document.getElementById("registerEmail");
+    const registerPassword = document.getElementById("registerPassword");
+    const registerPassword2 = document.getElementById("registerPassword2");
+    const registerNickname = document.getElementById("registerNickname");
+    const registerBtn = document.getElementById("registerBtn");
+    const registerAvatarGrid = document.getElementById("registerAvatarGrid");
+    const consentCheckbox = document.getElementById("consentCheckbox");
+
+    const resetPassword1 = document.getElementById("resetPassword1");
+    const resetPassword2 = document.getElementById("resetPassword2");
+    const resetSaveBtn = document.getElementById("resetSaveBtn");
+
+    const loginError = document.getElementById("loginError");
+    const loginSuccess = document.getElementById("loginSuccess");
+    const registerError = document.getElementById("registerError");
+    const registerSuccess = document.getElementById("registerSuccess");
+    const resetError = document.getElementById("resetError");
+    const resetSuccess = document.getElementById("resetSuccess");
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    const authInfo = document.getElementById("authInfo");
+
+    const profilePanel = document.getElementById("profilePanel");
+    const profileNickname = document.getElementById("profileNickname");
+    const profileAvatarUrl = document.getElementById("profileAvatarUrl");
+
+    const avatarFileInput = document.getElementById("avatarFileInput");
+    const avatarCameraInput = document.getElementById("avatarCameraInput");
+    const chooseAvatarFileBtn = document.getElementById("chooseAvatarFileBtn");
+    const takeAvatarPhotoBtn = document.getElementById("takeAvatarPhotoBtn");
+
+    const profileAvatarGrid = document.getElementById("profileAvatarGrid");
+    const profilePreviewAvatar = document.getElementById("profilePreviewAvatar");
+    const profilePreviewName = document.getElementById("profilePreviewName");
+    const saveProfileBtn = document.getElementById("saveProfileBtn");
+
+    const newPostInput = document.getElementById("newPost");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const statusBox = document.getElementById("status");
+    const postsBox = document.getElementById("posts");
+
+    const toastBox = document.getElementById("toast");
+    let toastTimer = null;
+
+    let currentUser = null;
+    let selectedRegisterAvatar = "🙂";
+    let selectedProfileAvatar = "🙂";
+  </script>
+
+  <script src="js/lang.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/posts.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
