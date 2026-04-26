@@ -45,16 +45,23 @@ function handleAvatarFile(event) {
     if (cropper) cropper.destroy();
 
     cropper = new Cropper(img, {
-      aspectRatio: 1,
+      aspectRatio: 1,          // 🔥 KÖR avatar
       viewMode: 1,
       movable: true,
       zoomable: true,
-      cropBoxResizable: true
+      cropBoxResizable: true,
+      dragMode: "move",
+      background: false
     });
   };
 
   reader.readAsDataURL(file);
 }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    profilePreviewAvatar.innerHTML = `<img id="cropImage" 
 
   const reader = new FileReader();
 
