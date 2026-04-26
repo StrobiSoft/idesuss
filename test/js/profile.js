@@ -143,6 +143,8 @@ async function saveProfile() {
 
   if (typeof updateMenuVisibility === "function") {
     updateMenuVisibility();
+    
+    profileAvatarGrid.classList.add("hidden");
   }
 }
 
