@@ -127,7 +127,9 @@ async function saveProfile() {
 }
 
 profilePreviewAvatar.onclick = () => {
-  profileAvatarGrid.classList.toggle("hidden");
+  const isHidden = getComputedStyle(profileAvatarGrid).display === "none";
+
+  profileAvatarGrid.style.display = isHidden ? "grid" : "none";
 };
 
 chooseAvatarFileBtn.onclick = () => {
