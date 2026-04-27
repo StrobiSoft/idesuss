@@ -44,7 +44,6 @@ function handleAvatarFile(event) {
   };
 
   reader.readAsDataURL(file);
-}
     }
 
     cropper = new Cropper(img, {
