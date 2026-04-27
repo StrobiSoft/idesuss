@@ -16,7 +16,7 @@ function updateProfilePreview() {
   const name = profileNickname.value.trim() || "Névtelen";
   const avatarUrl = profileAvatarUrl.value.trim();
 
-  profilePreviewName.textContent = name;
+  profilePreviewName.textContent = profileNickname.value || "Felhasználó";
 
   if (avatarUrl) {
     profilePreviewAvatar.innerHTML = `<img src="${avatarUrl}" alt="Avatar">`;
