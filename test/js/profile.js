@@ -112,9 +112,10 @@ async function saveProfile() {
   }
 
   showToast("Profil mentve", "success");
-  profileAvatarGrid.classList.add("hidden");
+
 
   await loadOwnProfile();
+  profileAvatarGrid.style.display = "none";
   await loadPosts();
 
   if (typeof showHome === "function") {
