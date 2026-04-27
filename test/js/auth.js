@@ -96,7 +96,7 @@ async function register() {
   }
 
   if (nickname.length < 4 || nickname.length > 12) {
-    registerError.textContent = "A nicknév 3 és 12 karakter között lehet.";
+    registerError.textContent = "A nicknév 4 és 12 karakter között lehet.";
     return;
   }
 
