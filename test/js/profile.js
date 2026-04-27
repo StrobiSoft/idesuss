@@ -44,8 +44,16 @@ function handleAvatarFile(event) {
   };
 
   reader.readAsDataURL(file);
-    }
-  function openCropModal(imageSrc) {
+}
+
+function openCropModal(imageSrc) {
+  if (!cropModal || !cropModalImage || typeof Cropper === "undefined") {
+    profileAvatarUrl.value = imageSrc;
+    selectedProfileAvatar = null;
+    updateProfilePreview();
+    return;
+  }
+
   cropModal.classList.remove("hidden");
   cropModalImage.src = imageSrc;
 
@@ -70,28 +78,18 @@ function handleAvatarFile(event) {
 }
 
 function closeCropModal() {
-  cropModal.classList.add("hidden");
+  if (cropModal) {
+    cropModal.classList.add("hidden");
+  }
 
   if (cropper) {
     cropper.destroy();
     cropper = null;
   }
 
-  cropModalImage.src = "";
-}
-    cropper = new Cropper(img, {
-      aspectRatio: 1,
-      viewMode: 1,
-      dragMode: "move",
-      movable: true,
-      zoomable: true,
-      cropBoxMovable: true,
-      cropBoxResizable: true,
-      background: false
-    });
-  };
-
-  reader.readAsDataURL(file);
+  if (cropModalImage) {
+    cropModalImage.src = "";
+  }
 }
 
 async function loadOwnProfile() {
@@ -151,19 +149,6 @@ async function saveProfile() {
 
   let avatarUrl = profileAvatarUrl.value.trim();
 
-  if (cropper) {
-    const canvas = cropper.getCroppedCanvas({
-      width: 256,
-      height: 256
-    });
-
-    avatarUrl = canvas.toDataURL("image/jpeg", 0.9);
-    profileAvatarUrl.value = avatarUrl;
-
-    cropper.destroy();
-    cropper = null;
-  }
-
   const { error } = await supabaseClient
     .from("profiles")
     .update({
@@ -210,23 +195,28 @@ takeAvatarPhotoBtn.onclick = () => {
 
 avatarFileInput.onchange = handleAvatarFile;
 avatarCameraInput.onchange = handleAvatarFile;
-cropCancelBtn.onclick = () => {
-  closeCropModal();
-};
 
-cropOkBtn.onclick = () => {
-  if (!cropper) return;
+if (typeof cropCancelBtn !== "undefined" && cropCancelBtn) {
+  cropCancelBtn.onclick = () => {
+    closeCropModal();
+  };
+}
 
-  const canvas = cropper.getCroppedCanvas({
-    width: 256,
-    height: 256
-  });
+if (typeof cropOkBtn !== "undefined" && cropOkBtn) {
+  cropOkBtn.onclick = () => {
+    if (!cropper) return;
 
-  const croppedAvatar = canvas.toDataURL("image/jpeg", 0.9);
+    const canvas = cropper.getCroppedCanvas({
+      width: 256,
+      height: 256
+    });
 
-  profileAvatarUrl.value = croppedAvatar;
-  selectedProfileAvatar = null;
+    const croppedAvatar = canvas.toDataURL("image/jpeg", 0.9);
 
-  closeCropModal();
-  updateProfilePreview();
-};
+    profileAvatarUrl.value = croppedAvatar;
+    selectedProfileAvatar = null;
+
+    closeCropModal();
+    updateProfilePreview();
+  };
+}
