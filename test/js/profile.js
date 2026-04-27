@@ -1,3 +1,5 @@
+let cropper = null;
+
 function renderAvatarGrid(container, selectedValue, onPick) {
   container.innerHTML = "";
 
@@ -38,9 +40,27 @@ function handleAvatarFile(event) {
   const reader = new FileReader();
 
   reader.onload = function(e) {
-    profileAvatarUrl.value = e.target.result;
     selectedProfileAvatar = null;
-    updateProfilePreview();
+    profileAvatarUrl.value = "";
+
+    profilePreviewAvatar.innerHTML = `<img id="cropImage" src="${e.target.result}" alt="Avatar szerkesztés">`;
+    const img = document.getElementById("cropImage");
+
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+
+    cropper = new Cropper(img, {
+      aspectRatio: 1,
+      viewMode: 1,
+      dragMode: "move",
+      movable: true,
+      zoomable: true,
+      cropBoxMovable: true,
+      cropBoxResizable: true,
+      background: false
+    });
   };
 
   reader.readAsDataURL(file);
@@ -79,11 +99,17 @@ async function loadOwnProfile() {
   renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, function pickProfileAvatar(val) {
     selectedProfileAvatar = val;
     profileAvatarUrl.value = "";
+
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+
     renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, pickProfileAvatar);
     updateProfilePreview();
   });
 
-  profileAvatarGrid.classList.add("hidden");
+  profileAvatarGrid.style.display = "none";
 
   if (typeof updateMenuVisibility === "function") {
     updateMenuVisibility();
@@ -95,7 +121,20 @@ async function loadOwnProfile() {
 async function saveProfile() {
   if (!currentUser) return;
 
-  const avatarUrl = profileAvatarUrl.value.trim();
+  let avatarUrl = profileAvatarUrl.value.trim();
+
+  if (cropper) {
+    const canvas = cropper.getCroppedCanvas({
+      width: 256,
+      height: 256
+    });
+
+    avatarUrl = canvas.toDataURL("image/jpeg", 0.9);
+    profileAvatarUrl.value = avatarUrl;
+
+    cropper.destroy();
+    cropper = null;
+  }
 
   const { error } = await supabaseClient
     .from("profiles")
@@ -112,10 +151,9 @@ async function saveProfile() {
   }
 
   showToast("Profil mentve", "success");
-
+  profileAvatarGrid.style.display = "none";
 
   await loadOwnProfile();
-  profileAvatarGrid.style.display = "none";
   await loadPosts();
 
   if (typeof showHome === "function") {
@@ -125,12 +163,10 @@ async function saveProfile() {
   if (typeof updateMenuVisibility === "function") {
     updateMenuVisibility();
   }
-  profileAvatarGrid.style.display = "none";
 }
 
 profilePreviewAvatar.onclick = () => {
   const isHidden = getComputedStyle(profileAvatarGrid).display === "none";
-
   profileAvatarGrid.style.display = isHidden ? "grid" : "none";
 };
 
@@ -146,10 +182,3 @@ takeAvatarPhotoBtn.onclick = () => {
 
 avatarFileInput.onchange = handleAvatarFile;
 avatarCameraInput.onchange = handleAvatarFile;
-
-
-profilePreviewAvatar.onclick = () => {
-  const isHidden = profileAvatarGrid.style.display === "none" || !profileAvatarGrid.style.display;
-
-  profileAvatarGrid.style.display = isHidden ? "grid" : "none";
-};
