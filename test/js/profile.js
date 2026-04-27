@@ -1,4 +1,3 @@
-let cropper = null;
 function renderAvatarGrid(container, selectedValue, onPick) {
   container.innerHTML = "";
 
@@ -13,14 +12,15 @@ function renderAvatarGrid(container, selectedValue, onPick) {
 }
 
 function updateProfilePreview() {
-  const name = profileNickname.value.trim() || "Névtelen";
+  const name = profileNickname.value.trim() || "Felhasználó";
   const avatarUrl = profileAvatarUrl.value.trim();
 
-  profilePreviewName.textContent = profileNickname.value || "Felhasználó";
+  profilePreviewName.textContent = name;
 
   if (avatarUrl) {
     profilePreviewAvatar.innerHTML = `<img src="${avatarUrl}" alt="Avatar">`;
   } else {
+    profilePreviewAvatar.innerHTML = "";
     profilePreviewAvatar.textContent =
       selectedProfileAvatar || window.ownProfile?.avatar_emoji || "🙂";
   }
@@ -34,34 +34,6 @@ function handleAvatarFile(event) {
     showToast("Csak képfájl választható", "error");
     return;
   }
-
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-    profilePreviewAvatar.innerHTML = `<img id="cropImage" src="${e.target.result}">`;
-
-    const img = document.getElementById("cropImage");
-
-    if (cropper) cropper.destroy();
-
-    cropper = new Cropper(img, {
-      aspectRatio: 1,          // 🔥 KÖR avatar
-      viewMode: 1,
-      movable: true,
-      zoomable: true,
-      cropBoxResizable: true,
-      dragMode: "move",
-      background: false
-    });
-  };
-
-  reader.readAsDataURL(file);
-}
-
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-    profilePreviewAvatar.innerHTML = `<img id="cropImage" 
 
   const reader = new FileReader();
 
@@ -86,7 +58,6 @@ async function loadOwnProfile() {
   if (error) {
     console.error("PROFILE LOAD ERROR:", error);
     showToast("Profil hiba: " + error.message, "error");
-    setStatus("PROFILE LOAD ERROR: " + error.message);
     return null;
   }
 
@@ -112,6 +83,8 @@ async function loadOwnProfile() {
     updateProfilePreview();
   });
 
+  profileAvatarGrid.classList.add("hidden");
+
   if (typeof updateMenuVisibility === "function") {
     updateMenuVisibility();
   }
@@ -135,11 +108,11 @@ async function saveProfile() {
   if (error) {
     console.error("PROFILE SAVE ERROR:", error);
     showToast("Profil hiba: " + error.message, "error");
-    setStatus("PROFILE SAVE ERROR: " + error.message);
     return;
   }
 
   showToast("Profil mentve", "success");
+  profileAvatarGrid.classList.add("hidden");
 
   await loadOwnProfile();
   await loadPosts();
@@ -150,10 +123,12 @@ async function saveProfile() {
 
   if (typeof updateMenuVisibility === "function") {
     updateMenuVisibility();
-    
-    profileAvatarGrid.classList.add("hidden");
   }
 }
+
+profilePreviewAvatar.onclick = () => {
+  profileAvatarGrid.classList.toggle("hidden");
+};
 
 chooseAvatarFileBtn.onclick = () => {
   avatarFileInput.value = "";
