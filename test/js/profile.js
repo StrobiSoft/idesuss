@@ -40,15 +40,11 @@ function handleAvatarFile(event) {
   const reader = new FileReader();
 
   reader.onload = function(e) {
-    selectedProfileAvatar = null;
-    profileAvatarUrl.value = "";
+    openCropModal(e.target.result);
+  };
 
-    profilePreviewAvatar.innerHTML = `<img id="cropImage" src="${e.target.result}" alt="Avatar szerkesztés">`;
-    const img = document.getElementById("cropImage");
-
-    if (cropper) {
-      cropper.destroy();
-      cropper = null;
+  reader.readAsDataURL(file);
+}
     }
 
     cropper = new Cropper(img, {
