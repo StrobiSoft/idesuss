@@ -45,7 +45,40 @@ function handleAvatarFile(event) {
 
   reader.readAsDataURL(file);
     }
+  function openCropModal(imageSrc) {
+  cropModal.classList.remove("hidden");
+  cropModalImage.src = imageSrc;
 
+  setTimeout(() => {
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+
+    cropper = new Cropper(cropModalImage, {
+      aspectRatio: 1,
+      viewMode: 1,
+      dragMode: "move",
+      movable: true,
+      zoomable: true,
+      cropBoxMovable: true,
+      cropBoxResizable: true,
+      background: false,
+      autoCropArea: 0.85
+    });
+  }, 50);
+}
+
+function closeCropModal() {
+  cropModal.classList.add("hidden");
+
+  if (cropper) {
+    cropper.destroy();
+    cropper = null;
+  }
+
+  cropModalImage.src = "";
+}
     cropper = new Cropper(img, {
       aspectRatio: 1,
       viewMode: 1,
