@@ -210,3 +210,23 @@ takeAvatarPhotoBtn.onclick = () => {
 
 avatarFileInput.onchange = handleAvatarFile;
 avatarCameraInput.onchange = handleAvatarFile;
+cropCancelBtn.onclick = () => {
+  closeCropModal();
+};
+
+cropOkBtn.onclick = () => {
+  if (!cropper) return;
+
+  const canvas = cropper.getCroppedCanvas({
+    width: 256,
+    height: 256
+  });
+
+  const croppedAvatar = canvas.toDataURL("image/jpeg", 0.9);
+
+  profileAvatarUrl.value = croppedAvatar;
+  selectedProfileAvatar = null;
+
+  closeCropModal();
+  updateProfilePreview();
+};
