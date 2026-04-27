@@ -1,13 +1,22 @@
 async function init() {
   bindEvents();
-  initMenu();
-  
+
+  if (typeof initMenu === "function") {
+    initMenu();
+  }
+
   showView("choice");
   await refreshSession();
-  updateMenuVisibility();
+
+  if (typeof updateMenuVisibility === "function") {
+    updateMenuVisibility();
+  }
+
   await loadPosts();
-  
-  applyLang();
+
+  if (typeof applyLang === "function") {
+    applyLang();
+  }
 }
 
 function bindEvents() {
@@ -49,17 +58,10 @@ function bindEvents() {
   });
 
   profileNickname.addEventListener("input", updateProfilePreview);
-  profileAvatarUrl.addEventListener("input", updateProfilePreview);
 
   renderAvatarGrid(registerAvatarGrid, selectedRegisterAvatar, function pickRegisterAvatar(avatar) {
     selectedRegisterAvatar = avatar;
     renderAvatarGrid(registerAvatarGrid, selectedRegisterAvatar, pickRegisterAvatar);
-  });
-
-  renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, function pickProfileAvatar(avatar) {
-    selectedProfileAvatar = avatar;
-    renderAvatarGrid(profileAvatarGrid, selectedProfileAvatar, pickProfileAvatar);
-    updateProfilePreview();
   });
 }
 
