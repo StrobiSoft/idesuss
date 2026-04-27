@@ -32,6 +32,11 @@ async function loadPosts() {
 
     const nickname = profile.nickname || ("user_" + String(post.user_id || "unknown").slice(0, 6));
     const avatarEmoji = profile.avatar_emoji || "🙂";
+    const avatarUrl = profile.avatar_url || "";
+
+    const avatarHtml = avatarUrl
+      ? `<img src="${escapeHtml(avatarUrl)}" alt="Avatar">`
+      : escapeHtml(avatarEmoji);
 
     const date = post.created_at
       ? new Date(post.created_at).toLocaleString("hu-HU")
@@ -42,7 +47,7 @@ async function loadPosts() {
 
     card.innerHTML = `
       <div class="post-head">
-        <div class="avatar-circle">${escapeHtml(avatarEmoji)}</div>
+        <div class="avatar-circle">${avatarHtml}</div>
         <div>
           <div class="post-name">${escapeHtml(nickname)}</div>
           <div class="post-date">${date}</div>
