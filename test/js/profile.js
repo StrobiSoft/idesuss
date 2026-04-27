@@ -124,6 +124,7 @@ async function saveProfile() {
   if (typeof updateMenuVisibility === "function") {
     updateMenuVisibility();
   }
+  profileAvatarGrid.style.display = "none";
 }
 
 profilePreviewAvatar.onclick = () => {
