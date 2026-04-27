@@ -142,3 +142,9 @@ takeAvatarPhotoBtn.onclick = () => {
 
 avatarFileInput.onchange = handleAvatarFile;
 avatarCameraInput.onchange = handleAvatarFile;
+
+profilePreviewAvatar.onclick = () => {
+  const isHidden = profileAvatarGrid.style.display === "none" || !profileAvatarGrid.style.display;
+
+  profileAvatarGrid.style.display = isHidden ? "grid" : "none";
+};
