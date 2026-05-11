@@ -909,5 +909,52 @@
 </body>
 </html>
 <script src="js/resolver.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const videoUrl = document.getElementById("videoUrl");
+    const openBtn = document.getElementById("openBtn");
+    const pasteBtn = document.getElementById("pasteBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    if (openBtn && videoUrl) {
+      openBtn.addEventListener("click", function () {
+        const rawUrl = videoUrl.value.trim();
+
+        if (!rawUrl) {
+          alert("Először illessz be egy videólinket.");
+          return;
+        }
+
+        let finalUrl = rawUrl;
+
+        if (window.IdesussResolver && window.IdesussResolver.cleanVideoUrl) {
+          const result = window.IdesussResolver.cleanVideoUrl(rawUrl);
+          if (result.ok && result.cleanUrl) {
+            finalUrl = result.cleanUrl;
+          }
+        }
+
+        window.open(finalUrl, "_blank", "noopener,noreferrer");
+      });
+    }
+
+    if (pasteBtn && videoUrl) {
+      pasteBtn.addEventListener("click", async function () {
+        try {
+          const text = await navigator.clipboard.readText();
+          videoUrl.value = text.trim();
+        } catch (error) {
+          alert("A böngésző nem engedte automatikusan olvasni a vágólapot. Tartsd nyomva a mezőt, és válaszd a Beillesztést.");
+        }
+      });
+    }
+
+    if (clearBtn && videoUrl) {
+      clearBtn.addEventListener("click", function () {
+        videoUrl.value = "";
+      });
+    }
+  });
+</script>
 </body>
 </html>
