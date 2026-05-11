@@ -889,6 +889,25 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
     // Itt folytathatod a JS logikát (dict, óra, stb.)
+<script>
+  function updateHeaderClock() {
+    const clock = document.getElementById("headerClock");
+    if (!clock) return;
+
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, "0");
+    const mm = String(now.getMinutes()).padStart(2, "0");
+
+    clock.textContent = `${hh}:${mm}`;
+  }
+
+  updateHeaderClock();
+  setInterval(updateHeaderClock, 1000);
+</script>
+
+<script src="js/resolver.js"></script>
+</body>
+</html>
 <script src="js/resolver.js"></script>
 </body>
 </html>
