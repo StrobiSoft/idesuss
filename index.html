@@ -910,14 +910,46 @@
 </html>
 <script src="js/resolver.js"></script>
 <script>
+  <script src="js/resolver.js"></script>
+
+<script>
   document.addEventListener("DOMContentLoaded", function () {
+
+    const year = document.getElementById("year");
+    const clock = document.getElementById("headerClock");
+
     const videoUrl = document.getElementById("videoUrl");
     const openBtn = document.getElementById("openBtn");
     const pasteBtn = document.getElementById("pasteBtn");
     const clearBtn = document.getElementById("clearBtn");
 
+    const shareBtn = document.getElementById("shareBtn");
+
+    // ===== ÉV =====
+    if (year) {
+      year.textContent = new Date().getFullYear();
+    }
+
+    // ===== ÓRA =====
+    function updateHeaderClock() {
+      if (!clock) return;
+
+      const now = new Date();
+
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+
+      clock.textContent = hh + ":" + mm;
+    }
+
+    updateHeaderClock();
+    setInterval(updateHeaderClock, 1000);
+
+    // ===== MEGNYITÁS =====
     if (openBtn && videoUrl) {
+
       openBtn.addEventListener("click", function () {
+
         const rawUrl = videoUrl.value.trim();
 
         if (!rawUrl) {
@@ -927,35 +959,112 @@
 
         let finalUrl = rawUrl;
 
-        if (window.IdesussResolver && window.IdesussResolver.cleanVideoUrl) {
-          const result = window.IdesussResolver.cleanVideoUrl(rawUrl);
+        // ===== RESOLVER =====
+        if (
+          window.IdesussResolver &&
+          window.IdesussResolver.cleanVideoUrl
+        ) {
+
+          const result =
+            window.IdesussResolver.cleanVideoUrl(rawUrl);
+
           if (result.ok && result.cleanUrl) {
+
             finalUrl = result.cleanUrl;
+
+            // visszaírja a tisztított URL-t
             videoUrl.value = finalUrl;
           }
         }
 
-        window.open(finalUrl, "_blank", "noopener,noreferrer");
+        window.open(
+          finalUrl,
+          "_blank",
+          "noopener,noreferrer"
+        );
+
       });
+
     }
 
+    // ===== BEILLESZTÉS =====
     if (pasteBtn && videoUrl) {
-      pasteBtn.addEventListener("click", async function () {
-        try {
-          const text = await navigator.clipboard.readText();
-          videoUrl.value = text.trim();
-        } catch (error) {
-          alert("A böngésző nem engedte automatikusan olvasni a vágólapot. Tartsd nyomva a mezőt, és válaszd a Beillesztést.");
+
+      pasteBtn.addEventListener(
+        "click",
+        async function () {
+
+          try {
+
+            const text =
+              await navigator.clipboard.readText();
+
+            videoUrl.value = text.trim();
+
+          } catch (error) {
+
+            alert(
+              "A böngésző nem engedte automatikusan olvasni a vágólapot. Tartsd nyomva a mezőt, és válaszd a Beillesztést."
+            );
+
+          }
+
         }
-      });
+      );
+
     }
 
+    // ===== TÖRLÉS =====
     if (clearBtn && videoUrl) {
+
       clearBtn.addEventListener("click", function () {
+
         videoUrl.value = "";
+
       });
+
     }
+
+    // ===== MEGOSZTÁS =====
+    if (shareBtn) {
+
+      shareBtn.addEventListener(
+        "click",
+        async function () {
+
+          const shareData = {
+            title: "Idesüss",
+            text: "Idesüss – nyilvános videólinkek egyszerűbb megnyitásához.",
+            url: window.location.href
+          };
+
+          try {
+
+            if (navigator.share) {
+
+              await navigator.share(shareData);
+
+            } else {
+
+              await navigator.clipboard.writeText(
+                window.location.href
+              );
+
+              alert("Link kimásolva.");
+
+            }
+
+          } catch (error) {
+            console.log(error);
+          }
+
+        }
+      );
+
+    }
+
   });
 </script>
+
 </body>
 </html>
