@@ -931,6 +931,7 @@
           const result = window.IdesussResolver.cleanVideoUrl(rawUrl);
           if (result.ok && result.cleanUrl) {
             finalUrl = result.cleanUrl;
+            videoUrl.value = finalUrl;
           }
         }
 
