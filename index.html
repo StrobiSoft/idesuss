@@ -163,9 +163,9 @@
     }
 
     .brand-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
       object-fit: cover;
       display: block;
       flex: 0 0 auto;
@@ -176,17 +176,17 @@
     .brand-text { min-width: 0; }
 
     .brand-title {
-      font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+      font-size: clamp(3.2rem, 5vw, 5.4rem);
       font-weight: 900;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.04em;
       margin: 0;
-      line-height: 0.94;
+      line-height: 0.92;
       color: #102542;
       white-space: nowrap;
     }
 
     .tm-mark {
-      font-size: 0.42em;
+      font-size: 0.34em;
       vertical-align: super;
       margin-left: 4px;
       font-weight: 900;
@@ -239,12 +239,66 @@
 
     .lang-select option { color: #000; }
 
-    .clock-chip {
-      min-width: 112px;
-      font-variant-numeric: tabular-nums;
-      font-size: 1rem;
-      letter-spacing: 0.03em;
-    }
+    .lang-clock-chip{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.header-clock-inline{
+  font-weight:800;
+  font-size:1rem;
+  letter-spacing:.04em;
+  color:#102a56;
+  white-space:nowrap;
+}
+    .auth-chip{
+  gap:10px;
+}
+
+.auth-link{
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  font-size:13px;
+  color:white;
+  padding:10px 18px;
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(58,134,255,.95),
+      rgba(97,175,255,.82)
+    );
+
+  box-shadow:
+    0 8px 20px rgba(58,134,255,.28),
+    inset 0 1px 0 rgba(255,255,255,.45);
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+}
+
+.auth-link:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 10px 24px rgba(58,134,255,.38),
+    inset 0 1px 0 rgba(255,255,255,.55);
+}
+
+.auth-link:active{
+  transform:translateY(1px);
+}
+
+.auth-separator{
+  opacity:.55;
+  font-size:12px;
+  font-weight:700;
+}
 
     .btn {
       appearance: none;
@@ -762,7 +816,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="#top" class="brand-wrap" aria-label="Idesüss főoldal">
-        <img src="/favicon.png" alt="Idesüss logo" class="brand-logo" />
+        <img src="favicon.png" alt="Idesüss logo" class="brand-logo" />
         <div class="brand-text">
           <h2 class="brand-title">Idesüss<span class="tm-mark">™</span></h2>
           <p class="brand-subtitle" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
@@ -770,20 +824,31 @@
       </a>
 
       <div class="header-actions">
-        <div class="header-chip">
-          <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
-  <option value="hu">🇭🇺 Magyar</option>
-<option value="en">🇬🇧 English</option>
-<option value="nl">🇳🇱 Nederlands</option>
-<option value="ro">🇷🇴 Română</option>
-<option value="pl">🇵🇱 Polski</option>
-<option value="hr">🇭🇷 Hrvatski</option>
-          </select>
-        </div>
 
-        <div class="header-chip clock-chip">
-          <span id="headerClock">00:00</span>
-        </div>
+  <div class="header-chip auth-chip">
+    <button id="loginBtn" class="auth-link" type="button">Bejelentkezés</button>
+    <span class="auth-separator">vagy</span>
+    <button id="registerBtn" class="auth-link" type="button">Regisztráció</button>
+  </div>
+
+  <div class="header-chip lang-clock-chip">
+  <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
+    <option value="hu">HU Magyar</option>
+    <option value="en">GB English</option>
+    <option value="nl">NL Nederlands</option>
+    <option value="ro">RO Română</option>
+    <option value="pl">PL Polski</option>
+    <option value="hr">HR Hrvatski</option>
+  </select>
+
+  <span id="headerClock" class="header-clock-inline">00:00</span>
+</div>
+  </div>
+
+  
+
+</div>
+             
       </div>
     </div>
   </header>
@@ -796,7 +861,7 @@
             <div class="hero-copy">
               <div>
                 <div class="hero-brand">
-                  <img src="/favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
+                  <img src="favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
                   <div>
                     <h1 class="hero-brand-title">Idesüss<span class="tm-mark">™</span></h1>
                     <p class="hero-brand-sub" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
