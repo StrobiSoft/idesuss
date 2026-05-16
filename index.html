@@ -814,7 +814,91 @@
       .hero-grid, .info-grid, .about-grid { grid-template-columns: 1fr; }
       .hero-webapp-btn { min-width: 0; width: 100%; }
     }
+    .footer-action-btn {
+  border: 1px solid rgba(13, 91, 215, 0.18);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.82), rgba(231,240,255,0.72));
+  color: #12345a;
+  border-radius: 999px;
+  padding: 11px 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.8),
+    0 8px 20px rgba(13,91,215,0.12);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
 
+.footer-action-btn:hover {
+  transform: translateY(-1px);
+  background:
+    linear-gradient(145deg, #ffffff, #e7f0ff);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    0 12px 28px rgba(13,91,215,0.18);
+}
+
+.idesuss-footer-actions {
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.info-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background: rgba(8, 20, 38, 0.48);
+  backdrop-filter: blur(10px);
+}
+
+.info-panel.show {
+  display: flex;
+}
+
+.info-panel-card {
+  position: relative;
+  width: min(100%, 560px);
+  border-radius: 28px;
+  padding: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(13,91,215,0.16), transparent 32%),
+    linear-gradient(180deg, #ffffff, #f4f8ff);
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: 0 28px 80px rgba(8, 20, 38, 0.34);
+  color: #17324d;
+}
+
+.info-panel-card h2 {
+  margin: 0 0 14px;
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  letter-spacing: -0.04em;
+}
+
+.info-panel-card p {
+  margin: 0;
+  color: #5e748d;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.info-panel-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(13,91,215,0.10);
+  color: #17324d;
+  font-size: 26px;
+  font-weight: 900;
+}
     @media (max-width: 760px) {
       :root { --header-h: 92px; }
       .container { width: min(var(--maxw), calc(100% - 20px)); }
@@ -936,9 +1020,10 @@
               </div>
               <a href="#how" class="hero-banner-link" data-i18n="heroBannerLink">Részletek</a>
             </div>
-            <div class="hero-footer-links">
-              <a href="#about" data-i18n="aboutLink">Névjegy</a>
-              <span class="powered">Powered by StZoo</span>
+            <div class="hero-footer-links idesuss-footer-actions">
+              <button class="footer-action-btn" type="button" data-panel="how">⚙️ Hogyan működik</button>
+               <button class="footer-action-btn" type="button" data-panel="about">ℹ️ Névjegy</button>
+              <a class="footer-action-btn" href="https://idesuss.net/app">📱 Webapp</a>
             </div>
           </div>
         </div>
@@ -960,12 +1045,17 @@
   <div class="container">
     <h2>Névjegy</h2>
     <p>
-      Az Idesüss egy saját fejlesztésű mini webapp nyilvános videólinkek
-      egyszerűbb megnyitásához. Powered by StZoo.
+      "aboutText": "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem." Powered by StZoo.
     </p>
   </div>
 </section>
-  </main>
+  </main><div id="infoPanel" class="info-panel" aria-hidden="true">
+  <div class="info-panel-card">
+    <button id="infoPanelClose" class="info-panel-close" type="button">×</button>
+    <h2 id="infoPanelTitle"></h2>
+    <p id="infoPanelText"></p>
+  </div>
+</div>
 
   <footer class="footer">
     <div class="container">
@@ -976,10 +1066,10 @@
             <p data-i18n="footerDesc">Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.</p>
           </div>
           <div class="footer-links">
-            <a href="#how" data-i18n="howItWorks">Hogyan működik</a>
-            <a href="#about" data-i18n="aboutLink">Névjegy</a>
-            <a id="footerOpenAppLink" href="https://idesuss.net/app" data-i18n="openWebapp">Webapp megnyitása</a>
-            <button id="shareBtn" type="button" data-i18n="shareButton">Megosztás</button>
+            <button class="footer-action-btn" type="button" data-panel="how">⚙️ Hogyan működik</button>
+              <button class="footer-action-btn" type="button" data-panel="about">ℹ️ Névjegy</button>
+              <a id="footerOpenAppLink" class="footer-action-btn" href="https://idesuss.net/app">📱 Webapp megnyitása</a>
+            <button id="shareBtn" class="footer-action-btn" type="button">📤 Megosztás</button>
           </div>
         </div>
         <div class="footer-bottom">
@@ -1081,7 +1171,53 @@ registerVisitSession();
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+const infoPanel = document.getElementById("infoPanel");
+const infoPanelTitle = document.getElementById("infoPanelTitle");
+const infoPanelText = document.getElementById("infoPanelText");
+const infoPanelClose = document.getElementById("infoPanelClose");
 
+const panelTexts = {
+  how: {
+    title: "Hogyan működik?",
+    text: "Másolj be egy nyilvános videólinket, majd nyomd meg a megnyitás gombot. Az Idesüss megpróbálja egyszerűen és gyorsan megnyitni a tartalmat."
+  },
+  about: {
+    title: "Névjegy",
+    text: "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem."
+  }
+};
+
+function openInfoPanel(type) {
+  const data = panelTexts[type];
+  if (!data || !infoPanel || !infoPanelTitle || !infoPanelText) return;
+
+  infoPanelTitle.textContent = data.title;
+  infoPanelText.textContent = data.text;
+  infoPanel.classList.add("show");
+  infoPanel.setAttribute("aria-hidden", "false");
+}
+
+function closeInfoPanel() {
+  if (!infoPanel) return;
+  infoPanel.classList.remove("show");
+  infoPanel.setAttribute("aria-hidden", "true");
+}
+
+document.querySelectorAll("[data-panel]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    openInfoPanel(btn.dataset.panel);
+  });
+});
+
+if (infoPanelClose) {
+  infoPanelClose.addEventListener("click", closeInfoPanel);
+}
+
+if (infoPanel) {
+  infoPanel.addEventListener("click", (event) => {
+    if (event.target === infoPanel) closeInfoPanel();
+  });
+}
     const year = document.getElementById("year");
     const clock = document.getElementById("headerClock");
 
