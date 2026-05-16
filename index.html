@@ -785,6 +785,26 @@
       color: var(--muted);
       font-size: 0.95rem;
     }
+    .footer-stats{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+  font-size:0.95rem;
+  font-weight:700;
+ color:#102a56;
+}
+
+.footer-stats span{
+  background:rgba(13,91,215,0.08);
+  border:1px solid rgba(13,91,215,0.18);
+  padding:8px 14px;
+  border-radius:999px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 18px rgba(0,0,0,0.12);
+}
 
     .powered { font-weight: 800; color: var(--primary); }
     .small-note { color: var(--muted); font-size: 0.9rem; }
@@ -964,6 +984,10 @@
         </div>
         <div class="footer-bottom">
           <div>© <span id="year"></span> Idesüss<span class="tm-mark">™</span></div>
+           <div class="footer-stats">
+             <span id="onlineUsersCounter">👁 0 online most</span>
+             <span id="totalVisitsCounter">🌍 0 összes látogatás</span>
+           </div>
           <div class="powered">Powered by StZoo</div>
         </div>
       </div>
@@ -990,10 +1014,70 @@
 </script>
 
 <script src="js/resolver.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+console.log("Supabase connected");
+function getVisitorKey() {
+  let key = localStorage.getItem("idesuss_visitor_key");
+
+  if (!key) {
+    key = "visitor_" + crypto.randomUUID();
+    localStorage.setItem("idesuss_visitor_key", key);
+  }
+
+  return key;
+}
+
+async function registerVisitSession() {
+  const visitorKey = getVisitorKey();
+
+  const { error: sessionError } = await supabaseClient
+    .from("site_sessions")
+    .insert({
+      visitor_key: visitorKey,
+      interaction_count: 0,
+      is_active: true
+    });
+
+  if (sessionError) {
+    console.error("Session insert error:", sessionError);
+    return;
+  }
+
+  const { data, error: statError } = await supabaseClient.rpc(
+    "increment_site_stat",
+    {
+      stat_name: "total_visits",
+      amount: 1
+    }
+  );
+
+  if (statError) {
+    console.error("Counter error:", statError);
+    return;
+  }
+
+  console.log("Visit registered. Total visits:", data);
+  const totalEl = document.getElementById("totalVisitsCounter");
+if (totalEl) {
+  totalEl.textContent = `🌍 ${data} összes látogatás`;
+}
+}
+registerVisitSession();
+</script>
 </body>
 </html>
 <script src="js/resolver.js"></script>
-<script> src="js/resolver.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
