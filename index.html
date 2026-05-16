@@ -878,6 +878,8 @@
 }
 
 .info-panel {
+  opacity: 0;
+  transition: opacity .25s ease;
   position: fixed;
   inset: 0;
   z-index: 999;
@@ -889,11 +891,70 @@
   backdrop-filter: blur(10px);
 }
 
+.viewer-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(8, 20, 38, 0.58);
+  backdrop-filter: blur(10px);
+}
+
+.viewer-shell.show {
+  display: flex;
+}
+
+.viewer-shell-card {
+  width: min(100%, 860px);
+  background: #07111f;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 26px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.45);
+  overflow: hidden;
+}
+
+.viewer-shell-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+.viewer-shell-title {
+  font-weight: 900;
+}
+
+.viewer-shell-close {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.viewer-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  display: block;
+  background: #000;
+}
 .info-panel.show {
+  opacity: 1;
   display: flex;
 }
 
 .info-panel-card {
+  transform: scale(.92);
+  transition: transform .25s ease;
   position: relative;
   width: min(100%, 560px);
   border-radius: 28px;
@@ -905,7 +966,9 @@
   box-shadow: 0 28px 80px rgba(8, 20, 38, 0.34);
   color: #17324d;
 }
-
+.info-panel.show .info-panel-card {
+  transform: scale(1);
+}
 .info-panel-card h2 {
   margin: 0 0 14px;
   font-size: clamp(1.5rem, 4vw, 2.1rem);
@@ -1063,7 +1126,38 @@
         </div>
       </div>
     </section>
+<div id="viewerShell" class="viewer-shell">
 
+  <div class="viewer-shell-card">
+
+    <div class="viewer-shell-top">
+
+      <div class="viewer-shell-title">
+        Idesüss Viewer
+      </div>
+
+      <button
+        id="closeViewerBtn"
+        class="viewer-shell-close"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <iframe
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      id="viewerFrame"
+      class="viewer-frame"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+
+  </div>
+
+</div>
      </main><div id="infoPanel" class="info-panel" aria-hidden="true">
   <div class="info-panel-card">
     <button id="infoPanelClose" class="info-panel-close" type="button">×</button>
@@ -1178,6 +1272,26 @@ if (totalEl) {
   totalEl.textContent = `🌍 ${data} összes látogatás`;
 }
 }
+async function loadTotalVisits() {
+  const { data, error } = await supabaseClient
+    .from("site_stats")
+    .select("value")
+    .eq("name", "total_visits")
+    .single();
+
+  if (error) {
+    console.error("Total visits load error:", error);
+    return;
+  }
+
+  const totalEl = document.getElementById("totalVisitsCounter");
+
+  if (totalEl && data) {
+    totalEl.textContent = `🌍 ${data.value} összes látogatás`;
+  }
+}
+
+loadTotalVisits();
 const lastVisit = localStorage.getItem("idesuss_last_visit");
 
 const now = Date.now();
@@ -1218,6 +1332,14 @@ const panelTexts = {
   android: {
     title: "Android kompatibilitás",
     text: "Egyes Android eszközökön vagy böngészőkben a videók megnyitása eltérően működhet. Ilyenkor az Idesüss megpróbálja a lehető legegyszerűbb módon kezelni a linket, de bizonyos platformok saját korlátozásai miatt előfordulhat, hogy a tartalom csak külső oldalon vagy alkalmazásban nyílik meg."
+  },
+register: {
+  title: "Regisztráció",
+  text: "Az Idesüss regisztrációs rendszere hamarosan indul. A regisztrált felhasználók később extra funkciókat, közösségi lehetőségeket és sofőrbarát eszközöket érhetnek el."
+},
+login: {
+  title: "Bejelentkezés",
+  text: "A bejelentkezés hamarosan elérhető lesz. Ez később a személyes profilhoz, az extra funkciókhoz és a közösségi lehetőségekhez kapcsolódik majd."
 }
 };
 
@@ -1259,9 +1381,24 @@ if (infoPanel) {
     const openBtn = document.getElementById("openBtn");
     const pasteBtn = document.getElementById("pasteBtn");
     const clearBtn = document.getElementById("clearBtn");
-
+    const viewerShell = document.getElementById("viewerShell");
+    const viewerFrame = document.getElementById("viewerFrame");
+    const closeViewerBtn = document.getElementById("closeViewerBtn");
     const shareBtn = document.getElementById("shareBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const registerBtn = document.getElementById("registerBtn");
 
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    openInfoPanel("login");
+  });
+}
+
+if (registerBtn) {
+  registerBtn.addEventListener("click", () => {
+    openInfoPanel("register");
+  });
+}
     // ===== ÉV =====
     if (year) {
       year.textContent = new Date().getFullYear();
@@ -1313,13 +1450,42 @@ if (infoPanel) {
             videoUrl.value = finalUrl;
           }
         }
+     if (viewerShell && viewerFrame) {
+function buildEmbedUrl(url) {
+  try {
+    const u = new URL(url);
 
-        window.open(
-          finalUrl,
-          "_blank",
-          "noopener,noreferrer"
-        );
+    if (u.hostname.includes("youtube.com")) {
+      const id = u.searchParams.get("v");
+      if (id) return "https://www.youtube.com/embed/" + id;
+    }
 
+    if (u.hostname.includes("youtu.be")) {
+      const id = u.pathname.replace("/", "");
+      if (id) return "https://www.youtube.com/embed/" + id;
+    }
+
+    return url;
+  } catch (e) {
+    return url;
+  }
+}
+ viewerFrame.src = buildEmbedUrl(finalUrl) + "?autoplay=1";
+
+  viewerShell.classList.add("show");
+
+}
+if (closeViewerBtn && viewerShell && viewerFrame) {
+
+  closeViewerBtn.addEventListener("click", function () {
+
+    viewerShell.classList.remove("show");
+
+    viewerFrame.src = "";
+
+  });
+
+}
       });
 
     }
