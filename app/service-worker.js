@@ -6,13 +6,14 @@ self.addEventListener("install", e => {
 
 self.addEventListener("activate", e => {
   e.waitUntil(
-   caches.keys().then(keys =>
-  Promise.all(
-    keys
-      .filter(key => key.startsWith("idesuss-v"))
-      .map(key => caches.delete(key))
-  )
-)
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key.startsWith("idesuss-v"))
+          .map(key => caches.delete(key))
+      )
+    )
+  );
 });
 
 self.addEventListener("fetch", e => {
