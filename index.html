@@ -1568,6 +1568,73 @@ if (closeViewerBtn && viewerShell && viewerFrame) {
 
   });
 </script>
+<script>
+/* Idesüss Shell Receiver v1
+   Főoldali linkfogadó réteg — webapp core érintése nélkül
+*/
+
+(function () {
+  const SHARED_URL_KEY = "ides_shared_last_url";
+
+  function getIncomingUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("url") || params.get("u") || "";
+  }
+
+  function cleanIncomingUrl(rawUrl) {
+    if (!rawUrl) return "";
+
+    let url = rawUrl.trim();
+
+    try {
+      url = decodeURIComponent(url);
+    } catch (e) {
+      // Ha már dekódolt, nem baj, megyünk tovább.
+    }
+
+    try {
+      const parsed = new URL(url);
+
+      [
+        "fbclid",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_term",
+        "utm_content",
+        "si",
+        "feature"
+      ].forEach(param => parsed.searchParams.delete(param));
+
+      return parsed.toString();
+    } catch (e) {
+      return url;
+    }
+  }
+
+  function openInIdesussApp(cleanUrl) {
+    if (!cleanUrl) return;
+
+    const target = "/app/?url=" + encodeURIComponent(cleanUrl);
+    window.location.href = target;
+  }
+
+  function initShellReceiver() {
+    const incoming = getIncomingUrl();
+
+    if (!incoming) return;
+
+    const cleanUrl = cleanIncomingUrl(incoming);
+
+    if (!cleanUrl) return;
+
+    localStorage.setItem(SHARED_URL_KEY, cleanUrl);
+    openInIdesussApp(cleanUrl);
+  }
+
+  initShellReceiver();
+})();
+</script>
 
 </body>
 </html>
