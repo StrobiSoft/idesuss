@@ -1226,6 +1226,246 @@ const supabaseClient = supabase.createClient(
 );
 
 console.log("Supabase connected");
+// Idesüss Auth v1
+let currentUser = null;
+
+function createAuthModal() {
+  if (document.getElementById("idesussAuthModal")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "idesussAuthModal";
+  modal.style.cssText = `
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 20, 40, 0.55);
+    backdrop-filter: blur(8px);
+  `;
+
+  modal.innerHTML = `
+    <div style="
+      width: min(420px, calc(100% - 32px));
+      border-radius: 28px;
+      background: linear-gradient(180deg, #f8fbff, #e8f2ff);
+      box-shadow: 0 30px 80px rgba(20, 80, 160, .35);
+      padding: 24px;
+      color: #142b4a;
+      font-family: inherit;
+    ">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
+        <h2 id="authModalTitle" style="margin:0;font-size:24px;">Bejelentkezés</h2>
+        <button id="authModalClose" type="button" style="
+          border:0;
+          background:#ffffff;
+          border-radius:999px;
+          width:38px;
+          height:38px;
+          cursor:pointer;
+          font-size:20px;
+        ">×</button>
+      </div>
+
+      <input id="authEmail" type="email" placeholder="E-mail cím" style="
+        width:100%;
+        box-sizing:border-box;
+        margin-bottom:12px;
+        padding:14px 16px;
+        border-radius:16px;
+        border:1px solid rgba(40,90,150,.25);
+        font-size:16px;
+      ">
+
+      <input id="authPassword" type="password" placeholder="Jelszó" style=" 
+      width:100%;
+        box-sizing:border-box;
+        margin-bottom:14px;
+        padding:14px 16px;
+        border-radius:16px;
+        border:1px solid rgba(40,90,150,.25);
+        font-size:16px;
+      ">
+      <input id="authPasswordRepeat" type="password" placeholder="Jelszó újra" style="
+  width:100%;
+  box-sizing:border-box;
+  margin-bottom:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(40,90,150,.25);
+  font-size:16px;
+  display:none;
+">
+
+      <button id="authSubmitBtn" type="button" style="
+        width:100%;
+        border:0;
+        border-radius:18px;
+        padding:15px 18px;
+        background: linear-gradient(135deg, #0f6fff, #4aa3ff);
+        color:white;
+        font-weight:800;
+        font-size:16px;
+        cursor:pointer;
+        box-shadow: 0 12px 28px rgba(20,100,220,.35);
+      ">Bejelentkezés</button>
+
+      <p id="authMessage" style="
+        min-height:22px;
+        margin:14px 0 0;
+        font-size:14px;
+        color:#47627f;
+        text-align:center;
+      "></p>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("authModalClose").addEventListener("click", closeAuthModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeAuthModal();
+  });
+}
+
+function openAuthModal(mode) {
+  createAuthModal();
+
+  const modal = document.getElementById("idesussAuthModal");
+  const title = document.getElementById("authModalTitle");
+  const submit = document.getElementById("authSubmitBtn");
+  const message = document.getElementById("authMessage");
+  const repeat = document.getElementById("authPasswordRepeat");
+
+  modal.dataset.mode = mode;
+  title.textContent = mode === "register" ? "Regisztráció" : "Bejelentkezés";
+  submit.textContent = mode === "register" ? "Regisztráció" : "Bejelentkezés";
+  message.textContent = "";
+if (repeat) {
+  repeat.style.display = mode === "register" ? "block" : "none";
+  repeat.value = "";
+}
+  modal.style.display = "flex";
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById("idesussAuthModal");
+  if (modal) modal.style.display = "none";
+}
+
+function updateAuthUI() {
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+
+  if (!loginBtn || !registerBtn) return;
+
+  if (currentUser) {
+    loginBtn.textContent = currentUser.email || "Belépve";
+    registerBtn.textContent = "Kijelentkezés";
+  } else {
+    loginBtn.textContent = "Bejelentkezés";
+    registerBtn.textContent = "Regisztráció";
+  }
+}
+
+async function checkAuthState() {
+  const { data } = await supabaseClient.auth.getUser();
+  currentUser = data?.user || null;
+  updateAuthUI();
+}
+
+async function handleAuthSubmit() {
+  const modal = document.getElementById("idesussAuthModal");
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const repeatPassword = document.getElementById("authPasswordRepeat")?.value || "";
+  const message = document.getElementById("authMessage");
+  const mode = modal.dataset.mode || "login";
+
+  if (!email || !password) {
+    message.textContent = "Add meg az e-mail címet és a jelszót.";
+    return;
+  }
+if (mode === "register" && password !== repeatPassword) {
+  message.textContent = "A két jelszó nem egyezik.";
+  return;
+}
+  message.textContent = "Dolgozom...";
+
+  let result;
+
+  if (mode === "register") {
+    result = await supabaseClient.auth.signUp({ email, password });
+  } else {
+    result = await supabaseClient.auth.signInWithPassword({ email, password });
+  }
+
+  if (result.error) {
+    message.textContent = result.error.message;
+    return;
+  }
+
+  if (mode === "register") {
+  await supabaseClient.auth.signOut();
+  currentUser = null;
+  updateAuthUI();
+
+  message.textContent = "Regisztráció elküldve. Küldtünk egy megerősítő e-mailt. Kattints a levélben található linkre, majd utána jelentkezz be.";
+
+  return;
+}
+
+currentUser = result.data?.user || null;
+message.textContent = "Sikeres bejelentkezés.";
+
+updateAuthUI();
+
+setTimeout(closeAuthModal, 800);
+}
+
+function initAuthButtons() {
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+
+  if (loginBtn) {
+loginBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  if (currentUser) return;
+  openAuthModal("login");
+});
+  }
+
+  if (registerBtn) {
+  registerBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if (currentUser) {
+      await supabaseClient.auth.signOut();
+      currentUser = null;
+      updateAuthUI();
+      return;
+    }
+
+    openAuthModal("register");
+  });
+}
+
+  createAuthModal();
+  document.getElementById("authSubmitBtn").addEventListener("click", handleAuthSubmit);
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    currentUser = session?.user || null;
+    updateAuthUI();
+  });
+
+  checkAuthState();
+}
+
+document.addEventListener("DOMContentLoaded", initAuthButtons);
 function getVisitorKey() {
   let key = localStorage.getItem("idesuss_visitor_key");
 
@@ -1361,6 +1601,7 @@ function closeInfoPanel() {
 
 document.querySelectorAll("[data-panel]").forEach((btn) => {
   btn.addEventListener("click", () => {
+    if (btn.id === "loginBtn" || btn.id === "registerBtn") return;
     openInfoPanel(btn.dataset.panel);
   });
 });
