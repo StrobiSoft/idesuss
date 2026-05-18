@@ -1466,6 +1466,437 @@ loginBtn.addEventListener("click", (e) => {
 }
 
 document.addEventListener("DOMContentLoaded", initAuthButtons);
+// ===== Idesüss Profile Onboarding v1 =====
+
+const RESERVED_MODERATOR_SUFFIXES = [
+  "_hu",
+  "_en",
+  "_nl",
+  "_ro",
+  "_pl",
+  "_hr",
+  "_de"
+];
+
+function normalizeNickname(name) {
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9_]/g, "");
+}
+
+function createProfileModal() {
+
+  if (document.getElementById("idesussProfileModal")) return;
+
+  const modal = document.createElement("div");
+
+  modal.id = "idesussProfileModal";
+
+  modal.style.cssText = `
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,20,40,.72);
+    backdrop-filter: blur(12px);
+  `;
+
+  modal.innerHTML = `
+    <div style="
+      width:min(520px,calc(100% - 24px));
+      border-radius:28px;
+      padding:24px;
+      background:linear-gradient(180deg,#f8fbff,#e8f2ff);
+      box-shadow:0 30px 80px rgba(0,0,0,.35);
+      color:#17324d;
+    ">
+
+      <h2 style="
+        margin:0 0 8px;
+        font-size:28px;
+        font-weight:900;
+      ">
+        Profil befejezése
+      </h2>
+
+      <p style="
+        margin:0 0 18px;
+        color:#5e748d;
+      ">
+        A továbblépéshez válassz becenevet és avatárt.
+      </p>
+
+      <div style="margin-bottom:14px;">
+
+        <input
+          id="profileNickname"
+          type="text"
+          placeholder="Becenév"
+          style="
+            width:100%;
+            padding:14px 16px;
+            border-radius:16px;
+            border:1px solid rgba(40,90,150,.25);
+            font-size:16px;
+            box-sizing:border-box;
+          "
+        >
+
+        <div
+          id="nicknameStatus"
+          style="
+            margin-top:8px;
+            font-size:14px;
+            font-weight:700;
+            min-height:18px;
+          "
+        ></div>
+
+      </div>
+
+      <div style="margin-bottom:18px;">
+
+        <div style="
+          font-size:14px;
+          font-weight:800;
+          margin-bottom:10px;
+        ">
+          Avatar
+        </div>
+
+        <div
+          id="avatarGrid"
+          style="
+            display:grid;
+            grid-template-columns:repeat(6,1fr);
+            gap:10px;
+          "
+        >
+        </div>
+
+      </div>
+
+      <div style="margin-bottom:18px;">
+
+        <div style="
+          font-size:14px;
+          font-weight:800;
+          margin-bottom:10px;
+        ">
+          E-mail láthatóság
+        </div>
+
+        <select
+          id="emailVisibility"
+          style="
+            width:100%;
+            padding:14px 16px;
+            border-radius:16px;
+            border:1px solid rgba(40,90,150,.25);
+            font-size:16px;
+          "
+        >
+          <option value="hidden">Rejtett</option>
+          <option value="masked">Maszkolt</option>
+          <option value="public">Nyilvános</option>
+        </select>
+
+      </div>
+
+      <button
+        id="saveProfileBtn"
+        type="button"
+        style="
+          width:100%;
+          border:0;
+          border-radius:18px;
+          padding:16px;
+          background:linear-gradient(135deg,#0f6fff,#4aa3ff);
+          color:white;
+          font-size:17px;
+          font-weight:900;
+          cursor:pointer;
+        "
+      >
+        Profil mentése
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const avatarGrid = document.getElementById("avatarGrid");
+
+  const avatars = [
+    "😎","🚛","🔥","🎧","🛰️","🦊",
+    "🐺","🛸","🐼","👑","⚡","🎮"
+  ];
+
+  avatars.forEach((emoji) => {
+
+    const btn = document.createElement("button");
+
+    btn.type = "button";
+
+    btn.textContent = emoji;
+
+    btn.dataset.avatar = emoji;
+
+    btn.style.cssText = `
+      height:52px;
+      border-radius:16px;
+      border:1px solid rgba(40,90,150,.2);
+      background:white;
+      font-size:24px;
+      cursor:pointer;
+    `;
+
+    btn.addEventListener("click", () => {
+
+      document
+        .querySelectorAll("[data-avatar]")
+        .forEach(el => {
+          el.style.outline = "none";
+        });
+
+      btn.style.outline = "3px solid #0f6fff";
+
+      modal.dataset.selectedAvatar = emoji;
+    });
+
+    avatarGrid.appendChild(btn);
+
+  });
+
+}
+
+async function ensureProfileExists(user) {
+
+  const { data: existing } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (existing) return existing;
+
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .insert({
+      id: user.id,
+      email: user.email,
+      role: "user",
+      email_visibility: "hidden",
+      profile_completed: false
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}
+
+async function checkProfileCompletion() {
+
+  if (!currentUser) return;
+
+  createProfileModal();
+
+  const modal = document.getElementById("idesussProfileModal");
+
+  const profile = await ensureProfileExists(currentUser);
+
+  if (!profile) return;
+
+  if (profile.profile_completed) {
+
+    modal.style.display = "none";
+
+    return;
+  }
+
+  modal.style.display = "flex";
+
+}
+
+async function validateNickname(rawNickname) {
+
+  const status =
+    document.getElementById("nicknameStatus");
+
+  const normalized =
+    normalizeNickname(rawNickname);
+
+  if (!normalized) {
+
+    status.textContent =
+      "Adj meg egy becenevet.";
+
+    status.style.color = "#c53030";
+
+    return false;
+  }
+
+  if (
+    RESERVED_MODERATOR_SUFFIXES.some(
+      suffix => normalized.endsWith(suffix)
+    )
+  ) {
+
+    status.textContent =
+      "Ez a végződés moderátori használatra fenntartott.";
+
+    status.style.color = "#c53030";
+
+    return false;
+  }
+
+  const { data: reserved } = await supabaseClient
+    .from("reserved_nicknames")
+    .select("*")
+    .eq("nickname_normalized", normalized)
+    .maybeSingle();
+
+  if (reserved) {
+
+    status.textContent =
+      "Ez a becenév foglalt.";
+
+    status.style.color = "#c53030";
+
+    return false;
+  }
+
+  const { data: existing } = await supabaseClient
+    .from("profiles")
+    .select("id")
+    .eq("nickname_normalized", normalized)
+    .maybeSingle();
+
+  if (existing) {
+
+    status.textContent =
+      "Ez a becenév már használatban van.";
+
+    status.style.color = "#c53030";
+
+    return false;
+  }
+
+  status.textContent =
+    "A becenév használható.";
+
+  status.style.color = "#1f9d55";
+
+  return true;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  createProfileModal();
+
+  document.addEventListener("click", async (e) => {
+
+    if (e.target?.id !== "saveProfileBtn") return;
+
+    const nickname =
+      document.getElementById("profileNickname")
+      .value
+      .trim();
+
+    const emailVisibility =
+      document.getElementById("emailVisibility")
+      .value;
+
+    const modal =
+      document.getElementById("idesussProfileModal");
+
+    const avatar =
+      modal.dataset.selectedAvatar;
+
+    const valid =
+      await validateNickname(nickname);
+
+    if (!valid) return;
+
+    if (!avatar) {
+
+      alert("Válassz avatárt.");
+
+      return;
+    }
+
+    const normalized =
+      normalizeNickname(nickname);
+
+    const { error } = await supabaseClient
+      .from("profiles")
+      .update({
+        nickname,
+        nickname_normalized: normalized,
+        avatar_emoji: avatar,
+        email_visibility: emailVisibility,
+        profile_completed: true
+      })
+      .eq("id", currentUser.id);
+
+    if (error) {
+
+      console.error(error);
+
+      alert("Nem sikerült menteni.");
+
+      return;
+    }
+
+    modal.style.display = "none";
+
+    console.log("Profile completed");
+
+  });
+
+  const nicknameInput =
+    document.getElementById("profileNickname");
+
+  if (nicknameInput) {
+
+    nicknameInput.addEventListener(
+      "input",
+      async () => {
+
+        await validateNickname(
+          nicknameInput.value
+        );
+
+      }
+    );
+
+  }
+
+  supabaseClient.auth.onAuthStateChange(
+    async (_event, session) => {
+
+      currentUser = session?.user || null;
+
+      if (currentUser) {
+
+        await checkProfileCompletion();
+
+      }
+
+    }
+  );
+
+});
 function getVisitorKey() {
   let key = localStorage.getItem("idesuss_visitor_key");
 
