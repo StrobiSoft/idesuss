@@ -1012,6 +1012,59 @@
   </style>
 </head>
 <body>
+<button
+  id="menuToggle"
+  style="
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:46px;
+    height:46px;
+    border-radius:14px;
+    border:none;
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(10px);
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+    z-index:2000;
+  "
+>
+☰
+</button>
+
+<div
+  id="idesussMenu"
+  style="
+    position:absolute;
+    top:72px;
+    right:18px;
+    min-width:220px;
+    padding:12px;
+    border-radius:20px;
+    background:rgba(15,25,40,.94);
+    backdrop-filter:blur(18px);
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    display:none;
+    flex-direction:column;
+    gap:10px;
+    z-index:2000;
+  "
+>
+
+  <button class="idesussMenuBtn" id="openProfileBtn">
+    👤 Profil
+  </button>
+
+  <button class="idesussMenuBtn">
+    ▶️ Webapp
+  </button>
+
+  <button class="idesussMenuBtn" id="logoutBtnMenu">
+    🚪 Kijelentkezés
+  </button>
+
+</div>
   <header class="site-header">
     <div class="container header-inner">
       <a href="#top" class="brand-wrap" aria-label="Idesüss főoldal">
