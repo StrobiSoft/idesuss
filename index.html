@@ -1373,6 +1373,10 @@ async function checkAuthState() {
   const { data } = await supabaseClient.auth.getUser();
   currentUser = data?.user || null;
   updateAuthUI();
+
+  if (currentUser && typeof checkProfileCompletion === "function") {
+    await checkProfileCompletion();
+  }
 }
 
 async function handleAuthSubmit() {
