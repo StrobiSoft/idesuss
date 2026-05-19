@@ -1285,6 +1285,74 @@ const supabaseClient = supabase.createClient(
   SUPABASE_ANON_KEY
 );
 
+const ONLINE_TIMEOUT_SECONDS = 30;
+const HEARTBEAT_INTERVAL_MS = 15000;
+
+function getVisitorId() {
+  let id = localStorage.getItem("ides_visitor_id");
+
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem("ides_visitor_id", id);
+  }
+
+  return id;
+}
+
+const visitorId = getVisitorId();
+
+async function heartbeatOnline() {
+  const now = new Date().toISOString();
+
+  await supabaseClient
+    .from("online_visitors")
+    .upsert({
+      visitor_id: visitorId,
+      page: window.location.pathname || "/",
+      status: "online",
+      last_seen: now
+    }, {
+      onConflict: "visitor_id"
+    });
+}
+
+async function setOffline() {
+  await supabaseClient
+    .from("online_visitors")
+    .update({
+      status: "offline",
+      last_seen: new Date().toISOString()
+    })
+    .eq("visitor_id", visitorId);
+}
+
+async function updateOnlineCount() {
+  const since = new Date(Date.now() - ONLINE_TIMEOUT_SECONDS * 1000).toISOString();
+
+  const { count, error } = await supabaseClient
+    .from("online_visitors")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "online")
+    .gte("last_seen", since);
+
+  if (!error) {
+    const el = document.getElementById("onlineNowCount");
+    if (el) el.textContent = count || 0;
+  }
+}
+
+heartbeatOnline();
+updateOnlineCount();
+
+setInterval(() => {
+  heartbeatOnline();
+  updateOnlineCount();
+}, HEARTBEAT_INTERVAL_MS);
+
+window.addEventListener("beforeunload", () => {
+  setOffline();
+});
+
 console.log("Supabase connected");
 // Idesüss Auth v1
 let currentUser = null;
