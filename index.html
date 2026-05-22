@@ -2197,7 +2197,21 @@ if (loginBtn) {
 }
 
 if (registerBtn) {
-  registerBtn.addEventListener("click", () => {
+  registerBtn.addEventListener("click", async () => {
+
+    const {
+      data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    if (user) {
+
+      await supabaseClient.auth.signOut();
+
+      location.reload();
+
+      return;
+    }
+
     openInfoPanel("register");
   });
 }
