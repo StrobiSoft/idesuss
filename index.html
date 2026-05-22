@@ -1336,8 +1336,8 @@ async function updateOnlineCount() {
     .gte("last_seen", since);
 
   if (!error) {
-    const el = document.getElementById("onlineNowCount");
-    if (el) el.textContent = count || 0;
+    const el = document.getElementById("onlineUsersCounter");
+if (el) el.textContent = `☻ ${count || 0} online most`;
   }
 }
 
@@ -1823,7 +1823,6 @@ async function ensureProfileExists(user) {
       id: user.id,
       email: user.email,
       role: "user",
-      email_visibility: "hidden",
       profile_completed: false
     })
     .select()
@@ -1976,7 +1975,6 @@ document.addEventListener("DOMContentLoaded", () => {
         nickname,
         nickname_normalized: normalized,
         avatar_emoji: avatar,
-        email_visibility: emailVisibility,
         profile_completed: true
       })
       .eq("id", currentUser.id);
