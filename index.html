@@ -1577,12 +1577,15 @@ loginBtn.addEventListener("click", (e) => {
     e.preventDefault();
     //e.stopImmediatePropagation();
 
-    if (currentUser) {
-      await supabaseClient.auth.signOut();
-      currentUser = null;
-      updateAuthUI();
-      return;
-    }
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
+if (user) {
+  await supabaseClient.auth.signOut();
+  currentUser = null;
+  updateAuthUI();
+  location.reload();
+  return;
+}
 
     openAuthModal("register");
   });
