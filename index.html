@@ -1530,7 +1530,12 @@ if (mode === "register" && password !== repeatPassword) {
   if (mode === "register") {
     result = await supabaseClient.auth.signUp({ email, password });
   } else {
-    result = await supabaseClient.auth.signInWithPassword({ email, password });
+    result = await Promise.race([
+  supabaseClient.auth.signInWithPassword({ email, password }),
+  new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Bejelentkezés timeout")), 8000)
+  )
+]);
   }
 
   if (result.error) {
