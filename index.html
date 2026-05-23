@@ -1527,24 +1527,24 @@ if (mode === "register" && password !== repeatPassword) {
 
   let result;
 
+try {
   if (mode === "register") {
     result = await supabaseClient.auth.signUp({ email, password });
   } else {
     result = await Promise.race([
-  supabaseClient.auth.signInWithPassword({ email, password }),
-  new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Bejelentkezés timeout")), 8000)
-  )
-]);
+      supabaseClient.auth.signInWithPassword({ email, password }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Bejelentkezés timeout")), 8000)
+      )
+    ]);
   }
-
-  if (result.error) {
-    message.textContent = result.error.message;
-    return;
-  }
+} catch (error) {
+  message.textContent = error.message || "Bejelentkezés sikertelen.";
+  return;
+}
 
   if (mode === "register") {
-  await supabaseClient.auth.signOut();
+  supabaseClient.auth.signOut();
   currentUser = null;
   updateAuthUI();
 
