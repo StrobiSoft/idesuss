@@ -2197,10 +2197,10 @@ if (loginBtn) {
 }
 
 if (registerBtn) {
-  const cleanRegisterBtn = registerBtn.cloneNode(true);
-  registerBtn.replaceWith(cleanRegisterBtn);
+ //const cleanRegisterBtn = registerBtn.cloneNode(true);
+  //registerBtn.replaceWith(cleanRegisterBtn);
 
-  cleanRegisterBtn.addEventListener("click", async () => {
+  registerBtn.addEventListener("click", async () => {
     const {
       data: { user }
     } = await supabaseClient.auth.getUser();
