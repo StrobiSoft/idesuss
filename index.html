@@ -1580,7 +1580,15 @@ loginBtn.addEventListener("click", (e) => {
     const { data: { user } } = await supabaseClient.auth.getUser();
 
 if (user) {
-  await supabaseClient.auth.signOut();
+  supabaseClient.auth.signOut();
+
+Object.keys(localStorage)
+  .filter(k => k.includes("supabase") || k.includes("sb-"))
+  .forEach(k => localStorage.removeItem(k));
+
+Object.keys(sessionStorage)
+  .filter(k => k.includes("supabase") || k.includes("sb-"))
+  .forEach(k => sessionStorage.removeItem(k));
   currentUser = null;
   updateAuthUI();
   location.reload();
