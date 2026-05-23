@@ -2201,12 +2201,17 @@ if (registerBtn) {
   //registerBtn.replaceWith(cleanRegisterBtn);
 
   registerBtn.addEventListener("click", async () => {
+    console.log("LOGOUT CLICK ELINDULT");
     const {
       data: { user }
     } = await supabaseClient.auth.getUser();
+    console.log("GET USER:", user);
 
     if (user) {
-      await supabaseClient.auth.signOut();
+      console.log("SIGNOUT INDUL");
+      const { error: signOutError } = await supabaseClient.auth.signOut();
+
+console.log("SIGNOUT VÉGE:", signOutError);
       location.reload();
       return;
     }
