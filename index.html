@@ -1563,7 +1563,7 @@ function initAuthButtons() {
   if (loginBtn) {
 loginBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  e.stopImmediatePropagation();
+  //e.stopImmediatePropagation();
 
   if (currentUser) return;
   openAuthModal("login");
@@ -1572,8 +1572,9 @@ loginBtn.addEventListener("click", (e) => {
 
   if (registerBtn) {
   registerBtn.addEventListener("click", async (e) => {
+    console.log("RÉGI REGISTER HANDLER FUT");
     e.preventDefault();
-    e.stopImmediatePropagation();
+    //e.stopImmediatePropagation();
 
     if (currentUser) {
       await supabaseClient.auth.signOut();
