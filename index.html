@@ -163,9 +163,9 @@
     }
 
     .brand-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
       object-fit: cover;
       display: block;
       flex: 0 0 auto;
@@ -176,17 +176,17 @@
     .brand-text { min-width: 0; }
 
     .brand-title {
-      font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+      font-size: clamp(3.2rem, 5vw, 5.4rem);
       font-weight: 900;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.04em;
       margin: 0;
-      line-height: 0.94;
+      line-height: 0.92;
       color: #102542;
       white-space: nowrap;
     }
 
     .tm-mark {
-      font-size: 0.42em;
+      font-size: 0.34em;
       vertical-align: super;
       margin-left: 4px;
       font-weight: 900;
@@ -239,12 +239,66 @@
 
     .lang-select option { color: #000; }
 
-    .clock-chip {
-      min-width: 112px;
-      font-variant-numeric: tabular-nums;
-      font-size: 1rem;
-      letter-spacing: 0.03em;
-    }
+    .lang-clock-chip{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.header-clock-inline{
+  font-weight:800;
+  font-size:1rem;
+  letter-spacing:.04em;
+  color:#102a56;
+  white-space:nowrap;
+}
+    .auth-chip{
+  gap:10px;
+}
+
+.auth-link{
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  font-size:13px;
+  color:white;
+  padding:10px 18px;
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(58,134,255,.95),
+      rgba(97,175,255,.82)
+    );
+
+  box-shadow:
+    0 8px 20px rgba(58,134,255,.28),
+    inset 0 1px 0 rgba(255,255,255,.45);
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+}
+
+.auth-link:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 10px 24px rgba(58,134,255,.38),
+    inset 0 1px 0 rgba(255,255,255,.55);
+}
+
+.auth-link:active{
+  transform:translateY(1px);
+}
+
+.auth-separator{
+  opacity:.55;
+  font-size:12px;
+  font-weight:700;
+}
 
     .btn {
       appearance: none;
@@ -268,7 +322,11 @@
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), #2f7cf0);
       color: white;
-      box-shadow: 0 10px 22px rgba(13, 91, 215, 0.18);
+      box-shadow:
+      inset 0 2px 0 rgba(255,255,255,0.28),
+      inset 0 -2px 6px rgba(0,0,0,0.12),
+      0 14px 32px rgba(13,91,215,0.28),
+      0 4px 10px rgba(0,0,0,0.14);
     }
 
     .btn-soft {
@@ -731,6 +789,26 @@
       color: var(--muted);
       font-size: 0.95rem;
     }
+    .footer-stats{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+  font-size:0.95rem;
+  font-weight:700;
+ color:#102a56;
+}
+
+.footer-stats span{
+  background:rgba(13,91,215,0.08);
+  border:1px solid rgba(13,91,215,0.18);
+  padding:8px 14px;
+  border-radius:999px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 18px rgba(0,0,0,0.12);
+}
 
     .powered { font-weight: 800; color: var(--primary); }
     .small-note { color: var(--muted); font-size: 0.9rem; }
@@ -740,7 +818,182 @@
       .hero-grid, .info-grid, .about-grid { grid-template-columns: 1fr; }
       .hero-webapp-btn { min-width: 0; width: 100%; }
     }
+    .footer-action-btn {
+  border: 1px solid rgba(13, 91, 215, 0.18);
 
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.95),
+      rgba(223,233,255,0.92)
+    );
+
+  color: #173b74;
+
+  border-radius: 999px;
+
+  padding: 11px 18px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  text-decoration: none;
+
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.95),
+    inset 0 -2px 4px rgba(13,91,215,0.08),
+    0 10px 22px rgba(13,91,215,0.18),
+    0 3px 8px rgba(0,0,0,0.10);
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+.footer-action-btn:hover {
+
+  transform: translateY(-2px);
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #dfe9ff
+    );
+
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,1),
+    inset 0 -2px 6px rgba(13,91,215,0.10),
+    0 16px 34px rgba(13,91,215,0.24),
+    0 5px 12px rgba(0,0,0,0.12);
+}
+
+.idesuss-footer-actions {
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.info-panel {
+  opacity: 0;
+  transition: opacity .25s ease;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background: rgba(8, 20, 38, 0.48);
+  backdrop-filter: blur(10px);
+}
+
+.viewer-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(8, 20, 38, 0.58);
+  backdrop-filter: blur(10px);
+}
+
+.viewer-shell.show {
+  display: flex;
+}
+
+.viewer-shell-card {
+  width: min(100%, 860px);
+  background: #07111f;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 26px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.45);
+  overflow: hidden;
+}
+
+.viewer-shell-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+.viewer-shell-title {
+  font-weight: 900;
+}
+
+.viewer-shell-close {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.viewer-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  display: block;
+  background: #000;
+}
+.info-panel.show {
+  opacity: 1;
+  display: flex;
+}
+
+.info-panel-card {
+  transform: scale(.92);
+  transition: transform .25s ease;
+  position: relative;
+  width: min(100%, 560px);
+  border-radius: 28px;
+  padding: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(13,91,215,0.16), transparent 32%),
+    linear-gradient(180deg, #ffffff, #f4f8ff);
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: 0 28px 80px rgba(8, 20, 38, 0.34);
+  color: #17324d;
+}
+.info-panel.show .info-panel-card {
+  transform: scale(1);
+}
+.info-panel-card h2 {
+  margin: 0 0 14px;
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  letter-spacing: -0.04em;
+}
+
+.info-panel-card p {
+  margin: 0;
+  color: #5e748d;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.info-panel-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(13,91,215,0.10);
+  color: #17324d;
+  font-size: 26px;
+  font-weight: 900;
+}
     @media (max-width: 760px) {
       :root { --header-h: 92px; }
       .container { width: min(var(--maxw), calc(100% - 20px)); }
@@ -759,10 +1012,70 @@
   </style>
 </head>
 <body>
+<button
+id="menuToggle"
+style="
+display:flex;
+align-items:center;
+justify-content:center;
+line-height:1;
+padding:0;
+position:fixed;
+top:18px;
+right:18px;
+width:46px;
+height:46px;
+border-radius:14px;
+border:none;
+background:linear-gradient(135deg,#0d5bd7,#4da3ff);
+backdrop-filter:blur(10px);
+color:white;
+font-size:28px;
+cursor:pointer;
+z-index:99999;
+box-shadow:0 10px 28px rgba(0,0,0,.35);
+"
+  
+>
+☰
+</button>
+
+<div
+  id="idesussMenu"
+  style="
+    position:absolute;
+    top:72px;
+    right:18px;
+    min-width:220px;
+    padding:12px;
+    border-radius:20px;
+    background:rgba(15,25,40,.94);
+    backdrop-filter:blur(18px);
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    display:none;
+    flex-direction:column;
+    gap:10px;
+    z-index:2000;
+  "
+>
+
+  <button class="idesussMenuBtn" id="openProfileBtn">
+    👤 Profil
+  </button>
+
+  <button class="idesussMenuBtn">
+    ▶️ Webapp
+  </button>
+
+  <button class="idesussMenuBtn" id="logoutBtnMenu">
+    🚪 Kijelentkezés
+  </button>
+
+</div>
   <header class="site-header">
     <div class="container header-inner">
       <a href="#top" class="brand-wrap" aria-label="Idesüss főoldal">
-        <img src="/favicon.png" alt="Idesüss logo" class="brand-logo" />
+        <img src="favicon.png" alt="Idesüss logo" class="brand-logo" />
         <div class="brand-text">
           <h2 class="brand-title">Idesüss<span class="tm-mark">™</span></h2>
           <p class="brand-subtitle" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
@@ -770,20 +1083,31 @@
       </a>
 
       <div class="header-actions">
-        <div class="header-chip">
-          <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
-  <option value="hu">🇭🇺 Magyar</option>
-<option value="en">🇬🇧 English</option>
-<option value="nl">🇳🇱 Nederlands</option>
-<option value="ro">🇷🇴 Română</option>
-<option value="pl">🇵🇱 Polski</option>
-<option value="hr">🇭🇷 Hrvatski</option>
-          </select>
-        </div>
 
-        <div class="header-chip clock-chip">
-          <span id="headerClock">00:00</span>
-        </div>
+  <div class="header-chip auth-chip">
+    <button id="loginBtn" class="auth-link" type="button">Bejelentkezés</button>
+    <span class="auth-separator">vagy</span>
+    <button id="registerBtn" class="auth-link" type="button">Regisztráció</button>
+  </div>
+
+  <div class="header-chip lang-clock-chip">
+  <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
+    <option value="hu">HU Magyar</option>
+    <option value="en">GB English</option>
+    <option value="nl">NL Nederlands</option>
+    <option value="ro">RO Română</option>
+    <option value="pl">PL Polski</option>
+    <option value="hr">HR Hrvatski</option>
+  </select>
+
+  <span id="headerClock" class="header-clock-inline">00:00</span>
+</div>
+  </div>
+
+  
+
+</div>
+             
       </div>
     </div>
   </header>
@@ -796,7 +1120,7 @@
             <div class="hero-copy">
               <div>
                 <div class="hero-brand">
-                  <img src="/favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
+                  <img src="favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
                   <div>
                     <h1 class="hero-brand-title">Idesüss<span class="tm-mark">™</span></h1>
                     <p class="hero-brand-sub" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
@@ -849,19 +1173,58 @@
                 <span class="hero-banner-icon"></span>
                 <span data-i18n="heroBannerText">Egyes Android eszközök nem támogatják!</span>
               </div>
-              <a href="#how" class="hero-banner-link" data-i18n="heroBannerLink">Részletek</a>
+             <button class="hero-banner-link" type="button" data-panel="android">
+            Részletek
+             </button>
             </div>
-            <div class="hero-footer-links">
-              <a href="#about" data-i18n="aboutLink">Névjegy</a>
-              <span class="powered">Powered by StZoo</span>
+            <div class="hero-footer-links idesuss-footer-actions">
+              <button class="footer-action-btn" type="button" data-panel="how">⚙️ Hogyan működik</button>
+               <button class="footer-action-btn" type="button" data-panel="about">ℹ️ Névjegy</button>
+              <a class="footer-action-btn" href="https://idesuss.net/app">📱 Webapp</a>
             </div>
           </div>
         </div>
       </div>
     </section>
+<div id="viewerShell" class="viewer-shell">
 
-    <!-- További szakaszok... -->
-  </main>
+  <div class="viewer-shell-card">
+
+    <div class="viewer-shell-top">
+
+      <div class="viewer-shell-title">
+        Idesüss Viewer
+      </div>
+
+      <button
+        id="closeViewerBtn"
+        class="viewer-shell-close"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <iframe
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      id="viewerFrame"
+      class="viewer-frame"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+
+  </div>
+
+</div>
+     </main><div id="infoPanel" class="info-panel" aria-hidden="true">
+  <div class="info-panel-card">
+    <button id="infoPanelClose" class="info-panel-close" type="button">×</button>
+    <h2 id="infoPanelTitle"></h2>
+    <p id="infoPanelText"></p>
+  </div>
+</div>
 
   <footer class="footer">
     <div class="container">
@@ -872,14 +1235,18 @@
             <p data-i18n="footerDesc">Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.</p>
           </div>
           <div class="footer-links">
-            <a href="#how" data-i18n="howItWorks">Hogyan működik</a>
-            <a href="#about" data-i18n="aboutLink">Névjegy</a>
-            <a id="footerOpenAppLink" href="https://idesuss.net/app" data-i18n="openWebapp">Webapp megnyitása</a>
-            <button id="shareBtn" type="button" data-i18n="shareButton">Megosztás</button>
+            <button class="footer-action-btn" type="button" data-panel="how">⚙️ Hogyan működik</button>
+              <button class="footer-action-btn" type="button" data-panel="about">ℹ️ Névjegy</button>
+              <a id="footerOpenAppLink" class="footer-action-btn" href="https://idesuss.net/app">📱 Webapp megnyitása</a>
+            <button id="shareBtn" class="footer-action-btn" type="button">📤 Megosztás</button>
           </div>
         </div>
         <div class="footer-bottom">
           <div>© <span id="year"></span> Idesüss<span class="tm-mark">™</span></div>
+           <div class="footer-stats">
+             <span id="onlineUsersCounter">👁 0 online most</span>
+             <span id="totalVisitsCounter">🌍 0 összes látogatás</span>
+           </div>
           <div class="powered">Powered by StZoo</div>
         </div>
       </div>
@@ -889,7 +1256,7 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
     // Itt folytathatod a JS logikát (dict, óra, stb.)
-<script>
+
   function updateHeaderClock() {
     const clock = document.getElementById("headerClock");
     if (!clock) return;
@@ -906,15 +1273,927 @@
 </script>
 
 <script src="js/resolver.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+const ONLINE_TIMEOUT_SECONDS = 30;
+const HEARTBEAT_INTERVAL_MS = 15000;
+
+function getVisitorId() {
+  let id = localStorage.getItem("ides_visitor_id");
+
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem("ides_visitor_id", id);
+  }
+
+  return id;
+}
+
+const visitorId = getVisitorId();
+
+async function heartbeatOnline() {
+  const now = new Date().toISOString();
+
+  await supabaseClient
+    .from("online_visitors")
+    .upsert({
+      visitor_id: visitorId,
+      page: window.location.pathname || "/",
+      status: "online",
+      last_seen: now
+    }, {
+      onConflict: "visitor_id"
+    });
+}
+
+async function setOffline() {
+  await supabaseClient
+    .from("online_visitors")
+    .update({
+      status: "offline",
+      last_seen: new Date().toISOString()
+    })
+    .eq("visitor_id", visitorId);
+}
+
+async function updateOnlineCount() {
+  const since = new Date(Date.now() - ONLINE_TIMEOUT_SECONDS * 1000).toISOString();
+
+  const { count, error } = await supabaseClient
+    .from("online_visitors")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "online")
+    .gte("last_seen", since);
+
+  if (!error) {
+    const el = document.getElementById("onlineUsersCounter");
+if (el) el.textContent = `☻ ${count || 0} online most`;
+  }
+}
+
+heartbeatOnline();
+updateOnlineCount();
+
+setInterval(() => {
+  heartbeatOnline();
+  updateOnlineCount();
+}, HEARTBEAT_INTERVAL_MS);
+
+window.addEventListener("beforeunload", () => {
+  setOffline();
+});
+
+console.log("Supabase connected");
+// Idesüss Auth v1
+let currentUser = null;
+
+function createAuthModal() {
+  if (document.getElementById("idesussAuthModal")) return;
+
+  const modal = document.createElement("div");
+  modal.id = "idesussAuthModal";
+  modal.style.cssText = `
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 20, 40, 0.55);
+    backdrop-filter: blur(8px);
+  `;
+
+  modal.innerHTML = `
+    <div style="
+      width: min(420px, calc(100% - 32px));
+      border-radius: 28px;
+      background: linear-gradient(180deg, #f8fbff, #e8f2ff);
+      box-shadow: 0 30px 80px rgba(20, 80, 160, .35);
+      padding: 24px;
+      color: #142b4a;
+      font-family: inherit;
+    ">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
+        <h2 id="authModalTitle" style="margin:0;font-size:24px;">Bejelentkezés</h2>
+        <button id="authModalClose" type="button" style="
+          border:0;
+          background:#ffffff;
+          border-radius:999px;
+          width:38px;
+          height:38px;
+          cursor:pointer;
+          font-size:20px;
+        ">×</button>
+      </div>
+
+      <input id="authEmail" type="email" placeholder="E-mail cím" style="
+        width:100%;
+        box-sizing:border-box;
+        margin-bottom:12px;
+        padding:14px 16px;
+        border-radius:16px;
+        border:1px solid rgba(40,90,150,.25);
+        font-size:16px;
+      ">
+
+      <input id="authPassword" type="password" placeholder="Jelszó" style=" 
+      width:100%;
+        box-sizing:border-box;
+        margin-bottom:14px;
+        padding:14px 16px;
+        border-radius:16px;
+        border:1px solid rgba(40,90,150,.25);
+        font-size:16px;
+      ">
+      <input id="authPasswordRepeat" type="password" placeholder="Jelszó újra" style="
+  width:100%;
+  box-sizing:border-box;
+  margin-bottom:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(40,90,150,.25);
+  font-size:16px;
+  display:none;
+">
+
+      <button id="authSubmitBtn" type="button" style="
+        width:100%;
+        border:0;
+        border-radius:18px;
+        padding:15px 18px;
+        background: linear-gradient(135deg, #0f6fff, #4aa3ff);
+        color:white;
+        font-weight:800;
+        font-size:16px;
+        cursor:pointer;
+        box-shadow: 0 12px 28px rgba(20,100,220,.35);
+      ">Bejelentkezés</button>
+
+      <p id="authMessage" style="
+        min-height:22px;
+        margin:14px 0 0;
+        font-size:14px;
+        color:#47627f;
+        text-align:center;
+      "></p>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("authModalClose").addEventListener("click", closeAuthModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeAuthModal();
+  });
+}
+
+function openAuthModal(mode) {
+  createAuthModal();
+
+  const modal = document.getElementById("idesussAuthModal");
+  const title = document.getElementById("authModalTitle");
+  const submit = document.getElementById("authSubmitBtn");
+  const message = document.getElementById("authMessage");
+  const repeat = document.getElementById("authPasswordRepeat");
+
+  modal.dataset.mode = mode;
+  title.textContent = mode === "register" ? "Regisztráció" : "Bejelentkezés";
+  submit.textContent = mode === "register" ? "Regisztráció" : "Bejelentkezés";
+  message.textContent = "";
+if (repeat) {
+  repeat.style.display = mode === "register" ? "block" : "none";
+  repeat.value = "";
+}
+  modal.style.display = "flex";
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById("idesussAuthModal");
+  if (modal) modal.style.display = "none";
+}
+
+function updateAuthUI() {
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+
+  if (!loginBtn || !registerBtn) return;
+
+  if (currentUser) {
+    loginBtn.textContent = currentUser.email || "Belépve";
+    registerBtn.textContent = "Kijelentkezés";
+  } else {
+    loginBtn.textContent = "Bejelentkezés";
+    registerBtn.textContent = "Regisztráció";
+  }
+}
+
+async function checkAuthState() {
+  const { data } = await supabaseClient.auth.getUser();
+  currentUser = data?.user || null;
+  updateAuthUI();
+
+  if (currentUser && typeof checkProfileCompletion === "function") {
+    await checkProfileCompletion();
+  }
+}
+
+async function handleAuthSubmit() {
+  const modal = document.getElementById("idesussAuthModal");
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const repeatPassword = document.getElementById("authPasswordRepeat")?.value || "";
+  const message = document.getElementById("authMessage");
+  const mode = modal.dataset.mode || "login";
+
+  if (!email || !password) {
+    message.textContent = "Add meg az e-mail címet és a jelszót.";
+    return;
+  }
+if (mode === "register" && password !== repeatPassword) {
+  message.textContent = "A két jelszó nem egyezik.";
+  return;
+}
+  message.textContent = "Dolgozom...";
+
+  let result;
+
+try {
+  if (mode === "register") {
+    result = await supabaseClient.auth.signUp({ email, password });
+  } else {
+    result = await Promise.race([
+      supabaseClient.auth.signInWithPassword({ email, password }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Bejelentkezés timeout")), 8000)
+      )
+    ]);
+  }
+} catch (error) {
+  message.textContent = error.message || "Bejelentkezés sikertelen.";
+  return;
+}
+
+  if (mode === "register") {
+  supabaseClient.auth.signOut();
+  currentUser = null;
+  updateAuthUI();
+
+  message.textContent = "Regisztráció elküldve. Küldtünk egy megerősítő e-mailt. Kattints a levélben található linkre, majd utána jelentkezz be.";
+
+  return;
+}
+
+currentUser = result.data?.user || null;
+message.textContent = "Sikeres bejelentkezés.";
+
+updateAuthUI();
+
+setTimeout(closeAuthModal, 800);
+}
+
+function initAuthButtons() {
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+
+  if (loginBtn) {
+loginBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  //e.stopImmediatePropagation();
+
+  if (currentUser) return;
+  openAuthModal("login");
+});
+  }
+
+  if (registerBtn) {
+  registerBtn.addEventListener("click", async (e) => {
+    console.log("currentUser:", currentUser);
+    console.log("RÉGI REGISTER HANDLER FUT");
+    e.preventDefault();
+    //e.stopImmediatePropagation();
+
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
+if (user) {
+  supabaseClient.auth.signOut();
+
+Object.keys(localStorage)
+  .filter(k => k.includes("supabase") || k.includes("sb-"))
+  .forEach(k => localStorage.removeItem(k));
+
+Object.keys(sessionStorage)
+  .filter(k => k.includes("supabase") || k.includes("sb-"))
+  .forEach(k => sessionStorage.removeItem(k));
+  currentUser = null;
+  updateAuthUI();
+  location.reload();
+  return;
+}
+
+    openAuthModal("register");
+  });
+}
+
+  createAuthModal();
+  document.getElementById("authSubmitBtn").addEventListener("click", handleAuthSubmit);
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    currentUser = session?.user || null;
+    updateAuthUI();
+  });
+
+  checkAuthState();
+}
+
+document.addEventListener("DOMContentLoaded", initAuthButtons);
+// ===== Idesüss Profile Onboarding v1 =====
+
+const RESERVED_MODERATOR_SUFFIXES = [
+  "_hu",
+  "_en",
+  "_nl",
+  "_ro",
+  "_pl",
+  "_hr",
+  "_de"
+];
+
+function normalizeNickname(name) {
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9_]/g, "");
+}
+
+function createProfileModal() {
+
+  if (document.getElementById("idesussProfileModal")) return;
+
+  const modal = document.createElement("div");
+
+  modal.id = "idesussProfileModal";
+
+  modal.style.cssText = `
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,20,40,.72);
+    backdrop-filter: blur(12px);
+  `;
+
+  modal.innerHTML = `
+    <div style="
+      width:min(520px,calc(100% - 24px));
+      border-radius:28px;
+      padding:24px;
+      background:linear-gradient(180deg,#f8fbff,#e8f2ff);
+      box-shadow:0 30px 80px rgba(0,0,0,.35);
+      color:#17324d;
+    ">
+
+      <h2 style="
+        margin:0 0 8px;
+        font-size:28px;
+        font-weight:900;
+      ">
+        Profil befejezése
+      </h2>
+
+      <p style="
+        margin:0 0 18px;
+        color:#5e748d;
+      ">
+        A továbblépéshez válassz becenevet és avatárt.
+      </p>
+
+      <div style="margin-bottom:14px;">
+
+        <input
+          id="profileNickname"
+          type="text"
+          placeholder="Becenév"
+          style="
+            width:100%;
+            padding:14px 16px;
+            border-radius:16px;
+            border:1px solid rgba(40,90,150,.25);
+            font-size:16px;
+            box-sizing:border-box;
+          "
+        >
+
+        <div
+          id="nicknameStatus"
+          style="
+            margin-top:8px;
+            font-size:14px;
+            font-weight:700;
+            min-height:18px;
+          "
+        ></div>
+
+      </div>
+
+      <div style="margin-bottom:18px;">
+
+        <div style="
+          font-size:14px;
+          font-weight:800;
+          margin-bottom:10px;
+        ">
+          Avatar
+        </div>
+
+        <div
+          id="avatarGrid"
+          style="
+            display:grid;
+            grid-template-columns:repeat(6,1fr);
+            gap:10px;
+          "
+        >
+        </div>
+
+      </div>
+
+      <div style="margin-bottom:18px;">
+
+        <div style="
+          font-size:14px;
+          font-weight:800;
+          margin-bottom:10px;
+        ">
+          E-mail láthatóság
+        </div>
+
+        <select
+          id="emailVisibility"
+          style="
+            width:100%;
+            padding:14px 16px;
+            border-radius:16px;
+            border:1px solid rgba(40,90,150,.25);
+            font-size:16px;
+          "
+        >
+          <option value="hidden">Rejtett</option>
+          <option value="masked">Maszkolt</option>
+          <option value="public">Nyilvános</option>
+        </select>
+
+      </div>
+
+      <button
+        id="saveProfileBtn"
+        type="button"
+        style="
+          width:100%;
+          border:0;
+          border-radius:18px;
+          padding:16px;
+          background:linear-gradient(135deg,#0f6fff,#4aa3ff);
+          color:white;
+          font-size:17px;
+          font-weight:900;
+          cursor:pointer;
+        "
+      >
+        Profil mentése
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const avatarGrid = document.getElementById("avatarGrid");
+
+  const avatars = [
+    "😎","🚛","🔥","🎧","🛰️","🦊",
+    "🐺","🛸","🐼","👑","⚡","🎮"
+  ];
+
+  avatars.forEach((emoji) => {
+
+    const btn = document.createElement("button");
+
+    btn.type = "button";
+
+    btn.textContent = emoji;
+
+    btn.dataset.avatar = emoji;
+
+    btn.style.cssText = `
+      height:52px;
+      border-radius:16px;
+      border:1px solid rgba(40,90,150,.2);
+      background:white;
+      font-size:24px;
+      cursor:pointer;
+    `;
+
+    btn.addEventListener("click", () => {
+
+      document
+        .querySelectorAll("[data-avatar]")
+        .forEach(el => {
+          el.style.outline = "none";
+        });
+
+      btn.style.outline = "3px solid #0f6fff";
+
+      modal.dataset.selectedAvatar = emoji;
+    });
+
+    avatarGrid.appendChild(btn);
+
+  });
+
+}
+
+async function ensureProfileExists(user) {
+
+  const { data: existing } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (existing) return existing;
+
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .insert({
+      id: user.id,
+      email: user.email,
+      role: "user",
+      profile_completed: false
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}
+
+async function checkProfileCompletion() {
+
+  if (!currentUser) return;
+
+  createProfileModal();
+
+  const modal = document.getElementById("idesussProfileModal");
+
+  const profile = await ensureProfileExists(currentUser);
+
+  if (!profile) return;
+
+  if (profile.profile_completed) {
+
+    modal.style.display = "none";
+
+    return;
+  }
+
+  modal.style.display = "flex";
+
+}
+
+async function validateNickname(rawNickname) {
+
+  const status =
+    document.getElementById("nicknameStatus");
+
+  const normalized =
+    normalizeNickname(rawNickname);
+
+  if (!normalized) {
+
+    status.textContent =
+      "Adj meg egy becenevet.";
+
+    status.style.color = "#c53030";
+
+    return false;
+  }
+
+  if (
+    RESERVED_MODERATOR_SUFFIXES.some(
+      suffix => normalized.endsWith(suffix)
+    )
+  ) {
+
+    status.textContent =
+      "Ez a végződés moderátori használatra fenntartott.";
+
+    status.style.color = "#c53030";
+
+    return false;
+  }
+
+  const { data: reserved } = await supabaseClient
+    .from("reserved_nicknames")
+    .select("*")
+    .eq("nickname_normalized", normalized)
+    .maybeSingle();
+
+  if (reserved) {
+
+    status.textContent =
+      "Ez a becenév foglalt.";
+
+    status.style.color = "#c53030";
+
+    return false;
+  }
+
+  const { data: existing } = await supabaseClient
+    .from("profiles")
+    .select("id")
+    .eq("nickname_normalized", normalized)
+    .maybeSingle();
+
+  if (existing) {
+
+    status.textContent =
+      "Ez a becenév már használatban van.";
+
+    status.style.color = "#c53030";
+
+    return false;
+  }
+
+  status.textContent =
+    "A becenév használható.";
+
+  status.style.color = "#1f9d55";
+
+  return true;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  createProfileModal();
+
+  document.addEventListener("click", async (e) => {
+
+    if (e.target?.id !== "saveProfileBtn") return;
+
+    const nickname =
+      document.getElementById("profileNickname")
+      .value
+      .trim();
+
+    const emailVisibility =
+      document.getElementById("emailVisibility")
+      .value;
+
+    const modal =
+      document.getElementById("idesussProfileModal");
+
+    const avatar =
+      modal.dataset.selectedAvatar;
+
+    const valid =
+      await validateNickname(nickname);
+
+    if (!valid) return;
+
+    if (!avatar) {
+
+      alert("Válassz avatárt.");
+
+      return;
+    }
+
+    const normalized =
+      normalizeNickname(nickname);
+
+    const { error } = await supabaseClient
+      .from("profiles")
+      .update({
+        nickname,
+        nickname_normalized: normalized,
+        avatar_emoji: avatar,
+        profile_completed: true
+      })
+      .eq("id", currentUser.id);
+
+    if (error) {
+
+      console.error(error);
+
+      alert("Nem sikerült menteni.");
+
+      return;
+    }
+
+    modal.style.display = "none";
+
+    console.log("Profile completed");
+
+  });
+
+  const nicknameInput =
+    document.getElementById("profileNickname");
+
+  if (nicknameInput) {
+
+    nicknameInput.addEventListener(
+      "input",
+      async () => {
+
+        await validateNickname(
+          nicknameInput.value
+        );
+
+      }
+    );
+
+  }
+
+  supabaseClient.auth.onAuthStateChange(
+    async (_event, session) => {
+
+      currentUser = session?.user || null;
+
+      if (currentUser) {
+
+        await checkProfileCompletion();
+
+      }
+
+    }
+  );
+
+});
+function getVisitorKey() {
+  let key = localStorage.getItem("idesuss_visitor_key");
+
+  if (!key) {
+    key = "visitor_" + crypto.randomUUID();
+    localStorage.setItem("idesuss_visitor_key", key);
+  }
+
+  return key;
+}
+
+async function registerVisitSession() {
+  const visitorKey = getVisitorKey();
+
+  const { error: sessionError } = await supabaseClient
+    .from("site_sessions")
+    .insert({
+      visitor_key: visitorKey,
+      interaction_count: 0,
+      is_active: true
+    });
+
+  if (sessionError) {
+    console.error("Session insert error:", sessionError);
+    return;
+  }
+
+  const { data, error: statError } = await supabaseClient.rpc(
+    "increment_site_stat",
+    {
+      stat_name: "total_visits",
+      amount: 1
+    }
+  );
+
+  if (statError) {
+    console.error("Counter error:", statError);
+    return;
+  }
+
+  console.log("Visit registered. Total visits:", data);
+  const totalEl = document.getElementById("totalVisitsCounter");
+if (totalEl) {
+  totalEl.textContent = `🌍 ${data} összes látogatás`;
+}
+}
+async function loadTotalVisits() {
+  const { data, error } = await supabaseClient
+    .from("site_stats")
+    .select("value")
+    .eq("name", "total_visits")
+    .single();
+
+  if (error) {
+    console.error("Total visits load error:", error);
+    return;
+  }
+
+  const totalEl = document.getElementById("totalVisitsCounter");
+
+  if (totalEl && data) {
+    totalEl.textContent = `🌍 ${data.value} összes látogatás`;
+  }
+}
+
+loadTotalVisits();
+const lastVisit = localStorage.getItem("idesuss_last_visit");
+
+const now = Date.now();
+
+const cooldown = 1000 * 60 * 30;
+
+if (!lastVisit || now - Number(lastVisit) > cooldown) {
+
+  localStorage.setItem(
+    "idesuss_last_visit",
+    String(now)
+  );
+
+  registerVisitSession();
+
+}
+</script>
 </body>
 </html>
 <script src="js/resolver.js"></script>
-<script>
-  <script src="js/resolver.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+const infoPanel = document.getElementById("infoPanel");
+const infoPanelTitle = document.getElementById("infoPanelTitle");
+const infoPanelText = document.getElementById("infoPanelText");
+const infoPanelClose = document.getElementById("infoPanelClose");
 
+const panelTexts = {
+  how: {
+    title: "Hogyan működik?",
+    text: "Másolj be egy nyilvános videólinket, majd nyomd meg a megnyitás gombot. Az Idesüss megpróbálja egyszerűen és gyorsan megnyitni a tartalmat."
+  },
+  about: {
+    title: "Névjegy",
+    text: "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem."
+  },
+  android: {
+    title: "Android kompatibilitás",
+    text: "Egyes Android eszközökön vagy böngészőkben a videók megnyitása eltérően működhet. Ilyenkor az Idesüss megpróbálja a lehető legegyszerűbb módon kezelni a linket, de bizonyos platformok saját korlátozásai miatt előfordulhat, hogy a tartalom csak külső oldalon vagy alkalmazásban nyílik meg."
+  },
+register: {
+  title: "Regisztráció",
+  text: "Az Idesüss regisztrációs rendszere hamarosan indul. A regisztrált felhasználók később extra funkciókat, közösségi lehetőségeket és sofőrbarát eszközöket érhetnek el."
+},
+login: {
+  title: "Bejelentkezés",
+  text: "A bejelentkezés hamarosan elérhető lesz. Ez később a személyes profilhoz, az extra funkciókhoz és a közösségi lehetőségekhez kapcsolódik majd."
+}
+};
+
+function openInfoPanel(type) {
+  const data = panelTexts[type];
+  if (!data || !infoPanel || !infoPanelTitle || !infoPanelText) return;
+
+  infoPanelTitle.textContent = data.title;
+  infoPanelText.textContent = data.text;
+  infoPanel.classList.add("show");
+  infoPanel.setAttribute("aria-hidden", "false");
+}
+
+function closeInfoPanel() {
+  if (!infoPanel) return;
+  infoPanel.classList.remove("show");
+  infoPanel.setAttribute("aria-hidden", "true");
+}
+
+document.querySelectorAll("[data-panel]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (btn.id === "loginBtn" || btn.id === "registerBtn") return;
+    openInfoPanel(btn.dataset.panel);
+  });
+});
+
+if (infoPanelClose) {
+  infoPanelClose.addEventListener("click", closeInfoPanel);
+}
+
+if (infoPanel) {
+  infoPanel.addEventListener("click", (event) => {
+    if (event.target === infoPanel) closeInfoPanel();
+  });
+}
     const year = document.getElementById("year");
     const clock = document.getElementById("headerClock");
 
@@ -922,9 +2201,43 @@
     const openBtn = document.getElementById("openBtn");
     const pasteBtn = document.getElementById("pasteBtn");
     const clearBtn = document.getElementById("clearBtn");
-
+    const viewerShell = document.getElementById("viewerShell");
+    const viewerFrame = document.getElementById("viewerFrame");
+    const closeViewerBtn = document.getElementById("closeViewerBtn");
     const shareBtn = document.getElementById("shareBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const registerBtn = document.getElementById("registerBtn");
 
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    openInfoPanel("login");
+  });
+}
+
+if (registerBtn) {
+ //const cleanRegisterBtn = registerBtn.cloneNode(true);
+  //registerBtn.replaceWith(cleanRegisterBtn);
+/*
+  registerBtn.addEventListener("click", async () => {
+    console.log("LOGOUT CLICK ELINDULT");
+    const {
+      data: { user }
+    } = await supabaseClient.auth.getUser();
+    console.log("GET USER:", user);
+
+    if (user) {
+      console.log("SIGNOUT INDUL");
+      const { error: signOutError } = await supabaseClient.auth.signOut();
+
+console.log("SIGNOUT VÉGE:", signOutError);
+      location.reload();
+      return;
+    }
+
+    openInfoPanel("register");
+  });
+  */
+}
     // ===== ÉV =====
     if (year) {
       year.textContent = new Date().getFullYear();
@@ -976,13 +2289,42 @@
             videoUrl.value = finalUrl;
           }
         }
+     if (viewerShell && viewerFrame) {
+function buildEmbedUrl(url) {
+  try {
+    const u = new URL(url);
 
-        window.open(
-          finalUrl,
-          "_blank",
-          "noopener,noreferrer"
-        );
+    if (u.hostname.includes("youtube.com")) {
+      const id = u.searchParams.get("v");
+      if (id) return "https://www.youtube.com/embed/" + id;
+    }
 
+    if (u.hostname.includes("youtu.be")) {
+      const id = u.pathname.replace("/", "");
+      if (id) return "https://www.youtube.com/embed/" + id;
+    }
+
+    return url;
+  } catch (e) {
+    return url;
+  }
+}
+ viewerFrame.src = buildEmbedUrl(finalUrl) + "?autoplay=1";
+
+  viewerShell.classList.add("show");
+
+}
+if (closeViewerBtn && viewerShell && viewerFrame) {
+
+  closeViewerBtn.addEventListener("click", function () {
+
+    viewerShell.classList.remove("show");
+
+    viewerFrame.src = "";
+
+  });
+
+}
       });
 
     }
@@ -1064,6 +2406,73 @@
     }
 
   });
+</script>
+<script>
+/* Idesüss Shell Receiver v1
+   Főoldali linkfogadó réteg — webapp core érintése nélkül
+*/
+
+(function () {
+  const SHARED_URL_KEY = "ides_shared_last_url";
+
+  function getIncomingUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("url") || params.get("u") || "";
+  }
+
+  function cleanIncomingUrl(rawUrl) {
+    if (!rawUrl) return "";
+
+    let url = rawUrl.trim();
+
+    try {
+      url = decodeURIComponent(url);
+    } catch (e) {
+      // Ha már dekódolt, nem baj, megyünk tovább.
+    }
+
+    try {
+      const parsed = new URL(url);
+
+      [
+        "fbclid",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_term",
+        "utm_content",
+        "si",
+        "feature"
+      ].forEach(param => parsed.searchParams.delete(param));
+
+      return parsed.toString();
+    } catch (e) {
+      return url;
+    }
+  }
+
+  function openInIdesussApp(cleanUrl) {
+    if (!cleanUrl) return;
+
+    const target = "/app/?url=" + encodeURIComponent(cleanUrl);
+    window.location.href = target;
+  }
+
+  function initShellReceiver() {
+    const incoming = getIncomingUrl();
+
+    if (!incoming) return;
+
+    const cleanUrl = cleanIncomingUrl(incoming);
+
+    if (!cleanUrl) return;
+
+    localStorage.setItem(SHARED_URL_KEY, cleanUrl);
+    openInIdesussApp(cleanUrl);
+  }
+
+  initShellReceiver();
+})();
 </script>
 
 </body>
