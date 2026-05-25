@@ -2475,5 +2475,11 @@ if (closeViewerBtn && viewerShell && viewerFrame) {
 })();
 </script>
 
+<script type="module">
+  import { initAuth } from "./js/auth.js";
+
+  initAuth({ supabaseClient: window.supabaseClient });
+</script>
+
 </body>
 </html>
