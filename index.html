@@ -2133,16 +2133,16 @@ if (!lastVisit || now - Number(lastVisit) > cooldown) {
 </script>
 </body>
 </html>
-<script src="js/resolver.js"></script>
 
-<script>
+<script type="module">
+  import lang from "./js/lang/Home/hu.js";
+
   document.addEventListener("DOMContentLoaded", function () {
 const infoPanel = document.getElementById("infoPanel");
 const infoPanelTitle = document.getElementById("infoPanelTitle");
 const infoPanelText = document.getElementById("infoPanelText");
 const infoPanelClose = document.getElementById("infoPanelClose");
 
-};
 const panelTexts = {
   how: lang.home.how,
   about: lang.home.about,
