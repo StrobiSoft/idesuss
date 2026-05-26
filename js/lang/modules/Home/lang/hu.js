@@ -5,6 +5,14 @@ export default {
 
   home: {
 
+    footerHow: "⚙️ Hogyan működik",
+    
+    footerAbout: "ℹ️ Névjegy",
+
+    footerOpenWebapp: "📱 Webapp",
+
+    footerShare: "📤 Megosztás",
+
     brandSubtitle: "Főoldal + mini app élmény",
 
     heroLead: "Próbáld ki közvetlenül a főoldalon népszerű minialkalmazásunkat!",
@@ -30,7 +38,7 @@ export default {
     paste: "Beillesztés",
 
     open: "Megnyitás",
-    
+
     clear: "Törlés",
 
     how: {
