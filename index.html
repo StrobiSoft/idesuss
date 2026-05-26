@@ -1254,7 +1254,9 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
   </footer>
 
   <script type="module">
-    import lang from "./js/lang/home/hu.js";
+    import lang from "./js/lang/modules/Home/lang/hu.js";
+    import webappLang from "./js/lang/modules/webapp/lang/hu.js";
+    import nativeLang from "./js/lang/modules/native/lang/hu.js";
     import { getText } from "./js/lang/lang-core.js";
 
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -2135,8 +2137,9 @@ if (!lastVisit || now - Number(lastVisit) > cooldown) {
 </html>
 
 <script type="module">
-  import lang from "./js/lang/Home/hu.js";
-
+  import lang from "./js/lang/modules/Home/lang/hu.js";
+  import webappLang from "./js/lang/modules/webapp/lang/hu.js";
+  import nativeLang from "./js/lang/modules/native/lang/hu.js";
   document.addEventListener("DOMContentLoaded", function () {
 const infoPanel = document.getElementById("infoPanel");
 const infoPanelTitle = document.getElementById("infoPanelTitle");

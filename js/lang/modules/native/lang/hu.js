@@ -1,4 +1,4 @@
-import webapp from "../webapp/hu.js";
+import webapp from "../../webapp/lang/hu.js";
 
 export default {
   ...webapp,

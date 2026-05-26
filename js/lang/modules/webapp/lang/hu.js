@@ -1,4 +1,4 @@
-import home from "../home/hu.js";
+import home from "../../Home/lang/hu.js";
 
 export default {
   ...home,
