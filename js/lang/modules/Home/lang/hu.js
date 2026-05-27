@@ -4,6 +4,15 @@ export default {
   },
 
   home: {
+    totalVisitsCounter: "🌍 {count} összes látogatás",
+    
+    onlineUsersCounter: "👁 {count} online most",
+
+    heroHow: "⚙️ Hogyan működik",
+
+    heroAbout: "ℹ️ Névjegy",
+
+    heroWebapp: "📱 Webapp",
 
     footerHow: "⚙️ Hogyan működik",
     
@@ -40,6 +49,20 @@ export default {
     open: "Megnyitás",
 
     clear: "Törlés",
+
+    details: "Részletek",
+    
+    profile: "👤 Profil",
+
+    heroWebapp: "▶️ Webapp",
+
+    logout: "🚪 Kijelentkezés",
+
+    register: "Regisztráció",
+
+    login: "Bejelentkezés",
+
+    or: "vagy",
 
     how: {
       title: "Hogyan működik?",

@@ -1059,17 +1059,11 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
   "
 >
 
-  <button class="idesussMenuBtn" id="openProfileBtn">
-    👤 Profil
-  </button>
+  <button class="idesussMenuBtn" id="openProfileBtn" data-i18n="profile"></button>
 
-  <button class="idesussMenuBtn">
-    ▶️ Webapp
-  </button>
+  <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp"></button>
 
-  <button class="idesussMenuBtn" id="logoutBtnMenu">
-    🚪 Kijelentkezés
-  </button>
+  <button class="idesussMenuBtn" id="logoutBtnMenu" data-i18n="logout"></button>
 
 </div>
   <header class="site-header">
@@ -1078,16 +1072,16 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
         <img src="favicon.png" alt="Idesüss logo" class="brand-logo" />
         <div class="brand-text">
           <h2 class="brand-title">Idesüss<span class="tm-mark">™</span></h2>
-          <p class="brand-subtitle" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
+          <p class="brand-subtitle" data-i18n="brandSubtitle"></p>
         </div>
       </a>
 
       <div class="header-actions">
 
   <div class="header-chip auth-chip">
-    <button id="loginBtn" class="auth-link" type="button">Bejelentkezés</button>
-    <span class="auth-separator">vagy</span>
-    <button id="registerBtn" class="auth-link" type="button">Regisztráció</button>
+    <button id="loginBtn" class="auth-link" type="button" data-i18n="login"></button>
+    <span class="auth-separator" data-i18n="or"></span>
+    <button id="registerBtn" class="auth-link" type="button" data-i18n="register"></button>
   </div>
 
   <div class="header-chip lang-clock-chip">
@@ -1123,27 +1117,23 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
                   <img src="favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
                   <div>
                     <h1 class="hero-brand-title">Idesüss<span class="tm-mark">™</span></h1>
-                    <p class="hero-brand-sub" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
+                    <p class="hero-brand-sub" data-i18n="brandSubtitle"></p>
                   </div>
                 </div>
-                <p class="hero-lead" data-i18n="heroLead">
-                  Próbáld ki közvetlenül a főoldalon népszerű minialkalmazásunkat!
-                </p>
+                <p class="hero-lead" data-i18n="heroLead"></p>
               </div>
               <div class="hero-actions">
                 <a id="heroOpenAppBtn" class="btn hero-webapp-btn" href="https://idesuss.net/app">
-                  <span data-i18n="openWebapp">Webapp megnyitása</span>
+                  <span data-i18n="openWebapp"></span>
                 </a>
               </div>
             </div>
 
             <div class="hero-miniapp">
-              <h3 class="miniapp-title" data-i18n="inputTitle">Illessz be egy nyilvános videólinket</h3>
-              <p class="miniapp-subtitle" data-i18n="inputSubtitle">
-                TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.
-              </p>
+              <h3 class="miniapp-title" data-i18n="inputTitle"></h3>
+              <p class="miniapp-subtitle" data-i18n="inputSubtitle"></p>
               <div class="field">
-                <label for="videoUrl" data-i18n="inputLabel">Nyilvános videó URL</label>
+                <label for="videoUrl" data-i18n="inputLabel"></label>
                 <input id="videoUrl" class="input" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://..." />
               </div>
               <div class="input-actions">
@@ -1154,15 +1144,15 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
               <div class="status-bar">
                 <div id="clipboardStatus" class="status-pill">
                   <span class="status-dot"></span>
-                  <span data-i18n="clipboardChecking">Vágólap ellenőrzése…</span>
+                  <span data-i18n="clipboardChecking"></span>
                 </div>
                 <div id="installStatus" class="status-pill">
                   <span class="status-dot"></span>
-                  <span data-i18n="installStateUnknown">Telepítési állapot betöltése…</span>
+                  <span data-i18n="installStateUnknown"></span>
                 </div>
                 <div class="status-pill status-ok">
                   <span class="status-dot"></span>
-                  <span data-i18n="publicLinksOnly">Csak nyilvános linkek</span>
+                  <span data-i18n="publicLinksOnly"></span>
                 </div>
               </div>
             </div>
@@ -1171,16 +1161,14 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
             <div class="hero-banner">
               <div class="hero-banner-text">
                 <span class="hero-banner-icon"></span>
-                <span data-i18n="heroBannerText">Egyes Android eszközök nem támogatják!</span>
+                <span data-i18n="heroBannerText"></span>
               </div>
-             <button class="hero-banner-link" type="button" data-panel="android">
-            Részletek
-             </button>
+             <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details"></button>
             </div>
             <div class="hero-footer-links idesuss-footer-actions">
-              <button class="footer-action-btn" type="button" data-panel="how">⚙️ Hogyan működik</button>
-               <button class="footer-action-btn" type="button" data-panel="about">ℹ️ Névjegy</button>
-              <a class="footer-action-btn" href="https://idesuss.net/app">📱 Webapp</a>
+              <button class="footer-action-btn" type="button" data-panel="how" data-i18n="heroHow"></button>
+              <button class="footer-action-btn" type="button" data-panel="about" data-i18n="heroAbout"></button>
+              <a class="footer-action-btn" href="https://idesuss.net/app" data-i18n="heroWebapp"></a>
             </div>
           </div>
         </div>
@@ -1232,29 +1220,37 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
         <div class="footer-top">
           <div class="footer-brand">
             <h3>Idesüss<span class="tm-mark">™</span></h3>
-            <p data-i18n="footerDesc">Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.</p>
+            <p data-i18n="footerDesc"></p>
           </div>
           <div class="footer-links">
-            <button class="footer-action-btn" type="button" data-panel="how" data-i18n="footerHow"></button>
 
-<button class="footer-action-btn" type="button" data-panel="about" data-i18n="footerAbout"></button>
+  <button class="footer-action-btn"
+          type="button"
+          data-panel="how"
+          data-i18n="footerHow"></button>
 
-<a id="footerOpenAppLink"
-   class="footer-action-btn"
-   href="https://idesuss.net/app"
-   data-i18n="footerOpenWebapp"></a>
+  <button class="footer-action-btn"
+          type="button"
+          data-panel="about"
+          data-i18n="footerAbout"></button>
 
-<button id="shareBtn"
-        class="footer-action-btn"
-        type="button"
-        data-i18n="footerShare"></button>
-          </div>
+  <a id="footerOpenAppLink"
+     class="footer-action-btn"
+     href="https://idesuss.net/app"
+     data-i18n="footerOpenWebapp"></a>
+
+  <button id="shareBtn"
+          class="footer-action-btn"
+          type="button"
+          data-i18n="footerShare"></button>
+
+</div>
         </div>
         <div class="footer-bottom">
           <div>© <span id="year"></span> Idesüss<span class="tm-mark">™</span></div>
            <div class="footer-stats">
-             <span id="onlineUsersCounter">👁 0 online most</span>
-             <span id="totalVisitsCounter">🌍 0 összes látogatás</span>
+             <span id="onlineUsersCounter" data-i18n="onlineUsersCounter"></span>
+             <span id="totalVisitsCounter" data-i18n="totalVisitsCounter"></span>
            </div>
           <div class="powered">Powered by StZoo</div>
         </div>
@@ -1269,43 +1265,7 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
     import { getText } from "./js/lang/lang-core.js";
 
     document.getElementById('year').textContent = new Date().getFullYear();
-    function applyTranslations(section, prefix = "home") {
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.dataset.i18n;
-
-    if (section[key]) {
-      el.textContent = section[key];
-      return;
-    }
-
-    const nestedKeys = key.split(".");
-    let value = section;
-
-    for (const part of nestedKeys) {
-      value = value?.[part];
-    }
-
-    if (typeof value === "string") {
-      el.textContent = value;
-    }
-  });
-
-  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-    const key = el.dataset.i18nPlaceholder;
-
-    let value = section;
-
-    for (const part of key.split(".")) {
-      value = value?.[part];
-    }
-
-    if (typeof value === "string") {
-      el.placeholder = value;
-    }
-  });
-}
-
-applyTranslations(lang.home);
+    
     // Itt folytathatod a JS logikát (dict, óra, stb.)
 
   function updateHeaderClock() {
