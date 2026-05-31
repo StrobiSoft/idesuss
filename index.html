@@ -819,38 +819,36 @@
       .hero-webapp-btn { min-width: 0; width: 100%; }
     }
     .footer-action-btn {
-  border: 1px solid rgba(13, 91, 215, 0.18);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,0.95),
-      rgba(223,233,255,0.92)
-    );
-
-  color: #173b74;
-
-  border-radius: 999px;
-
-  padding: 11px 18px;
-
-  font-weight: 900;
-
-  cursor: pointer;
-
   text-decoration: none;
-
+  border: 1px solid rgba(13, 91, 215, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.95),
+    rgba(223,233,255,0.92)
+  );
+  color: #173b74;
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-weight: 900;
+  cursor: pointer;
   box-shadow:
     inset 0 2px 0 rgba(255,255,255,0.95),
     inset 0 -2px 4px rgba(13,91,215,0.08),
     0 10px 22px rgba(13,91,215,0.18),
     0 3px 8px rgba(0,0,0,0.10);
-
+}
+#footerOpenAppLink,
+#footerOpenAppLink:link,
+#footerOpenAppLink:visited,
+#footerOpenAppLink:hover,
+#footerOpenAppLink:active {
+  color: #000 !important;
+}
   transition:
     transform .18s ease,
     box-shadow .18s ease,
     background .18s ease;
-}
+
 
 .footer-action-btn:hover {
 
@@ -860,7 +858,7 @@
     linear-gradient(
       180deg,
       #ffffff,
-      #dfe9ff
+      #f1f2f4
     );
 
   box-shadow:
@@ -1235,9 +1233,10 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
           data-i18n="footerAbout"></button>
 
   <a id="footerOpenAppLink"
-     class="footer-action-btn"
-     href="https://idesuss.net/app"
-     data-i18n="footerOpenWebapp"></a>
+   class="footer-action-btn footer-open-webapp"
+   href="https://idesuss.net/app"
+   data-i18n="footerOpenWebapp"></a>
+     
 
   <button id="shareBtn"
           class="footer-action-btn"
