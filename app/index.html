@@ -829,7 +829,9 @@
                 localStorage.setItem(STORAGE_KEYS.lastVisit, String(now));
             }
 
-            els.visitCount.textContent = count;
+           if (els.visitCount) {
+    els.visitCount.textContent = count;
+}
         }
 
         function getHistory() {

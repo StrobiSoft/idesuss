@@ -23,6 +23,8 @@
   "aboutLink": "Névjegy",
   "aboutTitle": "Névjegy",
   "aboutCloseBtn": "Rendben",
+    "pasted": "Link beillesztve.",
+  "pasteFail": "A beillesztés nem sikerült.",
 
   "footerText": "Powered by StZoo"
 }
