@@ -1107,7 +1107,7 @@ cursor:pointer;
 z-index:99999;
 box-shadow:0 10px 28px rgba(0,0,0,.35);
 "
-  
+
 >
 ☰
 </button>
@@ -1170,10 +1170,10 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
 </div>
   </div>
 
-  
+
 
 </div>
-             
+
       </div>
     </div>
   </header>
@@ -1310,7 +1310,7 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
    class="footer-action-btn footer-open-webapp"
    href="https://idesuss.net/app"
    data-i18n="footerOpenWebapp"></a>
-     
+
 
   <button id="shareBtn"
           class="footer-action-btn"
@@ -1333,9 +1333,8 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
 
   <script type="module">
     import lang from "./js/lang/modules/Home/lang/hu.js";
-    import webappLang from "./js/lang/modules/webapp/lang/hu.js";
-    import nativeLang from "./js/lang/modules/native/lang/hu.js";
-    import { getText } from "./js/lang/lang-core.js";
+
+
 
     document.getElementById('year').textContent = new Date().getFullYear();
     function applyTranslations(section) {
@@ -1350,7 +1349,7 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
 }
 
 applyTranslations(lang.home);
-    
+
     // Itt folytathatod a JS logikát (dict, óra, stb.)
 
   function updateHeaderClock() {
@@ -1504,7 +1503,7 @@ function createAuthModal() {
         font-size:16px;
       ">
 
-      <input id="authPassword" type="password" placeholder="Jelszó" style=" 
+      <input id="authPassword" type="password" placeholder="Jelszó" style="
       width:100%;
         box-sizing:border-box;
         margin-bottom:14px;
@@ -2229,8 +2228,7 @@ if (!lastVisit || now - Number(lastVisit) > cooldown) {
 
 <script type="module">
   import lang from "./js/lang/modules/Home/lang/hu.js";
-  import webappLang from "./js/lang/modules/webapp/lang/hu.js";
-  import nativeLang from "./js/lang/modules/native/lang/hu.js";
+
   document.addEventListener("DOMContentLoaded", function () {
 const infoPanel = document.getElementById("infoPanel");
 const infoPanelTitle = document.getElementById("infoPanelTitle");
@@ -2274,8 +2272,7 @@ if (infoPanel) {
     if (event.target === infoPanel) closeInfoPanel();
   });
 }
-    const year = document.getElementById("year");
-    const clock = document.getElementById("headerClock");
+
 
     const videoUrl = document.getElementById("videoUrl");
     const openBtn = document.getElementById("openBtn");
@@ -2286,7 +2283,7 @@ if (infoPanel) {
     const closeViewerBtn = document.getElementById("closeViewerBtn");
     const shareBtn = document.getElementById("shareBtn");
     const loginBtn = document.getElementById("loginBtn");
-    const registerBtn = document.getElementById("registerBtn");
+
 
 if (loginBtn) {
   loginBtn.addEventListener("click", () => {
@@ -2294,49 +2291,7 @@ if (loginBtn) {
   });
 }
 
-if (registerBtn) {
- //const cleanRegisterBtn = registerBtn.cloneNode(true);
-  //registerBtn.replaceWith(cleanRegisterBtn);
-/*
-  registerBtn.addEventListener("click", async () => {
-    console.log("LOGOUT CLICK ELINDULT");
-    const {
-      data: { user }
-    } = await supabaseClient.auth.getUser();
-    console.log("GET USER:", user);
 
-    if (user) {
-      console.log("SIGNOUT INDUL");
-      const { error: signOutError } = await supabaseClient.auth.signOut();
-
-console.log("SIGNOUT VÉGE:", signOutError);
-      location.reload();
-      return;
-    }
-
-    openInfoPanel("register");
-  });
-  */
-}
-    // ===== ÉV =====
-    if (year) {
-      year.textContent = new Date().getFullYear();
-    }
-
-    // ===== ÓRA =====
-    function updateHeaderClock() {
-      if (!clock) return;
-
-      const now = new Date();
-
-      const hh = String(now.getHours()).padStart(2, "0");
-      const mm = String(now.getMinutes()).padStart(2, "0");
-
-      clock.textContent = hh + ":" + mm;
-    }
-
-    updateHeaderClock();
-    setInterval(updateHeaderClock, 1000);
 
     // ===== MEGNYITÁS =====
     if (openBtn && videoUrl) {
