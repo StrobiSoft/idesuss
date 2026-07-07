@@ -1,11 +1,14 @@
 const HOME_LANGUAGE_STORAGE_KEY = "idesuss_home_language";
 
+let activeHomeLanguage = null;
+
 const SUPPORTED_HOME_LANGUAGES = [
     "hu",
     "en",
     "nl",
     "ro",
-    "pl"
+    "pl",
+    "hr"
 ];
 
 function getSafeHomeLanguage(language) {
@@ -62,6 +65,8 @@ async function loadHomeLanguage(language) {
 
     const homeLanguage = languageModule.default;
 
+    activeHomeLanguage = homeLanguage;
+
     document.documentElement.lang = safeLanguage;
 
     localStorage.setItem(
@@ -95,4 +100,7 @@ export async function initHomeLanguage() {
     }
 
     return loadHomeLanguage(initialLanguage);
+}
+export function getCurrentHomeLanguage() {
+    return activeHomeLanguage;
 }
