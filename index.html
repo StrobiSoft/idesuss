@@ -2215,7 +2215,7 @@ if (!lastVisit || now - Number(lastVisit) > cooldown) {
 </script>
 
 <script type="module">
-  import lang from "./js/lang/modules/Home/lang/hu.js";
+  import { getCurrentHomeLanguage } from "./js/lang/home-language.js";
 
   document.addEventListener("DOMContentLoaded", function () {
 const infoPanel = document.getElementById("infoPanel");
@@ -2223,13 +2223,9 @@ const infoPanelTitle = document.getElementById("infoPanelTitle");
 const infoPanelText = document.getElementById("infoPanelText");
 const infoPanelClose = document.getElementById("infoPanelClose");
 
-const panelTexts = {
-  how: lang.home.how,
-  about: lang.home.about,
-  android: lang.home.android
-};
 function openInfoPanel(type) {
-  const data = panelTexts[type];
+  const lang = getCurrentHomeLanguage();
+  const data = lang?.home?.[type];
   if (!data || !infoPanel || !infoPanelTitle || !infoPanelText) return;
 
   infoPanelTitle.textContent = data.title;
