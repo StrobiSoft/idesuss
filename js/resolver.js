@@ -4,6 +4,15 @@
   No backend, no Cobalt, no auth.
 */
 
+(function loadVisualPolishStyles() {
+  if (document.querySelector('link[data-idesuss-visual-polish]')) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = '/visual-polish.css';
+  link.dataset.idesussVisualPolish = 'true';
+  document.head.appendChild(link);
+})();
+
 function cleanVideoUrl(inputUrl) {
   if (!inputUrl || typeof inputUrl !== "string") {
     return {
