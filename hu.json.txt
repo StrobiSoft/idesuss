@@ -1,1 +1,0 @@
-{ "playBtnText": "INDÍTÁS", "footerText": "Powered by StZoo" }
