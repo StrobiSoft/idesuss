@@ -22,6 +22,7 @@
   "aboutCloseBtn": "OK",
   "pasted": "Link pasted.",
   "pasteFail": "Could not paste from the clipboard.",
+  "pasteUnavailable": "Automatic paste is unavailable. Paste the link manually.",
   "blockedOpen": "The browser blocked opening the link. Click here to continue.",
   "openLinkText": "OPEN LINK",
   "successOpen": "Opened successfully.",

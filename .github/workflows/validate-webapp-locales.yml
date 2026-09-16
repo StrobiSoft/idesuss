@@ -3,6 +3,7 @@ name: Validate webapp locales
 on:
   pull_request:
     paths:
+      - 'index.html'
       - 'app/index.html'
       - 'app/*.json.txt'
       - 'app/profile-bridge*.js'
@@ -15,6 +16,7 @@ on:
       - '.github/workflows/validate-webapp-locales.yml'
   push:
     paths:
+      - 'index.html'
       - 'app/index.html'
       - 'app/*.json.txt'
       - 'app/profile-bridge*.js'

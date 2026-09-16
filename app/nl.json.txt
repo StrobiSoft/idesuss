@@ -22,6 +22,7 @@
   "aboutCloseBtn": "OK",
   "pasted": "Link geplakt.",
   "pasteFail": "Plakken vanaf het klembord is mislukt.",
+  "pasteUnavailable": "Automatisch plakken is niet beschikbaar. Plak de link handmatig.",
   "blockedOpen": "De browser heeft het openen geblokkeerd. Klik hier om verder te gaan.",
   "openLinkText": "LINK OPENEN",
   "successOpen": "Succesvol geopend.",

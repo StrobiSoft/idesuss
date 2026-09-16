@@ -22,6 +22,7 @@
   "aboutCloseBtn": "OK",
   "pasted": "Link lipit.",
   "pasteFail": "Lipirea din clipboard nu a reușit.",
+  "pasteUnavailable": "Lipirea automată nu este disponibilă. Lipește manual linkul.",
   "blockedOpen": "Browserul a blocat deschiderea. Apasă aici pentru a continua.",
   "openLinkText": "DESCHIDE LINKUL",
   "successOpen": "Deschis cu succes.",

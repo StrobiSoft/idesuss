@@ -22,6 +22,7 @@
   "aboutCloseBtn": "OK",
   "pasted": "Link wklejony.",
   "pasteFail": "Nie udało się wkleić ze schowka.",
+  "pasteUnavailable": "Automatyczne wklejanie jest niedostępne. Wklej link ręcznie.",
   "blockedOpen": "Przeglądarka zablokowała otwarcie. Kliknij tutaj, aby kontynuować.",
   "openLinkText": "OTWÓRZ LINK",
   "successOpen": "Otwarto pomyślnie.",

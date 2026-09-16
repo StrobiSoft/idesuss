@@ -7,6 +7,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const appDir = path.join(root, 'app');
 const appIndex = path.join(appDir, 'index.html');
+const homeIndex = path.join(root, 'index.html');
 const expectedLocales = ['hu', 'en', 'nl', 'ro', 'pl', 'be'];
 
 const dictionaries = new Map();
@@ -64,6 +65,19 @@ if (!fs.existsSync(appIndex)) {
   if (!source.includes('<a class="brand brand-home-link" href="/" aria-label="Idesüss főoldal">')) {
     failures.push('app/index.html: webapp brand does not link accessibly to the homepage');
   }
+
+  if (!source.includes("els.urlInput.addEventListener('input'")) {
+    failures.push('app/index.html: manual input does not clear stale status messages');
+  }
+}
+
+if (!fs.existsSync(homeIndex)) {
+  failures.push('index.html: missing');
+} else {
+  const homeSource = fs.readFileSync(homeIndex, 'utf8');
+  if (!homeSource.includes('.hero-footer-links a { color: #173b74; }')) {
+    failures.push('index.html: hero webapp link contrast guard is missing');
+  }
 }
 
 const bridgeEntry = path.join(appDir, 'profile-bridge-entry.js');
@@ -91,4 +105,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, all runtime t(...) keys covered, profile bridge, homepage link, and Belarusian option wired.`);
+console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, all runtime t(...) keys covered, navigation, status reset, contrast, profile bridge, and Belarusian option wired.`);
