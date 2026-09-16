@@ -60,9 +60,59 @@ function ensureOpenButtonDepth() {
   document.head.appendChild(style);
 }
 
+function ensureSettingsCloseStyle() {
+  if (document.getElementById("homepageSettingsCloseStyle")) return;
+
+  const style = document.createElement("style");
+  style.id = "homepageSettingsCloseStyle";
+  style.textContent = `
+    #homepageSettingsClose {
+      position: relative;
+      width: 38px !important;
+      height: 38px !important;
+      min-width: 38px !important;
+      padding: 0 !important;
+      border: 1px solid #d7e0ea !important;
+      border-radius: 999px !important;
+      background: #eef4fb !important;
+      color: #17324d !important;
+      font-size: 25px !important;
+      font-weight: 800 !important;
+      line-height: 1 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-shadow: none !important;
+      transform: none !important;
+    }
+    #homepageSettingsClose::before {
+      display: none !important;
+      content: none !important;
+    }
+    #homepageSettingsClose:hover,
+    #homepageSettingsClose:active {
+      box-shadow: none !important;
+      transform: none !important;
+      background: #e6eef8 !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function syncSettingsLanguageSelect(panel) {
+  const settingsSelect = panel?.querySelector("#homepageSettingsLanguage");
+  const sourceSelect = document.getElementById("langSelect");
+  if (!settingsSelect || !sourceSelect) return;
+
+  settingsSelect.innerHTML = sourceSelect.innerHTML;
+  settingsSelect.value = sourceSelect.value;
+}
+
 function ensureSettingsPanel() {
   let panel = document.getElementById("homepageSettingsPanel");
   if (panel) return panel;
+
+  ensureSettingsCloseStyle();
 
   panel = document.createElement("div");
   panel.id = "homepageSettingsPanel";
@@ -86,7 +136,7 @@ function ensureSettingsPanel() {
     <div style="width:min(420px,100%);background:#fff;border-radius:24px;padding:22px;box-shadow:0 24px 70px rgba(10,35,75,.28);color:#17324d;">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;">
         <h2 id="homepageSettingsTitle" style="margin:0;font-size:22px;">Beállítások</h2>
-        <button id="homepageSettingsClose" type="button" aria-label="Bezárás" style="width:38px;height:38px;min-width:38px;padding:0;border-radius:999px;background:#eaf1fb;color:#17324d;box-shadow:none;">×</button>
+        <button id="homepageSettingsClose" type="button" aria-label="Bezárás">×</button>
       </div>
       <label for="homepageSettingsLanguage" style="display:block;font-weight:800;margin-bottom:8px;">Nyelv</label>
       <select id="homepageSettingsLanguage" style="width:100%;min-height:46px;padding:10px 12px;border:1px solid #d7e0ea;border-radius:14px;background:#fff;color:#17324d;font:inherit;"></select>
@@ -99,15 +149,13 @@ function ensureSettingsPanel() {
   const settingsSelect = panel.querySelector("#homepageSettingsLanguage");
   const sourceSelect = document.getElementById("langSelect");
   if (settingsSelect && sourceSelect) {
-    settingsSelect.innerHTML = sourceSelect.innerHTML;
-    settingsSelect.value = sourceSelect.value;
+    syncSettingsLanguageSelect(panel);
     settingsSelect.addEventListener("change", () => {
       sourceSelect.value = settingsSelect.value;
       sourceSelect.dispatchEvent(new Event("change", { bubbles: true }));
     });
     sourceSelect.addEventListener("change", () => {
-      settingsSelect.innerHTML = sourceSelect.innerHTML;
-      settingsSelect.value = sourceSelect.value;
+      syncSettingsLanguageSelect(panel);
     });
   }
 
@@ -168,6 +216,7 @@ function wireHomepageMenu() {
   settingsBtn.addEventListener("click", () => {
     setOpen(false);
     const panel = ensureSettingsPanel();
+    syncSettingsLanguageSelect(panel);
     panel.hidden = false;
     panel.style.display = "flex";
     panel.querySelector("#homepageSettingsClose")?.focus();
