@@ -3,27 +3,23 @@
   "counterNote": "The counter does not increase on every refresh.",
   "langBoxLabel": "Language",
   "langSubnote": "Hungarian browser → Hungarian UI, everything else → English.",
-
   "textareaPlaceholder": "Paste the link here...",
   "playBtnText": "PLAY",
   "pasteBtn": "PASTE",
   "shareBtn": "SHARE",
   "clearInputBtn": "CLEAR",
-
   "backBtn": "BACK",
-
   "historyTitle": "History",
   "clearHistoryBtn": "Clear history",
   "emptyHistory": "No history yet.",
   "openAgain": "Open again",
   "historyCleared": "History cleared.",
-
   "installBtnText": "Install",
-
   "aboutLink": "About",
   "aboutTitle": "About",
   "aboutText": "The idea behind Idesüss was inspired by a very old friend. His way of thinking, habits, and unique perspective started this project. He is a bit paranoid and a bit unusual — the project was almost called 'Lazy Driver'. In the end, Idesüss fit the atmosphere and purpose much better.",
   "aboutCloseBtn": "OK",
-
+  "pasted": "Link pasted.",
+  "pasteFail": "Could not paste from the clipboard.",
   "footerText": "Powered by StZoo"
 }
