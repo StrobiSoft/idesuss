@@ -1,6 +1,13 @@
 import { initWebappProfileBridge } from './profile-bridge.js';
+import { initExtendedLanguageOptions } from './language-options.js';
 
-function startBridge() {
+async function startBridge() {
+  try {
+    await initExtendedLanguageOptions();
+  } catch (error) {
+    console.error('Webapp language extension startup failed', error);
+  }
+
   initWebappProfileBridge().catch((error) => {
     console.error('Webapp profile bridge startup failed', error);
   });
