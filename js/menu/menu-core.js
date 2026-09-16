@@ -17,25 +17,10 @@ function handleRequestedPanel() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const menu = document.getElementById("idesussMenu");
-
-  if (menu) {
-    let profileBtn = document.getElementById("profileMenuBtn");
-
-    if (!profileBtn) {
-      profileBtn = document.createElement("button");
-      profileBtn.id = "profileMenuBtn";
-      profileBtn.type = "button";
-      profileBtn.textContent = "Profil";
-      profileBtn.className = "menu-profile-btn";
-
-      menu.prepend(profileBtn);
-    }
-
-    profileBtn.addEventListener("click", () => {
-      openProfilePanel();
-    });
-  }
+  const profileBtn = document.getElementById("openProfileBtn");
+  profileBtn?.addEventListener("click", () => {
+    openProfilePanel();
+  });
 
   try {
     await initRootAuthController();
