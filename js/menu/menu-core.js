@@ -27,6 +27,15 @@ function makeHomepageBrandStatic() {
   brandLink.replaceWith(brand);
 }
 
+function normalizeWebappLinks() {
+  const currentOriginAppUrl = new URL("app/", window.location.href).href;
+  document
+    .querySelectorAll('a[href="https://idesuss.net/app"], a[href="https://idesuss.net/app/"]')
+    .forEach((link) => {
+      link.href = currentOriginAppUrl;
+    });
+}
+
 function ensureOpenButtonDepth() {
   if (document.getElementById("idesussOpenButtonDepthStyle")) return;
 
@@ -229,6 +238,7 @@ function wireHomepageMenu() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   makeHomepageBrandStatic();
+  normalizeWebappLinks();
   ensureOpenButtonDepth();
   wireHomepageMenu();
 
