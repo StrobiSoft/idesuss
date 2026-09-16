@@ -60,6 +60,10 @@ if (!fs.existsSync(appIndex)) {
   if (!source.includes('<script type="module" src="./profile-bridge-entry.js"></script>')) {
     failures.push('app/index.html: shared profile bridge entrypoint is not wired');
   }
+
+  if (!source.includes('<a class="brand brand-home-link" href="/" aria-label="Idesüss főoldal">')) {
+    failures.push('app/index.html: webapp brand does not link accessibly to the homepage');
+  }
 }
 
 const bridgeEntry = path.join(appDir, 'profile-bridge-entry.js');
@@ -87,4 +91,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, all runtime t(...) keys covered, profile bridge and Belarusian option wired.`);
+console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, all runtime t(...) keys covered, profile bridge, homepage link, and Belarusian option wired.`);
