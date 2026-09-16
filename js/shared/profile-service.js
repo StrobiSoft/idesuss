@@ -43,7 +43,6 @@ export async function ensureMyProfile(supabaseClient) {
     .insert({
       id: user.id,
       email: user.email || "",
-      role: "user",
       email_visibility: "hidden",
       profile_completed: false
     })
@@ -108,7 +107,6 @@ export async function saveMyProfile(supabaseClient, changes = {}) {
     : (profile?.email_visibility || "hidden");
 
   const payload = {
-    email: user.email || profile?.email || "",
     nickname,
     nickname_normalized: validation.normalized,
     avatar_emoji: changes.avatar_emoji ?? profile?.avatar_emoji ?? null,
