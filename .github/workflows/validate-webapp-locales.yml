@@ -1,0 +1,25 @@
+name: Validate webapp locales
+
+on:
+  pull_request:
+    paths:
+      - 'app/*.json.txt'
+      - 'tools/validate-webapp-locales.mjs'
+      - '.github/workflows/validate-webapp-locales.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/*.json.txt'
+      - 'tools/validate-webapp-locales.mjs'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate webapp locale parity
+        run: node tools/validate-webapp-locales.mjs
