@@ -13,9 +13,15 @@ function toIdentity(user) {
 
 export async function currentIdentity(supabaseClient) {
   const client = requireClient(supabaseClient);
+  const { data: sessionData, error: sessionError } = await client.auth.getSession();
+  if (sessionError) throw sessionError;
+
+  const sessionUser = sessionData?.session?.user || null;
+  if (!sessionUser) return null;
+
   const { data, error } = await client.auth.getUser();
   if (error) throw error;
-  return toIdentity(data?.user || null);
+  return toIdentity(data?.user || sessionUser);
 }
 
 export async function signIn(supabaseClient, { email, password }) {
