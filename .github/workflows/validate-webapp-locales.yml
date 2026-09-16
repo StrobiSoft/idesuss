@@ -9,6 +9,7 @@ on:
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
       - 'tools/validate-webapp-locales.mjs'
+      - 'tools/validate-nickname-normalization.mjs'
       - '.github/workflows/validate-webapp-locales.yml'
   push:
     paths:
@@ -18,6 +19,7 @@ on:
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
       - 'tools/validate-webapp-locales.mjs'
+      - 'tools/validate-nickname-normalization.mjs'
       - '.github/workflows/validate-webapp-locales.yml'
 
 jobs:
@@ -30,6 +32,8 @@ jobs:
           node-version: '22'
       - name: Validate webapp locale parity
         run: node tools/validate-webapp-locales.mjs
+      - name: Validate nickname normalization parity
+        run: node tools/validate-nickname-normalization.mjs
       - name: Validate shared module syntax
         run: |
           node --check app/profile-bridge.js
