@@ -71,15 +71,6 @@ if (!fs.existsSync(appIndex)) {
   }
 }
 
-if (!fs.existsSync(homeIndex)) {
-  failures.push('index.html: missing');
-} else {
-  const homeSource = fs.readFileSync(homeIndex, 'utf8');
-  if (!homeSource.includes('.hero-footer-links a { color: #173b74; }')) {
-    failures.push('index.html: hero webapp link contrast guard is missing');
-  }
-}
-
 const bridgeEntry = path.join(appDir, 'profile-bridge-entry.js');
 const languageOptions = path.join(appDir, 'language-options.js');
 if (!fs.existsSync(bridgeEntry)) {
@@ -89,6 +80,11 @@ if (!fs.existsSync(bridgeEntry)) {
   if (!bridgeSource.includes("./language-options.js")) {
     failures.push('app/profile-bridge-entry.js: Belarusian language extension is not wired');
   }
+  if (!bridgeSource.includes("document.querySelector('.brand-home-link')") ||
+      !bridgeSource.includes("new URL('../', window.location.href)") ||
+      !bridgeSource.includes('window.location.assign(homeUrl.href)')) {
+    failures.push('app/profile-bridge-entry.js: executable home navigation fallback is missing');
+  }
 }
 if (!fs.existsSync(languageOptions)) {
   failures.push('app/language-options.js: missing');
@@ -96,6 +92,15 @@ if (!fs.existsSync(languageOptions)) {
   const languageSource = fs.readFileSync(languageOptions, 'utf8');
   if (!languageSource.includes("BELARUSIAN_LOCALE = 'be'")) {
     failures.push('app/language-options.js: Belarusian locale is not configured');
+  }
+}
+
+if (!fs.existsSync(homeIndex)) {
+  failures.push('index.html: missing');
+} else {
+  const homeSource = fs.readFileSync(homeIndex, 'utf8');
+  if (!homeSource.includes('.hero-footer-links a { color: #173b74; }')) {
+    failures.push('index.html: hero webapp link contrast guard is missing');
   }
 }
 
