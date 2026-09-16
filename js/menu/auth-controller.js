@@ -30,6 +30,16 @@ function setMessage(text) {
   if (target) target.textContent = text || "";
 }
 
+function localizeAuthError(error) {
+  const message = String(error?.message || "").toLowerCase();
+  if (message.includes("invalid login credentials")) return "Hibás e-mail cím vagy jelszó.";
+  if (message.includes("email not confirmed")) return "Az e-mail címed még nincs megerősítve. Ellenőrizd a postafiókodat.";
+  if (message.includes("user already registered")) return "Ezzel az e-mail címmel már létezik fiók.";
+  if (message.includes("password should be")) return "A megadott jelszó nem felel meg a biztonsági követelményeknek.";
+  if (message.includes("auth session missing")) return "A regisztráció elkészült, de a belépéshez előbb erősítsd meg az e-mail címedet.";
+  return "A művelet nem sikerült. Próbáld újra.";
+}
+
 function updateButtons() {
   const loginBtn = document.getElementById("loginBtn");
   const registerBtn = document.getElementById("registerBtn");
@@ -45,9 +55,7 @@ function updateButtons() {
     }
   }
 
-  if (menuLogout) {
-    menuLogout.hidden = !identity;
-  }
+  if (menuLogout) menuLogout.hidden = !identity;
 }
 
 async function maybeOpenProfile() {
@@ -55,9 +63,7 @@ async function maybeOpenProfile() {
 
   try {
     const profile = await loadMyProfile(getClient());
-    if (!profile?.profile_completed) {
-      await openProfilePanel();
-    }
+    if (!profile?.profile_completed) await openProfilePanel();
   } catch (error) {
     console.error("Shared profile completion check failed", error);
   }
@@ -100,11 +106,17 @@ async function handleSubmit(event) {
 
     if (mode === "register") {
       await signUp(client, { email, password });
-      identity = await currentIdentity(client);
+      const { data: sessionData, error: sessionError } = await client.auth.getSession();
+      if (sessionError) throw sessionError;
+
+      const sessionUser = sessionData?.session?.user || null;
+      identity = sessionUser
+        ? { id: sessionUser.id, email: sessionUser.email || "" }
+        : null;
       updateButtons();
 
       if (!identity) {
-        setMessage("Regisztráció elküldve. Ellenőrizd az e-mail fiókodat, ha megerősítés szükséges.");
+        setMessage("Regisztráció elküldve. Küldtünk egy megerősítő e-mailt. Kattints a levélben található linkre, majd jelentkezz be.");
         return;
       }
 
@@ -121,7 +133,7 @@ async function handleSubmit(event) {
     await maybeOpenProfile();
   } catch (error) {
     console.error("Shared auth action failed", error);
-    setMessage(error?.message || "A művelet nem sikerült.");
+    setMessage(localizeAuthError(error));
   }
 }
 
@@ -133,11 +145,8 @@ function bindHandlers() {
 
   loginBtn?.addEventListener("click", (event) => {
     event.preventDefault();
-    if (identity) {
-      openProfilePanel();
-    } else {
-      openAuthModal("login");
-    }
+    if (identity) openProfilePanel();
+    else openAuthModal("login");
   });
 
   registerBtn?.addEventListener("click", async (event) => {
