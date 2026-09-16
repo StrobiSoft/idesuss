@@ -1,0 +1,38 @@
+// GENERATED from idesuss-common src/i18n/locales/pl.json. Do not edit by hand.
+export default {
+  "common": {"appName": "Idesüss"},
+  "home": {
+    "totalVisitsCounter": "🌍 {count} wizyt łącznie",
+    "onlineUsersCounter": "👁 {count} online teraz",
+    "heroHow": "⚙️ Jak to działa",
+    "heroAbout": "ℹ️ O aplikacji",
+    "heroWebapp": "📱 Webapp",
+    "footerHow": "⚙️ Jak to działa",
+    "footerAbout": "ℹ️ O aplikacji",
+    "footerOpenWebapp": "📱 Webapp",
+    "footerShare": "📤 Udostępnij",
+    "brandSubtitle": "Strona główna + doświadczenie miniaplikacji",
+    "heroLead": "Wypróbuj naszą popularną miniaplikację bezpośrednio ze strony głównej!",
+    "openWebapp": "Otwórz webapp",
+    "inputTitle": "Wklej publiczny link do filmu",
+    "inputSubtitle": "TikTok, YouTube, Instagram Reels, filmy na Facebooku i inne obsługiwane publiczne linki.",
+    "inputLabel": "Publiczny adres URL filmu",
+    "clipboardChecking": "Sprawdzanie schowka…",
+    "installStateUnknown": "Ładowanie stanu instalacji…",
+    "publicLinksOnly": "Tylko publiczne linki",
+    "heroBannerText": "Niektóre urządzenia z Androidem nie są obsługiwane!",
+    "footerDesc": "Strona główna + punkt wejścia do miniaplikacji dla obsługiwanych publicznych linków do filmów.",
+    "paste": "Wklej",
+    "open": "Otwórz",
+    "clear": "Wyczyść",
+    "details": "Szczegóły",
+    "profile": "👤 Profil",
+    "logout": "🚪 Wyloguj",
+    "register": "Rejestracja",
+    "login": "Logowanie",
+    "or": "lub",
+    "how": {"title": "Jak to działa?", "text": "Wklej publiczny link do filmu, a następnie naciśnij przycisk otwierania. Idesüss spróbuje otworzyć treść w możliwie prosty i szybki sposób."},
+    "about": {"title": "O aplikacji", "text": "Idesüss został zainspirowany przez mojego bardzo starego, dobrego przyjaciela. Jego sposób myślenia, nawyki i wyjątkowe spojrzenie na świat sprawiły, że zacząłem myśleć o tej stronie. Jest trochę paranoiczny i trochę leniwy, dlatego przez pewien czas strona miała prawie nazywać się „Lazy Driver”. Ostatecznie została Idesüss i wcale tego nie żałuję. Ta nazwa znacznie lepiej oddaje atmosferę i cel strony, bez niesienia czegoś, co mogłoby być krzywdzące dla osoby, która zainspirowała pierwotny pomysł."},
+    "android": {"title": "Zgodność z Androidem", "text": "Na niektórych urządzeniach lub w przeglądarkach z Androidem otwieranie filmów może działać inaczej. W takich przypadkach Idesüss stara się obsłużyć link w możliwie najprostszy sposób, ale z powodu ograniczeń platformy treść może czasem otworzyć się wyłącznie na zewnętrznej stronie lub w aplikacji."}
+  }
+};

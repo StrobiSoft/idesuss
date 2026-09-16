@@ -9,6 +9,7 @@ const appDir = path.join(root, 'app');
 const appIndex = path.join(appDir, 'index.html');
 const homeIndex = path.join(root, 'index.html');
 const menuCore = path.join(root, 'js', 'menu', 'menu-core.js');
+const homeLanguage = path.join(root, 'js', 'lang', 'home-language.js');
 const expectedLocales = ['hu', 'en', 'nl', 'ro', 'pl', 'be'];
 
 const dictionaries = new Map();
@@ -81,6 +82,26 @@ if (!fs.existsSync(homeIndex)) {
   }
 }
 
+if (!fs.existsSync(homeLanguage)) {
+  failures.push('js/lang/home-language.js: missing');
+} else {
+  const homeLanguageSource = fs.readFileSync(homeLanguage, 'utf8');
+  if (!homeLanguageSource.includes('["hu", "en", "nl", "ro", "pl", "be"]')) {
+    failures.push('js/lang/home-language.js: canonical six-language set is not configured');
+  }
+  if (!homeLanguageSource.includes('BY Беларуская')) {
+    failures.push('js/lang/home-language.js: Belarusian homepage option is missing');
+  }
+  if (homeLanguageSource.includes('hr:') || homeLanguageSource.includes('HR Hrvatski')) {
+    failures.push('js/lang/home-language.js: stale Croatian homepage option remains');
+  }
+}
+
+for (const locale of ['nl', 'ro', 'pl']) {
+  const file = path.join(root, 'js', 'lang', 'modules', 'Home', 'lang', `${locale}.js`);
+  if (!fs.existsSync(file)) failures.push(`homepage ${locale}: generated Common-derived module missing`);
+}
+
 if (!fs.existsSync(menuCore)) {
   failures.push('js/menu/menu-core.js: missing');
 } else {
@@ -91,7 +112,10 @@ if (!fs.existsSync(menuCore)) {
     'wireHomepageMenu',
     'openSettingsBtn',
     'homepageSettingsPanel',
-    'aria-expanded'
+    'aria-expanded',
+    'ensureSettingsCloseStyle',
+    'syncSettingsLanguageSelect',
+    '#homepageSettingsClose::before'
   ]) {
     if (!menuSource.includes(required)) {
       failures.push(`js/menu/menu-core.js: missing navigation/UI guard ${required}`);
@@ -127,4 +151,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, runtime locale coverage, homepage menu/settings, button depth, webapp home navigation, status reset, contrast, profile bridge, and Belarusian option wired.`);
+console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, canonical homepage locale coverage, homepage menu/settings, normalized close control, button depth, webapp home navigation, status reset, contrast, profile bridge, and Belarusian option wired.`);
