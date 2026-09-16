@@ -99,6 +99,21 @@
             gap: 4px;
         }
 
+        .brand-home-link {
+            color: inherit;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .brand-home-link:hover .brand-title {
+            opacity: 0.82;
+        }
+
+        .brand-home-link:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 6px;
+        }
+
         .brand-title {
             font-size: clamp(28px, 6vw, 38px);
             line-height: 1;
@@ -690,10 +705,10 @@
 <body>
     <div class="app">
         <div class="topbar">
-            <div class="brand">
+            <a class="brand brand-home-link" href="/" aria-label="Idesüss főoldal">
                 <div class="brand-title">Idesüss<span class="tm">™</span></div>
                 <div class="brand-sub" id="brandSub"></div>
-            </div>
+            </a>
 
             <div class="top-actions">
                 <button id="installBtn" class="install-btn js-install-trigger" type="button" hidden>Telepítés</button>
