@@ -71,6 +71,10 @@ function renderProfile(panel, profile, user) {
         email_visibility: document.getElementById("profileEmailVisibility")?.value || "hidden"
       });
 
+      window.dispatchEvent(new CustomEvent("idesuss:profile-saved", {
+        detail: { nickname: saved?.nickname || "" }
+      }));
+
       if (message) message.textContent = "Profil mentve.";
       renderProfile(panel, saved, user);
     } catch (error) {
@@ -128,6 +132,9 @@ export async function openProfilePanel() {
 
     if (unsubscribeProfile) unsubscribeProfile();
     unsubscribeProfile = subscribeToMyProfile(window.supabaseClient, user.id, (nextProfile) => {
+      window.dispatchEvent(new CustomEvent("idesuss:profile-saved", {
+        detail: { nickname: nextProfile?.nickname || "" }
+      }));
       if (panel.classList.contains("show")) {
         renderProfile(panel, nextProfile, user);
       }
