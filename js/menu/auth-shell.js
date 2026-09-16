@@ -31,14 +31,25 @@ export function ensureAuthModal() {
     ">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
         <h2 id="authModalTitle" style="margin:0;font-size:24px;">Bejelentkezés</h2>
-        <button id="authModalClose" type="button" aria-label="Bezárás" style="
-          border:0;
-          background:#ffffff;
-          border-radius:999px;
-          width:38px;
-          height:38px;
-          cursor:pointer;
-          font-size:20px;
+        <button id="authModalClose" class="auth-modal-close" type="button" aria-label="Bezárás" style="
+          position: relative;
+          border: 1px solid rgba(23,50,77,.16);
+          background: #eef4fb;
+          color: #17324d;
+          border-radius: 999px;
+          width: 38px;
+          height: 38px;
+          min-width: 38px;
+          padding: 0;
+          cursor: pointer;
+          font-size: 25px;
+          font-weight: 800;
+          line-height: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: none;
+          transform: none;
         ">×</button>
       </div>
 
@@ -71,7 +82,13 @@ export function ensureAuthModal() {
   `;
 
   document.body.appendChild(modal);
-  document.getElementById("authModalClose")?.addEventListener("click", closeAuthModal);
+
+  const closeButton = document.getElementById("authModalClose");
+  if (closeButton) {
+    closeButton.style.setProperty("box-shadow", "none", "important");
+    closeButton.addEventListener("click", closeAuthModal);
+  }
+
   modal.addEventListener("click", (event) => {
     if (event.target === modal) closeAuthModal();
   });
