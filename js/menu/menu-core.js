@@ -1,3 +1,4 @@
+import { initRootAuthController } from "./auth-controller.js";
 import { openProfilePanel } from "./profile.js";
 
 function handleRequestedPanel() {
@@ -9,15 +10,13 @@ function handleRequestedPanel() {
   }
 
   if (hash === "#login") {
-    // Keep the current GEN1 login UI as the visible consumer for now.
-    // Trigger its existing click handler instead of duplicating auth UI logic.
     window.setTimeout(() => {
       document.getElementById("loginBtn")?.click();
     }, 0);
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const menu = document.getElementById("idesussMenu");
 
   if (menu) {
@@ -36,6 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
     profileBtn.addEventListener("click", () => {
       openProfilePanel();
     });
+  }
+
+  try {
+    await initRootAuthController();
+  } catch (error) {
+    console.error("Shared root auth controller init failed", error);
   }
 
   handleRequestedPanel();
