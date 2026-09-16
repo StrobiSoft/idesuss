@@ -14,6 +14,7 @@ import {
 } from "./auth-shell.js";
 
 let identity = null;
+let profileNickname = "";
 let unsubscribeAuth = null;
 
 function getClient() {
@@ -47,7 +48,7 @@ function updateButtons() {
 
   if (loginBtn && registerBtn) {
     if (identity) {
-      loginBtn.textContent = identity.email || "Belépve";
+      loginBtn.textContent = profileNickname || "Profil";
       registerBtn.textContent = "Kijelentkezés";
     } else {
       loginBtn.textContent = "Bejelentkezés";
@@ -63,6 +64,8 @@ async function maybeOpenProfile() {
 
   try {
     const profile = await loadMyProfile(getClient());
+    profileNickname = profile?.nickname || "";
+    updateButtons();
     if (!profile?.profile_completed) await openProfilePanel();
   } catch (error) {
     console.error("Shared profile completion check failed", error);
@@ -73,6 +76,7 @@ async function performSignOut() {
   try {
     await signOut(getClient());
     identity = null;
+    profileNickname = "";
     updateButtons();
   } catch (error) {
     console.error("Shared sign-out failed", error);
@@ -113,6 +117,7 @@ async function handleSubmit(event) {
       identity = sessionUser
         ? { id: sessionUser.id, email: sessionUser.email || "" }
         : null;
+      profileNickname = "";
       updateButtons();
 
       if (!identity) {
@@ -127,6 +132,7 @@ async function handleSubmit(event) {
     }
 
     identity = await signIn(client, { email, password });
+    profileNickname = "";
     updateButtons();
     setMessage("Sikeres bejelentkezés.");
     window.setTimeout(closeAuthModal, 350);
@@ -164,6 +170,12 @@ function bindHandlers() {
   });
 
   submitBtn?.addEventListener("click", handleSubmit);
+
+  window.addEventListener("idesuss:profile-saved", (event) => {
+    if (!identity) return;
+    profileNickname = event?.detail?.nickname || "";
+    updateButtons();
+  });
 }
 
 export async function initRootAuthController() {
@@ -178,12 +190,14 @@ export async function initRootAuthController() {
     identity = null;
   }
 
+  profileNickname = "";
   updateButtons();
   if (identity) await maybeOpenProfile();
 
   if (unsubscribeAuth) unsubscribeAuth();
   unsubscribeAuth = subscribeAuthState(client, async (nextIdentity) => {
     identity = nextIdentity;
+    profileNickname = "";
     updateButtons();
     if (identity) await maybeOpenProfile();
   });
