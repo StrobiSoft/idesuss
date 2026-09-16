@@ -3,27 +3,23 @@
   "counterNote": "Licznik nie zwiększa się przy każdym odświeżeniu.",
   "langBoxLabel": "Język",
   "langSubnote": "Węgierska przeglądarka → interfejs węgierski, inaczej → angielski.",
-
   "textareaPlaceholder": "Wklej link tutaj...",
   "playBtnText": "URUCHOM",
   "pasteBtn": "WKLEJ",
   "shareBtn": "UDOSTĘPNIJ",
   "clearInputBtn": "WYCZYŚĆ",
-
   "backBtn": "WRÓĆ",
-
   "historyTitle": "Historia",
   "clearHistoryBtn": "Wyczyść historię",
   "emptyHistory": "Brak historii.",
   "openAgain": "Otwórz ponownie",
   "historyCleared": "Historia została wyczyszczona.",
-
   "installBtnText": "Zainstaluj",
-
   "aboutLink": "O aplikacji",
   "aboutTitle": "O aplikacji",
   "aboutText": "Pomysł na Idesüss został zainspirowany przez bardzo starego przyjaciela. Jego sposób myślenia, nawyki i unikalne spojrzenie na świat zapoczątkowały ten projekt. Jest trochę paranoiczny i trochę dziwny — projekt prawie nazywał się 'Leniwy Kierowca'. Ostatecznie Idesüss pasuje znacznie lepiej.",
   "aboutCloseBtn": "OK",
-
+  "pasted": "Link wklejony.",
+  "pasteFail": "Nie udało się wkleić ze schowka.",
   "footerText": "Powered by StZoo"
 }
