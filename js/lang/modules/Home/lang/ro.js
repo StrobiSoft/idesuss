@@ -1,0 +1,38 @@
+// GENERATED from idesuss-common src/i18n/locales/ro.json. Do not edit by hand.
+export default {
+  "common": {"appName": "Idesüss"},
+  "home": {
+    "totalVisitsCounter": "🌍 {count} vizite în total",
+    "onlineUsersCounter": "👁 {count} online acum",
+    "heroHow": "⚙️ Cum funcționează",
+    "heroAbout": "ℹ️ Despre",
+    "heroWebapp": "📱 Webapp",
+    "footerHow": "⚙️ Cum funcționează",
+    "footerAbout": "ℹ️ Despre",
+    "footerOpenWebapp": "📱 Webapp",
+    "footerShare": "📤 Distribuie",
+    "brandSubtitle": "Pagină principală + experiență mini-aplicație",
+    "heroLead": "Încearcă mini-aplicația noastră populară direct de pe pagina principală!",
+    "openWebapp": "Deschide webapp-ul",
+    "inputTitle": "Lipește un link video public",
+    "inputSubtitle": "TikTok, YouTube, Instagram Reels, videoclipuri Facebook și alte linkuri publice acceptate.",
+    "inputLabel": "URL video public",
+    "clipboardChecking": "Se verifică clipboardul…",
+    "installStateUnknown": "Se încarcă starea instalării…",
+    "publicLinksOnly": "Doar linkuri publice",
+    "heroBannerText": "Unele dispozitive Android nu sunt acceptate!",
+    "footerDesc": "Pagină principală + punct de intrare în mini-aplicație pentru linkuri video publice acceptate.",
+    "paste": "Lipește",
+    "open": "Deschide",
+    "clear": "Șterge",
+    "details": "Detalii",
+    "profile": "👤 Profil",
+    "logout": "🚪 Deconectare",
+    "register": "Înregistrare",
+    "login": "Autentificare",
+    "or": "sau",
+    "how": {"title": "Cum funcționează?", "text": "Lipește un link video public, apoi apasă butonul de deschidere. Idesüss va încerca să deschidă conținutul cât mai simplu și rapid."},
+    "about": {"title": "Despre", "text": "Idesüss a fost inspirat de un prieten foarte vechi și bun. Felul lui de a gândi, obiceiurile și perspectiva lui aparte asupra lumii m-au făcut să încep să mă gândesc la această pagină. Este puțin paranoic și puțin leneș, așa că pentru o vreme site-ul era aproape să se numească „Lazy Driver”. În final a devenit Idesüss și nu regret deloc. Numele se potrivește mult mai bine cu atmosfera și scopul pe care voiam să le reprezinte pagina, fără să includă ceva care ar putea fi jignitor pentru persoana care a inspirat ideea inițială."},
+    "android": {"title": "Compatibilitate Android", "text": "Pe unele dispozitive sau browsere Android, deschiderea videoclipurilor poate funcționa diferit. În aceste cazuri, Idesüss încearcă să gestioneze linkul cât mai simplu posibil, dar din cauza restricțiilor platformei conținutul se poate deschide uneori doar într-o pagină externă sau într-o aplicație."}
+  }
+};
