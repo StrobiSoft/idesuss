@@ -13,6 +13,9 @@ on:
       - 'js/lang/modules/auth/lang/auth.js'
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-nickname-normalization.mjs'
+      - 'tools/validate-resolver-vectors.mjs'
+      - 'tools/fixtures/resolver-vectors.json'
+      - 'js/resolver.js'
       - '.github/workflows/validate-webapp-locales.yml'
   push:
     paths:
@@ -26,6 +29,9 @@ on:
       - 'js/lang/modules/auth/lang/auth.js'
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-nickname-normalization.mjs'
+      - 'tools/validate-resolver-vectors.mjs'
+      - 'tools/fixtures/resolver-vectors.json'
+      - 'js/resolver.js'
       - '.github/workflows/validate-webapp-locales.yml'
 
 jobs:
@@ -40,6 +46,8 @@ jobs:
         run: node tools/validate-webapp-locales.mjs
       - name: Validate nickname normalization parity
         run: node tools/validate-nickname-normalization.mjs
+      - name: Validate resolver parity vectors
+        run: node tools/validate-resolver-vectors.mjs
       - name: Validate profile bridge runtime ordering
         run: node tools/validate-profile-bridge-runtime.mjs
       - name: Validate shared module syntax
