@@ -17,6 +17,17 @@ function requireClient(supabaseClient) {
   return supabaseClient;
 }
 
+function isMissingRpcError(error) {
+  if (!error) return false;
+  const text = `${error.code || ""} ${error.message || ""} ${error.details || ""}`.toLowerCase();
+  return text.includes("save_my_profile") && (
+    text.includes("not found") ||
+    text.includes("does not exist") ||
+    text.includes("pgrst202") ||
+    text.includes("42883")
+  );
+}
+
 export async function getCurrentUser(supabaseClient) {
   const client = requireClient(supabaseClient);
   const { data, error } = await client.auth.getUser();
@@ -88,12 +99,7 @@ export async function validateNickname(supabaseClient, rawNickname, currentUserI
   return { ok: true, normalized, reason: null };
 }
 
-export async function saveMyProfile(supabaseClient, changes = {}) {
-  const client = requireClient(supabaseClient);
-  const user = await getCurrentUser(client);
-  if (!user) throw new Error("AUTH_REQUIRED");
-
-  const profile = await ensureMyProfile(client);
+async function saveMyProfileLegacy(client, user, profile, changes) {
   const nickname = changes.nickname ?? profile?.nickname ?? "";
   const validation = await validateNickname(client, nickname, user.id);
   if (!validation.ok) {
@@ -123,6 +129,31 @@ export async function saveMyProfile(supabaseClient, changes = {}) {
 
   if (error) throw error;
   return data;
+}
+
+export async function saveMyProfile(supabaseClient, changes = {}) {
+  const client = requireClient(supabaseClient);
+  const user = await getCurrentUser(client);
+  if (!user) throw new Error("AUTH_REQUIRED");
+
+  const profile = await ensureMyProfile(client);
+  const nickname = changes.nickname ?? profile?.nickname ?? "";
+  const avatarEmoji = changes.avatar_emoji ?? profile?.avatar_emoji ?? "";
+  const emailVisibility = ["hidden", "masked", "public"].includes(changes.email_visibility)
+    ? changes.email_visibility
+    : (profile?.email_visibility || "hidden");
+
+  const { data: rpcData, error: rpcError } = await client.rpc("save_my_profile", {
+    p_nickname: nickname,
+    p_avatar_emoji: avatarEmoji,
+    p_email_visibility: emailVisibility
+  });
+
+  if (!rpcError) return rpcData;
+  if (!isMissingRpcError(rpcError)) throw rpcError;
+
+  // Compatibility path while the live Supabase schema is still GEN1.
+  return saveMyProfileLegacy(client, user, profile, changes);
 }
 
 export async function loadMyProfile(supabaseClient) {
