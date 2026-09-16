@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "contract": "idesuss.resolver.vectors",
+  "cases": [
+    {
+      "name": "empty",
+      "input": "",
+      "ok": false,
+      "error": "EMPTY_URL",
+      "platform": "unknown",
+      "cleanUrl": ""
+    },
+    {
+      "name": "youtube-watch-tracking",
+      "input": "https://www.youtube.com/watch?v=abc123&utm_source=test&feature=share",
+      "ok": true,
+      "platform": "youtube",
+      "cleanUrl": "https://www.youtube.com/watch?v=abc123"
+    },
+    {
+      "name": "youtube-playlist",
+      "input": "https://www.youtube.com/watch?v=abc123&list=PL42&si=noise",
+      "ok": true,
+      "platform": "youtube",
+      "cleanUrl": "https://www.youtube.com/watch?v=abc123&list=PL42"
+    },
+    {
+      "name": "youtu-be",
+      "input": "https://youtu.be/abc123?si=noise",
+      "ok": true,
+      "platform": "youtube",
+      "cleanUrl": "https://youtu.be/abc123"
+    },
+    {
+      "name": "tiktok-tracking",
+      "input": "https://www.tiktok.com/@creator/video/12345?share_item_id=12345&utm_source=test",
+      "ok": true,
+      "platform": "tiktok",
+      "cleanUrl": "https://www.tiktok.com/@creator/video/12345"
+    },
+    {
+      "name": "instagram-tracking",
+      "input": "https://www.instagram.com/reel/ABC/?igshid=xyz&utm_medium=copy_link",
+      "ok": true,
+      "platform": "instagram",
+      "cleanUrl": "https://www.instagram.com/reel/ABC/"
+    },
+    {
+      "name": "facebook-tracking",
+      "input": "https://www.facebook.com/watch/?v=123&fbclid=xyz",
+      "ok": true,
+      "platform": "facebook",
+      "cleanUrl": "https://www.facebook.com/watch/"
+    },
+    {
+      "name": "x-preserve-content-param-strip-tracking",
+      "input": "https://x.com/example/status/123?utm_source=test&lang=en",
+      "ok": true,
+      "platform": "x",
+      "cleanUrl": "https://x.com/example/status/123?lang=en"
+    },
+    {
+      "name": "unknown-preserve-nontracking",
+      "input": "https://example.com/video?id=42&utm_campaign=test",
+      "ok": true,
+      "platform": "unknown",
+      "cleanUrl": "https://example.com/video?id=42"
+    }
+  ]
+}
