@@ -7,7 +7,7 @@ import {
   signOut,
   signUp,
   subscribeAuthState
-} from "../../../shared/auth-service.js";
+} from "../../../../shared/auth-service.js";
 
 let currentUser = null;
 const listeners = new Set();
