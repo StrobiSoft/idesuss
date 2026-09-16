@@ -3,6 +3,7 @@ name: Validate webapp locales
 on:
   pull_request:
     paths:
+      - 'app/index.html'
       - 'app/*.json.txt'
       - 'app/profile-bridge*.js'
       - 'js/menu/**'
@@ -13,6 +14,7 @@ on:
       - '.github/workflows/validate-webapp-locales.yml'
   push:
     paths:
+      - 'app/index.html'
       - 'app/*.json.txt'
       - 'app/profile-bridge*.js'
       - 'js/menu/**'
@@ -30,7 +32,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate webapp locale parity
+      - name: Validate webapp locale parity and bridge wiring
         run: node tools/validate-webapp-locales.mjs
       - name: Validate nickname normalization parity
         run: node tools/validate-nickname-normalization.mjs
