@@ -10,6 +10,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
 
 let unsubscribeProfile = null;
 let unsubscribeAuth = null;
+let identityGeneration = 0;
 
 function loadSupabaseLibrary() {
   if (window.supabase?.createClient) return Promise.resolve(window.supabase);
@@ -75,21 +76,25 @@ function renderSignedIn(profile, user) {
   };
 }
 
-async function bindSignedInProfile(client, user) {
+async function bindSignedInProfile(client, user, generation) {
   if (unsubscribeProfile) {
     unsubscribeProfile();
     unsubscribeProfile = null;
   }
 
   const profile = await loadMyProfile(client);
+  if (generation !== identityGeneration) return;
   renderSignedIn(profile, user);
 
   unsubscribeProfile = subscribeToMyProfile(client, user.id, (nextProfile) => {
+    if (generation !== identityGeneration) return;
     renderSignedIn(nextProfile, user);
   });
 }
 
 async function renderIdentity(client, user) {
+  const generation = ++identityGeneration;
+
   if (!user) {
     if (unsubscribeProfile) {
       unsubscribeProfile();
@@ -99,7 +104,7 @@ async function renderIdentity(client, user) {
     return;
   }
 
-  await bindSignedInProfile(client, user);
+  await bindSignedInProfile(client, user, generation);
 }
 
 export async function initWebappProfileBridge() {
@@ -121,6 +126,7 @@ export async function initWebappProfileBridge() {
   }
 
   return () => {
+    identityGeneration += 1;
     if (unsubscribeProfile) unsubscribeProfile();
     if (unsubscribeAuth) unsubscribeAuth();
     unsubscribeProfile = null;
