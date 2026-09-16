@@ -1,8 +1,17 @@
-// js/auth.js
-// Közös auth-réteg webapphoz és későbbi natív apphoz
+// Compatibility facade for the historical Home auth module.
+// The canonical implementation now lives in js/shared/auth-service.js.
+
+import {
+  currentIdentity,
+  signIn,
+  signOut,
+  signUp,
+  subscribeAuthState
+} from "../../../shared/auth-service.js";
 
 let currentUser = null;
 const listeners = new Set();
+let unsubscribeBackend = null;
 
 export function getAuthState() {
   return {
@@ -31,58 +40,31 @@ export async function initAuth({ supabaseClient } = {}) {
     return;
   }
 
-  const { data } = await supabaseClient.auth.getUser();
-  currentUser = data?.user || null;
+  currentUser = await currentIdentity(supabaseClient);
   notifyAuthChange();
 
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    currentUser = session?.user || null;
+  unsubscribeBackend?.();
+  unsubscribeBackend = subscribeAuthState(supabaseClient, (identity) => {
+    currentUser = identity;
     notifyAuthChange();
   });
 }
 
 export async function login({ supabaseClient, email, password }) {
-  if (!supabaseClient) throw new Error("Hiányzó Supabase kliens.");
-
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) throw error;
-
-  currentUser = data?.user || null;
+  currentUser = await signIn(supabaseClient, { email, password });
   notifyAuthChange();
-
   return currentUser;
 }
 
 export async function register({ supabaseClient, email, password }) {
-  if (!supabaseClient) throw new Error("Hiányzó Supabase kliens.");
-
-  const { data, error } = await supabaseClient.auth.signUp({
-    email,
-    password,
-  });
-
-  if (error) throw error;
-
-  return data;
+  const identity = await signUp(supabaseClient, { email, password });
+  currentUser = await currentIdentity(supabaseClient);
+  notifyAuthChange();
+  return { user: identity };
 }
 
 export async function logout({ supabaseClient }) {
-  if (!supabaseClient) throw new Error("Hiányzó Supabase kliens.");
-
-  await supabaseClient.auth.signOut();
-
-  Object.keys(localStorage)
-    .filter((key) => key.includes("supabase") || key.includes("sb-"))
-    .forEach((key) => localStorage.removeItem(key));
-
-  Object.keys(sessionStorage)
-    .filter((key) => key.includes("supabase") || key.includes("sb-"))
-    .forEach((key) => sessionStorage.removeItem(key));
-
+  await signOut(supabaseClient);
   currentUser = null;
   notifyAuthChange();
 }
