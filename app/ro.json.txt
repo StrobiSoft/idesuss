@@ -3,27 +3,23 @@
   "counterNote": "Contorul nu crește la fiecare reîmprospătare.",
   "langBoxLabel": "Limbă",
   "langSubnote": "Browser maghiar → interfață maghiară, altfel → engleză.",
-
   "textareaPlaceholder": "Lipește linkul aici...",
   "playBtnText": "PORNEȘTE",
   "pasteBtn": "LIPIRE",
   "shareBtn": "PARTAJEAZĂ",
   "clearInputBtn": "ȘTERGE",
-
   "backBtn": "ÎNAPOI",
-
   "historyTitle": "Istoric",
   "clearHistoryBtn": "Șterge istoricul",
   "emptyHistory": "Nu există istoric.",
   "openAgain": "Deschide din nou",
   "historyCleared": "Istoricul a fost șters.",
-
   "installBtnText": "Instalează",
-
   "aboutLink": "Despre",
   "aboutTitle": "Despre",
   "aboutText": "Ideea din spatele Idesüss a fost inspirată de un prieten foarte vechi. Modul lui de a gândi, obiceiurile și perspectiva lui unică au dat naștere acestui proiect. Este puțin paranoic și puțin ciudat — proiectul aproape s-a numit 'Șofer leneș'. În final, Idesüss se potrivește mult mai bine.",
   "aboutCloseBtn": "OK",
-
+  "pasted": "Link lipit.",
+  "pasteFail": "Lipirea din clipboard nu a reușit.",
   "footerText": "Powered by StZoo"
 }
