@@ -8,6 +8,7 @@ const root = path.resolve(here, '..');
 const appDir = path.join(root, 'app');
 const appIndex = path.join(appDir, 'index.html');
 const homeIndex = path.join(root, 'index.html');
+const menuCore = path.join(root, 'js', 'menu', 'menu-core.js');
 const expectedLocales = ['hu', 'en', 'nl', 'ro', 'pl', 'be'];
 
 const dictionaries = new Map();
@@ -80,6 +81,24 @@ if (!fs.existsSync(homeIndex)) {
   }
 }
 
+if (!fs.existsSync(menuCore)) {
+  failures.push('js/menu/menu-core.js: missing');
+} else {
+  const menuSource = fs.readFileSync(menuCore, 'utf8');
+  for (const required of [
+    'makeHomepageBrandStatic',
+    'ensureOpenButtonDepth',
+    'wireHomepageMenu',
+    'openSettingsBtn',
+    'homepageSettingsPanel',
+    'aria-expanded'
+  ]) {
+    if (!menuSource.includes(required)) {
+      failures.push(`js/menu/menu-core.js: missing navigation/UI guard ${required}`);
+    }
+  }
+}
+
 const bridgeEntry = path.join(appDir, 'profile-bridge-entry.js');
 const languageOptions = path.join(appDir, 'language-options.js');
 if (!fs.existsSync(bridgeEntry)) {
@@ -88,6 +107,9 @@ if (!fs.existsSync(bridgeEntry)) {
   const bridgeSource = fs.readFileSync(bridgeEntry, 'utf8');
   if (!bridgeSource.includes("./language-options.js")) {
     failures.push('app/profile-bridge-entry.js: Belarusian language extension is not wired');
+  }
+  if (!bridgeSource.includes('wireBrandHomeLink') || !bridgeSource.includes("new URL('../', window.location.href)")) {
+    failures.push('app/profile-bridge-entry.js: runtime brand-to-home navigation is not wired');
   }
 }
 if (!fs.existsSync(languageOptions)) {
@@ -105,4 +127,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, all runtime t(...) keys covered, navigation, status reset, contrast, profile bridge, and Belarusian option wired.`);
+console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, runtime locale coverage, homepage menu/settings, button depth, webapp home navigation, status reset, contrast, profile bridge, and Belarusian option wired.`);
