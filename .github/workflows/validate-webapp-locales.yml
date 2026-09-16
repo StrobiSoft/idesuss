@@ -4,11 +4,19 @@ on:
   pull_request:
     paths:
       - 'app/*.json.txt'
+      - 'app/profile-bridge*.js'
+      - 'js/menu/**'
+      - 'js/shared/**'
+      - 'js/lang/modules/auth/lang/auth.js'
       - 'tools/validate-webapp-locales.mjs'
       - '.github/workflows/validate-webapp-locales.yml'
   push:
     paths:
       - 'app/*.json.txt'
+      - 'app/profile-bridge*.js'
+      - 'js/menu/**'
+      - 'js/shared/**'
+      - 'js/lang/modules/auth/lang/auth.js'
       - 'tools/validate-webapp-locales.mjs'
       - '.github/workflows/validate-webapp-locales.yml'
 
@@ -22,3 +30,13 @@ jobs:
           node-version: '22'
       - name: Validate webapp locale parity
         run: node tools/validate-webapp-locales.mjs
+      - name: Validate shared module syntax
+        run: |
+          node --check app/profile-bridge.js
+          node --check app/profile-bridge-entry.js
+          node --check js/shared/auth-service.js
+          node --check js/shared/profile-service.js
+          node --check js/menu/auth-controller.js
+          node --check js/menu/profile.js
+          node --check js/menu/menu-core.js
+          node --check js/lang/modules/auth/lang/auth.js
