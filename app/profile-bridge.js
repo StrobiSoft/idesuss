@@ -3,9 +3,13 @@ import {
   loadMyProfile,
   subscribeToMyProfile
 } from "../js/shared/profile-service.js";
+import { subscribeAuthState } from "../js/shared/auth-service.js";
 
 const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
+
+let unsubscribeProfile = null;
+let unsubscribeAuth = null;
 
 function loadSupabaseLibrary() {
   if (window.supabase?.createClient) return Promise.resolve(window.supabase);
@@ -51,7 +55,16 @@ function ensureProfileBadge() {
   return badge;
 }
 
-function renderBadge(profile, user) {
+function renderSignedOut() {
+  const badge = ensureProfileBadge();
+  badge.textContent = "👤 Bejelentkezés";
+  badge.hidden = false;
+  badge.onclick = () => {
+    window.location.href = "/#login";
+  };
+}
+
+function renderSignedIn(profile, user) {
   const badge = ensureProfileBadge();
   const avatar = profile?.avatar_emoji || "👤";
   const label = profile?.nickname || user?.email || "Profil";
@@ -62,32 +75,55 @@ function renderBadge(profile, user) {
   };
 }
 
+async function bindSignedInProfile(client, user) {
+  if (unsubscribeProfile) {
+    unsubscribeProfile();
+    unsubscribeProfile = null;
+  }
+
+  const profile = await loadMyProfile(client);
+  renderSignedIn(profile, user);
+
+  unsubscribeProfile = subscribeToMyProfile(client, user.id, (nextProfile) => {
+    renderSignedIn(nextProfile, user);
+  });
+}
+
+async function renderIdentity(client, user) {
+  if (!user) {
+    if (unsubscribeProfile) {
+      unsubscribeProfile();
+      unsubscribeProfile = null;
+    }
+    renderSignedOut();
+    return;
+  }
+
+  await bindSignedInProfile(client, user);
+}
+
 export async function initWebappProfileBridge() {
   try {
     const client = await getClient();
     const user = await getCurrentUser(client);
-    const badge = ensureProfileBadge();
+    await renderIdentity(client, user);
 
-    if (!user) {
-      badge.textContent = "👤 Bejelentkezés";
-      badge.hidden = false;
-      badge.onclick = () => {
-        window.location.href = "/#login";
-      };
-      return;
-    }
-
-    const profile = await loadMyProfile(client);
-    renderBadge(profile, user);
-
-    subscribeToMyProfile(client, user.id, (nextProfile) => {
-      renderBadge(nextProfile, user);
+    if (unsubscribeAuth) unsubscribeAuth();
+    unsubscribeAuth = subscribeAuthState(client, async (identity) => {
+      try {
+        await renderIdentity(client, identity);
+      } catch (error) {
+        console.error("Webapp profile bridge auth refresh failed", error);
+      }
     });
   } catch (error) {
     console.error("Webapp profile bridge init failed", error);
   }
-}
 
-// The current /app page is still a self-contained GEN1 consumer.
-// Wire this module into app/index.html only after the branch is checked,
-// keeping the existing video flow untouched.
+  return () => {
+    if (unsubscribeProfile) unsubscribeProfile();
+    if (unsubscribeAuth) unsubscribeAuth();
+    unsubscribeProfile = null;
+    unsubscribeAuth = null;
+  };
+}
