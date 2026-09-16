@@ -14,6 +14,8 @@ on:
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
+      - 'tools/validate-common-webapp-locales.mjs'
+      - 'tools/fixtures/common-webapp-locale-manifest.json'
       - 'tools/fixtures/resolver-vectors.json'
       - 'js/resolver.js'
       - '.github/workflows/validate-webapp-locales.yml'
@@ -30,6 +32,8 @@ on:
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
+      - 'tools/validate-common-webapp-locales.mjs'
+      - 'tools/fixtures/common-webapp-locale-manifest.json'
       - 'tools/fixtures/resolver-vectors.json'
       - 'js/resolver.js'
       - '.github/workflows/validate-webapp-locales.yml'
@@ -44,6 +48,8 @@ jobs:
           node-version: '22'
       - name: Validate webapp locale parity and bridge wiring
         run: node tools/validate-webapp-locales.mjs
+      - name: Validate common-generated webapp locale parity
+        run: node tools/validate-common-webapp-locales.mjs
       - name: Validate nickname normalization parity
         run: node tools/validate-nickname-normalization.mjs
       - name: Validate resolver parity vectors
