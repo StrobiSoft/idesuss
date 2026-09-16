@@ -7,6 +7,11 @@ import {
 } from "../shared/auth-service.js";
 import { loadMyProfile } from "../shared/profile-service.js";
 import { openProfilePanel } from "./profile.js";
+import {
+  closeAuthModal,
+  ensureAuthModal,
+  openAuthModal
+} from "./auth-shell.js";
 
 let identity = null;
 let unsubscribeAuth = null;
@@ -28,43 +33,21 @@ function setMessage(text) {
 function updateButtons() {
   const loginBtn = document.getElementById("loginBtn");
   const registerBtn = document.getElementById("registerBtn");
-  if (!loginBtn || !registerBtn) return;
+  const menuLogout = document.getElementById("logoutBtnMenu");
 
-  if (identity) {
-    loginBtn.textContent = identity.email || "Belépve";
-    registerBtn.textContent = "Kijelentkezés";
-  } else {
-    loginBtn.textContent = "Bejelentkezés";
-    registerBtn.textContent = "Regisztráció";
-  }
-}
-
-function openAuth(mode) {
-  if (typeof window.openAuthModal === "function") {
-    window.openAuthModal(mode);
-    return;
+  if (loginBtn && registerBtn) {
+    if (identity) {
+      loginBtn.textContent = identity.email || "Belépve";
+      registerBtn.textContent = "Kijelentkezés";
+    } else {
+      loginBtn.textContent = "Bejelentkezés";
+      registerBtn.textContent = "Regisztráció";
+    }
   }
 
-  console.warn("Shared auth controller could not find the current auth shell.");
-}
-
-function closeAuth() {
-  if (typeof window.closeAuthModal === "function") {
-    window.closeAuthModal();
+  if (menuLogout) {
+    menuLogout.hidden = !identity;
   }
-}
-
-function suppressGen1ProfileOnboarding() {
-  // The profile UI is now served by the shared profile panel. Keep the old
-  // modal code present for rollback, but stop it from becoming an active
-  // consumer while the migration branch is being proven.
-  if (typeof window.checkProfileCompletion === "function") {
-    window.__idesussGen1CheckProfileCompletion = window.checkProfileCompletion;
-    window.checkProfileCompletion = async () => {};
-  }
-
-  const oldModal = document.getElementById("idesussProfileModal");
-  if (oldModal) oldModal.style.display = "none";
 }
 
 async function maybeOpenProfile() {
@@ -73,12 +56,20 @@ async function maybeOpenProfile() {
   try {
     const profile = await loadMyProfile(getClient());
     if (!profile?.profile_completed) {
-      const oldModal = document.getElementById("idesussProfileModal");
-      if (oldModal) oldModal.style.display = "none";
       await openProfilePanel();
     }
   } catch (error) {
     console.error("Shared profile completion check failed", error);
+  }
+}
+
+async function performSignOut() {
+  try {
+    await signOut(getClient());
+    identity = null;
+    updateButtons();
+  } catch (error) {
+    console.error("Shared sign-out failed", error);
   }
 }
 
@@ -118,7 +109,7 @@ async function handleSubmit(event) {
       }
 
       setMessage("Sikeres regisztráció.");
-      closeAuth();
+      closeAuthModal();
       await maybeOpenProfile();
       return;
     }
@@ -126,7 +117,7 @@ async function handleSubmit(event) {
     identity = await signIn(client, { email, password });
     updateButtons();
     setMessage("Sikeres bejelentkezés.");
-    window.setTimeout(closeAuth, 350);
+    window.setTimeout(closeAuthModal, 350);
     await maybeOpenProfile();
   } catch (error) {
     console.error("Shared auth action failed", error);
@@ -134,54 +125,42 @@ async function handleSubmit(event) {
   }
 }
 
-function bindCaptureHandlers() {
+function bindHandlers() {
   const loginBtn = document.getElementById("loginBtn");
   const registerBtn = document.getElementById("registerBtn");
+  const menuLogout = document.getElementById("logoutBtnMenu");
   const submitBtn = document.getElementById("authSubmitBtn");
 
-  loginBtn?.addEventListener(
-    "click",
-    (event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      if (identity) {
-        openProfilePanel();
-      } else {
-        openAuth("login");
-      }
-    },
-    true
-  );
+  loginBtn?.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (identity) {
+      openProfilePanel();
+    } else {
+      openAuthModal("login");
+    }
+  });
 
-  registerBtn?.addEventListener(
-    "click",
-    async (event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
+  registerBtn?.addEventListener("click", async (event) => {
+    event.preventDefault();
+    if (!identity) {
+      openAuthModal("register");
+      return;
+    }
+    await performSignOut();
+  });
 
-      if (!identity) {
-        openAuth("register");
-        return;
-      }
+  menuLogout?.addEventListener("click", async (event) => {
+    event.preventDefault();
+    await performSignOut();
+  });
 
-      try {
-        await signOut(getClient());
-        identity = null;
-        updateButtons();
-      } catch (error) {
-        console.error("Shared sign-out failed", error);
-      }
-    },
-    true
-  );
-
-  submitBtn?.addEventListener("click", handleSubmit, true);
+  submitBtn?.addEventListener("click", handleSubmit);
 }
 
 export async function initRootAuthController() {
   const client = getClient();
-  suppressGen1ProfileOnboarding();
-  bindCaptureHandlers();
+  ensureAuthModal();
+  bindHandlers();
 
   try {
     identity = await currentIdentity(client);
@@ -197,8 +176,6 @@ export async function initRootAuthController() {
   unsubscribeAuth = subscribeAuthState(client, async (nextIdentity) => {
     identity = nextIdentity;
     updateButtons();
-    const oldModal = document.getElementById("idesussProfileModal");
-    if (oldModal) oldModal.style.display = "none";
     if (identity) await maybeOpenProfile();
   });
 
