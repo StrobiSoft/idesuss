@@ -32,6 +32,7 @@ function setMessage(text) {
 
 function localizeAuthError(error) {
   const message = String(error?.message || "").toLowerCase();
+  if (message.includes("email rate limit exceeded")) return "Túl sok megerősítő e-mailt kértünk rövid időn belül. Várj néhány percet, majd próbáld újra.";
   if (message.includes("invalid login credentials")) return "Hibás e-mail cím vagy jelszó.";
   if (message.includes("email not confirmed")) return "Az e-mail címed még nincs megerősítve. Ellenőrizd a postafiókodat.";
   if (message.includes("user already registered")) return "Ezzel az e-mail címmel már létezik fiók.";
