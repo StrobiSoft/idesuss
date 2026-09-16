@@ -56,12 +56,16 @@ if (!fs.existsSync(appIndex)) {
       }
     }
   }
+
+  if (!source.includes('<script type="module" src="./profile-bridge-entry.js"></script>')) {
+    failures.push('app/index.html: shared profile bridge entrypoint is not wired');
+  }
 }
 
 if (failures.length) {
-  console.error('Webapp locale validation failed:');
+  console.error('Webapp validation failed:');
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log(`Webapp locale parity OK: ${dictionaries.size} locale(s), ${union.size} shared keys, all runtime t(...) keys covered.`);
+console.log(`Webapp validation OK: ${dictionaries.size} locale(s), ${union.size} shared keys, all runtime t(...) keys covered, profile bridge wired.`);
