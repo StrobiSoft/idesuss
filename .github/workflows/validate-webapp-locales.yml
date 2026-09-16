@@ -15,6 +15,7 @@ on:
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
       - 'tools/validate-common-webapp-locales.mjs'
+      - 'tools/validate-root-auth-profile-single-path.mjs'
       - 'tools/fixtures/common-webapp-locale-manifest.json'
       - 'tools/fixtures/resolver-vectors.json'
       - 'js/resolver.js'
@@ -33,6 +34,7 @@ on:
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
       - 'tools/validate-common-webapp-locales.mjs'
+      - 'tools/validate-root-auth-profile-single-path.mjs'
       - 'tools/fixtures/common-webapp-locale-manifest.json'
       - 'tools/fixtures/resolver-vectors.json'
       - 'js/resolver.js'
@@ -56,6 +58,8 @@ jobs:
         run: node tools/validate-resolver-vectors.mjs
       - name: Validate profile bridge runtime ordering
         run: node tools/validate-profile-bridge-runtime.mjs
+      - name: Validate single root auth/profile path
+        run: node tools/validate-root-auth-profile-single-path.mjs
       - name: Validate shared module syntax
         run: |
           node --check app/profile-bridge.js
@@ -63,6 +67,7 @@ jobs:
           node --check app/language-options.js
           node --check js/shared/auth-service.js
           node --check js/shared/profile-service.js
+          node --check js/menu/auth-shell.js
           node --check js/menu/auth-controller.js
           node --check js/menu/profile.js
           node --check js/menu/menu-core.js
