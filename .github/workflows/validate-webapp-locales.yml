@@ -40,6 +40,8 @@ jobs:
         run: node tools/validate-webapp-locales.mjs
       - name: Validate nickname normalization parity
         run: node tools/validate-nickname-normalization.mjs
+      - name: Validate profile bridge runtime ordering
+        run: node tools/validate-profile-bridge-runtime.mjs
       - name: Validate shared module syntax
         run: |
           node --check app/profile-bridge.js
