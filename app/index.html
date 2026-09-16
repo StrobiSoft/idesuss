@@ -1169,7 +1169,10 @@
                     setStatus(t('pasteFail', 'Paste failed.'), 'error');
                 }
             } catch {
-                setStatus(t('pasteFail', 'Paste failed.'), 'error');
+                setStatus(
+                    t('pasteUnavailable', 'Automatic paste is unavailable. Paste the link manually.'),
+                    'error'
+                );
             }
         }
 
@@ -1288,6 +1291,9 @@
         els.goBtn.addEventListener('click', () => handleGo());
         els.backBtn.addEventListener('click', hideYouTubePlayer);
         els.pasteBtn.addEventListener('click', pasteFromClipboard);
+        els.urlInput.addEventListener('input', () => {
+            if (els.status.textContent) setStatus('');
+        });
         els.shareBtn.addEventListener('click', () => shareUrl());
         els.clearInputBtn.addEventListener('click', clearInputField);
         els.clearHistoryBtn.addEventListener('click', clearHistory);

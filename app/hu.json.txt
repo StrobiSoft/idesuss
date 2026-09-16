@@ -22,6 +22,7 @@
   "aboutCloseBtn": "Rendben",
   "pasted": "Link beillesztve.",
   "pasteFail": "A beillesztés nem sikerült.",
+  "pasteUnavailable": "Az automatikus beillesztés nem érhető el. Illeszd be kézzel a linket.",
   "blockedOpen": "A böngésző blokkolta a megnyitást. Kattints ide a folytatáshoz.",
   "openLinkText": "LINK MEGNYITÁSA",
   "successOpen": "Sikeresen megnyitva.",
