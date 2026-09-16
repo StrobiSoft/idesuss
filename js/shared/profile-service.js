@@ -28,6 +28,12 @@ function isMissingRpcError(error) {
   );
 }
 
+function profileError(code, message = code) {
+  const error = new Error(message);
+  error.code = code;
+  return error;
+}
+
 export async function getCurrentUser(supabaseClient) {
   const client = requireClient(supabaseClient);
   const { data, error } = await client.auth.getUser();
@@ -64,7 +70,7 @@ export async function ensureMyProfile(supabaseClient) {
   return data;
 }
 
-export async function validateNickname(supabaseClient, rawNickname, currentUserId = null) {
+export async function validateNickname(supabaseClient, rawNickname) {
   const client = requireClient(supabaseClient);
   const normalized = normalizeNickname(rawNickname);
 
@@ -85,27 +91,17 @@ export async function validateNickname(supabaseClient, rawNickname, currentUserI
   if (reservedError) throw reservedError;
   if (reserved) return { ok: false, normalized, reason: "RESERVED" };
 
-  let query = client
-    .from("profiles")
-    .select("id")
-    .eq("nickname_normalized", normalized);
-
-  if (currentUserId) query = query.neq("id", currentUserId);
-
-  const { data: existing, error: existingError } = await query.maybeSingle();
-  if (existingError) throw existingError;
-  if (existing) return { ok: false, normalized, reason: "TAKEN" };
-
+  // `profiles` is intentionally owner-only under RLS, so a client must not
+  // enumerate other users merely to preflight nickname uniqueness. The live
+  // unique index / save_my_profile boundary is authoritative for TAKEN.
   return { ok: true, normalized, reason: null };
 }
 
 async function saveMyProfileLegacy(client, user, profile, changes) {
   const nickname = changes.nickname ?? profile?.nickname ?? "";
-  const validation = await validateNickname(client, nickname, user.id);
+  const validation = await validateNickname(client, nickname);
   if (!validation.ok) {
-    const error = new Error(`INVALID_NICKNAME:${validation.reason}`);
-    error.code = validation.reason;
-    throw error;
+    throw profileError(validation.reason, `INVALID_NICKNAME:${validation.reason}`);
   }
 
   const emailVisibility = ["hidden", "masked", "public"].includes(changes.email_visibility)
@@ -127,6 +123,9 @@ async function saveMyProfileLegacy(client, user, profile, changes) {
     .select()
     .single();
 
+  if (error?.code === "23505") {
+    throw profileError("TAKEN", "INVALID_NICKNAME:TAKEN");
+  }
   if (error) throw error;
   return data;
 }
@@ -150,9 +149,13 @@ export async function saveMyProfile(supabaseClient, changes = {}) {
   });
 
   if (!rpcError) return rpcData;
+  if (rpcError.code === "23505") {
+    throw profileError("TAKEN", "INVALID_NICKNAME:TAKEN");
+  }
   if (!isMissingRpcError(rpcError)) throw rpcError;
 
-  // Compatibility path while the live Supabase schema is still GEN1.
+  // Defensive compatibility only: use the old direct-write path if the RPC
+  // is unexpectedly absent in a non-production/older environment.
   return saveMyProfileLegacy(client, user, profile, changes);
 }
 
