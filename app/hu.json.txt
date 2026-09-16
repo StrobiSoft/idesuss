@@ -3,28 +3,38 @@
   "counterNote": "A számláló nem nő minden frissítésre.",
   "langBoxLabel": "Nyelv",
   "langSubnote": "Magyar böngésző → magyar felület, minden más → angol.",
-
   "textareaPlaceholder": "Másold be a linket ide...",
   "playBtnText": "INDÍTÁS",
   "pasteBtn": "BEILLESZTÉS",
   "shareBtn": "MEGOSZTÁS",
   "clearInputBtn": "TÖRLÉS",
-
   "backBtn": "VISSZA",
-
   "historyTitle": "Előzmények",
   "clearHistoryBtn": "Előzmények törlése",
   "emptyHistory": "Még nincs előzmény.",
   "openAgain": "Újra megnyitás",
   "historyCleared": "Előzmények törölve.",
-
+  "inputCleared": "A mező törölve.",
   "installBtnText": "Telepítés",
-
   "aboutLink": "Névjegy",
   "aboutTitle": "Névjegy",
+  "aboutText": "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem.",
   "aboutCloseBtn": "Rendben",
-    "pasted": "Link beillesztve.",
+  "pasted": "Link beillesztve.",
   "pasteFail": "A beillesztés nem sikerült.",
-
+  "pasteUnavailable": "Az automatikus beillesztés nem érhető el. Illeszd be kézzel a linket.",
+  "blockedOpen": "A böngésző blokkolta a megnyitást. Kattints ide a folytatáshoz.",
+  "openLinkText": "LINK MEGNYITÁSA",
+  "successOpen": "Sikeresen megnyitva.",
+  "emptyField": "Hiba: üres mező.",
+  "starting": "Indítás...",
+  "ytLoading": "YouTube betöltése...",
+  "unknownLink": "Ismeretlen link. Megpróbálom megnyitni...",
+  "directOpen": "Közvetlen megnyitás...",
+  "shareEmpty": "Még nincs mit megosztani.",
+  "shareText": "Megosztva az Idesüssből",
+  "shareOk": "Sikeresen megosztva.",
+  "shareFallback": "A megosztás itt nem érhető el — a linket a vágólapra másoltam.",
+  "shareFail": "A megosztás nem sikerült.",
   "footerText": "Powered by StZoo"
 }

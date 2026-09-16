@@ -3,27 +3,38 @@
   "counterNote": "Contorul nu crește la fiecare reîmprospătare.",
   "langBoxLabel": "Limbă",
   "langSubnote": "Browser maghiar → interfață maghiară, altfel → engleză.",
-
   "textareaPlaceholder": "Lipește linkul aici...",
   "playBtnText": "PORNEȘTE",
   "pasteBtn": "LIPIRE",
   "shareBtn": "PARTAJEAZĂ",
   "clearInputBtn": "ȘTERGE",
-
   "backBtn": "ÎNAPOI",
-
   "historyTitle": "Istoric",
   "clearHistoryBtn": "Șterge istoricul",
   "emptyHistory": "Nu există istoric.",
   "openAgain": "Deschide din nou",
   "historyCleared": "Istoricul a fost șters.",
-
+  "inputCleared": "Câmpul a fost șters.",
   "installBtnText": "Instalează",
-
   "aboutLink": "Despre",
   "aboutTitle": "Despre",
   "aboutText": "Ideea din spatele Idesüss a fost inspirată de un prieten foarte vechi. Modul lui de a gândi, obiceiurile și perspectiva lui unică au dat naștere acestui proiect. Este puțin paranoic și puțin ciudat — proiectul aproape s-a numit 'Șofer leneș'. În final, Idesüss se potrivește mult mai bine.",
   "aboutCloseBtn": "OK",
-
+  "pasted": "Link lipit.",
+  "pasteFail": "Lipirea din clipboard nu a reușit.",
+  "pasteUnavailable": "Lipirea automată nu este disponibilă. Lipește manual linkul.",
+  "blockedOpen": "Browserul a blocat deschiderea. Apasă aici pentru a continua.",
+  "openLinkText": "DESCHIDE LINKUL",
+  "successOpen": "Deschis cu succes.",
+  "emptyField": "Eroare: câmp gol.",
+  "starting": "Pornire...",
+  "ytLoading": "Se încarcă YouTube...",
+  "unknownLink": "Link necunoscut. Încerc să îl deschid...",
+  "directOpen": "Deschidere directă...",
+  "shareEmpty": "Nu există încă nimic de partajat.",
+  "shareText": "Partajat din Idesüss",
+  "shareOk": "Partajat cu succes.",
+  "shareFallback": "Partajarea nu este disponibilă aici — linkul a fost copiat.",
+  "shareFail": "Partajarea a eșuat.",
   "footerText": "Powered by StZoo"
 }

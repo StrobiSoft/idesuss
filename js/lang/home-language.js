@@ -1,5 +1,14 @@
-const SUPPORTED_HOME_LANGUAGES = ["hu", "en"];
+const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "be"];
 const HOME_LANG_STORAGE_KEY = "idesuss_home_lang";
+
+function ensureBelarusianHomeOption(languageSelect) {
+  if (!languageSelect || languageSelect.querySelector('option[value="be"]')) return;
+
+  const option = document.createElement("option");
+  option.value = "be";
+  option.textContent = "BY Беларуская";
+  languageSelect.appendChild(option);
+}
 
 function getSafeHomeLanguage(langCode) {
   if (SUPPORTED_HOME_LANGUAGES.includes(langCode)) {
@@ -48,6 +57,7 @@ async function loadHomeLanguage(langCode) {
 
   const languageSelect = document.getElementById("langSelect");
   if (languageSelect) {
+    ensureBelarusianHomeOption(languageSelect);
     languageSelect.value = safeLanguage;
   }
 
@@ -59,6 +69,7 @@ export async function initHomeLanguage() {
   const initialLanguage = getInitialHomeLanguage();
 
   if (languageSelect) {
+    ensureBelarusianHomeOption(languageSelect);
     languageSelect.value = initialLanguage;
     languageSelect.addEventListener("change", function (event) {
       loadHomeLanguage(event.target.value).catch(function () {

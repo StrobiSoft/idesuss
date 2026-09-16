@@ -3,27 +3,38 @@
   "counterNote": "De teller wordt niet bij elke refresh verhoogd.",
   "langBoxLabel": "Taal",
   "langSubnote": "Hongaarse browser → Hongaarse interface, anders → Engels.",
-
   "textareaPlaceholder": "Plak hier de link...",
   "playBtnText": "START",
   "pasteBtn": "PLAKKEN",
   "shareBtn": "DELEN",
   "clearInputBtn": "WISSEN",
-
   "backBtn": "TERUG",
-
   "historyTitle": "Geschiedenis",
   "clearHistoryBtn": "Geschiedenis wissen",
   "emptyHistory": "Nog geen geschiedenis.",
   "openAgain": "Opnieuw openen",
   "historyCleared": "Geschiedenis gewist.",
-
+  "inputCleared": "Veld gewist.",
   "installBtnText": "Installeren",
-
   "aboutLink": "Over",
   "aboutTitle": "Over",
   "aboutText": "Het idee achter Idesüss werd geïnspireerd door een zeer oude vriend. Zijn manier van denken, gewoonten en unieke kijk op dingen brachten dit project tot leven. Hij is een beetje paranoïde en een beetje vreemd — daarom heette het project bijna 'Luie Chauffeur'. Uiteindelijk past Idesüss veel beter bij de sfeer en het doel.",
   "aboutCloseBtn": "OK",
-
+  "pasted": "Link geplakt.",
+  "pasteFail": "Plakken vanaf het klembord is mislukt.",
+  "pasteUnavailable": "Automatisch plakken is niet beschikbaar. Plak de link handmatig.",
+  "blockedOpen": "De browser heeft het openen geblokkeerd. Klik hier om verder te gaan.",
+  "openLinkText": "LINK OPENEN",
+  "successOpen": "Succesvol geopend.",
+  "emptyField": "Fout: leeg veld.",
+  "starting": "Starten...",
+  "ytLoading": "YouTube laden...",
+  "unknownLink": "Onbekende link. Ik probeer hem te openen...",
+  "directOpen": "Direct openen...",
+  "shareEmpty": "Er is nog niets om te delen.",
+  "shareText": "Gedeeld vanuit Idesüss",
+  "shareOk": "Succesvol gedeeld.",
+  "shareFallback": "Delen is hier niet beschikbaar — de link is gekopieerd.",
+  "shareFail": "Delen is mislukt.",
   "footerText": "Powered by StZoo"
 }

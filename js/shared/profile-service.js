@@ -1,0 +1,187 @@
+const RESERVED_MODERATOR_SUFFIXES = [
+  "_hu", "_en", "_nl", "_ro", "_pl", "_hr", "_de"
+];
+
+export function normalizeNickname(name = "") {
+  return String(name)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9_]/g, "");
+}
+
+function requireClient(supabaseClient) {
+  if (!supabaseClient) {
+    throw new Error("Missing Supabase client.");
+  }
+  return supabaseClient;
+}
+
+function isMissingRpcError(error) {
+  if (!error) return false;
+  const text = `${error.code || ""} ${error.message || ""} ${error.details || ""}`.toLowerCase();
+  return text.includes("save_my_profile") && (
+    text.includes("not found") ||
+    text.includes("does not exist") ||
+    text.includes("pgrst202") ||
+    text.includes("42883")
+  );
+}
+
+function profileError(code, message = code) {
+  const error = new Error(message);
+  error.code = code;
+  return error;
+}
+
+export async function getCurrentUser(supabaseClient) {
+  const client = requireClient(supabaseClient);
+  const { data, error } = await client.auth.getUser();
+  if (error) throw error;
+  return data?.user || null;
+}
+
+export async function ensureMyProfile(supabaseClient) {
+  const client = requireClient(supabaseClient);
+  const user = await getCurrentUser(client);
+  if (!user) return null;
+
+  const { data: existing, error: selectError } = await client
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (selectError) throw selectError;
+  if (existing) return existing;
+
+  const { data, error } = await client
+    .from("profiles")
+    .insert({
+      id: user.id,
+      email: user.email || "",
+      email_visibility: "hidden",
+      profile_completed: false
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function validateNickname(supabaseClient, rawNickname) {
+  const client = requireClient(supabaseClient);
+  const normalized = normalizeNickname(rawNickname);
+
+  if (!normalized) {
+    return { ok: false, normalized, reason: "EMPTY" };
+  }
+
+  if (RESERVED_MODERATOR_SUFFIXES.some((suffix) => normalized.endsWith(suffix))) {
+    return { ok: false, normalized, reason: "RESERVED_SUFFIX" };
+  }
+
+  const { data: reserved, error: reservedError } = await client
+    .from("reserved_nicknames")
+    .select("nickname_normalized")
+    .eq("nickname_normalized", normalized)
+    .maybeSingle();
+
+  if (reservedError) throw reservedError;
+  if (reserved) return { ok: false, normalized, reason: "RESERVED" };
+
+  // `profiles` is intentionally owner-only under RLS, so a client must not
+  // enumerate other users merely to preflight nickname uniqueness. The live
+  // unique index / save_my_profile boundary is authoritative for TAKEN.
+  return { ok: true, normalized, reason: null };
+}
+
+async function saveMyProfileLegacy(client, user, profile, changes) {
+  const nickname = changes.nickname ?? profile?.nickname ?? "";
+  const validation = await validateNickname(client, nickname);
+  if (!validation.ok) {
+    throw profileError(validation.reason, `INVALID_NICKNAME:${validation.reason}`);
+  }
+
+  const emailVisibility = ["hidden", "masked", "public"].includes(changes.email_visibility)
+    ? changes.email_visibility
+    : (profile?.email_visibility || "hidden");
+
+  const payload = {
+    nickname,
+    nickname_normalized: validation.normalized,
+    avatar_emoji: changes.avatar_emoji ?? profile?.avatar_emoji ?? null,
+    email_visibility: emailVisibility,
+    profile_completed: Boolean(nickname && (changes.avatar_emoji ?? profile?.avatar_emoji))
+  };
+
+  const { data, error } = await client
+    .from("profiles")
+    .update(payload)
+    .eq("id", user.id)
+    .select()
+    .single();
+
+  if (error?.code === "23505") {
+    throw profileError("TAKEN", "INVALID_NICKNAME:TAKEN");
+  }
+  if (error) throw error;
+  return data;
+}
+
+export async function saveMyProfile(supabaseClient, changes = {}) {
+  const client = requireClient(supabaseClient);
+  const user = await getCurrentUser(client);
+  if (!user) throw new Error("AUTH_REQUIRED");
+
+  const profile = await ensureMyProfile(client);
+  const nickname = changes.nickname ?? profile?.nickname ?? "";
+  const avatarEmoji = changes.avatar_emoji ?? profile?.avatar_emoji ?? "";
+  const emailVisibility = ["hidden", "masked", "public"].includes(changes.email_visibility)
+    ? changes.email_visibility
+    : (profile?.email_visibility || "hidden");
+
+  const { data: rpcData, error: rpcError } = await client.rpc("save_my_profile", {
+    p_nickname: nickname,
+    p_avatar_emoji: avatarEmoji,
+    p_email_visibility: emailVisibility
+  });
+
+  if (!rpcError) return rpcData;
+  if (rpcError.code === "23505") {
+    throw profileError("TAKEN", "INVALID_NICKNAME:TAKEN");
+  }
+  if (!isMissingRpcError(rpcError)) throw rpcError;
+
+  // Defensive compatibility only: use the old direct-write path if the RPC
+  // is unexpectedly absent in a non-production/older environment.
+  return saveMyProfileLegacy(client, user, profile, changes);
+}
+
+export async function loadMyProfile(supabaseClient) {
+  return ensureMyProfile(supabaseClient);
+}
+
+export function subscribeToMyProfile(supabaseClient, userId, onChange) {
+  const client = requireClient(supabaseClient);
+  if (!userId || typeof onChange !== "function") return () => {};
+
+  const channel = client
+    .channel(`idesuss-profile-${userId}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "profiles",
+        filter: `id=eq.${userId}`
+      },
+      (payload) => onChange(payload.new)
+    )
+    .subscribe();
+
+  return () => {
+    client.removeChannel(channel);
+  };
+}

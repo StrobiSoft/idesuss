@@ -1,0 +1,74 @@
+name: Validate webapp locales
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'app/index.html'
+      - 'app/*.json.txt'
+      - 'app/profile-bridge*.js'
+      - 'app/language-options.js'
+      - 'js/menu/**'
+      - 'js/shared/**'
+      - 'js/lang/modules/auth/lang/auth.js'
+      - 'tools/validate-webapp-locales.mjs'
+      - 'tools/validate-nickname-normalization.mjs'
+      - 'tools/validate-resolver-vectors.mjs'
+      - 'tools/validate-common-webapp-locales.mjs'
+      - 'tools/validate-root-auth-profile-single-path.mjs'
+      - 'tools/fixtures/common-webapp-locale-manifest.json'
+      - 'tools/fixtures/resolver-vectors.json'
+      - 'js/resolver.js'
+      - '.github/workflows/validate-webapp-locales.yml'
+  push:
+    paths:
+      - 'index.html'
+      - 'app/index.html'
+      - 'app/*.json.txt'
+      - 'app/profile-bridge*.js'
+      - 'app/language-options.js'
+      - 'js/menu/**'
+      - 'js/shared/**'
+      - 'js/lang/modules/auth/lang/auth.js'
+      - 'tools/validate-webapp-locales.mjs'
+      - 'tools/validate-nickname-normalization.mjs'
+      - 'tools/validate-resolver-vectors.mjs'
+      - 'tools/validate-common-webapp-locales.mjs'
+      - 'tools/validate-root-auth-profile-single-path.mjs'
+      - 'tools/fixtures/common-webapp-locale-manifest.json'
+      - 'tools/fixtures/resolver-vectors.json'
+      - 'js/resolver.js'
+      - '.github/workflows/validate-webapp-locales.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate webapp locale parity and bridge wiring
+        run: node tools/validate-webapp-locales.mjs
+      - name: Validate common-generated webapp locale parity
+        run: node tools/validate-common-webapp-locales.mjs
+      - name: Validate nickname normalization parity
+        run: node tools/validate-nickname-normalization.mjs
+      - name: Validate resolver parity vectors
+        run: node tools/validate-resolver-vectors.mjs
+      - name: Validate profile bridge runtime ordering
+        run: node tools/validate-profile-bridge-runtime.mjs
+      - name: Validate single root auth/profile path
+        run: node tools/validate-root-auth-profile-single-path.mjs
+      - name: Validate shared module syntax
+        run: |
+          node --check app/profile-bridge.js
+          node --check app/profile-bridge-entry.js
+          node --check app/language-options.js
+          node --check js/shared/auth-service.js
+          node --check js/shared/profile-service.js
+          node --check js/menu/auth-shell.js
+          node --check js/menu/auth-controller.js
+          node --check js/menu/profile.js
+          node --check js/menu/menu-core.js
+          node --check js/lang/modules/auth/lang/auth.js
