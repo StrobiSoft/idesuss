@@ -2,8 +2,7 @@ import { IdesussRadioEngine } from "./radio-engine.js";
 import {
   loadRadioCapabilities,
   loadSavedRadioChannels,
-  saveRadioChannel,
-  canAccessTier
+  saveRadioChannel
 } from "./radio-entitlements.js";
 import {
   getEnabledRadioStations,
@@ -15,16 +14,10 @@ const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
 const AVAILABLE_SKINS = new Set(["default", "night-drive", "classic-black"]);
 const STATIONS = getEnabledRadioStations();
 
-const PRESET_RULES = [
-  { slot: 1, requiredTier: "registered", freeStation: STATIONS[0] || null },
-  { slot: 2, requiredTier: "registered", freeStation: STATIONS[1] || null },
-  { slot: 3, requiredTier: "premium" },
-  { slot: 4, requiredTier: "premium" },
-  { slot: 5, requiredTier: "premium" },
-  { slot: 6, requiredTier: "premium" },
-  { slot: 7, requiredTier: "premium_plus" },
-  { slot: 8, requiredTier: "premium_plus" }
-];
+const PRESET_RULES = Array.from({ length: 8 }, (_unused, index) => ({
+  slot: index + 1,
+  freeStation: index < 2 ? (STATIONS[index] || null) : null
+}));
 
 const STREAM_STATE_TEXT = {
   loading: "Streamforrás betöltése…",
@@ -41,7 +34,14 @@ const STREAM_STATE_TEXT = {
 const storedVolume = Number(localStorage.getItem(VOLUME_STORAGE_KEY));
 const initialVolume = Number.isFinite(storedVolume) ? Math.min(1, Math.max(0, storedVolume)) : 0.7;
 const engine = new IdesussRadioEngine({ initialVolume });
-let capabilities = { tier: "signed_out", label: "Vendég", canSaveRadioChannels: false, canUseCustomSkins: false, canUsePremiumPlusFeatures: false };
+let capabilities = {
+  tier: "signed_out",
+  label: "Vendég",
+  canSaveRadioChannels: false,
+  maxRadioPresets: 0,
+  canUseCustomSkins: false,
+  canUsePremiumPlusFeatures: false
+};
 let selectedStation = null;
 let radioClient = null;
 let radioUser = null;
@@ -68,6 +68,12 @@ function tierLabel(tier) {
   if (tier === "premium") return "Premium";
   if (tier === "registered") return "Free";
   return "Vendég";
+}
+
+function requiredTierForSlot(slot) {
+  if (slot <= 2) return "Free";
+  if (slot <= 6) return "Premium";
+  return "Premium Plus";
 }
 
 function applySkin(requestedSkin, { persist = true } = {}) {
@@ -131,9 +137,9 @@ function renderTier() {
 
   const saveHint = $("#saveHint");
   if (saveHint) {
-    saveHint.textContent = capabilities.canSaveRadioChannels
-      ? "Kedvenc állomások szerveroldali mentése engedélyezve. Az üres, jogosult preset gombra koppintva mentheted az éppen kiválasztott állomást."
-      : "A Free szint a beépített csatornákat használhatja; saját állomás mentése Premium szinttől érhető el.";
+    saveHint.textContent = radioUser
+      ? `A csomagodban ${capabilities.maxRadioPresets} menthető rádiópreset érhető el.`
+      : "A presetek mentéséhez bejelentkezés szükséges.";
   }
 
   const skin = $("#skinSelect");
@@ -178,7 +184,7 @@ function renderPresets() {
   host.replaceChildren();
 
   PRESET_RULES.forEach((rule) => {
-    const unlocked = canAccessTier(capabilities.tier, rule.requiredTier);
+    const unlocked = Boolean(radioUser) && rule.slot <= capabilities.maxRadioPresets;
     const stored = savedPresets[rule.slot] || null;
     const fallback = rule.freeStation || null;
     const stationForButton = stored || fallback;
@@ -187,10 +193,10 @@ function renderPresets() {
     button.className = `preset${unlocked ? "" : " locked"}${stored ? " saved" : ""}`;
     button.disabled = !unlocked;
     appendTextElement(button, "b", rule.slot);
-    appendTextElement(button, "small", stationForButton?.name || (unlocked ? "üres" : tierLabel(rule.requiredTier)));
+    appendTextElement(button, "small", stationForButton?.name || (unlocked ? "üres" : requiredTierForSlot(rule.slot)));
     button.title = unlocked
       ? (stationForButton ? `${stationForButton.name} betöltése` : "Üres preset — a kiválasztott állomás mentése")
-      : `${tierLabel(rule.requiredTier)} szükséges`;
+      : `${requiredTierForSlot(rule.slot)} csomag szükséges`;
 
     button.addEventListener("click", async () => {
       if (stationForButton) {
@@ -202,7 +208,7 @@ function renderPresets() {
       }
 
       if (!capabilities.canSaveRadioChannels) {
-        setStatus("Saját preset mentése Premium szinttől érhető el.");
+        setStatus("A szerveroldali preset-mentési jogosultság még nem aktív ehhez a csomaghoz.");
         return;
       }
 
