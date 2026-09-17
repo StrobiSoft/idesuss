@@ -11,7 +11,8 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTop: "Always on top",
     alwaysOnTopHint: "A beállítás eltárolható, de böngészőben az ablak tényleges rögzítését az operációs rendszer korlátozhatja.",
     share: "Megosztás",
-    logout: "Kijelentkezés"
+    logout: "Kijelentkezés",
+    copied: "A linket a vágólapra másoltuk."
   },
   en: {
     title: "Settings",
@@ -25,7 +26,8 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTop: "Always on top",
     alwaysOnTopHint: "The preference can be saved, but browsers may be unable to keep the window on top because of operating-system restrictions.",
     share: "Share",
-    logout: "Log out"
+    logout: "Log out",
+    copied: "The link was copied to the clipboard."
   },
   nl: {
     title: "Instellingen",
@@ -39,7 +41,8 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTop: "Altijd op voorgrond",
     alwaysOnTopHint: "De voorkeur kan worden opgeslagen, maar browsers kunnen het venster door beperkingen van het besturingssysteem mogelijk niet echt op de voorgrond houden.",
     share: "Delen",
-    logout: "Uitloggen"
+    logout: "Uitloggen",
+    copied: "De link is naar het klembord gekopieerd."
   },
   ro: {
     title: "Setări",
@@ -53,7 +56,8 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTop: "Mereu deasupra",
     alwaysOnTopHint: "Preferința poate fi salvată, dar browserul poate să nu poată menține efectiv fereastra deasupra din cauza limitărilor sistemului de operare.",
     share: "Distribuie",
-    logout: "Deconectare"
+    logout: "Deconectare",
+    copied: "Linkul a fost copiat în clipboard."
   },
   pl: {
     title: "Ustawienia",
@@ -67,7 +71,8 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTop: "Zawsze na wierzchu",
     alwaysOnTopHint: "Preferencję można zapisać, ale przeglądarka może nie być w stanie faktycznie utrzymywać okna na wierzchu z powodu ograniczeń systemu operacyjnego.",
     share: "Udostępnij",
-    logout: "Wyloguj"
+    logout: "Wyloguj",
+    copied: "Link został skopiowany do schowka."
   },
   be: {
     title: "Налады",
@@ -81,12 +86,14 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTop: "Заўсёды зверху",
     alwaysOnTopHint: "Наладу можна захаваць, але браўзер можа не мець магчымасці фактычна трымаць акно зверху з-за абмежаванняў аперацыйнай сістэмы.",
     share: "Падзяліцца",
-    logout: "Выйсці"
+    logout: "Выйсці",
+    copied: "Спасылка скапіявана ў буфер абмену."
   }
 };
 
 let activeLanguage = "hu";
 let observer = null;
+let shareFallbackBound = false;
 
 function setText(selector, value) {
   if (!value) return;
@@ -103,6 +110,30 @@ function setChoiceText(value, text) {
   const textNode = Array.from(label.childNodes).find((node) => node.nodeType === Node.TEXT_NODE);
   if (textNode) textNode.textContent = ` ${text}`;
   else label.append(document.createTextNode(` ${text}`));
+}
+
+function bindLocalizedShareFallback() {
+  if (shareFallbackBound) return;
+  const button = document.getElementById("homepageSettingsShare");
+  if (!button) return;
+
+  button.addEventListener("click", async (event) => {
+    if (navigator.share || !navigator.clipboard?.writeText) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const url = window.location.origin + window.location.pathname;
+    try {
+      await navigator.clipboard.writeText(url);
+      const t = SETTINGS_TRANSLATIONS[activeLanguage] || SETTINGS_TRANSLATIONS.hu;
+      window.alert(t.copied);
+    } catch (error) {
+      console.error("Localized clipboard share failed", error);
+    }
+  }, true);
+
+  shareFallbackBound = true;
 }
 
 function renderSettingsLanguage() {
@@ -124,6 +155,8 @@ function renderSettingsLanguage() {
 
   const closeButton = document.getElementById("homepageSettingsClose");
   if (closeButton) closeButton.setAttribute("aria-label", t.close);
+
+  bindLocalizedShareFallback();
 }
 
 function ensureObserver() {
