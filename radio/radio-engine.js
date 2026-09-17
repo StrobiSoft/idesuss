@@ -28,6 +28,9 @@ export class IdesussRadioEngine extends EventTarget {
   }
 
   #forwardMediaEvents() {
+    this.audio.addEventListener("loadstart", () => this.#emit("state", { state: "loading" }));
+    this.audio.addEventListener("canplay", () => this.#emit("state", { state: "ready" }));
+    this.audio.addEventListener("stalled", () => this.#emit("state", { state: "stalled" }));
     this.audio.addEventListener("play", () => {
       this.#setMediaSessionPlaybackState("playing");
       this.#emit("state", { state: "playing" });
@@ -155,8 +158,8 @@ export class IdesussRadioEngine extends EventTarget {
     this.#emit("station", { station: this.station });
 
     if (station.streamUrl) {
+      this.#emit("state", { state: "loading" });
       await this.#attachSource(station.streamUrl, station.streamType);
-      this.#emit("state", { state: "ready" });
     } else {
       this.#emit("state", { state: "unconfigured" });
     }
