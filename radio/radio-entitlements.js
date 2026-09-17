@@ -102,6 +102,10 @@ export async function saveRadioChannel(client, userId, slot, station) {
     metadata: {
       station_id: station.id,
       info: station.info || "",
+      stream_type: station.streamType || "auto",
+      artwork: station.artwork || "",
+      homepage: station.homepage || "",
+      source_status: station.sourceStatus || (station.streamUrl ? "configured" : "unconfigured"),
       preset_slot: slot
     },
     updated_at: new Date().toISOString()
