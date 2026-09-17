@@ -12,7 +12,9 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTopHint: "A beállítás eltárolható, de böngészőben az ablak tényleges rögzítését az operációs rendszer korlátozhatja.",
     share: "Megosztás",
     logout: "Kijelentkezés",
-    copied: "A linket a vágólapra másoltuk."
+    copied: "A linket a vágólapra másoltuk.",
+    chat: "💬 Chat",
+    radio: "📻 Rádió"
   },
   en: {
     title: "Settings",
@@ -27,7 +29,9 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTopHint: "The preference can be saved, but browsers may be unable to keep the window on top because of operating-system restrictions.",
     share: "Share",
     logout: "Log out",
-    copied: "The link was copied to the clipboard."
+    copied: "The link was copied to the clipboard.",
+    chat: "💬 Chat",
+    radio: "📻 Radio"
   },
   nl: {
     title: "Instellingen",
@@ -42,7 +46,9 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTopHint: "De voorkeur kan worden opgeslagen, maar browsers kunnen het venster door beperkingen van het besturingssysteem mogelijk niet echt op de voorgrond houden.",
     share: "Delen",
     logout: "Uitloggen",
-    copied: "De link is naar het klembord gekopieerd."
+    copied: "De link is naar het klembord gekopieerd.",
+    chat: "💬 Chat",
+    radio: "📻 Radio"
   },
   ro: {
     title: "Setări",
@@ -57,7 +63,9 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTopHint: "Preferința poate fi salvată, dar browserul poate să nu poată menține efectiv fereastra deasupra din cauza limitărilor sistemului de operare.",
     share: "Distribuie",
     logout: "Deconectare",
-    copied: "Linkul a fost copiat în clipboard."
+    copied: "Linkul a fost copiat în clipboard.",
+    chat: "💬 Chat",
+    radio: "📻 Radio"
   },
   pl: {
     title: "Ustawienia",
@@ -72,7 +80,9 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTopHint: "Preferencję można zapisać, ale przeglądarka może nie być w stanie faktycznie utrzymywać okna na wierzchu z powodu ograniczeń systemu operacyjnego.",
     share: "Udostępnij",
     logout: "Wyloguj",
-    copied: "Link został skopiowany do schowka."
+    copied: "Link został skopiowany do schowka.",
+    chat: "💬 Czat",
+    radio: "📻 Radio"
   },
   be: {
     title: "Налады",
@@ -87,7 +97,9 @@ const SETTINGS_TRANSLATIONS = {
     alwaysOnTopHint: "Наладу можна захаваць, але браўзер можа не мець магчымасці фактычна трымаць акно зверху з-за абмежаванняў аперацыйнай сістэмы.",
     share: "Падзяліцца",
     logout: "Выйсці",
-    copied: "Спасылка скапіявана ў буфер абмену."
+    copied: "Спасылка скапіявана ў буфер абмену.",
+    chat: "💬 Чат",
+    radio: "📻 Радыё"
   }
 };
 
@@ -110,6 +122,37 @@ function setChoiceText(value, text) {
   const textNode = Array.from(label.childNodes).find((node) => node.nodeType === Node.TEXT_NODE);
   if (textNode) textNode.textContent = ` ${text}`;
   else label.append(document.createTextNode(` ${text}`));
+}
+
+function ensureNavigationItems() {
+  const menu = document.getElementById("idesussMenu");
+  if (!menu) return;
+
+  const insertBefore = document.getElementById("logoutBtnMenu");
+
+  let chatButton = document.getElementById("openChatBtn");
+  if (!chatButton) {
+    chatButton = document.createElement("button");
+    chatButton.type = "button";
+    chatButton.id = "openChatBtn";
+    chatButton.className = "idesussMenuBtn";
+    chatButton.addEventListener("click", () => {
+      window.location.assign(new URL("chat/", window.location.href).href);
+    });
+    menu.insertBefore(chatButton, insertBefore || null);
+  }
+
+  let radioButton = document.getElementById("openRadioBtn");
+  if (!radioButton) {
+    radioButton = document.createElement("button");
+    radioButton.type = "button";
+    radioButton.id = "openRadioBtn";
+    radioButton.className = "idesussMenuBtn";
+    radioButton.addEventListener("click", () => {
+      window.location.assign(new URL("radio/", window.location.href).href);
+    });
+    menu.insertBefore(radioButton, insertBefore || null);
+  }
 }
 
 function bindLocalizedShareFallback() {
@@ -137,10 +180,15 @@ function bindLocalizedShareFallback() {
 }
 
 function renderSettingsLanguage() {
+  ensureNavigationItems();
+
+  const t = SETTINGS_TRANSLATIONS[activeLanguage] || SETTINGS_TRANSLATIONS.hu;
+  setText("#openChatBtn", t.chat);
+  setText("#openRadioBtn", t.radio);
+
   const panel = document.getElementById("homepageSettingsPanel");
   if (!panel) return;
 
-  const t = SETTINGS_TRANSLATIONS[activeLanguage] || SETTINGS_TRANSLATIONS.hu;
   setText("#homepageSettingsTitle", t.title);
   setText('label[for="homepageSettingsLanguage"]', t.language);
   setText('label[for="homepageSettingsBrightness"]', t.brightness);
@@ -162,13 +210,16 @@ function renderSettingsLanguage() {
 function ensureObserver() {
   if (observer || !document.documentElement) return;
   observer = new MutationObserver((mutations) => {
-    const settingsAdded = mutations.some((mutation) =>
+    const relevantNodeAdded = mutations.some((mutation) =>
       Array.from(mutation.addedNodes).some((node) =>
         node.nodeType === Node.ELEMENT_NODE &&
-        (node.id === "homepageSettingsPanel" || node.querySelector?.("#homepageSettingsPanel"))
+        (node.id === "homepageSettingsPanel" ||
+          node.id === "idesussMenu" ||
+          node.querySelector?.("#homepageSettingsPanel") ||
+          node.querySelector?.("#idesussMenu"))
       )
     );
-    if (settingsAdded) renderSettingsLanguage();
+    if (relevantNodeAdded) renderSettingsLanguage();
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 }
