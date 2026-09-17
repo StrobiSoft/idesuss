@@ -10,9 +10,11 @@ export class IdesussRadioEngine extends EventTarget {
     this.station = null;
     this.hls = null;
     this.resumeVolume = this.audio.volume;
+    this.callBaselineVolume = null;
     this.fadeTimer = null;
 
     this.#forwardMediaEvents();
+    this.#setupMediaSessionActions();
   }
 
   #clamp(value) {
@@ -26,8 +28,14 @@ export class IdesussRadioEngine extends EventTarget {
   }
 
   #forwardMediaEvents() {
-    this.audio.addEventListener("play", () => this.#emit("state", { state: "playing" }));
-    this.audio.addEventListener("pause", () => this.#emit("state", { state: "paused" }));
+    this.audio.addEventListener("play", () => {
+      this.#setMediaSessionPlaybackState("playing");
+      this.#emit("state", { state: "playing" });
+    });
+    this.audio.addEventListener("pause", () => {
+      this.#setMediaSessionPlaybackState("paused");
+      this.#emit("state", { state: "paused" });
+    });
     this.audio.addEventListener("waiting", () => this.#emit("state", { state: "buffering" }));
     this.audio.addEventListener("playing", () => this.#emit("state", { state: "playing" }));
     this.audio.addEventListener("ended", () => this.#emit("state", { state: "ended" }));
@@ -36,6 +44,54 @@ export class IdesussRadioEngine extends EventTarget {
       const code = this.audio.error?.code || null;
       this.#emit("error", { code, message: "A rádió stream lejátszása nem sikerült." });
     });
+  }
+
+  #setupMediaSessionActions() {
+    if (!("mediaSession" in navigator)) return;
+
+    const handlers = {
+      play: () => this.play().catch((error) => this.#emit("error", { code: error.message, message: "A lejátszás nem indítható." })),
+      pause: () => this.pause(),
+      stop: () => this.stop()
+    };
+
+    Object.entries(handlers).forEach(([action, handler]) => {
+      try {
+        navigator.mediaSession.setActionHandler(action, handler);
+      } catch {
+        // Some browsers expose Media Session but do not support every action.
+      }
+    });
+  }
+
+  #syncMediaSessionMetadata() {
+    if (!("mediaSession" in navigator) || typeof MediaMetadata === "undefined") return;
+
+    const artwork = this.station?.artwork
+      ? [{ src: this.station.artwork }]
+      : [];
+
+    try {
+      navigator.mediaSession.metadata = this.station
+        ? new MediaMetadata({
+            title: this.station.name,
+            artist: "Idesüss Radio",
+            album: this.station.info || "Élő rádió",
+            artwork
+          })
+        : null;
+    } catch {
+      // Metadata is a progressive enhancement only.
+    }
+  }
+
+  #setMediaSessionPlaybackState(state) {
+    if (!("mediaSession" in navigator)) return;
+    try {
+      navigator.mediaSession.playbackState = state;
+    } catch {
+      // Ignore browsers that expose but do not allow playbackState writes.
+    }
   }
 
   async #loadHlsLibrary() {
@@ -58,9 +114,10 @@ export class IdesussRadioEngine extends EventTarget {
     return window.Hls;
   }
 
-  async #attachSource(url) {
+  async #attachSource(url, streamType = "auto") {
     this.#destroyHls();
-    const isHls = /\.m3u8(?:$|\?)/i.test(url);
+    const declaredType = String(streamType || "auto").toLowerCase();
+    const isHls = declaredType === "hls" || /\.m3u8(?:$|\?)/i.test(url);
 
     if (!isHls || this.audio.canPlayType("application/vnd.apple.mpegurl")) {
       this.audio.src = url;
@@ -94,10 +151,11 @@ export class IdesussRadioEngine extends EventTarget {
     this.pause();
     this.audio.removeAttribute("src");
     this.audio.load();
+    this.#syncMediaSessionMetadata();
     this.#emit("station", { station: this.station });
 
     if (station.streamUrl) {
-      await this.#attachSource(station.streamUrl);
+      await this.#attachSource(station.streamUrl, station.streamType);
       this.#emit("state", { state: "ready" });
     } else {
       this.#emit("state", { state: "unconfigured" });
@@ -117,6 +175,7 @@ export class IdesussRadioEngine extends EventTarget {
   stop() {
     this.audio.pause();
     try { this.audio.currentTime = 0; } catch {}
+    this.#setMediaSessionPlaybackState("none");
     this.#emit("state", { state: "stopped" });
   }
 
@@ -127,7 +186,7 @@ export class IdesussRadioEngine extends EventTarget {
   setVolume(value) {
     const next = this.#clamp(value);
     this.audio.volume = next;
-    if (next > 0) this.resumeVolume = next;
+    if (next > 0 && this.callBaselineVolume === null) this.resumeVolume = next;
     return next;
   }
 
@@ -162,8 +221,11 @@ export class IdesussRadioEngine extends EventTarget {
   }
 
   rememberPreInterruptionVolume() {
-    this.resumeVolume = this.audio.volume;
-    return this.resumeVolume;
+    if (this.callBaselineVolume === null) {
+      this.callBaselineVolume = this.audio.volume;
+      this.resumeVolume = this.callBaselineVolume;
+    }
+    return this.callBaselineVolume;
   }
 
   async duckForRinging() {
@@ -172,13 +234,26 @@ export class IdesussRadioEngine extends EventTarget {
   }
 
   async muteForCall() {
+    this.rememberPreInterruptionVolume();
     await this.fadeTo(0, 180);
   }
 
   async restoreAfterCall() {
-    const base = this.#clamp(this.resumeVolume);
+    const base = this.#clamp(this.callBaselineVolume ?? this.resumeVolume);
     await this.fadeTo(base * 0.75, 350);
     await this.fadeTo(base, 900);
+    this.resumeVolume = base;
+    this.callBaselineVolume = null;
+  }
+
+  cancelCallInterruption() {
+    const base = this.callBaselineVolume;
+    this.callBaselineVolume = null;
+    if (base !== null) {
+      this.resumeVolume = this.#clamp(base);
+      return this.resumeVolume;
+    }
+    return this.resumeVolume;
   }
 
   destroy() {
@@ -187,5 +262,11 @@ export class IdesussRadioEngine extends EventTarget {
     if (this.fadeTimer) cancelAnimationFrame(this.fadeTimer);
     this.audio.removeAttribute("src");
     this.audio.load();
+    if ("mediaSession" in navigator) {
+      try {
+        navigator.mediaSession.metadata = null;
+        navigator.mediaSession.playbackState = "none";
+      } catch {}
+    }
   }
 }
