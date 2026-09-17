@@ -8,6 +8,13 @@ const TIER_RANK = {
   premium_plus: 3
 };
 
+const DEFAULT_PRESET_LIMITS = {
+  signed_out: 0,
+  registered: 2,
+  premium: 6,
+  premium_plus: 8
+};
+
 function loadSupabaseLibrary() {
   if (window.supabase?.createClient) return Promise.resolve(window.supabase);
 
@@ -36,14 +43,17 @@ export async function getRadioSupabaseClient() {
   return window.supabaseClient;
 }
 
-function capabilityEnvelope(tier, canSaveRadioChannels, canUseRadioSkins) {
+function capabilityEnvelope(tier, canSaveRadioChannels, canUseRadioSkins, maxRadioPresets) {
   const normalized = ["registered", "premium", "premium_plus"].includes(tier) ? tier : "registered";
   const tierAllowsRadioSkins = TIER_RANK[normalized] >= TIER_RANK.premium;
+  const parsedLimit = Number(maxRadioPresets);
+  const fallbackLimit = DEFAULT_PRESET_LIMITS[normalized] ?? 0;
 
   return {
     tier: normalized,
     label: normalized === "premium_plus" ? "Premium Plus" : normalized === "premium" ? "Premium" : "Free",
     canSaveRadioChannels: Boolean(canSaveRadioChannels),
+    maxRadioPresets: Number.isInteger(parsedLimit) && parsedLimit >= 0 ? Math.min(8, parsedLimit) : fallbackLimit,
     canUseCustomSkins: typeof canUseRadioSkins === "boolean" ? canUseRadioSkins : tierAllowsRadioSkins,
     canUsePremiumPlusFeatures: TIER_RANK[normalized] >= TIER_RANK.premium_plus
   };
@@ -63,6 +73,7 @@ export async function loadRadioCapabilities() {
         tier: "signed_out",
         label: "Vendég",
         canSaveRadioChannels: false,
+        maxRadioPresets: 0,
         canUseCustomSkins: false,
         canUsePremiumPlusFeatures: false
       }
@@ -75,7 +86,8 @@ export async function loadRadioCapabilities() {
   const capabilities = capabilityEnvelope(
     entitlementData?.tier,
     entitlementData?.can_save_radio_channels,
-    entitlementData?.can_use_radio_skins
+    entitlementData?.can_use_radio_skins,
+    entitlementData?.max_radio_presets
   );
 
   return { client, user, capabilities };
