@@ -5,17 +5,17 @@ import {
   saveRadioChannel,
   canAccessTier
 } from "./radio-entitlements.js";
+import {
+  getEnabledRadioStations,
+  normalizeRadioStation
+} from "./radio-stations.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
-
-const DEFAULT_STATIONS = [
-  { id: "idesuss-1", name: "Idesüss Radio 1", info: "Nincs még streamforrás bekötve", streamUrl: "" },
-  { id: "idesuss-2", name: "Idesüss Radio 2", info: "Nincs még streamforrás bekötve", streamUrl: "" }
-];
+const STATIONS = getEnabledRadioStations();
 
 const PRESET_RULES = [
-  { slot: 1, requiredTier: "registered", freeStation: DEFAULT_STATIONS[0] },
-  { slot: 2, requiredTier: "registered", freeStation: DEFAULT_STATIONS[1] },
+  { slot: 1, requiredTier: "registered", freeStation: STATIONS[0] || null },
+  { slot: 2, requiredTier: "registered", freeStation: STATIONS[1] || null },
   { slot: 3, requiredTier: "premium" },
   { slot: 4, requiredTier: "premium" },
   { slot: 5, requiredTier: "premium" },
@@ -50,12 +50,17 @@ function tierLabel(tier) {
 }
 
 function savedRowToStation(row) {
-  return {
+  return normalizeRadioStation({
     id: row?.metadata?.station_id || row?.channel_key || "saved-station",
     name: row?.channel_name || "Mentett állomás",
     info: row?.metadata?.info || "Mentett rádióállomás",
-    streamUrl: row?.stream_url || ""
-  };
+    streamUrl: row?.stream_url || "",
+    streamType: row?.metadata?.stream_type || "auto",
+    artwork: row?.metadata?.artwork || "",
+    homepage: row?.metadata?.homepage || "",
+    enabled: true,
+    sourceStatus: row?.stream_url ? "configured" : "unconfigured"
+  });
 }
 
 function indexSavedPresets(rows) {
@@ -63,16 +68,23 @@ function indexSavedPresets(rows) {
   for (const row of rows || []) {
     const match = /^preset_(\d+)$/.exec(row.channel_key || "");
     if (!match) continue;
-    savedPresets[Number(match[1])] = savedRowToStation(row);
+    const station = savedRowToStation(row);
+    if (station) savedPresets[Number(match[1])] = station;
   }
 }
 
 async function selectStation(station, message = null) {
-  selectedStation = station;
+  const normalized = normalizeRadioStation(station);
+  if (!normalized) {
+    setStatus("Érvénytelen rádióállomás-adat.");
+    return;
+  }
+
+  selectedStation = normalized;
   try {
-    await engine.selectStation(station);
-    $("#nowPlaying").textContent = station.name;
-    setStatus(message || (station.streamUrl ? "Állomás készen áll." : "Az állomáshoz még nincs streamforrás bekötve."));
+    await engine.selectStation(normalized);
+    $("#nowPlaying").textContent = normalized.name;
+    setStatus(message || (normalized.streamUrl ? "Állomás készen áll." : "Az állomáshoz még nincs streamforrás bekötve."));
     renderPresets();
   } catch (error) {
     setStatus(`Állomásválasztási hiba: ${error.message}`);
@@ -104,11 +116,19 @@ function renderStations() {
   if (!host) return;
   host.innerHTML = "";
 
-  DEFAULT_STATIONS.forEach((station) => {
+  if (!STATIONS.length) {
+    const empty = document.createElement("div");
+    empty.className = "note";
+    empty.textContent = "Nincs engedélyezett rádióállomás a katalógusban.";
+    host.appendChild(empty);
+    return;
+  }
+
+  STATIONS.forEach((station) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "station";
-    button.innerHTML = `<strong>${station.name}</strong><span>${station.info}</span>`;
+    button.innerHTML = `<strong>${station.name}</strong><span>${station.info || "Rádióállomás"}</span>`;
     button.addEventListener("click", () => selectStation(station));
     host.appendChild(button);
   });
