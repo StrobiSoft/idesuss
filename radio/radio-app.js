@@ -24,6 +24,18 @@ const PRESET_RULES = [
   { slot: 8, requiredTier: "premium_plus" }
 ];
 
+const STREAM_STATE_TEXT = {
+  loading: "Streamforrás betöltése…",
+  ready: "A stream készen áll a lejátszásra.",
+  buffering: "Pufferelés…",
+  stalled: "A stream nem küld adatot; várakozás az újracsatlakozásra…",
+  playing: "Élő adás lejátszása folyamatban.",
+  paused: "Lejátszás szüneteltetve.",
+  stopped: "Lejátszás leállítva.",
+  ended: "A stream véget ért.",
+  unconfigured: "Az állomáshoz még nincs streamforrás bekötve."
+};
+
 const storedVolume = Number(localStorage.getItem(VOLUME_STORAGE_KEY));
 const initialVolume = Number.isFinite(storedVolume) ? Math.min(1, Math.max(0, storedVolume)) : 0.7;
 const engine = new IdesussRadioEngine({ initialVolume });
@@ -82,9 +94,9 @@ async function selectStation(station, message = null) {
 
   selectedStation = normalized;
   try {
-    await engine.selectStation(normalized);
     $("#nowPlaying").textContent = normalized.name;
-    setStatus(message || (normalized.streamUrl ? "Állomás készen áll." : "Az állomáshoz még nincs streamforrás bekötve."));
+    if (message) setStatus(message);
+    await engine.selectStation(normalized);
     renderPresets();
   } catch (error) {
     setStatus(`Állomásválasztási hiba: ${error.message}`);
@@ -155,7 +167,10 @@ function renderPresets() {
 
     button.addEventListener("click", async () => {
       if (stationForButton) {
-        await selectStation(stationForButton, stored ? "Mentett preset betöltve." : "Beépített Free preset betöltve.");
+        await selectStation(
+          stationForButton,
+          stored ? "Mentett preset kiválasztva; stream ellenőrzése…" : "Beépített Free preset kiválasztva."
+        );
         return;
       }
 
@@ -222,8 +237,7 @@ function bindEngineEvents() {
     const state = event.detail?.state;
     const button = $("#playPauseBtn");
     if (button) button.textContent = state === "playing" ? "⏸ Szünet" : "▶ Lejátszás";
-    if (state === "buffering") setStatus("Pufferelés…");
-    if (state === "stopped") setStatus("Lejátszás leállítva.");
+    if (STREAM_STATE_TEXT[state]) setStatus(STREAM_STATE_TEXT[state]);
   });
 
   engine.addEventListener("volume", (event) => {
