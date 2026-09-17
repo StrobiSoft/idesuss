@@ -36,13 +36,15 @@ export async function getRadioSupabaseClient() {
   return window.supabaseClient;
 }
 
-function capabilityEnvelope(tier, canSaveRadioChannels) {
+function capabilityEnvelope(tier, canSaveRadioChannels, canUseRadioSkins) {
   const normalized = ["registered", "premium", "premium_plus"].includes(tier) ? tier : "registered";
+  const tierAllowsRadioSkins = TIER_RANK[normalized] >= TIER_RANK.premium;
+
   return {
     tier: normalized,
     label: normalized === "premium_plus" ? "Premium Plus" : normalized === "premium" ? "Premium" : "Free",
     canSaveRadioChannels: Boolean(canSaveRadioChannels),
-    canUseCustomSkins: TIER_RANK[normalized] >= TIER_RANK.premium,
+    canUseCustomSkins: typeof canUseRadioSkins === "boolean" ? canUseRadioSkins : tierAllowsRadioSkins,
     canUsePremiumPlusFeatures: TIER_RANK[normalized] >= TIER_RANK.premium_plus
   };
 }
@@ -72,7 +74,8 @@ export async function loadRadioCapabilities() {
 
   const capabilities = capabilityEnvelope(
     entitlementData?.tier,
-    entitlementData?.can_save_radio_channels
+    entitlementData?.can_save_radio_channels,
+    entitlementData?.can_use_radio_skins
   );
 
   return { client, user, capabilities };
