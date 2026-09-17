@@ -6,6 +6,8 @@ export const RADIO_STATIONS = Object.freeze([
     streamUrl: "",
     streamType: "auto",
     enabled: true,
+    catalogManaged: true,
+    distributionStatus: "placeholder",
     sourceStatus: "unconfigured"
   }),
   Object.freeze({
@@ -15,6 +17,8 @@ export const RADIO_STATIONS = Object.freeze([
     streamUrl: "",
     streamType: "auto",
     enabled: true,
+    catalogManaged: true,
+    distributionStatus: "placeholder",
     sourceStatus: "unconfigured"
   })
 ]);
@@ -26,14 +30,23 @@ export function normalizeRadioStation(station) {
   const name = String(station.name || "").trim();
   if (!id || !name) return null;
 
+  const streamUrl = String(station.streamUrl || "").trim();
+  const catalogManaged = Boolean(station.catalogManaged);
+  const distributionStatus = String(station.distributionStatus || (catalogManaged ? "unreviewed" : "user_managed")).trim();
+  const sourceApproved = !catalogManaged || distributionStatus === "approved";
+
   return {
     id,
     name,
     info: String(station.info || "").trim(),
-    streamUrl: String(station.streamUrl || "").trim(),
+    streamUrl: sourceApproved ? streamUrl : "",
     streamType: String(station.streamType || "auto").trim().toLowerCase(),
     enabled: station.enabled !== false,
-    sourceStatus: String(station.sourceStatus || (station.streamUrl ? "configured" : "unconfigured")).trim(),
+    catalogManaged,
+    distributionStatus,
+    sourceStatus: sourceApproved
+      ? String(station.sourceStatus || (streamUrl ? "configured" : "unconfigured")).trim()
+      : "blocked_unapproved_source",
     artwork: station.artwork ? String(station.artwork).trim() : "",
     homepage: station.homepage ? String(station.homepage).trim() : ""
   };
