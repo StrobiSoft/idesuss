@@ -86,7 +86,7 @@ function renderTier() {
   const saveHint = $("#saveHint");
   if (saveHint) {
     saveHint.textContent = capabilities.canSaveRadioChannels
-      ? "Kedvenc állomások szerveroldali mentése engedélyezve."
+      ? "Kedvenc állomások szerveroldali mentése engedélyezve. Az üres, jogosult preset gombra koppintva mentheted az éppen kiválasztott állomást."
       : "A Free szint a beépített csatornákat használhatja; saját állomás mentése Premium szinttől érhető el.";
   }
 
@@ -130,27 +130,10 @@ function renderPresets() {
     button.disabled = !unlocked;
     button.innerHTML = `<b>${rule.slot}</b><small>${stationForButton?.name || (unlocked ? "üres" : tierLabel(rule.requiredTier))}</small>`;
     button.title = unlocked
-      ? (stationForButton ? `${stationForButton.name} betöltése` : "Üres preset — kiválasztott állomás menthető ide")
+      ? (stationForButton ? `${stationForButton.name} betöltése` : "Üres preset — a kiválasztott állomás mentése")
       : `${tierLabel(rule.requiredTier)} szükséges`;
 
-    button.addEventListener("click", async (event) => {
-      if (event.shiftKey && capabilities.canSaveRadioChannels) {
-        if (!selectedStation) {
-          setStatus("Mentéshez előbb válassz állomást.");
-          return;
-        }
-        try {
-          await saveRadioChannel(radioClient, radioUser?.id, rule.slot, selectedStation);
-          savedPresets[rule.slot] = { ...selectedStation };
-          setStatus(`${selectedStation.name} elmentve a(z) ${rule.slot}. presetre.`);
-          renderPresets();
-        } catch (error) {
-          console.error("Radio preset save failed", error);
-          setStatus("A preset mentése nem sikerült. Ellenőrizd a jogosultságot és a kapcsolatot.");
-        }
-        return;
-      }
-
+    button.addEventListener("click", async () => {
       if (stationForButton) {
         await selectStation(stationForButton, stored ? "Mentett preset betöltve." : "Beépített Free preset betöltve.");
         return;
@@ -161,7 +144,20 @@ function renderPresets() {
         return;
       }
 
-      setStatus("Ez a preset üres. Állomás kiválasztása után Shift+kattintással menthető ide.");
+      if (!selectedStation) {
+        setStatus("Mentéshez előbb válassz állomást.");
+        return;
+      }
+
+      try {
+        await saveRadioChannel(radioClient, radioUser?.id, rule.slot, selectedStation);
+        savedPresets[rule.slot] = { ...selectedStation };
+        setStatus(`${selectedStation.name} elmentve a(z) ${rule.slot}. presetre.`);
+        renderPresets();
+      } catch (error) {
+        console.error("Radio preset save failed", error);
+        setStatus("A preset mentése nem sikerült. Ellenőrizd a jogosultságot és a kapcsolatot.");
+      }
     });
 
     host.appendChild(button);
