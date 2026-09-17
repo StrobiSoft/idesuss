@@ -11,6 +11,8 @@ import {
 } from "./radio-stations.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
+const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
+const AVAILABLE_SKINS = new Set(["default", "night-drive", "classic-black"]);
 const STATIONS = getEnabledRadioStations();
 
 const PRESET_RULES = [
@@ -59,6 +61,19 @@ function tierLabel(tier) {
   if (tier === "premium") return "Premium";
   if (tier === "registered") return "Free";
   return "Vendég";
+}
+
+function applySkin(requestedSkin, { persist = true } = {}) {
+  const wanted = AVAILABLE_SKINS.has(requestedSkin) ? requestedSkin : "default";
+  const allowed = wanted === "default" || capabilities.canUseCustomSkins;
+  const active = allowed ? wanted : "default";
+
+  document.documentElement.dataset.radioSkin = active;
+  const skin = $("#skinSelect");
+  if (skin && skin.value !== active) skin.value = active;
+
+  if (persist) localStorage.setItem(SKIN_STORAGE_KEY, active);
+  return active;
 }
 
 function savedRowToStation(row) {
@@ -119,8 +134,11 @@ function renderTier() {
     Array.from(skin.options).forEach((option) => {
       if (option.value !== "default") option.disabled = !capabilities.canUseCustomSkins;
     });
-    if (!capabilities.canUseCustomSkins) skin.value = "default";
   }
+
+  const preferredSkin = localStorage.getItem(SKIN_STORAGE_KEY) || "default";
+  const activeSkin = applySkin(preferredSkin, { persist: false });
+  if (activeSkin !== preferredSkin) localStorage.setItem(SKIN_STORAGE_KEY, activeSkin);
 }
 
 function renderStations() {
@@ -222,13 +240,13 @@ function bindControls() {
   }
 
   $("#skinSelect")?.addEventListener("change", (event) => {
-    if (event.target.value !== "default" && !capabilities.canUseCustomSkins) {
-      event.target.value = "default";
+    const requested = event.target.value;
+    const active = applySkin(requested);
+    if (active !== requested) {
       setStatus("Egyedi skinek Premium szinttől érhetők el.");
       return;
     }
-    document.documentElement.dataset.radioSkin = event.target.value;
-    setStatus(event.target.value === "default" ? "Idesüss alap skin aktív." : "Skin kiválasztva.");
+    setStatus(active === "default" ? "Idesüss alap skin aktív." : "Premium skin aktív és elmentve.");
   });
 }
 
