@@ -36,38 +36,14 @@ export async function getRadioSupabaseClient() {
   return window.supabaseClient;
 }
 
-function normalizeTier(value) {
-  return ["registered", "premium", "premium_plus"].includes(value) ? value : "registered";
-}
-
-function isPremiumPlusActive(profile) {
-  if (profile?.tier !== "premium_plus") return false;
-  if (!profile?.subscription_expires_at) return false;
-  const expiry = Date.parse(profile.subscription_expires_at);
-  return Number.isFinite(expiry) && expiry > Date.now();
-}
-
-export function deriveRadioCapabilities(profile, signedIn) {
-  if (!signedIn) {
-    return {
-      tier: "signed_out",
-      label: "Vendég",
-      canSaveRadioChannels: false,
-      canUseCustomSkins: false,
-      canUsePremiumPlusFeatures: false
-    };
-  }
-
-  let tier = normalizeTier(profile?.tier);
-  if (tier === "premium_plus" && !isPremiumPlusActive(profile)) tier = "registered";
-
-  const rank = TIER_RANK[tier] ?? 1;
+function capabilityEnvelope(tier, canSaveRadioChannels) {
+  const normalized = ["registered", "premium", "premium_plus"].includes(tier) ? tier : "registered";
   return {
-    tier,
-    label: tier === "premium_plus" ? "Premium Plus" : tier === "premium" ? "Premium" : "Free",
-    canSaveRadioChannels: rank >= TIER_RANK.premium,
-    canUseCustomSkins: rank >= TIER_RANK.premium,
-    canUsePremiumPlusFeatures: rank >= TIER_RANK.premium_plus
+    tier: normalized,
+    label: normalized === "premium_plus" ? "Premium Plus" : normalized === "premium" ? "Premium" : "Free",
+    canSaveRadioChannels: Boolean(canSaveRadioChannels),
+    canUseCustomSkins: TIER_RANK[normalized] >= TIER_RANK.premium,
+    canUsePremiumPlusFeatures: TIER_RANK[normalized] >= TIER_RANK.premium_plus
   };
 }
 
@@ -77,22 +53,67 @@ export async function loadRadioCapabilities() {
   if (userError) throw userError;
 
   const user = userData?.user || null;
-  if (!user) return { client, user: null, profile: null, capabilities: deriveRadioCapabilities(null, false) };
+  if (!user) {
+    return {
+      client,
+      user: null,
+      capabilities: {
+        tier: "signed_out",
+        label: "Vendég",
+        canSaveRadioChannels: false,
+        canUseCustomSkins: false,
+        canUsePremiumPlusFeatures: false
+      }
+    };
+  }
 
-  const { data: profile, error: profileError } = await client
-    .from("profiles")
-    .select("id,nickname,avatar_emoji,tier,subscription_expires_at")
-    .eq("id", user.id)
-    .maybeSingle();
+  const { data: entitlementData, error: entitlementError } = await client.rpc("get_my_idesuss_entitlements");
+  if (entitlementError) throw entitlementError;
 
-  if (profileError) throw profileError;
+  const capabilities = capabilityEnvelope(
+    entitlementData?.tier,
+    entitlementData?.can_save_radio_channels
+  );
 
-  return {
-    client,
-    user,
-    profile,
-    capabilities: deriveRadioCapabilities(profile, true)
+  return { client, user, capabilities };
+}
+
+export async function loadSavedRadioChannels(client, userId) {
+  if (!client || !userId) return [];
+  const { data, error } = await client
+    .from("saved_radio_channels")
+    .select("channel_key,channel_name,stream_url,metadata,updated_at")
+    .eq("user_id", userId)
+    .order("channel_key", { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function saveRadioChannel(client, userId, slot, station) {
+  if (!client || !userId) throw new Error("AUTH_REQUIRED");
+  if (!station?.id || !station?.name) throw new Error("INVALID_STATION");
+
+  const channelKey = `preset_${slot}`;
+  const payload = {
+    user_id: userId,
+    channel_key: channelKey,
+    channel_name: station.name,
+    stream_url: station.streamUrl || null,
+    metadata: {
+      station_id: station.id,
+      info: station.info || "",
+      preset_slot: slot
+    },
+    updated_at: new Date().toISOString()
   };
+
+  const { data, error } = await client
+    .from("saved_radio_channels")
+    .upsert(payload, { onConflict: "user_id,channel_key" })
+    .select("channel_key,channel_name,stream_url,metadata,updated_at")
+    .single();
+  if (error) throw error;
+  return data;
 }
 
 export function canAccessTier(currentTier, requiredTier) {
