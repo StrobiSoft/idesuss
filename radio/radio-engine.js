@@ -1,9 +1,9 @@
 export class IdesussRadioEngine extends EventTarget {
-  constructor({ initialVolume = 0.7 } = {}) {
+  constructor({ initialVolume = 0.7, crossOrigin = null } = {}) {
     super();
     this.audio = new Audio();
     this.audio.preload = "none";
-    this.audio.crossOrigin = "anonymous";
+    if (crossOrigin) this.audio.crossOrigin = crossOrigin;
     this.audio.volume = this.#clamp(initialVolume);
     this.audio.playsInline = true;
 
