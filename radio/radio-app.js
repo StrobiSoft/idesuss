@@ -1,7 +1,11 @@
 import { IdesussRadioEngine } from "./radio-engine.js";
-import { loadRadioCapabilities, canAccessTier } from "./radio-entitlements.js";
+import {
+  loadRadioCapabilities,
+  loadSavedRadioChannels,
+  saveRadioChannel,
+  canAccessTier
+} from "./radio-entitlements.js";
 
-const PRESET_STORAGE_KEY = "idesuss.radio.presets.v1";
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
 
 const DEFAULT_STATIONS = [
@@ -10,8 +14,8 @@ const DEFAULT_STATIONS = [
 ];
 
 const PRESET_RULES = [
-  { slot: 1, requiredTier: "registered" },
-  { slot: 2, requiredTier: "registered" },
+  { slot: 1, requiredTier: "registered", freeStation: DEFAULT_STATIONS[0] },
+  { slot: 2, requiredTier: "registered", freeStation: DEFAULT_STATIONS[1] },
   { slot: 3, requiredTier: "premium" },
   { slot: 4, requiredTier: "premium" },
   { slot: 5, requiredTier: "premium" },
@@ -20,10 +24,14 @@ const PRESET_RULES = [
   { slot: 8, requiredTier: "premium_plus" }
 ];
 
-const initialVolume = Math.min(1, Math.max(0, Number(localStorage.getItem(VOLUME_STORAGE_KEY)) || 0.7));
+const storedVolume = Number(localStorage.getItem(VOLUME_STORAGE_KEY));
+const initialVolume = Number.isFinite(storedVolume) ? Math.min(1, Math.max(0, storedVolume)) : 0.7;
 const engine = new IdesussRadioEngine({ initialVolume });
 let capabilities = { tier: "signed_out", label: "Vendég", canSaveRadioChannels: false, canUseCustomSkins: false, canUsePremiumPlusFeatures: false };
 let selectedStation = null;
+let radioClient = null;
+let radioUser = null;
+let savedPresets = {};
 
 function $(selector) {
   return document.querySelector(selector);
@@ -34,24 +42,41 @@ function setStatus(text) {
   if (target) target.textContent = text;
 }
 
-function loadPresets() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(PRESET_STORAGE_KEY) || "{}");
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    return {};
-  }
-}
-
-function savePresets(presets) {
-  localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(presets));
-}
-
 function tierLabel(tier) {
   if (tier === "premium_plus") return "Premium Plus";
   if (tier === "premium") return "Premium";
   if (tier === "registered") return "Free";
   return "Vendég";
+}
+
+function savedRowToStation(row) {
+  return {
+    id: row?.metadata?.station_id || row?.channel_key || "saved-station",
+    name: row?.channel_name || "Mentett állomás",
+    info: row?.metadata?.info || "Mentett rádióállomás",
+    streamUrl: row?.stream_url || ""
+  };
+}
+
+function indexSavedPresets(rows) {
+  savedPresets = {};
+  for (const row of rows || []) {
+    const match = /^preset_(\d+)$/.exec(row.channel_key || "");
+    if (!match) continue;
+    savedPresets[Number(match[1])] = savedRowToStation(row);
+  }
+}
+
+async function selectStation(station, message = null) {
+  selectedStation = station;
+  try {
+    await engine.selectStation(station);
+    $("#nowPlaying").textContent = station.name;
+    setStatus(message || (station.streamUrl ? "Állomás készen áll." : "Az állomáshoz még nincs streamforrás bekötve."));
+    renderPresets();
+  } catch (error) {
+    setStatus(`Állomásválasztási hiba: ${error.message}`);
+  }
 }
 
 function renderTier() {
@@ -61,8 +86,8 @@ function renderTier() {
   const saveHint = $("#saveHint");
   if (saveHint) {
     saveHint.textContent = capabilities.canSaveRadioChannels
-      ? "Kedvenc állomások mentése engedélyezve."
-      : "Kedvenc állomások mentése Premium szinttől érhető el.";
+      ? "Kedvenc állomások szerveroldali mentése engedélyezve."
+      : "A Free szint a beépített csatornákat használhatja; saját állomás mentése Premium szinttől érhető el.";
   }
 
   const skin = $("#skinSelect");
@@ -84,17 +109,7 @@ function renderStations() {
     button.type = "button";
     button.className = "station";
     button.innerHTML = `<strong>${station.name}</strong><span>${station.info}</span>`;
-    button.addEventListener("click", async () => {
-      selectedStation = station;
-      try {
-        await engine.selectStation(station);
-        $("#nowPlaying").textContent = station.name;
-        setStatus(station.streamUrl ? "Állomás készen áll." : "Az állomáshoz még nincs streamforrás bekötve.");
-        renderPresets();
-      } catch (error) {
-        setStatus(`Állomásválasztási hiba: ${error.message}`);
-      }
-    });
+    button.addEventListener("click", () => selectStation(station));
     host.appendChild(button);
   });
 }
@@ -102,42 +117,51 @@ function renderStations() {
 function renderPresets() {
   const host = $("#presetGrid");
   if (!host) return;
-  const presets = loadPresets();
   host.innerHTML = "";
 
   PRESET_RULES.forEach((rule) => {
     const unlocked = canAccessTier(capabilities.tier, rule.requiredTier);
-    const stored = presets[String(rule.slot)] || null;
+    const stored = savedPresets[rule.slot] || null;
+    const fallback = rule.freeStation || null;
+    const stationForButton = stored || fallback;
     const button = document.createElement("button");
     button.type = "button";
     button.className = `preset${unlocked ? "" : " locked"}${stored ? " saved" : ""}`;
     button.disabled = !unlocked;
-    button.innerHTML = `<b>${rule.slot}</b><small>${stored?.name || (unlocked ? "üres" : rule.requiredTier.replace("_", " "))}</small>`;
-    button.title = unlocked ? (stored ? `${stored.name} betöltése` : "Üres preset") : `${tierLabel(rule.requiredTier)} szükséges`;
+    button.innerHTML = `<b>${rule.slot}</b><small>${stationForButton?.name || (unlocked ? "üres" : tierLabel(rule.requiredTier))}</small>`;
+    button.title = unlocked
+      ? (stationForButton ? `${stationForButton.name} betöltése` : "Üres preset — kiválasztott állomás menthető ide")
+      : `${tierLabel(rule.requiredTier)} szükséges`;
 
-    button.addEventListener("click", async () => {
-      if (stored) {
-        selectedStation = stored;
-        await engine.selectStation(stored);
-        $("#nowPlaying").textContent = stored.name;
-        setStatus(stored.streamUrl ? "Preset betöltve." : "A mentett állomáshoz nincs streamforrás.");
+    button.addEventListener("click", async (event) => {
+      if (event.shiftKey && capabilities.canSaveRadioChannels) {
+        if (!selectedStation) {
+          setStatus("Mentéshez előbb válassz állomást.");
+          return;
+        }
+        try {
+          await saveRadioChannel(radioClient, radioUser?.id, rule.slot, selectedStation);
+          savedPresets[rule.slot] = { ...selectedStation };
+          setStatus(`${selectedStation.name} elmentve a(z) ${rule.slot}. presetre.`);
+          renderPresets();
+        } catch (error) {
+          console.error("Radio preset save failed", error);
+          setStatus("A preset mentése nem sikerült. Ellenőrizd a jogosultságot és a kapcsolatot.");
+        }
+        return;
+      }
+
+      if (stationForButton) {
+        await selectStation(stationForButton, stored ? "Mentett preset betöltve." : "Beépített Free preset betöltve.");
         return;
       }
 
       if (!capabilities.canSaveRadioChannels) {
-        setStatus("A saját kedvencek mentése Premium szinttől érhető el.");
+        setStatus("Saját preset mentése Premium szinttől érhető el.");
         return;
       }
 
-      if (!selectedStation) {
-        setStatus("Előbb válassz állomást, utána mentsd a preset gombra.");
-        return;
-      }
-
-      presets[String(rule.slot)] = selectedStation;
-      savePresets(presets);
-      setStatus(`${selectedStation.name} elmentve a(z) ${rule.slot}. presetre.`);
-      renderPresets();
+      setStatus("Ez a preset üres. Állomás kiválasztása után Shift+kattintással menthető ide.");
     });
 
     host.appendChild(button);
@@ -204,8 +228,15 @@ async function init() {
   try {
     const result = await loadRadioCapabilities();
     capabilities = result.capabilities;
+    radioClient = result.client;
+    radioUser = result.user;
+
+    if (radioUser) {
+      const rows = await loadSavedRadioChannels(radioClient, radioUser.id);
+      indexSavedPresets(rows);
+    }
   } catch (error) {
-    console.error("Radio entitlement load failed", error);
+    console.error("Radio entitlement or preset load failed", error);
     setStatus("A jogosultsági állapot nem tölthető be; biztonsági okból vendég módban működünk.");
   }
 
