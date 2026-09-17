@@ -1,3 +1,5 @@
+import { applyHomepageSettingsLanguage } from "./home-settings-i18n.js";
+
 const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "nl", "ro", "pl", "be"];
 const HOME_LANG_STORAGE_KEY = "idesuss_home_lang";
 
@@ -71,6 +73,7 @@ async function loadHomeLanguage(langCode) {
   }
 
   applyHomeTranslations(homeTranslations);
+  applyHomepageSettingsLanguage(safeLanguage);
 }
 
 export async function initHomeLanguage() {
