@@ -51,6 +51,13 @@ function $(selector) {
   return document.querySelector(selector);
 }
 
+function appendTextElement(parent, tagName, text) {
+  const element = document.createElement(tagName);
+  element.textContent = String(text ?? "");
+  parent.appendChild(element);
+  return element;
+}
+
 function setStatus(text) {
   const target = $("#radioStatus");
   if (target) target.textContent = text;
@@ -144,7 +151,7 @@ function renderTier() {
 function renderStations() {
   const host = $("#stationList");
   if (!host) return;
-  host.innerHTML = "";
+  host.replaceChildren();
 
   if (!STATIONS.length) {
     const empty = document.createElement("div");
@@ -158,7 +165,8 @@ function renderStations() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "station";
-    button.innerHTML = `<strong>${station.name}</strong><span>${station.info || "Rádióállomás"}</span>`;
+    appendTextElement(button, "strong", station.name);
+    appendTextElement(button, "span", station.info || "Rádióállomás");
     button.addEventListener("click", () => selectStation(station));
     host.appendChild(button);
   });
@@ -167,7 +175,7 @@ function renderStations() {
 function renderPresets() {
   const host = $("#presetGrid");
   if (!host) return;
-  host.innerHTML = "";
+  host.replaceChildren();
 
   PRESET_RULES.forEach((rule) => {
     const unlocked = canAccessTier(capabilities.tier, rule.requiredTier);
@@ -178,7 +186,8 @@ function renderPresets() {
     button.type = "button";
     button.className = `preset${unlocked ? "" : " locked"}${stored ? " saved" : ""}`;
     button.disabled = !unlocked;
-    button.innerHTML = `<b>${rule.slot}</b><small>${stationForButton?.name || (unlocked ? "üres" : tierLabel(rule.requiredTier))}</small>`;
+    appendTextElement(button, "b", rule.slot);
+    appendTextElement(button, "small", stationForButton?.name || (unlocked ? "üres" : tierLabel(rule.requiredTier)));
     button.title = unlocked
       ? (stationForButton ? `${stationForButton.name} betöltése` : "Üres preset — a kiválasztott állomás mentése")
       : `${tierLabel(rule.requiredTier)} szükséges`;
