@@ -1,27 +1,44 @@
-const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "be"];
+import { applyHomepageSettingsLanguage } from "./home-settings-i18n.js";
+
+const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "nl", "ro", "pl", "be"];
 const HOME_LANG_STORAGE_KEY = "idesuss_home_lang";
 
-function ensureBelarusianHomeOption(languageSelect) {
-  if (!languageSelect || languageSelect.querySelector('option[value="be"]')) return;
+const HOME_LANGUAGE_LABELS = {
+  hu: "HU Magyar",
+  en: "GB English",
+  nl: "NL Nederlands",
+  ro: "RO Română",
+  pl: "PL Polski",
+  be: "BY Беларуская"
+};
 
-  const option = document.createElement("option");
-  option.value = "be";
-  option.textContent = "BY Беларуская";
-  languageSelect.appendChild(option);
+function syncHomeLanguageOptions(languageSelect) {
+  if (!languageSelect) return;
+
+  Array.from(languageSelect.options).forEach(function (option) {
+    if (!SUPPORTED_HOME_LANGUAGES.includes(option.value)) {
+      option.remove();
+    }
+  });
+
+  SUPPORTED_HOME_LANGUAGES.forEach(function (code) {
+    let option = languageSelect.querySelector(`option[value="${code}"]`);
+    if (!option) {
+      option = document.createElement("option");
+      option.value = code;
+      languageSelect.appendChild(option);
+    }
+    option.textContent = HOME_LANGUAGE_LABELS[code];
+  });
 }
 
 function getSafeHomeLanguage(langCode) {
-  if (SUPPORTED_HOME_LANGUAGES.includes(langCode)) {
-    return langCode;
-  }
-  return "hu";
+  return SUPPORTED_HOME_LANGUAGES.includes(langCode) ? langCode : "hu";
 }
 
 function getInitialHomeLanguage() {
   const saved = window.localStorage.getItem(HOME_LANG_STORAGE_KEY);
-  if (SUPPORTED_HOME_LANGUAGES.includes(saved)) {
-    return saved;
-  }
+  if (SUPPORTED_HOME_LANGUAGES.includes(saved)) return saved;
 
   const browserLanguage = (window.navigator.language || "hu").slice(0, 2).toLowerCase();
   return getSafeHomeLanguage(browserLanguage);
@@ -29,21 +46,15 @@ function getInitialHomeLanguage() {
 
 function getTranslationValue(section, key) {
   return key.split(".").reduce(function (current, part) {
-    if (!current || typeof current !== "object") {
-      return undefined;
-    }
+    if (!current || typeof current !== "object") return undefined;
     return current[part];
   }, section);
 }
 
 function applyHomeTranslations(section) {
   document.querySelectorAll("[data-i18n]").forEach(function (element) {
-    const key = element.dataset.i18n;
-    const value = getTranslationValue(section, key);
-
-    if (typeof value === "string") {
-      element.textContent = value;
-    }
+    const value = getTranslationValue(section, element.dataset.i18n);
+    if (typeof value === "string") element.textContent = value;
   });
 }
 
@@ -57,11 +68,12 @@ async function loadHomeLanguage(langCode) {
 
   const languageSelect = document.getElementById("langSelect");
   if (languageSelect) {
-    ensureBelarusianHomeOption(languageSelect);
+    syncHomeLanguageOptions(languageSelect);
     languageSelect.value = safeLanguage;
   }
 
   applyHomeTranslations(homeTranslations);
+  applyHomepageSettingsLanguage(safeLanguage);
 }
 
 export async function initHomeLanguage() {
@@ -69,7 +81,7 @@ export async function initHomeLanguage() {
   const initialLanguage = getInitialHomeLanguage();
 
   if (languageSelect) {
-    ensureBelarusianHomeOption(languageSelect);
+    syncHomeLanguageOptions(languageSelect);
     languageSelect.value = initialLanguage;
     languageSelect.addEventListener("change", function (event) {
       loadHomeLanguage(event.target.value).catch(function () {
