@@ -1,6 +1,148 @@
 import { initRootAuthController } from "./auth-controller.js";
 import { openProfilePanel } from "./profile.js";
 
+const SETTINGS_STORAGE_KEY = "idesuss.home.settings.v1";
+
+function readSettings() {
+  try {
+    return JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) || "{}") || {};
+  } catch {
+    return {};
+  }
+}
+
+function writeSettings(next) {
+  localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(next));
+}
+
+function ensureSettingsRuntimeStyle() {
+  if (document.getElementById("homepageSettingsRuntimeStyle")) return;
+  const style = document.createElement("style");
+  style.id = "homepageSettingsRuntimeStyle";
+  style.textContent = `
+    html[data-idesuss-display="dark"] body {
+      color-scheme: dark;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%) !important;
+      color: #e5edf7 !important;
+    }
+    html[data-idesuss-display="dark"] .site-header,
+    html[data-idesuss-display="dark"] .header-chip,
+    html[data-idesuss-display="dark"] .card,
+    html[data-idesuss-display="dark"] .feature-card,
+    html[data-idesuss-display="dark"] .step-card,
+    html[data-idesuss-display="dark"] .legal-card,
+    html[data-idesuss-display="dark"] footer {
+      background-color: #162033 !important;
+      color: #e5edf7 !important;
+      border-color: #334155 !important;
+    }
+    html[data-idesuss-display="dark"] .brand-title,
+    html[data-idesuss-display="dark"] .section-title,
+    html[data-idesuss-display="dark"] h1,
+    html[data-idesuss-display="dark"] h2,
+    html[data-idesuss-display="dark"] h3,
+    html[data-idesuss-display="dark"] p,
+    html[data-idesuss-display="dark"] .brand-subtitle,
+    html[data-idesuss-display="dark"] .header-clock-inline {
+      color: inherit;
+    }
+    #homepageSettingsPanel .settings-row {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    #homepageSettingsPanel .settings-label {
+      font-weight: 800;
+    }
+    #homepageSettingsPanel .settings-hint {
+      margin: 0;
+      color: #5e748d;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    #homepageSettingsPanel .settings-choice-group {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    #homepageSettingsPanel .settings-choice-group label,
+    #homepageSettingsPanel .settings-switch-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 9px 10px;
+      border: 1px solid #d7e0ea;
+      border-radius: 12px;
+      background: #f8fbff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    #homepageSettingsPanel input[type="range"] {
+      width: 100%;
+      accent-color: #0d5bd7;
+    }
+    #homepageSettingsPanel input[type="checkbox"],
+    #homepageSettingsPanel input[type="radio"] {
+      accent-color: #0d5bd7;
+    }
+    #homepageSettingsPanel .settings-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    #homepageSettingsPanel .settings-action-btn {
+      min-height: 44px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #17324d;
+      background: #eef4fb;
+      border: 1px solid #d7e0ea;
+      box-shadow: none;
+    }
+    #homepageSettingsPanel .settings-action-btn::before {
+      display: none !important;
+      content: none !important;
+    }
+    #homepageSettingsPanel .settings-action-btn.settings-danger {
+      color: #9b1c1c;
+      background: #fff1f1;
+      border-color: #f4c7c7;
+    }
+    @media (max-width: 520px) {
+      #homepageSettingsPanel .settings-choice-group,
+      #homepageSettingsPanel .settings-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function resolveAutomaticDisplayMode() {
+  return window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ? "dark" : "light";
+}
+
+function applyDisplayMode(mode) {
+  ensureSettingsRuntimeStyle();
+  const resolved = mode === "auto" ? resolveAutomaticDisplayMode() : mode;
+  document.documentElement.dataset.idesussDisplay = resolved;
+}
+
+function applyBrightness(value) {
+  const numeric = Math.min(130, Math.max(60, Number(value) || 100));
+  document.documentElement.style.setProperty("--idesuss-user-brightness", String(numeric));
+  document.body.style.filter = `brightness(${numeric / 100})`;
+}
+
+function restoreHomepageSettings() {
+  const settings = readSettings();
+  applyBrightness(settings.brightness ?? 100);
+  applyDisplayMode(settings.displayMode || "auto");
+}
+
 function handleRequestedPanel() {
   const hash = window.location.hash.toLowerCase();
 
@@ -108,11 +250,25 @@ function syncSettingsLanguageSelect(panel) {
   settingsSelect.value = sourceSelect.value;
 }
 
+function syncSettingsControls(panel) {
+  const settings = readSettings();
+  const brightness = panel.querySelector("#homepageSettingsBrightness");
+  const brightnessValue = panel.querySelector("#homepageSettingsBrightnessValue");
+  const mode = settings.displayMode || "auto";
+  const alwaysOnTop = panel.querySelector("#homepageSettingsAlwaysOnTop");
+
+  if (brightness) brightness.value = String(settings.brightness ?? 100);
+  if (brightnessValue) brightnessValue.textContent = `${settings.brightness ?? 100}%`;
+  panel.querySelector(`input[name="homepageDisplayMode"][value="${mode}"]`)?.click();
+  if (alwaysOnTop) alwaysOnTop.checked = Boolean(settings.alwaysOnTop);
+}
+
 function ensureSettingsPanel() {
   let panel = document.getElementById("homepageSettingsPanel");
   if (panel) return panel;
 
   ensureSettingsCloseStyle();
+  ensureSettingsRuntimeStyle();
 
   panel = document.createElement("div");
   panel.id = "homepageSettingsPanel";
@@ -133,14 +289,46 @@ function ensureSettingsPanel() {
   `;
 
   panel.innerHTML = `
-    <div style="width:min(420px,100%);background:#fff;border-radius:24px;padding:22px;box-shadow:0 24px 70px rgba(10,35,75,.28);color:#17324d;">
+    <div style="width:min(460px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:24px;padding:22px;box-shadow:0 24px 70px rgba(10,35,75,.28);color:#17324d;">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;">
         <h2 id="homepageSettingsTitle" style="margin:0;font-size:22px;">Beállítások</h2>
         <button id="homepageSettingsClose" type="button" aria-label="Bezárás">×</button>
       </div>
-      <label for="homepageSettingsLanguage" style="display:block;font-weight:800;margin-bottom:8px;">Nyelv</label>
-      <select id="homepageSettingsLanguage" style="width:100%;min-height:46px;padding:10px 12px;border:1px solid #d7e0ea;border-radius:14px;background:#fff;color:#17324d;font:inherit;"></select>
-      <p style="margin:14px 0 0;color:#5e748d;font-size:13px;">A további beállítások később bővíthetők.</p>
+
+      <div class="settings-row" style="margin-top:0;">
+        <label class="settings-label" for="homepageSettingsLanguage">Nyelv</label>
+        <select id="homepageSettingsLanguage" style="width:100%;min-height:46px;padding:10px 12px;border:1px solid #d7e0ea;border-radius:14px;background:#fff;color:#17324d;font:inherit;"></select>
+      </div>
+
+      <div class="settings-row">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+          <label class="settings-label" for="homepageSettingsBrightness">Kijelző fényereje</label>
+          <span id="homepageSettingsBrightnessValue" style="font-weight:800;">100%</span>
+        </div>
+        <input id="homepageSettingsBrightness" type="range" min="60" max="130" step="5" value="100" />
+      </div>
+
+      <fieldset class="settings-row" style="border:0;padding:0;margin-inline:0;">
+        <legend class="settings-label" style="padding:0;margin-bottom:8px;">Megjelenítési mód</legend>
+        <div class="settings-choice-group">
+          <label><input type="radio" name="homepageDisplayMode" value="light" /> Nappali</label>
+          <label><input type="radio" name="homepageDisplayMode" value="dark" /> Éjszakai</label>
+          <label><input type="radio" name="homepageDisplayMode" value="auto" /> Automatikus</label>
+        </div>
+      </fieldset>
+
+      <div class="settings-row">
+        <label class="settings-switch-row" for="homepageSettingsAlwaysOnTop">
+          <input id="homepageSettingsAlwaysOnTop" type="checkbox" />
+          <span>Always on top</span>
+        </label>
+        <p class="settings-hint">A beállítás eltárolható, de böngészőben az ablak tényleges rögzítését az operációs rendszer korlátozhatja.</p>
+      </div>
+
+      <div class="settings-actions">
+        <button id="homepageSettingsShare" class="settings-action-btn" type="button">Megosztás</button>
+        <button id="homepageSettingsLogout" class="settings-action-btn settings-danger" type="button">Kijelentkezés</button>
+      </div>
     </div>
   `;
 
@@ -159,6 +347,51 @@ function ensureSettingsPanel() {
     });
   }
 
+  const brightness = panel.querySelector("#homepageSettingsBrightness");
+  const brightnessValue = panel.querySelector("#homepageSettingsBrightnessValue");
+  brightness?.addEventListener("input", () => {
+    const value = Number(brightness.value);
+    if (brightnessValue) brightnessValue.textContent = `${value}%`;
+    const settings = { ...readSettings(), brightness: value };
+    writeSettings(settings);
+    applyBrightness(value);
+  });
+
+  panel.querySelectorAll('input[name="homepageDisplayMode"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      if (!input.checked) return;
+      const settings = { ...readSettings(), displayMode: input.value };
+      writeSettings(settings);
+      applyDisplayMode(input.value);
+    });
+  });
+
+  panel.querySelector("#homepageSettingsAlwaysOnTop")?.addEventListener("change", (event) => {
+    writeSettings({ ...readSettings(), alwaysOnTop: event.currentTarget.checked });
+  });
+
+  panel.querySelector("#homepageSettingsShare")?.addEventListener("click", async () => {
+    const shareData = {
+      title: "Idesüss",
+      text: "Idesüss — nyilvános videólinkek egyszerűbb megnyitása",
+      url: window.location.origin + window.location.pathname,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareData.url);
+        window.alert("A linket a vágólapra másoltuk.");
+      }
+    } catch (error) {
+      if (error?.name !== "AbortError") console.error("Share failed", error);
+    }
+  });
+
+  panel.querySelector("#homepageSettingsLogout")?.addEventListener("click", () => {
+    document.getElementById("logoutBtnMenu")?.click();
+  });
+
   const close = () => {
     panel.hidden = true;
     panel.style.display = "none";
@@ -171,6 +404,7 @@ function ensureSettingsPanel() {
     if (event.key === "Escape" && !panel.hidden) close();
   });
 
+  syncSettingsControls(panel);
   return panel;
 }
 
@@ -217,6 +451,7 @@ function wireHomepageMenu() {
     setOpen(false);
     const panel = ensureSettingsPanel();
     syncSettingsLanguageSelect(panel);
+    syncSettingsControls(panel);
     panel.hidden = false;
     panel.style.display = "flex";
     panel.querySelector("#homepageSettingsClose")?.focus();
@@ -228,6 +463,7 @@ function wireHomepageMenu() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  restoreHomepageSettings();
   makeHomepageBrandStatic();
   ensureOpenButtonDepth();
   wireHomepageMenu();
@@ -244,6 +480,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   handleRequestedPanel();
+});
+
+window.matchMedia?.("(prefers-color-scheme: dark)")?.addEventListener?.("change", () => {
+  if ((readSettings().displayMode || "auto") === "auto") applyDisplayMode("auto");
 });
 
 window.addEventListener("hashchange", handleRequestedPanel);
