@@ -117,3 +117,34 @@ export function createDevelopmentToneStation() {
     }
   };
 }
+
+
+export function createDevelopmentExternalStation(rawUrl, streamType = "auto") {
+  const input = String(rawUrl || "").trim();
+  if (!input) return null;
+
+  let parsed;
+  try {
+    parsed = new URL(input);
+  } catch {
+    return null;
+  }
+
+  if (parsed.protocol !== "https:") return null;
+
+  const normalizedType = ["auto", "hls", "mp3", "aac", "wav"].includes(String(streamType || "auto").toLowerCase())
+    ? String(streamType || "auto").toLowerCase()
+    : "auto";
+
+  return normalizeRadioStation({
+    id: "idesuss-dev-external",
+    name: "Idesüss External Stream Test",
+    info: "Fejlesztői, nem perzisztált külső stream-probe",
+    streamUrl: parsed.toString(),
+    streamType: normalizedType,
+    enabled: true,
+    catalogManaged: false,
+    distributionStatus: "development_external",
+    sourceStatus: "configured"
+  });
+}
