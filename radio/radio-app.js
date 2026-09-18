@@ -1,11 +1,16 @@
 import { IdesussRadioEngine } from "./radio-engine.js";
 import { loadRadioCapabilities, loadSavedRadioChannels, saveRadioChannel } from "./radio-entitlements.js";
-import { getEnabledRadioStations, normalizeRadioStation } from "./radio-stations.js";
+import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation } from "./radio-stations.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
 const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
 const AVAILABLE_SKINS = new Set(["default", "night-drive", "classic-black"]);
-const STATIONS = getEnabledRadioStations();
+const DEV_AUDIO_MODE = new URLSearchParams(window.location.search).get("dev") === "1";
+const developmentTone = DEV_AUDIO_MODE ? createDevelopmentToneStation() : null;
+const STATIONS = [
+  ...getEnabledRadioStations(),
+  ...(developmentTone?.station ? [developmentTone.station] : [])
+];
 const PRESET_RULES = Array.from({ length: 8 }, (_unused, index) => ({
   slot: index + 1,
   freeStation: index < 2 ? (STATIONS[index] || null) : null
@@ -206,5 +211,8 @@ async function init() {
   }
   renderTier(); renderPresets();
 }
-window.addEventListener("beforeunload",()=>engine.destroy());
+window.addEventListener("beforeunload",()=>{
+  developmentTone?.revoke?.();
+  engine.destroy();
+});
 init();
