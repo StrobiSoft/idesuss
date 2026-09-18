@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { buildDevelopmentToneWav } from "../radio/radio-stations.js";
+import { buildDevelopmentToneWav, createDevelopmentExternalStation } from "../radio/radio-stations.js";
 
 const buffer = buildDevelopmentToneWav({
   durationSeconds: 1,
@@ -35,3 +35,19 @@ for (let offset = 44; offset < buffer.byteLength; offset += 2) {
 assert.ok(hasNonZeroSample, "Generated WAV contains no audible samples");
 
 console.log("Radio development WAV validation OK");
+
+
+const external = createDevelopmentExternalStation("https://example.com/live.mp3", "mp3");
+assert.ok(external, "Expected HTTPS development stream to be accepted");
+assert.equal(external.streamUrl, "https://example.com/live.mp3");
+assert.equal(external.streamType, "mp3");
+assert.equal(external.catalogManaged, false);
+
+assert.equal(createDevelopmentExternalStation("http://example.com/live.mp3", "mp3"), null);
+assert.equal(createDevelopmentExternalStation("javascript:alert(1)", "auto"), null);
+assert.equal(createDevelopmentExternalStation("", "auto"), null);
+
+const fallbackType = createDevelopmentExternalStation("https://example.com/live", "unknown");
+assert.equal(fallbackType.streamType, "auto");
+
+console.log("Radio development external-stream validation OK");
