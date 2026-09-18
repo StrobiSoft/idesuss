@@ -12,6 +12,8 @@ on:
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
       - 'radio/**'
+      - 'tools/validate-radio-dev-audio.mjs'
+      - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
@@ -80,3 +82,5 @@ jobs:
           node --check radio/radio-entitlements.js
           node --check radio/radio-stations.js
           node --check radio/radio-app.js
+      - name: Validate generated radio development audio
+        run: node tools/validate-radio-dev-audio.mjs
