@@ -17,6 +17,11 @@ function handleRequestedPanel() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const radioBtn = document.getElementById("openRadioBtn");
+  radioBtn?.addEventListener("click", () => {
+    window.location.href = "/radio/";
+  });
+
   const profileBtn = document.getElementById("openProfileBtn");
   profileBtn?.addEventListener("click", () => {
     openProfilePanel();
