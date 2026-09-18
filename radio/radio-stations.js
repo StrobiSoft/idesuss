@@ -46,3 +46,74 @@ export function findRadioStationById(id) {
   const wanted = String(id || "").trim();
   return getEnabledRadioStations().find((station) => station.id === wanted) || null;
 }
+
+
+function writeAscii(view, offset, text) {
+  for (let index = 0; index < text.length; index += 1) {
+    view.setUint8(offset + index, text.charCodeAt(index));
+  }
+}
+
+export function buildDevelopmentToneWav({
+  durationSeconds = 4,
+  sampleRate = 22050,
+  frequencyHz = 440,
+  amplitude = 0.18
+} = {}) {
+  const safeDuration = Math.max(1, Math.min(10, Number(durationSeconds) || 4));
+  const safeSampleRate = Math.max(8000, Math.min(48000, Number(sampleRate) || 22050));
+  const safeFrequency = Math.max(100, Math.min(2000, Number(frequencyHz) || 440));
+  const safeAmplitude = Math.max(0.01, Math.min(0.5, Number(amplitude) || 0.18));
+  const sampleCount = Math.floor(safeDuration * safeSampleRate);
+  const bytesPerSample = 2;
+  const dataSize = sampleCount * bytesPerSample;
+  const buffer = new ArrayBuffer(44 + dataSize);
+  const view = new DataView(buffer);
+
+  writeAscii(view, 0, "RIFF");
+  view.setUint32(4, 36 + dataSize, true);
+  writeAscii(view, 8, "WAVE");
+  writeAscii(view, 12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, safeSampleRate, true);
+  view.setUint32(28, safeSampleRate * bytesPerSample, true);
+  view.setUint16(32, bytesPerSample, true);
+  view.setUint16(34, 16, true);
+  writeAscii(view, 36, "data");
+  view.setUint32(40, dataSize, true);
+
+  for (let index = 0; index < sampleCount; index += 1) {
+    const t = index / safeSampleRate;
+    const gate = Math.floor(t * 4) % 2 === 0 ? 1 : 0.45;
+    const envelope = Math.min(1, index / 300, (sampleCount - index) / 300);
+    const sample = Math.sin(2 * Math.PI * safeFrequency * t) * safeAmplitude * gate * Math.max(0, envelope);
+    view.setInt16(44 + index * bytesPerSample, Math.round(sample * 32767), true);
+  }
+
+  return buffer;
+}
+
+export function createDevelopmentToneStation() {
+  const wavBuffer = buildDevelopmentToneWav();
+  const blob = new Blob([wavBuffer], { type: "audio/wav" });
+  const streamUrl = URL.createObjectURL(blob);
+
+  return {
+    station: normalizeRadioStation({
+      id: "idesuss-dev-tone",
+      name: "Idesüss Audio Test",
+      info: "Helyben generált fejlesztői WAV teszthang",
+      streamUrl,
+      streamType: "wav",
+      enabled: true,
+      catalogManaged: false,
+      distributionStatus: "development_generated",
+      sourceStatus: "configured"
+    }),
+    revoke() {
+      URL.revokeObjectURL(streamUrl);
+    }
+  };
+}
