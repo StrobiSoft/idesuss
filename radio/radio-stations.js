@@ -39,7 +39,7 @@ export function normalizeRadioStation(station) {
 }
 
 export function getEnabledRadioStations() {
-  return RADIO_STATIONS.map(normalizeRadioStation).filter((station) => station?.enabled);
+  return RADIO_STATIONS.map(normalizeRadioStation).filter((station) => station?.enabled && station.sourceStatus !== "blocked_unapproved_source");
 }
 
 export function findRadioStationById(id) {
