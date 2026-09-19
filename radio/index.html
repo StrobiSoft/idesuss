@@ -50,7 +50,7 @@
       <div class="face-head">
         <div>
           <h1>📻 Rádió</h1>
-          <p class="subtitle">HTML5 rádiómotor — első bekötött fejlesztői változat</p>
+          <p class="subtitle">HTML5 rádiómotor, presetek és jogosultságalapú rádiófelület</p>
         </div>
         <div class="tier">
           <span id="tierBadge" class="badge">Betöltés…</span>
@@ -66,7 +66,7 @@
         <div>
           <div class="eyebrow">Live radio</div>
           <div id="nowPlaying" class="now">Nincs kiválasztott állomás</div>
-          <div id="radioStatus" class="status">Válassz egy állomást a listából.</div>
+          <div id="radioStatus" class="status" role="status" aria-live="polite">Válassz egy állomást a listából, vagy indíts hangtesztet.</div>
         </div>
         <div class="volume-wrap">
           <label for="volumeSlider">Hangerő</label>
@@ -77,6 +77,7 @@
       <div class="transport">
         <button id="playPauseBtn" class="primary" type="button">▶ Lejátszás</button>
         <button id="stopBtn" type="button">■ Leállítás</button>
+        <button id="audioTestBtn" type="button">🔊 Hangteszt</button>
       </div>
 
       <div class="section-title">Állomások</div>
@@ -87,7 +88,7 @@
       <div id="saveHint" class="note"></div>
 
       <div class="note">
-        A motor már valódi HTML5 audio- és HLS-forrást tud kezelni. A jelenlegi mintaállomásokhoz még nincs tényleges stream URL hozzárendelve; ezért a vezérlés bekötött, de hang csak streamforrás megadása után lesz.
+        A rádiómotor HTML5 audio- és HLS-forrást kezel. A beépített katalógusban csak jóváhagyott terjesztési státuszú stream jelenhet meg; a Hangteszt külső forrás nélkül ellenőrzi a lejátszómotort.
       </div>
     </section>
   </main>
