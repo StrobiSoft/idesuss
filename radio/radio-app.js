@@ -36,6 +36,7 @@ let selectedStation = null;
 let radioClient = null;
 let radioUser = null;
 let savedPresets = {};
+let audioTestTone = null;
 
 const $ = (selector) => document.querySelector(selector);
 function appendTextElement(parent, tagName, text) {
@@ -117,7 +118,7 @@ function renderStations() {
   const host=$("#stationList"); if (!host) return; host.replaceChildren();
   if (!STATIONS.length) {
     const empty=document.createElement("div"); empty.className="note";
-    empty.textContent="Nincs engedélyezett rádióállomás a katalógusban.";
+    empty.textContent="Jóváhagyott élő rádióforrás még nincs a katalógusban. A lejátszómotor a Hangteszt gombbal kipróbálható.";
     host.appendChild(empty); return;
   }
   STATIONS.forEach((station)=>{
@@ -173,6 +174,18 @@ function bindControls() {
     }
   });
   $("#stopBtn")?.addEventListener("click",()=>engine.stop());
+  $("#audioTestBtn")?.addEventListener("click",async()=>{
+    try {
+      audioTestTone?.revoke?.();
+      audioTestTone=createDevelopmentToneStation();
+      await selectStation(audioTestTone.station,"Helyi hangteszt betöltve…");
+      await engine.play();
+      setStatus("Hangteszt fut — a rádiómotor és a hangerőszabályzás működik.");
+    } catch (error) {
+      console.error("Radio audio self-test failed",error);
+      setStatus(`Hangteszt hiba: ${error.message}`);
+    }
+  });
   const volume=$("#volumeSlider");
   if (volume) {
     volume.value=String(Math.round(initialVolume*100));
@@ -218,6 +231,7 @@ async function init() {
 }
 window.addEventListener("beforeunload",()=>{
   developmentTone?.revoke?.();
+  audioTestTone?.revoke?.();
   engine.destroy();
 });
 init();
