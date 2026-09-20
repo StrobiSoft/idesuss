@@ -67,7 +67,7 @@ function normalizeNameForMatch(value) {
   return String(value || "")
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/gi, "")
+    .replace(/[^\p{L}\p{N}]+/gu, "")
     .toLowerCase();
 }
 
