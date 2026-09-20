@@ -20,19 +20,19 @@ for (const token of forbiddenRootTokens) {
   }
 }
 
-if (!html.includes('<script type="module" src="./js/menu/menu-core.js"></script>')) {
+if (!/<script\s+type=["']module["']\s+src=["']\.\/js\/menu\/menu-core\.js(?:\?[^"']*)?["']><\/script>/.test(html)) {
   throw new Error('Root page must initialize auth/profile only through js/menu/menu-core.js.');
 }
 
-if (!authController.includes('from "./auth-shell.js"')) {
+if (!/from\s+["']\.\/auth-shell\.js(?:\?[^"']*)?["']/.test(authController)) {
   throw new Error('Root auth controller must own the shared auth shell.');
 }
 
-if (!authController.includes('from "../shared/auth-service.js"')) {
+if (!/from\s+["']\.\.\/shared\/auth-service\.js(?:\?[^"']*)?["']/.test(authController)) {
   throw new Error('Root auth controller must use the shared auth service.');
 }
 
-if (!authController.includes('from "../shared/profile-service.js"')) {
+if (!/from\s+["']\.\.\/shared\/profile-service\.js(?:\?[^"']*)?["']/.test(authController)) {
   throw new Error('Root auth controller must use the shared profile service.');
 }
 
