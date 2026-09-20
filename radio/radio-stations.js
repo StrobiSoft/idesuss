@@ -1,15 +1,135 @@
-export const RADIO_STATIONS = Object.freeze([
-  Object.freeze({
-    id: "idesuss-1", name: "Idesüss Radio 1", info: "Első beépített csatornahely",
-    streamUrl: "", streamType: "auto", enabled: true, catalogManaged: true,
-    distributionStatus: "placeholder", sourceStatus: "unconfigured"
-  }),
-  Object.freeze({
-    id: "idesuss-2", name: "Idesüss Radio 2", info: "Második beépített csatornahely",
-    streamUrl: "", streamType: "auto", enabled: true, catalogManaged: true,
-    distributionStatus: "placeholder", sourceStatus: "unconfigured"
-  })
+export const RADIO_STATIONS = Object.freeze([]);
+
+export const RADIO_FAVORITES_BY_LOCALE = Object.freeze({
+  hu: Object.freeze({ id: "fav-hu-retro", name: "Retro Rádió", directoryName: "Retro Rádió", countryCode: "HU" }),
+  en: Object.freeze({ id: "fav-en-bbc-radio-2", name: "BBC Radio 2", directoryName: "BBC Radio 2", countryCode: "GB" }),
+  nl: Object.freeze({ id: "fav-nl-npo-radio-2", name: "NPO Radio 2", directoryName: "NPO Radio 2", countryCode: "NL" }),
+  ro: Object.freeze({ id: "fav-ro-kiss-fm", name: "Kiss FM", directoryName: "Kiss FM", countryCode: "RO" }),
+  pl: Object.freeze({ id: "fav-pl-rmf-fm", name: "RMF FM", directoryName: "RMF FM", countryCode: "PL" }),
+  hr: Object.freeze({ id: "fav-hr-bravo", name: "bravo!", directoryName: "bravo!", countryCode: "HR" }),
+  be: Object.freeze({ id: "fav-be-radio-roks", name: "Радио РОКС", directoryName: "Радио РОКС", countryCode: "BY" })
+});
+
+const RADIO_DIRECTORY_ENDPOINTS = Object.freeze([
+  "https://de1.api.radio-browser.info",
+  "https://nl1.api.radio-browser.info"
 ]);
+
+function normalizedLocale(raw) {
+  const value = String(raw || "").trim().toLowerCase();
+  if (!value) return "";
+  return value.split(/[-_]/)[0];
+}
+
+export function detectRadioLocale() {
+  const candidates = [
+    window.localStorage?.getItem("idesuss_home_lang"),
+    window.localStorage?.getItem("ides_lang"),
+    document.documentElement?.lang,
+    window.navigator?.language
+  ];
+  for (const candidate of candidates) {
+    const locale = normalizedLocale(candidate);
+    if (RADIO_FAVORITES_BY_LOCALE[locale]) return locale;
+  }
+  return "hu";
+}
+
+export function getLocaleFavoriteStationSeed(locale = detectRadioLocale()) {
+  const config = RADIO_FAVORITES_BY_LOCALE[normalizedLocale(locale)] || RADIO_FAVORITES_BY_LOCALE.hu;
+  return normalizeRadioStation({
+    id: config.id,
+    name: config.name,
+    info: "Ajánlott kezdőállomás",
+    streamUrl: "",
+    streamType: "auto",
+    enabled: true,
+    catalogManaged: true,
+    distributionStatus: "approved",
+    sourceStatus: "resolving",
+    directoryName: config.directoryName,
+    countryCode: config.countryCode,
+    preferredLocale: normalizedLocale(locale) || "hu",
+    isLocaleFavorite: true
+  });
+}
+
+function inferStreamType(row) {
+  if (Number(row?.hls) === 1) return "hls";
+  const codec = String(row?.codec || "").trim().toLowerCase();
+  if (codec.includes("aac")) return "aac";
+  if (codec.includes("mp3") || codec.includes("mpeg")) return "mp3";
+  if (codec.includes("wav")) return "wav";
+  return "auto";
+}
+
+function normalizeNameForMatch(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/gi, "")
+    .toLowerCase();
+}
+
+function pickBestDirectoryMatch(rows, seed) {
+  const wanted = normalizeNameForMatch(seed.directoryName || seed.name);
+  const candidates = (rows || []).filter((row) => {
+    const resolved = String(row?.url_resolved || row?.url || "").trim();
+    if (!resolved) return false;
+    try {
+      return new URL(resolved).protocol === "https:";
+    } catch {
+      return false;
+    }
+  });
+  if (!candidates.length) return null;
+  const exact = candidates.find((row) => normalizeNameForMatch(row?.name) === wanted);
+  return exact || candidates[0];
+}
+
+export async function resolveFavoriteStation(seed) {
+  if (!seed?.directoryName || !seed?.countryCode) return null;
+  const params = new URLSearchParams({
+    name: seed.directoryName,
+    countrycode: seed.countryCode,
+    hidebroken: "true",
+    is_https: "true",
+    order: "clickcount",
+    reverse: "true",
+    limit: "10"
+  });
+
+  let lastError = null;
+  for (const endpoint of RADIO_DIRECTORY_ENDPOINTS) {
+    try {
+      const response = await fetch(`${endpoint}/json/stations/search?${params.toString()}`, {
+        headers: { Accept: "application/json" },
+        cache: "no-store"
+      });
+      if (!response.ok) throw new Error(`DIRECTORY_HTTP_${response.status}`);
+      const rows = await response.json();
+      const match = pickBestDirectoryMatch(rows, seed);
+      if (!match) continue;
+
+      return normalizeRadioStation({
+        ...seed,
+        name: String(match.name || seed.name).trim() || seed.name,
+        info: seed.info || "Ajánlott kezdőállomás",
+        streamUrl: String(match.url_resolved || match.url || "").trim(),
+        streamType: inferStreamType(match),
+        artwork: String(match.favicon || "").trim(),
+        homepage: String(match.homepage || "").trim(),
+        sourceStatus: "configured",
+        directoryStationUuid: String(match.stationuuid || "").trim()
+      });
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (lastError) throw lastError;
+  return null;
+}
 
 export function normalizeRadioStation(station) {
   if (!station || typeof station !== "object") return null;
@@ -34,7 +154,12 @@ export function normalizeRadioStation(station) {
       ? String(station.sourceStatus || (streamUrl ? "configured" : "unconfigured")).trim()
       : "blocked_unapproved_source",
     artwork: station.artwork ? String(station.artwork).trim() : "",
-    homepage: station.homepage ? String(station.homepage).trim() : ""
+    homepage: station.homepage ? String(station.homepage).trim() : "",
+    directoryName: station.directoryName ? String(station.directoryName).trim() : "",
+    countryCode: station.countryCode ? String(station.countryCode).trim().toUpperCase() : "",
+    preferredLocale: station.preferredLocale ? String(station.preferredLocale).trim().toLowerCase() : "",
+    isLocaleFavorite: Boolean(station.isLocaleFavorite),
+    directoryStationUuid: station.directoryStationUuid ? String(station.directoryStationUuid).trim() : ""
   };
 }
 
