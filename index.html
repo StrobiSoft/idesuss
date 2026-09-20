@@ -11,7 +11,7 @@
   <meta name="theme-color" content="#0d5bd7" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="icon" href="/favicon.png" />
-  <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />\n  <link rel="stylesheet" href="/fx-rates.css" />
 
   <style>
     :root {
@@ -1180,6 +1180,45 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
     </div>
   </header>
 
+  <section class="fx-strip" aria-labelledby="fxTitle">
+    <div class="container">
+      <div class="fx-card">
+        <div class="fx-card-head">
+          <h2 id="fxTitle" class="fx-title">Napi hivatalos árfolyamok</h2>
+          <div class="fx-source">
+            <span id="fxSourceDate">MNB napi hivatalos árfolyam</span>
+            · <span id="fxStatus" class="fx-status">betöltés…</span>
+          </div>
+        </div>
+
+        <div class="fx-grid" aria-live="polite">
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="EUR">EUR/HUF</span>
+            <strong class="fx-value" data-fx-value="EUR">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="USD">USD/HUF</span>
+            <strong class="fx-value" data-fx-value="USD">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="GBP">GBP/HUF</span>
+            <strong class="fx-value" data-fx-value="GBP">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="CHF">CHF/HUF</span>
+            <strong class="fx-value" data-fx-value="CHF">—</strong>
+          </div>
+        </div>
+
+        <p class="fx-note">
+          Forrás: Magyar Nemzeti Bank. Az MNB a hivatalos devizaárfolyamokat munkanapokon
+          11:00-kor állapítja meg; ezek a következő hivatalos közzétételig érvényesek.
+          Az Idesüss a napon belüli piaci ingadozást nem követi.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <main id="top">
     <section class="hero">
       <div class="container">
@@ -1817,7 +1856,7 @@ if (closeViewerBtn && viewerShell && viewerFrame) {
 </script>
 
 
-<script type="module" src="./js/menu/menu-core.js"></script>
+<script type="module" src="./js/fx-rates.js"></script>\n<script type="module" src="./js/menu/menu-core.js"></script>
 
 </body>
 </html>
