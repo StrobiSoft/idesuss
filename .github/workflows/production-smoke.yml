@@ -12,20 +12,60 @@ permissions:
 jobs:
   production-smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 3
     steps:
       - name: Wait briefly for Pages deployment
-        run: sleep 60
+        run: sleep 45
 
-      - name: Resolve production domain
+      - name: Inspect production DNS
         run: |
           set -euxo pipefail
-          getent ahosts idesuss.net
+          echo "=== A ==="
+          dig +short A idesuss.net
+          echo "=== AAAA ==="
+          dig +short AAAA idesuss.net
+          echo "=== CNAME ==="
+          dig +short CNAME idesuss.net
+          echo "=== NS ==="
+          dig +short NS idesuss.net
+
+      - name: Verify GitHub Pages DNS target
+        run: |
+          set -euxo pipefail
+          mapfile -t ips < <(dig +short A idesuss.net | sort -u)
+          printf 'Resolved IPv4 addresses:\n%s\n' "${ips[*]:-<none>}"
+
+          expected=(
+            185.199.108.153
+            185.199.109.153
+            185.199.110.153
+            185.199.111.153
+          )
+
+          if [ "${#ips[@]}" -eq 0 ]; then
+            echo "No IPv4 address resolved for idesuss.net" >&2
+            exit 1
+          fi
+
+          for ip in "${ips[@]}"; do
+            matched=false
+            for github_ip in "${expected[@]}"; do
+              if [ "$ip" = "$github_ip" ]; then
+                matched=true
+                break
+              fi
+            done
+            if [ "$matched" != true ]; then
+              echo "Unexpected production A record: $ip" >&2
+              echo "Expected GitHub Pages A records: ${expected[*]}" >&2
+              exit 1
+            fi
+          done
 
       - name: Check production HTTPS
         run: |
           set -euxo pipefail
-          curl             --fail             --show-error             --silent             --location             --retry 12             --retry-all-errors             --retry-delay 10             --max-time 20             https://idesuss.net/             -o /tmp/idesuss-production.html
+          curl             --fail             --show-error             --silent             --location             --connect-timeout 10             --max-time 20             https://idesuss.net/             -o /tmp/idesuss-production.html
 
           grep -q "Idesüss" /tmp/idesuss-production.html
           echo "Production homepage is reachable and contains the expected Idesüss marker."
