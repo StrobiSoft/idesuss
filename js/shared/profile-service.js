@@ -159,6 +159,86 @@ export async function saveMyProfile(supabaseClient, changes = {}) {
   return saveMyProfileLegacy(client, user, profile, changes);
 }
 
+export const APPROVED_AVATAR_EMOJIS = Object.freeze([
+  "🙂", "😎", "🤠", "🧑‍💻", "🚚", "🎧",
+  "🦊", "🐼", "🦁", "🐯", "🤖", "👽"
+]);
+
+const AVATAR_SUBMISSION_BUCKET = "avatar-submissions";
+const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
+const AVATAR_ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
+export function validateAvatarFile(file) {
+  if (!file) return { ok: false, reason: "NO_FILE" };
+  if (!AVATAR_ALLOWED_TYPES.has(file.type)) return { ok: false, reason: "TYPE" };
+  if (file.size > AVATAR_MAX_BYTES) return { ok: false, reason: "SIZE" };
+  return { ok: true, reason: null };
+}
+
+function avatarExtension(file) {
+  if (file.type === "image/png") return "png";
+  if (file.type === "image/webp") return "webp";
+  return "jpg";
+}
+
+export async function uploadAvatarSubmission(supabaseClient, file) {
+  const client = requireClient(supabaseClient);
+  const user = await getCurrentUser(client);
+  if (!user) throw profileError("AUTH_REQUIRED");
+
+  const validation = validateAvatarFile(file);
+  if (!validation.ok) throw profileError(`AVATAR_${validation.reason}`);
+
+  const randomPart = globalThis.crypto?.randomUUID?.() || Math.random().toString(36).slice(2);
+  const path = `${user.id}/${Date.now()}-${randomPart}.${avatarExtension(file)}`;
+
+  const { error: uploadError } = await client.storage
+    .from(AVATAR_SUBMISSION_BUCKET)
+    .upload(path, file, {
+      cacheControl: "3600",
+      contentType: file.type,
+      upsert: false
+    });
+
+  if (uploadError) throw uploadError;
+
+  const { data, error: insertError } = await client
+    .from("avatar_submissions")
+    .insert({
+      user_id: user.id,
+      storage_path: path,
+      original_filename: String(file.name || "").slice(0, 255),
+      mime_type: file.type,
+      status: "pending",
+      rules_version: "2026-09-20-v1"
+    })
+    .select("id,status,created_at")
+    .single();
+
+  if (insertError) {
+    await client.storage.from(AVATAR_SUBMISSION_BUCKET).remove([path]).catch(() => {});
+    throw insertError;
+  }
+
+  return data;
+}
+
+export async function loadMyAvatarSubmissions(supabaseClient) {
+  const client = requireClient(supabaseClient);
+  const user = await getCurrentUser(client);
+  if (!user) return [];
+
+  const { data, error } = await client
+    .from("avatar_submissions")
+    .select("id,status,created_at,reviewed_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (error) throw error;
+  return data || [];
+}
+
 export async function loadMyProfile(supabaseClient) {
   return ensureMyProfile(supabaseClient);
 }
