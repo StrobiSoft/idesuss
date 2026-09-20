@@ -145,6 +145,75 @@
             justify-content: flex-end;
             align-items: center;
             gap: 8px;
+            position: relative;
+        }
+
+        .app-menu-wrap {
+            position: relative;
+            flex: 0 0 auto;
+        }
+
+        .app-menu-toggle {
+            width: 46px;
+            height: 46px;
+            min-width: 46px;
+            border: 1px solid rgba(125, 211, 252, 0.28);
+            border-radius: 14px;
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            padding: 0;
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 28px rgba(14,165,233,0.24);
+        }
+
+        .app-menu-toggle:hover {
+            box-shadow: 0 14px 32px rgba(14,165,233,0.32);
+        }
+
+        .app-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            z-index: 80;
+            width: min(260px, calc(100vw - 32px));
+            display: none;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 18px;
+            background: rgba(15, 23, 42, 0.97);
+            box-shadow: 0 22px 55px rgba(0,0,0,0.46);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .app-menu.show {
+            display: grid;
+        }
+
+        .app-menu-link {
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 13px;
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 13px;
+            background: rgba(255,255,255,0.06);
+            color: #f8fafc;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .app-menu-link:hover {
+            background: rgba(255,255,255,0.11);
+            border-color: rgba(125,211,252,0.25);
         }
 
         .install-btn,
@@ -723,6 +792,14 @@
                         <option value="pl">🇵🇱 Polski</option>
                     </select>
                 </div>
+
+                <div class="app-menu-wrap">
+                    <button id="appMenuToggle" class="app-menu-toggle" type="button" aria-label="Menü" aria-expanded="false" aria-controls="appMenu">☰</button>
+                    <nav id="appMenu" class="app-menu" aria-label="Idesüss menü">
+                        <a id="appMenuHome" class="app-menu-link" href="/"><span aria-hidden="true">🏠</span><span>Főoldal</span></a>
+                        <a id="appMenuRadio" class="app-menu-link" href="/radio/"><span aria-hidden="true">📻</span><span>Rádió</span></a>
+                    </nav>
+                </div>
             </div>
         </div>
 
@@ -840,7 +917,11 @@
             playerCard: document.getElementById('playerCard'),
             inputCard: document.getElementById('inputCard'),
             ytFrame: document.getElementById('ytFrame'),
-            goBtn: document.getElementById('goBtn')
+            goBtn: document.getElementById('goBtn'),
+            appMenuToggle: document.getElementById('appMenuToggle'),
+            appMenu: document.getElementById('appMenu'),
+            appMenuHome: document.getElementById('appMenuHome'),
+            appMenuRadio: document.getElementById('appMenuRadio')
         };
 
         let currentLang = detectInitialLanguage();
@@ -882,8 +963,27 @@
             return dict[key] || fallback || key;
         }
 
+        const MENU_LABELS = {
+            hu: { home: 'Főoldal', radio: 'Rádió', menu: 'Menü' },
+            en: { home: 'Home', radio: 'Radio', menu: 'Menu' },
+            nl: { home: 'Startpagina', radio: 'Radio', menu: 'Menu' },
+            ro: { home: 'Pagina principală', radio: 'Radio', menu: 'Meniu' },
+            pl: { home: 'Strona główna', radio: 'Radio', menu: 'Menu' },
+            be: { home: 'Галоўная', radio: 'Радыё', menu: 'Меню' }
+        };
+
+        function updateAppMenuLanguage() {
+            const labels = MENU_LABELS[currentLang] || MENU_LABELS.en;
+            const homeLabel = els.appMenuHome?.querySelector('span:last-child');
+            const radioLabel = els.appMenuRadio?.querySelector('span:last-child');
+            if (homeLabel) homeLabel.textContent = labels.home;
+            if (radioLabel) radioLabel.textContent = labels.radio;
+            if (els.appMenuToggle) els.appMenuToggle.setAttribute('aria-label', labels.menu);
+        }
+
         function applyLanguage() {
             document.documentElement.lang = currentLang;
+            updateAppMenuLanguage();
             document.getElementById('aboutCloseBtn').textContent = t('aboutCloseBtn', 'OK');
 
             els.brandSub.textContent = '';
@@ -1338,6 +1438,26 @@
         window.addEventListener('appinstalled', () => {
             deferredInstallPrompt = null;
             updateInstallButtonVisibility();
+        });
+
+        function setAppMenuOpen(open) {
+            if (!els.appMenu || !els.appMenuToggle) return;
+            els.appMenu.classList.toggle('show', Boolean(open));
+            els.appMenuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        els.appMenuToggle?.addEventListener('click', (event) => {
+            event.stopPropagation();
+            setAppMenuOpen(!els.appMenu?.classList.contains('show'));
+        });
+
+        els.appMenu?.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+
+        document.addEventListener('click', () => setAppMenuOpen(false));
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') setAppMenuOpen(false);
         });
 
         window.addEventListener('focus', tryAutoPasteFromClipboard);
