@@ -23,7 +23,7 @@
     button,select,input{font:inherit}
     .shell{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:22px 0 38px}
     .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .brand{font-weight:900;font-size:1.2rem;letter-spacing:.02em}.back{border:1px solid #35506d;border-radius:12px;padding:10px 14px;font-weight:800;background:#132033;color:#eaf4ff;cursor:pointer}
+    .brand{font-weight:900;font-size:1.2rem;letter-spacing:.02em}.top-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.back{border:1px solid #35506d;border-radius:12px;padding:10px 14px;font-weight:800;background:#132033;color:#eaf4ff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
     .radio-face{border:1px solid #33465d;border-radius:24px;background:linear-gradient(180deg,#172335,#0f1825);box-shadow:0 28px 70px rgba(0,0,0,.42);padding:20px}
     .face-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:16px;flex-wrap:wrap}
     h1{margin:0;font-size:1.5rem}.subtitle{margin:5px 0 0;color:var(--muted)}
@@ -43,14 +43,17 @@
   <main class="shell">
     <div class="top">
       <div class="brand">Idesüss™ Radio</div>
-      <button class="back" type="button" onclick="location.href='../'">← Főoldal</button>
+      <div class="top-nav">
+        <a class="back" href="../">← Főoldal</a>
+        <a class="back" href="../app/">▶ Webapp</a>
+      </div>
     </div>
 
     <section class="radio-face" aria-label="Idesüss rádió">
       <div class="face-head">
         <div>
           <h1>📻 Rádió</h1>
-          <p class="subtitle">HTML5 rádiómotor, presetek és jogosultságalapú rádiófelület</p>
+          <p class="subtitle">HTML5 rádiómotor, presetek és jogosultságalapú rádiófelület. Az Idesüss Demo helyben generált hangmintával azonnal kipróbálható.</p>
         </div>
         <div class="tier">
           <span id="tierBadge" class="badge">Betöltés…</span>
@@ -88,7 +91,7 @@
       <div id="saveHint" class="note"></div>
 
       <div class="note">
-        A rádiómotor HTML5 audio- és HLS-forrást kezel. A beépített katalógusban csak jóváhagyott terjesztési státuszú stream jelenhet meg; a Hangteszt külső forrás nélkül ellenőrzi a lejátszómotort.
+        A rádiómotor HTML5 audio- és HLS-forrást kezel. Az Idesüss Demo és a Hangteszt külső stream nélkül ellenőrzi a teljes lejátszási láncot. Élő rádióforrás csak jóváhagyott terjesztési státusszal kerülhet a beépített katalógusba.
       </div>
     </section>
   </main>
