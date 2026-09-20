@@ -99,6 +99,7 @@ async function selectStation(station,message=null) {
   const normalized=normalizeRadioStation(station);
   if (!normalized) { setStatus("Érvénytelen rádióállomás-adat."); return; }
   selectedStation=normalized;
+  engine.audio.loop = normalized.id === "idesuss-demo-tone";
   try {
     $("#nowPlaying").textContent=normalized.name;
     if (message) setStatus(message);
@@ -131,7 +132,13 @@ function renderStations() {
   STATIONS.forEach((station)=>{
     const button=document.createElement("button"); button.type="button"; button.className="station";
     appendTextElement(button,"strong",station.name);
-    appendTextElement(button,"span",station.info||"Rádióállomás");
+    appendTextElement(
+      button,
+      "span",
+      station.sourceStatus === "unconfigured"
+        ? `${station.info || "Rádióállomás"} · Élő stream még nincs bekötve`
+        : (station.info || "Rádióállomás")
+    );
     button.addEventListener("click",()=>selectStation(station));
     host.appendChild(button);
   });
