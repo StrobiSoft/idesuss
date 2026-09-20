@@ -39,6 +39,9 @@
     .badge{font-size:.78rem;font-weight:900;padding:5px 9px;border-radius:999px;background:#e7f0ff;color:#0d5bd7;white-space:nowrap}
     .idea-date{margin-top:8px;font-size:.82rem;color:var(--muted)}
     .privacy{font-size:.9rem;color:var(--muted);margin-top:16px}
+    .anon-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid #dce7f3;border-radius:14px;background:#f8fbff;font-weight:700}
+    .anon-option input{width:18px;height:18px;margin:2px 0 0;flex:0 0 auto}
+    .anon-option small{display:block;margin-top:4px;color:var(--muted);font-weight:600;line-height:1.45}
   </style>
 </head>
 <body>
@@ -69,6 +72,13 @@
         <textarea id="ideaBody" name="body" maxlength="5000" minlength="10" required placeholder="Írd le, mit változtatnál, mit adnál hozzá, és ha fontos, azt is, hogy szerinted miért lenne hasznos."></textarea>
         <span id="bodyCounter" class="counter">0 / 5000</span>
       </label>
+      <label class="anon-option">
+        <input id="anonymousToReviewers" type="checkbox" />
+        <span>
+          Név nélkül szeretném beküldeni.
+          <small>Alapértelmezésben az ötlet a profilneveddel együtt kerül hozzánk. Ha ezt bejelölöd, a normál értékelés során nem jelenítjük meg a nevedet. A beküldés technikailag továbbra is a fiókodhoz kötődik, hogy visszaélés, zaklatás vagy szabálysértés esetén szükség esetén visszakövethető legyen.</small>
+        </span>
+      </label>
       <button id="submitBtn" type="submit">Ötlet beküldése</button>
     </form>
     <div id="submitStatus" class="status" aria-live="polite"></div>
@@ -95,6 +105,7 @@ const submitBtn = document.getElementById("submitBtn");
 const titleEl = document.getElementById("ideaTitle");
 const bodyEl = document.getElementById("ideaBody");
 const bodyCounter = document.getElementById("bodyCounter");
+const anonymousToReviewers = document.getElementById("anonymousToReviewers");
 const myIdeasCard = document.getElementById("myIdeasCard");
 const myIdeas = document.getElementById("myIdeas");
 
@@ -176,7 +187,8 @@ form.addEventListener("submit", async (event) => {
   const { error } = await client.from("idea_submissions").insert({
     user_id: currentUser.id,
     title,
-    body
+    body,
+    anonymous_to_reviewers: Boolean(anonymousToReviewers?.checked)
   });
 
   submitBtn.disabled = false;
