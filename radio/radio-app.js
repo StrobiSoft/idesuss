@@ -1,6 +1,6 @@
 import { IdesussRadioEngine } from "./radio-engine.js";
 import { loadRadioCapabilities, loadSavedRadioChannels, saveRadioChannel } from "./radio-entitlements.js";
-import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation, createDevelopmentExternalStation } from "./radio-stations.js";
+import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation, createDevelopmentExternalStation, getLocaleFavoriteStationSeed, resolveFavoriteStation } from "./radio-stations.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
 const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
@@ -12,21 +12,42 @@ const developmentTone = DEV_AUDIO_MODE ? createDevelopmentToneStation() : null;
 const developmentExternalStation = DEV_AUDIO_MODE
   ? createDevelopmentExternalStation(DEV_PARAMS.get("stream"), DEV_PARAMS.get("type") || "auto")
   : null;
-const STATIONS = [
-  ...getEnabledRadioStations(),
-  ...(productionDemoTone?.station ? [{
+let STATIONS = [];
+let PRESET_RULES = [];
+
+async function prepareStations() {
+  const localeFavoriteSeed = getLocaleFavoriteStationSeed();
+  let localeFavorite = null;
+
+  try {
+    localeFavorite = await resolveFavoriteStation(localeFavoriteSeed);
+  } catch (error) {
+    console.warn("Locale radio favorite could not be resolved", error);
+  }
+
+  const builtInStations = getEnabledRadioStations();
+  const demoStation = productionDemoTone?.station ? {
     ...productionDemoTone.station,
     id: "idesuss-demo-tone",
     name: "Idesüss Demo",
     info: "Helyben generált hangminta — a rádiómotor azonnali kipróbálásához"
-  }] : []),
-  ...(developmentTone?.station ? [developmentTone.station] : []),
-  ...(developmentExternalStation ? [developmentExternalStation] : [])
-];
-const PRESET_RULES = Array.from({ length: 8 }, (_unused, index) => ({
-  slot: index + 1,
-  freeStation: index < 2 ? (STATIONS[index] || null) : null
-}));
+  } : null;
+
+  STATIONS = [
+    ...(localeFavorite ? [localeFavorite] : []),
+    ...builtInStations.filter((station) => !localeFavorite || station.id !== localeFavorite.id),
+    ...(demoStation ? [demoStation] : []),
+    ...(developmentTone?.station ? [developmentTone.station] : []),
+    ...(developmentExternalStation ? [developmentExternalStation] : [])
+  ];
+
+  PRESET_RULES = Array.from({ length: 8 }, (_unused, index) => ({
+    slot: index + 1,
+    freeStation: index === 0 ? (localeFavorite || null) : null
+  }));
+
+  return localeFavorite;
+}
 const STREAM_STATE_TEXT = {
   loading:"Streamforrás betöltése…", ready:"A stream készen áll a lejátszásra.",
   buffering:"Pufferelés…", stalled:"A stream nem küld adatot; várakozás az újracsatlakozásra…",
@@ -229,15 +250,23 @@ function bindEngineEvents() {
   engine.addEventListener("error",(event)=>setStatus(event.detail?.message||"Rádióhiba történt."));
 }
 async function init() {
-  renderStations(); bindControls(); bindEngineEvents();
+  bindControls(); bindEngineEvents();
 
-  const demoStation = STATIONS.find((station) => station.id === "idesuss-demo-tone") || null;
-  if (demoStation) {
+  const localeFavorite = await prepareStations();
+  renderStations();
+
+  const initialStation = localeFavorite || STATIONS.find((station) => station.id === "idesuss-demo-tone") || STATIONS[0] || null;
+  if (initialStation) {
     await selectStation(
-      demoStation,
-      "A rádiómotor készen áll. Nyomd meg a Lejátszás gombot az Idesüss Demo hangmintához."
+      initialStation,
+      localeFavorite
+        ? `${localeFavorite.name} készen áll. Nyomd meg a Lejátszás gombot az élő adáshoz.`
+        : "A rádiómotor készen áll. Nyomd meg a Lejátszás gombot az Idesüss Demo hangmintához."
     );
+  } else {
+    setStatus("Jelenleg nincs elérhető rádióállomás.");
   }
+
   try {
     const result=await loadRadioCapabilities();
     capabilities=result.capabilities; radioClient=result.client; radioUser=result.user;
