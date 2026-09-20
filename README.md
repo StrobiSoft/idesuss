@@ -33,6 +33,6 @@ This is both a privacy feature and an operational principle: data that is never 
 
 ## Daily exchange rates
 
-The public homepage also shows the official daily MNB exchange rates for EUR/HUF, USD/HUF, GBP/HUF and CHF/HUF.
+The public homepage also shows the official daily MNB mid-market reference rates for EUR/HUF, USD/HUF, GBP/HUF and CHF/HUF.
 
 These are not intraday market quotes. The Magyar Nemzeti Bank fixes the official rates at 11:00 on MNB business days; the published values remain valid until the next official fixing. The Idesüss UI labels this limitation explicitly.
