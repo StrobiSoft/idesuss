@@ -1,6 +1,7 @@
 import { IdesussRadioEngine } from "./radio-engine.js";
 import { loadRadioCapabilities, loadSavedRadioChannels, saveRadioChannel } from "./radio-entitlements.js";
-import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation, createDevelopmentExternalStation, getLocaleFavoriteStationSeed, resolveFavoriteStation } from "./radio-stations.js";
+import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation, createDevelopmentExternalStation, getLocaleFavoriteStationSeed, resolveFavoriteStation, detectRadioLocale } from "./radio-stations.js";
+import { loadSharedRadioCatalog } from "./radio-api-client.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
 const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
@@ -16,16 +17,35 @@ let STATIONS = [];
 let PRESET_RULES = [];
 
 async function prepareStations() {
-  const localeFavoriteSeed = getLocaleFavoriteStationSeed();
+  const locale = detectRadioLocale();
   let localeFavorite = null;
+  let sharedStations = null;
 
   try {
-    localeFavorite = await resolveFavoriteStation(localeFavoriteSeed);
+    sharedStations = await loadSharedRadioCatalog(locale);
   } catch (error) {
-    console.warn("Locale radio favorite could not be resolved", error);
+    console.warn("Shared radio catalog could not be loaded", error);
   }
 
-  const builtInStations = getEnabledRadioStations();
+  if (sharedStations?.length) {
+    const normalizedShared = sharedStations.map(normalizeRadioStation).filter(Boolean);
+    localeFavorite = normalizedShared.find((station) => station.isLocaleFavorite) || normalizedShared[0] || null;
+    STATIONS = normalizedShared;
+  } else {
+    const localeFavoriteSeed = getLocaleFavoriteStationSeed(locale);
+    try {
+      localeFavorite = await resolveFavoriteStation(localeFavoriteSeed);
+    } catch (error) {
+      console.warn("Locale radio favorite could not be resolved", error);
+    }
+
+    const builtInStations = getEnabledRadioStations();
+    STATIONS = [
+      ...(localeFavorite ? [localeFavorite] : []),
+      ...builtInStations.filter((station) => !localeFavorite || station.id !== localeFavorite.id)
+    ];
+  }
+
   const demoStation = productionDemoTone?.station ? {
     ...productionDemoTone.station,
     id: "idesuss-demo-tone",
@@ -34,8 +54,7 @@ async function prepareStations() {
   } : null;
 
   STATIONS = [
-    ...(localeFavorite ? [localeFavorite] : []),
-    ...builtInStations.filter((station) => !localeFavorite || station.id !== localeFavorite.id),
+    ...STATIONS,
     ...(demoStation ? [demoStation] : []),
     ...(developmentTone?.station ? [developmentTone.station] : []),
     ...(developmentExternalStation ? [developmentExternalStation] : [])
