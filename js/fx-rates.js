@@ -1,8 +1,3 @@
-const SUPABASE_FUNCTION_URL =
-  "https://aypymehochdhcisgkowy.supabase.co/functions/v1/fx-rates";
-
-const PUBLISHABLE_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
-
 const labels = {
   EUR: "EUR/HUF",
   USD: "USD/HUF",
@@ -21,6 +16,7 @@ function renderRates(payload) {
   for (const [code, label] of Object.entries(labels)) {
     const valueEl = document.querySelector(`[data-fx-value="${code}"]`);
     const labelEl = document.querySelector(`[data-fx-label="${code}"]`);
+
     if (labelEl) labelEl.textContent = label;
     if (valueEl && payload?.rates?.[code] != null) {
       valueEl.textContent = `${formatRate(payload.rates[code])} Ft`;
@@ -52,20 +48,17 @@ function renderError() {
 
 async function loadFxRates() {
   try {
-    const response = await fetch(SUPABASE_FUNCTION_URL, {
-      method: "GET",
-      headers: {
-        apikey: PUBLISHABLE_KEY,
-        Authorization: `Bearer ${PUBLISHABLE_KEY}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`FX endpoint HTTP ${response.status}`);
+    const client = window.supabaseClient;
+    if (!client?.functions?.invoke) {
+      throw new Error("Supabase functions client is not available.");
     }
 
-    const payload = await response.json();
-    renderRates(payload);
+    const { data, error } = await client.functions.invoke("fx-rates", {
+      method: "GET"
+    });
+
+    if (error) throw error;
+    renderRates(data);
   } catch (error) {
     console.error("FX rates load failed", error);
     renderError();
