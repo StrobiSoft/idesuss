@@ -7,12 +7,19 @@ const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
 const AVAILABLE_SKINS = new Set(["default", "night-drive", "classic-black"]);
 const DEV_PARAMS = new URLSearchParams(window.location.search);
 const DEV_AUDIO_MODE = DEV_PARAMS.get("dev") === "1";
+const productionDemoTone = createDevelopmentToneStation();
 const developmentTone = DEV_AUDIO_MODE ? createDevelopmentToneStation() : null;
 const developmentExternalStation = DEV_AUDIO_MODE
   ? createDevelopmentExternalStation(DEV_PARAMS.get("stream"), DEV_PARAMS.get("type") || "auto")
   : null;
 const STATIONS = [
   ...getEnabledRadioStations(),
+  ...(productionDemoTone?.station ? [{
+    ...productionDemoTone.station,
+    id: "idesuss-demo-tone",
+    name: "Idesüss Demo",
+    info: "Helyben generált hangminta — a rádiómotor azonnali kipróbálásához"
+  }] : []),
   ...(developmentTone?.station ? [developmentTone.station] : []),
   ...(developmentExternalStation ? [developmentExternalStation] : [])
 ];
@@ -216,6 +223,14 @@ function bindEngineEvents() {
 }
 async function init() {
   renderStations(); bindControls(); bindEngineEvents();
+
+  const demoStation = STATIONS.find((station) => station.id === "idesuss-demo-tone") || null;
+  if (demoStation) {
+    await selectStation(
+      demoStation,
+      "A rádiómotor készen áll. Nyomd meg a Lejátszás gombot az Idesüss Demo hangmintához."
+    );
+  }
   try {
     const result=await loadRadioCapabilities();
     capabilities=result.capabilities; radioClient=result.client; radioUser=result.user;
@@ -230,6 +245,7 @@ async function init() {
   renderTier(); renderPresets();
 }
 window.addEventListener("beforeunload",()=>{
+  productionDemoTone?.revoke?.();
   developmentTone?.revoke?.();
   audioTestTone?.revoke?.();
   engine.destroy();
