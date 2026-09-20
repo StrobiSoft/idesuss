@@ -6,14 +6,14 @@ import {
   signUp,
   subscribeAuthState,
   updatePassword
-} from "../shared/auth-service.js";
-import { loadMyProfile } from "../shared/profile-service.js";
-import { openProfilePanel } from "./profile.js";
+} from "../shared/auth-service.js?v=20260920-auth2";
+import { loadMyProfile } from "../shared/profile-service.js?v=20260920-auth2";
+import { openProfilePanel } from "./profile.js?v=20260920-auth2";
 import {
   closeAuthModal,
   ensureAuthModal,
   openAuthModal
-} from "./auth-shell.js";
+} from "./auth-shell.js?v=20260920-auth2";
 
 let identity = null;
 let unsubscribeAuth = null;
@@ -89,7 +89,7 @@ async function handlePasswordResetRequest() {
   try {
     await requestPasswordReset(getClient(), {
       email,
-      redirectTo: window.location.origin + "/"
+      redirectTo: new URL("/#password-reset", window.location.origin).href
     });
 
     setMessage(
@@ -122,12 +122,20 @@ async function handleSubmit(event) {
       return;
     }
 
+    if (password.length < 8) {
+      setMessage("Az új jelszó legalább 8 karakter legyen.");
+      return;
+    }
+
     setMessage("Új jelszó mentése...");
 
     try {
       identity = await updatePassword(getClient(), { password });
       updateButtons();
       setMessage("A jelszó sikeresen megváltozott.");
+      if (window.location.hash === "#password-reset") {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
       window.setTimeout(closeAuthModal, 650);
     } catch (error) {
       console.error("Password update failed", error);
@@ -141,9 +149,16 @@ async function handleSubmit(event) {
     return;
   }
 
-  if (mode === "register" && password !== repeatPassword) {
-    setMessage("A két jelszó nem egyezik.");
-    return;
+  if (mode === "register") {
+    if (password !== repeatPassword) {
+      setMessage("A két jelszó nem egyezik.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setMessage("A jelszó legalább 8 karakter legyen.");
+      return;
+    }
   }
 
   setMessage("Dolgozom...");
@@ -190,6 +205,7 @@ function bindHandlers() {
   const menuLogout = document.getElementById("logoutBtnMenu");
   const submitBtn = document.getElementById("authSubmitBtn");
   const forgotBtn = document.getElementById("authForgotPassword");
+  const modeSwitch = document.getElementById("authModeSwitch");
 
   loginBtn?.addEventListener("click", (event) => {
     event.preventDefault();
@@ -216,6 +232,10 @@ function bindHandlers() {
 
   submitBtn?.addEventListener("click", handleSubmit);
   forgotBtn?.addEventListener("click", handlePasswordResetRequest);
+  modeSwitch?.addEventListener("click", () => {
+    const modal = document.getElementById("idesussAuthModal");
+    openAuthModal(modal?.dataset.mode === "register" ? "login" : "register");
+  });
 }
 
 export async function initRootAuthController() {
