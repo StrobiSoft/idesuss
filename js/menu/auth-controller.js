@@ -1,9 +1,11 @@
 import {
   currentIdentity,
+  requestPasswordReset,
   signIn,
   signOut,
   signUp,
-  subscribeAuthState
+  subscribeAuthState,
+  updatePassword
 } from "../shared/auth-service.js";
 import { loadMyProfile } from "../shared/profile-service.js";
 import { openProfilePanel } from "./profile.js";
@@ -73,6 +75,32 @@ async function performSignOut() {
   }
 }
 
+async function handlePasswordResetRequest() {
+  const email = document.getElementById("authEmail")?.value.trim() || "";
+
+  if (!email) {
+    setMessage("Előbb add meg az e-mail címedet.");
+    document.getElementById("authEmail")?.focus();
+    return;
+  }
+
+  setMessage("Jelszó-visszaállító e-mail küldése...");
+
+  try {
+    await requestPasswordReset(getClient(), {
+      email,
+      redirectTo: window.location.origin + "/"
+    });
+
+    setMessage(
+      "Ha ehhez az e-mail címhez tartozik fiók, elküldtük a jelszó-visszaállító linket."
+    );
+  } catch (error) {
+    console.error("Password reset request failed", error);
+    setMessage(error?.message || "A jelszó-visszaállító e-mail küldése nem sikerült.");
+  }
+}
+
 async function handleSubmit(event) {
   event?.preventDefault?.();
   event?.stopImmediatePropagation?.();
@@ -81,7 +109,32 @@ async function handleSubmit(event) {
   const email = document.getElementById("authEmail")?.value.trim() || "";
   const password = document.getElementById("authPassword")?.value || "";
   const repeatPassword = document.getElementById("authPasswordRepeat")?.value || "";
-  const mode = modal?.dataset.mode === "register" ? "register" : "login";
+  const mode = modal?.dataset.mode || "login";
+
+  if (mode === "reset") {
+    if (!password || !repeatPassword) {
+      setMessage("Add meg kétszer az új jelszót.");
+      return;
+    }
+
+    if (password !== repeatPassword) {
+      setMessage("A két jelszó nem egyezik.");
+      return;
+    }
+
+    setMessage("Új jelszó mentése...");
+
+    try {
+      identity = await updatePassword(getClient(), { password });
+      updateButtons();
+      setMessage("A jelszó sikeresen megváltozott.");
+      window.setTimeout(closeAuthModal, 650);
+    } catch (error) {
+      console.error("Password update failed", error);
+      setMessage(error?.message || "Az új jelszó mentése nem sikerült.");
+    }
+    return;
+  }
 
   if (!email || !password) {
     setMessage("Add meg az e-mail címet és a jelszót.");
@@ -121,6 +174,12 @@ async function handleSubmit(event) {
     await maybeOpenProfile();
   } catch (error) {
     console.error("Shared auth action failed", error);
+
+    if (mode === "register" && /already|registered|exists/i.test(error?.message || "")) {
+      setMessage("Ezzel az e-mail címmel már létezik fiók. Jelentkezz be, vagy állítsd vissza a jelszavad.");
+      return;
+    }
+
     setMessage(error?.message || "A művelet nem sikerült.");
   }
 }
@@ -130,6 +189,7 @@ function bindHandlers() {
   const registerBtn = document.getElementById("registerBtn");
   const menuLogout = document.getElementById("logoutBtnMenu");
   const submitBtn = document.getElementById("authSubmitBtn");
+  const forgotBtn = document.getElementById("authForgotPassword");
 
   loginBtn?.addEventListener("click", (event) => {
     event.preventDefault();
@@ -155,6 +215,7 @@ function bindHandlers() {
   });
 
   submitBtn?.addEventListener("click", handleSubmit);
+  forgotBtn?.addEventListener("click", handlePasswordResetRequest);
 }
 
 export async function initRootAuthController() {
@@ -173,9 +234,16 @@ export async function initRootAuthController() {
   if (identity) await maybeOpenProfile();
 
   if (unsubscribeAuth) unsubscribeAuth();
-  unsubscribeAuth = subscribeAuthState(client, async (nextIdentity) => {
+  unsubscribeAuth = subscribeAuthState(client, async (nextIdentity, event) => {
     identity = nextIdentity;
     updateButtons();
+
+    if (event === "PASSWORD_RECOVERY") {
+      openAuthModal("reset");
+      setMessage("Állíts be egy új jelszót.");
+      return;
+    }
+
     if (identity) await maybeOpenProfile();
   });
 
