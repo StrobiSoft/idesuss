@@ -2,7 +2,7 @@
 
 Status: development guardrail
 
-Built-in catalog sources must have `catalogManaged: true` and `distributionStatus: "approved"` before their stream URL is exposed to playback.
+Built-in catalog sources must have `catalogManaged: true` and `distributionStatus: "approved"` before they become available in the built-in station catalog.
 
 A technically working public stream URL alone does not establish that Idesüss may ship it as a built-in station.
 
