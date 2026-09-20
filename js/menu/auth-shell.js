@@ -9,53 +9,79 @@ function ensureAuthStyles() {
   style.id = "idesussAuthStyles";
   style.textContent = `
     .idesuss-auth-card {
+      position: relative;
       width: min(420px, calc(100% - 32px));
       border-radius: 28px;
       background: linear-gradient(180deg, #f8fbff, #e8f2ff);
       box-shadow: 0 30px 80px rgba(20, 80, 160, .35);
-      padding: 24px;
+      padding: 28px 24px 24px;
       color: #142b4a;
       font-family: inherit;
     }
 
-    #authModalClose {
-      position: relative;
-      display: grid !important;
-      place-items: center !important;
-      flex: 0 0 44px;
-      width: 44px !important;
-      height: 44px !important;
-      min-width: 44px !important;
-      min-height: 44px !important;
-      padding: 0 !important;
-      border: 1px solid rgba(20, 43, 74, .12) !important;
-      border-radius: 50% !important;
-      background: #fff !important;
-      color: #17324d !important;
-      box-shadow: 0 8px 18px rgba(20, 43, 74, .18) !important;
-      cursor: pointer;
-      line-height: 1 !important;
-      transform: none !important;
+    .idesuss-auth-head {
+      display: flex;
+      align-items: center;
+      min-height: 48px;
+      margin-bottom: 16px;
+      padding-right: 58px;
     }
 
-    #authModalClose::before {
+    #authModalTitle {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.15;
+    }
+
+    #authModalClose {
+      position: absolute !important;
+      top: 18px !important;
+      right: 18px !important;
+      inset-inline-start: auto !important;
+      display: grid !important;
+      place-items: center !important;
+      width: 46px !important;
+      height: 46px !important;
+      min-width: 46px !important;
+      min-height: 46px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 1px solid rgba(20, 43, 74, .14) !important;
+      border-radius: 999px !important;
+      background: #ffffff !important;
+      color: #17324d !important;
+      box-shadow: 0 8px 18px rgba(20, 43, 74, .20) !important;
+      cursor: pointer;
+      line-height: 0 !important;
+      transform: none !important;
+      overflow: hidden;
+    }
+
+    #authModalClose::before,
+    #authModalClose::after {
       display: none !important;
       content: none !important;
     }
 
     #authModalClose:hover,
-    #authModalClose:active {
+    #authModalClose:active,
+    #authModalClose:focus-visible {
       transform: none !important;
-      background: #f5f8fc !important;
+      background: #f4f8fd !important;
+      color: #102b4d !important;
     }
 
     #authModalClose svg {
-      display: block;
-      width: 22px;
-      height: 22px;
-      stroke: currentColor;
-      stroke-width: 2.6;
+      display: block !important;
+      width: 23px !important;
+      height: 23px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      stroke: currentColor !important;
+      fill: none !important;
+      stroke-width: 2.8 !important;
       stroke-linecap: round;
+      stroke-linejoin: round;
       pointer-events: none;
     }
 
@@ -65,17 +91,20 @@ function ensureAuthStyles() {
       background: transparent !important;
       box-shadow: none !important;
       color: #0d5bd7 !important;
-      padding: 8px 4px !important;
-      margin: 6px auto 0;
+      padding: 9px 6px !important;
+      margin: 8px auto 0;
       display: block;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 800;
+      line-height: 1.3;
       text-decoration: underline;
       text-underline-offset: 3px;
       cursor: pointer;
+      transform: none !important;
     }
 
-    .auth-secondary-action::before {
+    .auth-secondary-action::before,
+    .auth-secondary-action::after {
       display: none !important;
       content: none !important;
     }
@@ -86,6 +115,32 @@ function ensureAuthStyles() {
       font-size: 13px;
       line-height: 1.45;
       text-align: center;
+    }
+
+    .auth-mode-switch {
+      margin-top: 2px;
+      text-decoration: none;
+    }
+
+    @media (max-width: 520px) {
+      .idesuss-auth-card {
+        width: min(100% - 24px, 420px);
+        padding: 26px 20px 22px;
+        border-radius: 24px;
+      }
+
+      #authModalClose {
+        top: 16px !important;
+        right: 16px !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+      }
+
+      .idesuss-auth-head {
+        padding-right: 54px;
+      }
     }
   `;
 
@@ -107,17 +162,19 @@ export function ensureAuthModal() {
     display: none;
     align-items: center;
     justify-content: center;
+    padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
     background: rgba(10, 20, 40, 0.55);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   `;
 
   modal.innerHTML = `
-    <div class="idesuss-auth-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
-        <h2 id="authModalTitle" style="margin:0;font-size:24px;">Bejelentkezés</h2>
-        <button id="authModalClose" type="button" aria-label="Bezárás">
+    <div class="idesuss-auth-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+      <div class="idesuss-auth-head">
+        <h2 id="authModalTitle">Bejelentkezés</h2>
+        <button id="authModalClose" type="button" aria-label="Bezárás" title="Bezárás">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M6 6l12 12M18 6L6 18"></path>
+            <path d="M6 6L18 18M18 6L6 18"></path>
           </svg>
         </button>
       </div>
@@ -148,6 +205,10 @@ export function ensureAuthModal() {
         Elfelejtetted a jelszavad?
       </button>
 
+      <button id="authModeSwitch" type="button" class="auth-secondary-action auth-mode-switch">
+        Nincs még fiókod? Regisztráció
+      </button>
+
       <p id="authResetHelp" class="auth-help" hidden>
         Adj meg egy új jelszót kétszer, majd mentsd el.
       </p>
@@ -162,6 +223,9 @@ export function ensureAuthModal() {
   document.getElementById("authModalClose")?.addEventListener("click", closeAuthModal);
   modal.addEventListener("click", (event) => {
     if (event.target === modal) closeAuthModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.style.display !== "none") closeAuthModal();
   });
 
   return modal;
@@ -178,6 +242,7 @@ export function openAuthModal(mode = "login") {
   const password = document.getElementById("authPassword");
   const email = document.getElementById("authEmail");
   const forgot = document.getElementById("authForgotPassword");
+  const modeSwitch = document.getElementById("authModeSwitch");
   const resetHelp = document.getElementById("authResetHelp");
   const message = document.getElementById("authMessage");
 
@@ -218,12 +283,27 @@ export function openAuthModal(mode = "login") {
     forgot.style.display = mode === "login" ? "block" : "none";
   }
 
+  if (modeSwitch) {
+    modeSwitch.style.display = reset ? "none" : "block";
+    modeSwitch.textContent = register
+      ? "Már van fiókod? Bejelentkezés"
+      : "Nincs még fiókod? Regisztráció";
+  }
+
   if (resetHelp) {
     resetHelp.hidden = !reset;
   }
 
   if (message) message.textContent = "";
   modal.style.display = "flex";
+
+  window.setTimeout(() => {
+    if (reset) {
+      password?.focus();
+    } else {
+      email?.focus();
+    }
+  }, 0);
 }
 
 export function closeAuthModal() {
