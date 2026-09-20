@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Idesüss — Házirend</title>
+  <meta name="description" content="Az Idesüss minden felhasználóra érvényes nyilvános házirendje." />
+  <style>
+    :root{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:#17324d;background:#f4f7fb;
+      --line:#d7e0ea;--muted:#5e748d;--primary:#0d5bd7;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#eef5ff,#f8fbff);padding:max(18px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+    main{width:min(820px,100%);margin:0 auto}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+    .brand{font-size:1.25rem;font-weight:900}
+    .back{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border:1px solid #b9c9dc;border-radius:13px;background:#fff;color:#17324d;text-decoration:none;font-weight:800}
+    .card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:clamp(20px,4vw,34px);box-shadow:0 24px 70px rgba(23,50,77,.12)}
+    h1{margin:0 0 8px;font-size:clamp(2rem,6vw,3.2rem);letter-spacing:-.04em}
+    .lead{margin:0 0 24px;color:var(--muted);line-height:1.65}
+    .rule{border:1px solid #d7e0ea;border-radius:20px;padding:20px;background:#f8fbff}
+    .rule-kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--primary);font-weight:900}
+    h2{margin:8px 0 12px;font-size:1.35rem}
+    p{line-height:1.65}
+    .sanction{margin-top:14px;padding:14px 16px;border-left:4px solid #c53030;background:#fff5f5;border-radius:10px;color:#742a2a}
+    .version{margin-top:22px;color:var(--muted);font-size:.86rem}
+    hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+    .en{color:#243b53}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="top">
+      <div class="brand">Idesüss™</div>
+      <a class="back" href="/">← Főoldal</a>
+    </div>
+
+    <article class="card">
+      <h1>Házirend</h1>
+      <p class="lead">Ez a nyilvános házirend az Idesüss minden felhasználójára egyformán vonatkozik. A szabályok célja, hogy a közös felületek biztonságosak és vállalhatók maradjanak.</p>
+
+      <section class="rule">
+        <div class="rule-kicker">1. szabály · Profilkép / avatar</div>
+        <h2>A profilképnek közösségi felületre alkalmasnak kell lennie.</h2>
+        <p>Pornográf, szexuálisan explicit, illetve intim testrészeket szándékosan feltáró vagy szexuális kitárulkozást ábrázoló kép avatárként nem használható.</p>
+        <p>A saját feltöltésű profilképek ellenőrzés után válhatnak nyilvánossá. A szabályba ütköző kép elutasítható vagy eltávolítható.</p>
+        <div class="sanction"><strong>Szankció:</strong> súlyos vagy szándékos szabálysértés esetén a fiók azonnal felfüggeszthető; ismételt vagy kirívó visszaélés a fiók végleges megszüntetéséhez vezethet.</div>
+      </section>
+
+      <hr />
+
+      <section class="en" lang="en">
+        <h2>House Rules — English summary</h2>
+        <p><strong>Rule 1 — Profile images / avatars:</strong> Pornographic, sexually explicit, deliberately exposed intimate imagery, or sexual exhibitionism is not permitted as a profile image. User-uploaded images may become public only after review. Serious or deliberate violations may result in immediate account suspension; repeated or extreme abuse may result in permanent account termination.</p>
+      </section>
+
+      <p class="version">1. verzió · 2026-09-20</p>
+    </article>
+  </main>
+</body>
+</html>
