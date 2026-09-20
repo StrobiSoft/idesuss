@@ -1,0 +1,31 @@
+name: Production smoke test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Wait briefly for Pages deployment
+        run: sleep 60
+
+      - name: Resolve production domain
+        run: |
+          set -euxo pipefail
+          getent ahosts idesuss.net
+
+      - name: Check production HTTPS
+        run: |
+          set -euxo pipefail
+          curl             --fail             --show-error             --silent             --location             --retry 12             --retry-all-errors             --retry-delay 10             --max-time 20             https://idesuss.net/             -o /tmp/idesuss-production.html
+
+          grep -q "Idesüss" /tmp/idesuss-production.html
+          echo "Production homepage is reachable and contains the expected Idesüss marker."
