@@ -180,11 +180,24 @@ function renderPresets() {
       ? (stationForButton?`${stationForButton.name} betöltése`:"Üres preset — a kiválasztott állomás mentése")
       : `${requiredTierForSlot(rule.slot)} csomag szükséges`;
     button.addEventListener("click",async()=>{
-      if (stationForButton) {
-        await selectStation(stationForButton,stored?"Mentett preset kiválasztva; stream ellenőrzése…":"Beépített Free preset kiválasztva.");
+      if (stored) {
+        await selectStation(stored,"Mentett preset kiválasztva; stream ellenőrzése…");
         return;
       }
-      if (!capabilities.canSaveRadioChannels) { setStatus("A szerveroldali preset-mentési jogosultság még nem aktív ehhez a csomaghoz."); return; }
+
+      if (fallback && (!selectedStation || selectedStation.id === fallback.id)) {
+        await selectStation(fallback,"Ajánlott kezdőállomás kiválasztva.");
+        return;
+      }
+
+      if (!capabilities.canSaveRadioChannels) {
+        if (fallback) {
+          await selectStation(fallback,"Ajánlott kezdőállomás kiválasztva.");
+          return;
+        }
+        setStatus("A szerveroldali preset-mentési jogosultság még nem aktív ehhez a csomaghoz.");
+        return;
+      }
       if (!selectedStation) { setStatus("Mentéshez előbb válassz állomást."); return; }
       try {
         await saveRadioChannel(radioClient,radioUser?.id,rule.slot,selectedStation);
