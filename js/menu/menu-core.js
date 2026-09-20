@@ -1,10 +1,11 @@
 import { initRootAuthController } from "./auth-controller.js?v=20260920-auth2";
-import { openProfilePanel } from "./profile.js?v=20260920-auth2";
+import { openProfilePanel } from "./profile.js?v=20260920-avatar1";
 
 function initFloatingMenu() {
   const toggle = document.getElementById("menuToggle");
   const menu = document.getElementById("idesussMenu");
   const openWebappBtn = document.getElementById("openWebappBtn");
+  const openRulesBtn = document.getElementById("openRulesBtn");
 
   if (!toggle || !menu) return;
 
@@ -35,6 +36,10 @@ function initFloatingMenu() {
 
   openWebappBtn?.addEventListener("click", () => {
     window.location.href = "/app/";
+  });
+
+  openRulesBtn?.addEventListener("click", () => {
+    window.location.href = "/rules/";
   });
 
   menu.querySelectorAll("button").forEach((button) => {
