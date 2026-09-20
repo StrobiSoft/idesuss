@@ -6,6 +6,7 @@ function initFloatingMenu() {
   const menu = document.getElementById("idesussMenu");
   const openWebappBtn = document.getElementById("openWebappBtn");
   const openRulesBtn = document.getElementById("openRulesBtn");
+  const openIdeaBoxBtn = document.getElementById("openIdeaBoxBtn");
 
   if (!toggle || !menu) return;
 
@@ -40,6 +41,10 @@ function initFloatingMenu() {
 
   openRulesBtn?.addEventListener("click", () => {
     window.location.href = "/rules/";
+  });
+
+  openIdeaBoxBtn?.addEventListener("click", () => {
+    window.location.href = "/ideas/";
   });
 
   menu.querySelectorAll("button").forEach((button) => {
