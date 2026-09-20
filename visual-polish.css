@@ -269,21 +269,25 @@ input:focus-visible {
   place-items: center !important;
   flex: 0 0 auto;
   padding: 0 !important;
-  line-height: 1 !important;
+  line-height: 0 !important;
   text-align: center !important;
-  box-shadow: none !important;
-}
-
-.viewer-shell-close {
-  color: #fff !important;
-}
-
-.info-panel-close {
+  border: 1px solid rgba(23,50,77,0.18) !important;
+  background: #ffffff !important;
   color: #17324d !important;
+  box-shadow: 0 8px 18px rgba(23,50,77,0.18) !important;
 }
 
-.profile-panel-close {
-  color: #fff !important;
+.viewer-shell-close svg,
+.info-panel-close svg,
+.profile-panel-close svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
 }
 
 /* Footer */
