@@ -798,6 +798,7 @@
                     <nav id="appMenu" class="app-menu" aria-label="Idesüss menü">
                         <a id="appMenuHome" class="app-menu-link" href="/"><span aria-hidden="true">🏠</span><span>Főoldal</span></a>
                         <a id="appMenuRadio" class="app-menu-link" href="/radio/"><span aria-hidden="true">📻</span><span>Rádió</span></a>
+                        <a id="appMenuRules" class="app-menu-link" href="/rules/"><span aria-hidden="true">📜</span><span>Házirend</span></a>
                     </nav>
                 </div>
             </div>
@@ -861,7 +862,11 @@
 
         <div class="footer">
             <div class="footer-inner">
-                <a id="aboutLink" class="footer-link" role="button" tabindex="0">Névjegy</a>
+                <div>
+                    <a id="aboutLink" class="footer-link" role="button" tabindex="0">Névjegy</a>
+                    <span aria-hidden="true"> · </span>
+                    <a id="rulesLink" class="footer-link" href="/rules/">Házirend</a>
+                </div>
                 <div id="footerText">Powered by StZoo</div>
             </div>
         </div>
@@ -921,7 +926,9 @@
             appMenuToggle: document.getElementById('appMenuToggle'),
             appMenu: document.getElementById('appMenu'),
             appMenuHome: document.getElementById('appMenuHome'),
-            appMenuRadio: document.getElementById('appMenuRadio')
+            appMenuRadio: document.getElementById('appMenuRadio'),
+            appMenuRules: document.getElementById('appMenuRules'),
+            rulesLink: document.getElementById('rulesLink')
         };
 
         let currentLang = detectInitialLanguage();
@@ -964,20 +971,23 @@
         }
 
         const MENU_LABELS = {
-            hu: { home: 'Főoldal', radio: 'Rádió', menu: 'Menü' },
-            en: { home: 'Home', radio: 'Radio', menu: 'Menu' },
-            nl: { home: 'Startpagina', radio: 'Radio', menu: 'Menu' },
-            ro: { home: 'Pagina principală', radio: 'Radio', menu: 'Meniu' },
-            pl: { home: 'Strona główna', radio: 'Radio', menu: 'Menu' },
-            be: { home: 'Галоўная', radio: 'Радыё', menu: 'Меню' }
+            hu: { home: 'Főoldal', radio: 'Rádió', rules: 'Házirend', menu: 'Menü' },
+            en: { home: 'Home', radio: 'Radio', rules: 'House rules', menu: 'Menu' },
+            nl: { home: 'Startpagina', radio: 'Radio', rules: 'Huisregels', menu: 'Menu' },
+            ro: { home: 'Pagina principală', radio: 'Radio', rules: 'Regulament', menu: 'Meniu' },
+            pl: { home: 'Strona główna', radio: 'Radio', rules: 'Regulamin', menu: 'Menu' },
+            be: { home: 'Галоўная', radio: 'Радыё', rules: 'Правілы', menu: 'Меню' }
         };
 
         function updateAppMenuLanguage() {
             const labels = MENU_LABELS[currentLang] || MENU_LABELS.en;
             const homeLabel = els.appMenuHome?.querySelector('span:last-child');
             const radioLabel = els.appMenuRadio?.querySelector('span:last-child');
+            const rulesLabel = els.appMenuRules?.querySelector('span:last-child');
             if (homeLabel) homeLabel.textContent = labels.home;
             if (radioLabel) radioLabel.textContent = labels.radio;
+            if (rulesLabel) rulesLabel.textContent = labels.rules;
+            if (els.rulesLink) els.rulesLink.textContent = labels.rules;
             if (els.appMenuToggle) els.appMenuToggle.setAttribute('aria-label', labels.menu);
         }
 
