@@ -68,8 +68,12 @@ function homeText(key, fallback) {
 function localizeAuthError(error) {
   const message = String(error?.message || "").toLowerCase();
 
-  if (message.includes("email rate limit exceeded")) {
-    return "Túl sok e-mailt kértünk rövid időn belül. Várj néhány percet, majd próbáld újra.";
+  if (
+    message.includes("email rate limit exceeded") ||
+    message.includes("for security purposes") ||
+    message.includes("request this after")
+  ) {
+    return "Biztonsági okból várnod kell egy rövid ideig az újabb kérés előtt. Próbáld meg később.";
   }
   if (message.includes("invalid login credentials")) return "Hibás e-mail cím vagy jelszó.";
   if (message.includes("email not confirmed")) return "Az e-mail címed még nincs megerősítve. Ellenőrizd a postafiókodat.";
@@ -223,15 +227,23 @@ async function handleSubmit(event) {
     const client = getClient();
 
     if (mode === "register") {
-      await signUp(client, { email, password });
-      identity = await currentIdentity(client);
-      updateButtons();
+      const result = await signUp(client, {
+        email,
+        password,
+        emailRedirectTo: new URL("/", window.location.origin).href
+      });
 
-      if (!identity) {
-        setMessage("Regisztráció elküldve. Ellenőrizd az e-mail fiókodat, ha megerősítés szükséges.");
+      if (!result?.session) {
+        identity = null;
+        updateButtons();
+        document.getElementById("authPassword").value = "";
+        document.getElementById("authPasswordRepeat").value = "";
+        setMessage("Regisztráció elküldve. Küldtünk egy megerősítő e-mailt; a fiók az e-mail-cím megerősítése után lesz aktív.");
         return;
       }
 
+      identity = result.user;
+      updateButtons();
       setMessage("Sikeres regisztráció.");
       closeAuthModal();
       await maybeOpenProfile();
