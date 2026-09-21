@@ -8,6 +8,7 @@ inputSubtitle:"TikTok, YouTube, Instagram Reel, video Facebook și alte linkuri 
 inputLabel:"URL video public", clipboardChecking:"Se verifică clipboardul…", installStateUnknown:"Se încarcă starea instalării…",
 publicLinksOnly:"Doar linkuri publice", heroBannerText:"Unele dispozitive Android nu sunt acceptate!",
 footerDesc:"Pagină principală + punct de acces mini-aplicație pentru linkuri video publice acceptate.",
+menuRadio:"📻 Radio", menuRules:"📜 Regulament", menuIdeas:"💡 Cutia cu idei", menuIdeasInfoLabel:"Ce este Cutia cu idei?", menuIdeasInfo:"Poți trimite orice crezi că ar putea face Idesüss mai bun: o regulă nouă, o funcție sau un serviciu, o opțiune lipsă, o propunere de schimbare sau chiar o idee de finanțare ori sprijin. Analizăm propunerile, iar cele realizabile și compatibile cu principiile Idesüss pot intra în dezvoltare.",
 paste:"Lipește", open:"Deschide", clear:"Șterge", details:"Detalii", profile:"👤 Profil", logout:"🚪 Deconectare",
 register:"Înregistrare", login:"Autentificare", or:"sau",
 how:{title:"Cum funcționează?",text:"Lipește un link video public, apoi apasă butonul de deschidere. Idesüss va încerca să deschidă conținutul simplu și rapid."},
