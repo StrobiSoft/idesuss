@@ -110,6 +110,61 @@ function ensureAuthStyles() {
       pointer-events: none;
     }
 
+    .auth-password-field {
+      position: relative;
+      width: 100%;
+      margin-bottom: 14px;
+    }
+
+    .auth-password-field input {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 14px 52px 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(40,90,150,.25);
+      font-size: 16px;
+    }
+
+    .auth-password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: #5b7088;
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    .auth-password-toggle:hover,
+    .auth-password-toggle:focus-visible {
+      background: rgba(13, 91, 215, .08);
+      color: #0d5bd7;
+      outline: none;
+    }
+
+    .auth-password-toggle svg {
+      width: 21px;
+      height: 21px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
     .auth-secondary-action {
       appearance: none;
       border: 0 !important;
@@ -209,15 +264,37 @@ export function ensureAuthModal() {
         border-radius:16px;border:1px solid rgba(40,90,150,.25);font-size:16px;
       ">
 
-      <input id="authPassword" type="password" autocomplete="current-password" placeholder="Jelszó" style="
-        width:100%;box-sizing:border-box;margin-bottom:14px;padding:14px 16px;
-        border-radius:16px;border:1px solid rgba(40,90,150,.25);font-size:16px;
-      ">
+      <div class="auth-password-field" id="authPasswordField">
+        <input id="authPassword" type="password" autocomplete="current-password" placeholder="Jelszó">
+        <button class="auth-password-toggle" type="button" data-password-target="authPassword" aria-label="Jelszó megjelenítése" title="Jelszó megjelenítése">
+          <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+            <circle cx="12" cy="12" r="2.5"></circle>
+          </svg>
+          <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden>
+            <path d="M3 3l18 18"></path>
+            <path d="M10.6 6.2A10.5 10.5 0 0 1 12 6c6 0 9.5 6 9.5 6a16.8 16.8 0 0 1-3.1 3.9"></path>
+            <path d="M6.1 6.1C3.8 7.8 2.5 12 2.5 12s3.5 6 9.5 6a9.7 9.7 0 0 0 3-.5"></path>
+            <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path>
+          </svg>
+        </button>
+      </div>
 
-      <input id="authPasswordRepeat" type="password" autocomplete="new-password" placeholder="Jelszó újra" style="
-        width:100%;box-sizing:border-box;margin-bottom:14px;padding:14px 16px;
-        border-radius:16px;border:1px solid rgba(40,90,150,.25);font-size:16px;display:none;
-      ">
+      <div class="auth-password-field" id="authPasswordRepeatField" style="display:none;">
+        <input id="authPasswordRepeat" type="password" autocomplete="new-password" placeholder="Jelszó újra">
+        <button class="auth-password-toggle" type="button" data-password-target="authPasswordRepeat" aria-label="Jelszó megjelenítése" title="Jelszó megjelenítése">
+          <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+            <circle cx="12" cy="12" r="2.5"></circle>
+          </svg>
+          <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden>
+            <path d="M3 3l18 18"></path>
+            <path d="M10.6 6.2A10.5 10.5 0 0 1 12 6c6 0 9.5 6 9.5 6a16.8 16.8 0 0 1-3.1 3.9"></path>
+            <path d="M6.1 6.1C3.8 7.8 2.5 12 2.5 12s3.5 6 9.5 6a9.7 9.7 0 0 0 3-.5"></path>
+            <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path>
+          </svg>
+        </button>
+      </div>
 
       <button id="authSubmitBtn" type="button" style="
         width:100%;border:0;border-radius:18px;padding:15px 18px;
@@ -245,6 +322,23 @@ export function ensureAuthModal() {
   `;
 
   document.body.appendChild(modal);
+
+  modal.querySelectorAll(".auth-password-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const input = document.getElementById(button.dataset.passwordTarget || "");
+      if (!input) return;
+
+      const reveal = input.type === "password";
+      input.type = reveal ? "text" : "password";
+      button.setAttribute("aria-label", reveal ? "Jelszó elrejtése" : "Jelszó megjelenítése");
+      button.setAttribute("title", reveal ? "Jelszó elrejtése" : "Jelszó megjelenítése");
+      button.setAttribute("aria-pressed", String(reveal));
+      button.querySelector(".eye-open")?.toggleAttribute("hidden", reveal);
+      button.querySelector(".eye-closed")?.toggleAttribute("hidden", !reveal);
+      input.focus({ preventScroll: true });
+    });
+  });
+
   document.getElementById("authModalClose")?.addEventListener("click", closeAuthModal);
   modal.addEventListener("click", (event) => {
     if (event.target === modal) closeAuthModal();
@@ -264,6 +358,7 @@ export function openAuthModal(mode = "login") {
   const title = document.getElementById("authModalTitle");
   const submit = document.getElementById("authSubmitBtn");
   const repeat = document.getElementById("authPasswordRepeat");
+  const repeatField = document.getElementById("authPasswordRepeatField");
   const password = document.getElementById("authPassword");
   const email = document.getElementById("authEmail");
   const forgot = document.getElementById("authForgotPassword");
@@ -293,16 +388,29 @@ export function openAuthModal(mode = "login") {
     email.style.display = reset ? "none" : "block";
   }
 
+  if (repeatField) {
+    repeatField.style.display = register || reset ? "block" : "none";
+  }
+
   if (repeat) {
-    repeat.style.display = register || reset ? "block" : "none";
     repeat.value = "";
+    repeat.type = "password";
   }
 
   if (password) {
     password.value = "";
+    password.type = "password";
     password.autocomplete = register || reset ? "new-password" : "current-password";
     password.placeholder = reset ? "Új jelszó" : "Jelszó";
   }
+
+  modal.querySelectorAll(".auth-password-toggle").forEach((button) => {
+    button.setAttribute("aria-label", "Jelszó megjelenítése");
+    button.setAttribute("title", "Jelszó megjelenítése");
+    button.setAttribute("aria-pressed", "false");
+    button.querySelector(".eye-open")?.removeAttribute("hidden");
+    button.querySelector(".eye-closed")?.setAttribute("hidden", "");
+  });
 
   if (forgot) {
     forgot.style.display = mode === "login" ? "block" : "none";
