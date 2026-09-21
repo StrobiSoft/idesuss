@@ -41,7 +41,8 @@ function capabilityEnvelope(tier, canSaveRadioChannels, canUseRadioSkins, maxRad
     canSaveRadioChannels: Boolean(canSaveRadioChannels),
     maxRadioPresets: Number.isInteger(parsedLimit) && parsedLimit >= 0 ? Math.min(8, parsedLimit) : fallbackLimit,
     canUseCustomSkins: typeof canUseRadioSkins === "boolean" ? canUseRadioSkins : tierAllowsRadioSkins,
-    canUsePremiumPlusFeatures: TIER_RANK[normalized] >= TIER_RANK.premium_plus
+    canUsePremiumPlusFeatures: TIER_RANK[normalized] >= TIER_RANK.premium_plus,
+    canUseRadioDiagnostics: false
   };
 }
 
@@ -55,7 +56,8 @@ export async function loadRadioCapabilities() {
       client, user: null,
       capabilities: {
         tier: "signed_out", label: "Vendég", canSaveRadioChannels: false,
-        maxRadioPresets: 0, canUseCustomSkins: false, canUsePremiumPlusFeatures: false
+        maxRadioPresets: 0, canUseCustomSkins: false, canUsePremiumPlusFeatures: false,
+        canUseRadioDiagnostics: false
       }
     };
   }
@@ -69,6 +71,18 @@ export async function loadRadioCapabilities() {
     entitlementData?.can_use_radio_skins,
     entitlementData?.max_radio_presets
   );
+
+  const { data: profileData, error: profileError } = await client
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profileError) {
+    console.warn("Radio admin role lookup failed", profileError);
+  }
+
+  capabilities.canUseRadioDiagnostics = profileData?.role === "admin";
   return { client, user, capabilities };
 }
 
