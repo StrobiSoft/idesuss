@@ -3,7 +3,7 @@ totalVisitsCounter:"🌍 {count} ukupnih posjeta", onlineUsersCounter:"👁 {cou
 heroHow:"⚙️ Kako radi", heroAbout:"ℹ️ O projektu", heroWebapp:"▶️ Webapp",
 footerHow:"⚙️ Kako radi", footerAbout:"ℹ️ O projektu", footerOpenWebapp:"📱 Webapp", footerShare:"📤 Podijeli",
 brandSubtitle:"Početna stranica + mini aplikacija", heroLead:"Isprobaj našu popularnu mini aplikaciju izravno na početnoj stranici!",
-openWebapp:"Otvori webapp", inputTitle:"Zalijepi javnu poveznicu na video",
+openWebapp:"Otvori webapp", openRadio:"Otvori radio", inputTitle:"Zalijepi javnu poveznicu na video",
 inputSubtitle:"TikTok, YouTube, Instagram Reel, Facebook video i druge podržane javne poveznice.",
 inputLabel:"Javni URL videa", clipboardChecking:"Provjera međuspremnika…", installStateUnknown:"Učitavanje statusa instalacije…",
 publicLinksOnly:"Samo javne poveznice", heroBannerText:"Neki Android uređaji nisu podržani!",

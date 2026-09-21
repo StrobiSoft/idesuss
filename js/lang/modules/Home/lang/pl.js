@@ -3,7 +3,7 @@ totalVisitsCounter:"🌍 Łączna liczba wizyt: {count}", onlineUsersCounter:"�
 heroHow:"⚙️ Jak to działa", heroAbout:"ℹ️ O nas", heroWebapp:"▶️ Webapp",
 footerHow:"⚙️ Jak to działa", footerAbout:"ℹ️ O nas", footerOpenWebapp:"📱 Webapp", footerShare:"📤 Udostępnij",
 brandSubtitle:"Strona główna + miniaplikacja", heroLead:"Wypróbuj naszą popularną miniaplikację bezpośrednio na stronie głównej!",
-openWebapp:"Otwórz webapp", inputTitle:"Wklej publiczny link do filmu",
+openWebapp:"Otwórz webapp", openRadio:"Otwórz radio", inputTitle:"Wklej publiczny link do filmu",
 inputSubtitle:"TikTok, YouTube, Instagram Reel, filmy z Facebooka i inne obsługiwane publiczne linki.",
 inputLabel:"Publiczny adres URL filmu", clipboardChecking:"Sprawdzanie schowka…", installStateUnknown:"Ładowanie stanu instalacji…",
 publicLinksOnly:"Tylko publiczne linki", heroBannerText:"Niektóre urządzenia z Androidem nie są obsługiwane!",

@@ -3,7 +3,7 @@ totalVisitsCounter:"🌍 {count} vizite totale", onlineUsersCounter:"👁 {count
 heroHow:"⚙️ Cum funcționează", heroAbout:"ℹ️ Despre", heroWebapp:"▶️ Webapp",
 footerHow:"⚙️ Cum funcționează", footerAbout:"ℹ️ Despre", footerOpenWebapp:"📱 Webapp", footerShare:"📤 Distribuie",
 brandSubtitle:"Pagina principală + experiență mini-aplicație", heroLead:"Încearcă mini-aplicația noastră populară direct pe pagina principală!",
-openWebapp:"Deschide webapp-ul", inputTitle:"Lipește un link video public",
+openWebapp:"Deschide webapp-ul", openRadio:"Deschide radioul", inputTitle:"Lipește un link video public",
 inputSubtitle:"TikTok, YouTube, Instagram Reel, video Facebook și alte linkuri publice acceptate.",
 inputLabel:"URL video public", clipboardChecking:"Se verifică clipboardul…", installStateUnknown:"Se încarcă starea instalării…",
 publicLinksOnly:"Doar linkuri publice", heroBannerText:"Unele dispozitive Android nu sunt acceptate!",

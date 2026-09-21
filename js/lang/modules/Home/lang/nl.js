@@ -3,7 +3,7 @@ totalVisitsCounter:"🌍 {count} totale bezoeken", onlineUsersCounter:"👁 {cou
 heroHow:"⚙️ Hoe werkt het", heroAbout:"ℹ️ Over", heroWebapp:"▶️ Webapp",
 footerHow:"⚙️ Hoe werkt het", footerAbout:"ℹ️ Over", footerOpenWebapp:"📱 Webapp", footerShare:"📤 Delen",
 brandSubtitle:"Startpagina + mini-app ervaring", heroLead:"Probeer onze populaire mini-app direct op de startpagina!",
-openWebapp:"Webapp openen", inputTitle:"Plak een openbare videolink",
+openWebapp:"Webapp openen", openRadio:"Radio openen", inputTitle:"Plak een openbare videolink",
 inputSubtitle:"TikTok, YouTube, Instagram Reel, Facebook-video en andere ondersteunde openbare links.",
 inputLabel:"Openbare video-URL", clipboardChecking:"Klembord controleren…", installStateUnknown:"Installatiestatus laden…",
 publicLinksOnly:"Alleen openbare links", heroBannerText:"Sommige Android-apparaten worden niet ondersteund!",

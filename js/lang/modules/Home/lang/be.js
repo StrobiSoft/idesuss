@@ -16,6 +16,7 @@ export default {
     brandSubtitle: "Галоўная старонка + міні-праграма",
     heroLead: "Паспрабуйце нашу міні-праграму непасрэдна на галоўнай старонцы!",
     openWebapp: "Адкрыць webapp",
+    openRadio: "Адкрыць радыё",
     inputTitle: "Устаўце публічную спасылку на відэа",
     inputSubtitle: "TikTok, YouTube, Instagram Reels, відэа Facebook і іншыя падтрыманыя публічныя спасылкі.",
     inputLabel: "Публічны URL відэа",
