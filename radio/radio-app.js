@@ -293,7 +293,7 @@ async function init() {
     renderStations();
     renderPresets();
     const button = $("#playPauseBtn");
-    if (button) button.textContent = engine.state === "playing" ? radioT("pause") : radioT("play");
+    if (button) button.textContent = engine.audio?.paused === false ? radioT("pause") : radioT("play");
   });
 
   const localeFavorite = await prepareStations();
