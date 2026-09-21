@@ -494,14 +494,17 @@
     }
 
     .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       margin-top: 8px;
+      max-width: 680px;
     }
 
-    .hero-webapp-btn {
-      min-width: 320px;
+    .hero-webapp-btn,
+    .hero-radio-btn {
+      width: 100%;
+      min-width: 0;
       min-height: 82px;
       padding: 18px 28px;
       border-radius: 24px;
@@ -512,6 +515,10 @@
       font-weight: 900;
       letter-spacing: -0.02em;
       border: 1px solid rgba(255,255,255,0.24);
+    }
+
+    .hero-radio-btn {
+      background: linear-gradient(135deg, #0b4cb3 0%, #2f7cf0 100%);
     }
 
     .hero-miniapp {
@@ -1122,6 +1129,7 @@
       .hero-bottom { padding: 0 20px 18px; }
       .hero-brand { align-items: flex-start; }
       .hero-brand-logo { width: 58px; height: 58px; }
+      .hero-actions { grid-template-columns: 1fr; max-width: none; width: 100%; }
       .miniapp-btn { width: 100%; }
       .input-actions, .status-bar, .footer-links { flex-direction: column; }
       .hero-footer-links { width: 100%; }
@@ -1504,6 +1512,9 @@ body.viewer-open #idesussMenu {
               <div class="hero-actions">
                 <a id="heroOpenAppBtn" class="btn hero-webapp-btn" href="https://idesuss.net/app">
                   <span data-i18n="openWebapp"></span>
+                </a>
+                <a id="heroOpenRadioBtn" class="btn hero-webapp-btn hero-radio-btn" href="/radio/">
+                  <span data-i18n="openRadio"></span>
                 </a>
               </div>
             </div>
