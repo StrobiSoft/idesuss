@@ -186,33 +186,6 @@ function renderTier() {
   const activeSkin=applySkin(preferredSkin,{persist:false});
   if (activeSkin!==preferredSkin) localStorage.setItem(SKIN_STORAGE_KEY,activeSkin);
 }
-function renderStations() {
-  const host=$("#stationList"); if (!host) return; host.replaceChildren();
-  if (!STATIONS.length) {
-    const empty=document.createElement("div"); empty.className="note";
-    empty.textContent="Jóváhagyott élő rádióforrás még nincs a katalógusban. A lejátszómotor a Hangteszt gombbal kipróbálható.";
-    host.appendChild(empty); return;
-  }
-  STATIONS.forEach((station)=>{
-    const button=document.createElement("button"); button.type="button"; button.className="station";
-    appendTextElement(button,"strong",station.name);
-    appendTextElement(
-      button,
-      "span",
-      station.sourceStatus === "unconfigured"
-        ? radioT("streamMissing")
-        : radioT("recommended")
-    );
-    const playable=canPlayStation(station);
-    if (!playable) {
-      button.classList.add("locked");
-      button.setAttribute("aria-disabled","true");
-      button.title=radioT("registeredOnly");
-    }
-    button.addEventListener("click",()=>playable ? selectStation(station) : setStatus(radioT("registeredOnly")));
-    host.appendChild(button);
-  });
-}
 function renderPresets() {
   const host=$("#presetGrid"); if (!host) return; host.replaceChildren();
   PRESET_RULES.forEach((rule)=>{
@@ -224,7 +197,10 @@ function renderPresets() {
     button.className=`preset${unlocked?" unlocked":" locked"}${stored?" saved":""}`;
     button.disabled=!unlocked;
     const number=appendTextElement(button,"b",rule.slot);
-    if (unlocked) number.classList.add("open-lock");
+    const lock=document.createElement("span");
+    lock.className=`preset-lock ${unlocked ? "is-open" : "is-closed"}`;
+    lock.setAttribute("aria-hidden","true");
+    number.appendChild(lock);
     const label = !unlocked && rule.slot === 2
       ? radioT("registeredOnly")
       : (stationForButton?.name||(unlocked?radioT("empty"):requiredTierForSlot(rule.slot)));
@@ -324,14 +300,12 @@ async function init() {
   window.addEventListener("idesuss:radio-languagechange", async () => {
     await prepareStations();
     renderTier();
-    renderStations();
     renderPresets();
     const button = $("#playPauseBtn");
     if (button) button.textContent = engine.audio?.paused === false ? radioT("pause") : radioT("play");
   });
 
   const localeFavorite = await prepareStations();
-  renderStations();
 
   const initialStation = localeFavorite || STATIONS[0] || null;
   if (initialStation) {
