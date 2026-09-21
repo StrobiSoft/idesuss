@@ -8,6 +8,12 @@ function ensureAuthStyles() {
   const style = document.createElement("style");
   style.id = "idesussAuthStyles";
   style.textContent = `
+    body.idesuss-auth-open #menuToggle,
+    body.idesuss-auth-open #idesussMenu {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
     .idesuss-auth-card {
       position: relative;
       width: min(420px, calc(100% - 32px));
@@ -231,7 +237,7 @@ export function ensureAuthModal() {
   return modal;
 }
 
-export function openAuthModal(mode = "login") {
+export function openAuthModal(mode = "login", { email: recoveryEmail = "" } = {}) {
   const modal = ensureAuthModal();
   const register = mode === "register";
   const reset = mode === "reset";
@@ -265,7 +271,13 @@ export function openAuthModal(mode = "login") {
   }
 
   if (email) {
-    email.style.display = reset ? "none" : "block";
+    email.style.display = "block";
+    email.readOnly = reset;
+    email.setAttribute("aria-readonly", reset ? "true" : "false");
+    email.style.background = reset ? "#eef3f9" : "#fff";
+    email.style.color = reset ? "#5e748d" : "#17324d";
+    if (reset && recoveryEmail) email.value = recoveryEmail;
+    email.placeholder = reset ? "Fiók e-mail címe" : "E-mail cím";
   }
 
   if (repeat) {
@@ -295,6 +307,12 @@ export function openAuthModal(mode = "login") {
   }
 
   if (message) message.textContent = "";
+
+  const menu = document.getElementById("idesussMenu");
+  const toggle = document.getElementById("menuToggle");
+  if (menu) menu.style.display = "none";
+  toggle?.setAttribute("aria-expanded", "false");
+  document.body.classList.add("idesuss-auth-open");
   modal.style.display = "flex";
 
   window.setTimeout(() => {
@@ -309,4 +327,5 @@ export function openAuthModal(mode = "login") {
 export function closeAuthModal() {
   const modal = getModal();
   if (modal) modal.style.display = "none";
+  document.body.classList.remove("idesuss-auth-open");
 }
