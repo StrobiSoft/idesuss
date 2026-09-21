@@ -33,8 +33,17 @@ function ensureAuthStyles() {
       pointer-events: none !important;
     }
 
+    #idesussAuthModal {
+      box-sizing: border-box !important;
+      overflow-y: auto !important;
+      overscroll-behavior: contain;
+    }
+
     .idesuss-auth-card {
       position: relative;
+      z-index: 1;
+      display: block !important;
+      flex: 0 0 auto;
       width: min(420px, calc(100% - 32px));
       border-radius: 28px;
       background: linear-gradient(180deg, #f8fbff, #e8f2ff);
@@ -207,6 +216,12 @@ function ensureAuthStyles() {
     }
 
     @media (max-width: 520px) {
+      #idesussAuthModal {
+        align-items: flex-start !important;
+        padding-top: max(20px, env(safe-area-inset-top)) !important;
+        padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+      }
+
       .idesuss-auth-card {
         width: min(100% - 24px, 420px);
         padding: 26px 20px 22px;
@@ -434,6 +449,7 @@ export function openAuthModal(mode = "login") {
   if (message) message.textContent = "";
   setAuthShellLocked(true);
   modal.style.display = "flex";
+  modal.scrollTop = 0;
 
   window.setTimeout(() => {
     if (reset) {
