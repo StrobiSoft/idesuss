@@ -1,12 +1,5 @@
 import { getIdesussLanguage } from "./shared/language-preference.js";
 
-const labels = {
-  EUR: "EUR/HUF",
-  USD: "USD/HUF",
-  GBP: "GBP/HUF",
-  CHF: "CHF/HUF"
-};
-
 const LOCALES = {
   hu: "hu-HU",
   en: "en-GB",
@@ -17,7 +10,16 @@ const LOCALES = {
   be: "be-BY"
 };
 
-let lastPayload = null;
+const QUOTE_BY_LANGUAGE = {
+  hu: "HUF",
+  nl: "EUR",
+  ro: "RON",
+  pl: "PLN",
+  hr: "EUR",
+  be: "BYN"
+};
+
+let lastRequestKey = "";
 
 function getLanguage() {
   return String(getIdesussLanguage?.() || document.documentElement.lang || "hu")
@@ -27,6 +29,19 @@ function getLanguage() {
 
 function getLocale() {
   return LOCALES[getLanguage()] || LOCALES.hu;
+}
+
+function getEnglishQuote() {
+  const locale = String(navigator.language || "").toUpperCase();
+  if (locale.endsWith("-GB")) return "GBP";
+  if (locale.endsWith("-US")) return "USD";
+  if (locale.endsWith("-CH")) return "CHF";
+  return "EUR";
+}
+
+function getQuoteCurrency() {
+  const language = getLanguage();
+  return language === "en" ? getEnglishQuote() : (QUOTE_BY_LANGUAGE[language] || "HUF");
 }
 
 function getFxTranslations() {
@@ -57,17 +72,30 @@ function formatSourceDate(value) {
 }
 
 function renderRates(payload) {
-  lastPayload = payload;
+  const quote = payload?.quote || getQuoteCurrency();
+  const targets = Array.isArray(payload?.targets) ? payload.targets : Object.keys(payload?.rates || {});
+  const rows = Array.from(document.querySelectorAll(".fx-grid .fx-item"));
 
-  for (const [code, label] of Object.entries(labels)) {
-    const valueEl = document.querySelector(`[data-fx-value="${code}"]`);
-    const labelEl = document.querySelector(`[data-fx-label="${code}"]`);
+  rows.forEach((row, index) => {
+    const code = targets[index];
+    const labelEl = row.querySelector(".fx-code");
+    const valueEl = row.querySelector(".fx-value");
 
-    if (labelEl) labelEl.textContent = label;
-    if (valueEl && payload?.rates?.[code] != null) {
-      valueEl.textContent = `${formatRate(payload.rates[code])} HUF`;
+    if (!code || payload?.rates?.[code] == null) {
+      if (labelEl) labelEl.textContent = "—";
+      if (valueEl) valueEl.textContent = "—";
+      return;
     }
-  }
+
+    if (labelEl) {
+      labelEl.textContent = `${code}/${quote}`;
+      labelEl.dataset.fxLabel = code;
+    }
+    if (valueEl) {
+      valueEl.textContent = `${formatRate(payload.rates[code])} ${quote}`;
+      valueEl.dataset.fxValue = code;
+    }
+  });
 
   const status = document.getElementById("fxStatus");
   const sourceDate = document.getElementById("fxSourceDate");
@@ -100,7 +128,7 @@ function renderLoading() {
   }
 }
 
-async function loadFxRates() {
+async function loadFxRates({ force = false } = {}) {
   renderLoading();
 
   try {
@@ -109,11 +137,17 @@ async function loadFxRates() {
       throw new Error("Supabase functions client is not available.");
     }
 
+    const quote = getQuoteCurrency();
+    const requestKey = `${getLanguage()}:${quote}`;
+    if (!force && requestKey === lastRequestKey) return;
+
     const { data, error } = await client.functions.invoke("fx-rates", {
-      method: "GET"
+      method: "POST",
+      body: { quote }
     });
 
     if (error) throw error;
+    lastRequestKey = requestKey;
     renderRates(data);
   } catch (error) {
     console.error("FX rates load failed", error);
@@ -121,8 +155,5 @@ async function loadFxRates() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadFxRates);
-window.addEventListener("idesuss:home-language-applied", () => {
-  if (lastPayload) renderRates(lastPayload);
-  else renderLoading();
-});
+document.addEventListener("DOMContentLoaded", () => loadFxRates({ force: true }));
+window.addEventListener("idesuss:home-language-applied", () => loadFxRates({ force: true }));
