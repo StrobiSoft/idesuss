@@ -28,6 +28,8 @@ export default {
 
     openWebapp: "Webapp megnyitása",
 
+    openRadio: "Rádió megnyitása",
+
     inputTitle: "Illessz be egy nyilvános videólinket",
 
     inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.",
