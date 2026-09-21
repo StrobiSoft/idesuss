@@ -790,6 +790,8 @@
                         <option value="nl">🇳🇱 Dutch</option>
                         <option value="ro">🇷🇴 Română</option>
                         <option value="pl">🇵🇱 Polski</option>
+                        <option value="hr">🇭🇷 Hrvatski</option>
+                        <option value="be">🇧🇾 Беларуская</option>
                     </select>
                 </div>
 
@@ -884,14 +886,15 @@
 
     <script>
         const STORAGE_KEYS = {
-            lang: 'ides_lang',
+            lang: 'idesuss_lang',
+            legacyLang: 'ides_lang',
             history: 'ides_h',
             counter: 'ides_visit_count',
             lastVisit: 'ides_last_visit_ts'
         };
 
         const VISIT_COOLDOWN_MS = 12 * 60 * 60 * 1000;
-        const SUPPORTED_LANGS = ['hu', 'en', 'nl', 'ro', 'pl'];
+        const SUPPORTED_LANGS = ['hu', 'en', 'nl', 'ro', 'pl', 'hr', 'be'];
 
         const els = {
             brandSub: document.getElementById('brandSub'),
@@ -940,13 +943,17 @@
             const saved = localStorage.getItem(STORAGE_KEYS.lang);
             if (SUPPORTED_LANGS.includes(saved)) return saved;
 
-            const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+            const legacySaved = localStorage.getItem(STORAGE_KEYS.legacyLang)
+                || localStorage.getItem('idesuss_home_lang');
+            if (SUPPORTED_LANGS.includes(legacySaved)) {
+                localStorage.setItem(STORAGE_KEYS.lang, legacySaved);
+                return legacySaved;
+            }
 
-            if (browserLang.startsWith('hu')) return 'hu';
-            if (browserLang.startsWith('nl')) return 'nl';
-            if (browserLang.startsWith('ro')) return 'ro';
-            if (browserLang.startsWith('pl')) return 'pl';
-            return 'en';
+            const browserLang = (navigator.language || navigator.userLanguage || 'en')
+                .toLowerCase().split(/[-_]/)[0];
+
+            return SUPPORTED_LANGS.includes(browserLang) ? browserLang : 'en';
         }
 
         async function loadLanguage(lang) {
@@ -956,6 +963,8 @@
                 dict = await response.json();
                 currentLang = lang;
                 localStorage.setItem(STORAGE_KEYS.lang, lang);
+                localStorage.setItem(STORAGE_KEYS.legacyLang, lang);
+                localStorage.setItem('idesuss_home_lang', lang);
                 els.langSelect.value = lang;
                 applyLanguage();
             } catch (error) {
@@ -976,6 +985,7 @@
             nl: { home: 'Startpagina', radio: 'Radio', rules: 'Huisregels', menu: 'Menu' },
             ro: { home: 'Pagina principală', radio: 'Radio', rules: 'Regulament', menu: 'Meniu' },
             pl: { home: 'Strona główna', radio: 'Radio', rules: 'Regulamin', menu: 'Menu' },
+            hr: { home: 'Početna', radio: 'Radio', rules: 'Pravila', menu: 'Izbornik' },
             be: { home: 'Галоўная', radio: 'Радыё', rules: 'Правілы', menu: 'Меню' }
         };
 
@@ -1408,6 +1418,12 @@
         els.clearInputBtn.addEventListener('click', clearInputField);
         els.clearHistoryBtn.addEventListener('click', clearHistory);
         els.langSelect.addEventListener('change', (event) => loadLanguage(event.target.value));
+
+        window.addEventListener('storage', (event) => {
+            if (event.key !== STORAGE_KEYS.lang || !SUPPORTED_LANGS.includes(event.newValue)) return;
+            if (event.newValue === currentLang) return;
+            loadLanguage(event.newValue);
+        });
         els.aboutLink.addEventListener('click', openAboutModal);
         els.aboutLink.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' || event.key === ' ') {
