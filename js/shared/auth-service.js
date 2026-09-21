@@ -25,11 +25,19 @@ export async function signIn(supabaseClient, { email, password }) {
   return toIdentity(data?.user || null);
 }
 
-export async function signUp(supabaseClient, { email, password }) {
+export async function signUp(supabaseClient, { email, password, emailRedirectTo }) {
   const client = requireClient(supabaseClient);
-  const { data, error } = await client.auth.signUp({ email, password });
+  const options = emailRedirectTo ? { emailRedirectTo } : undefined;
+  const { data, error } = await client.auth.signUp({
+    email,
+    password,
+    ...(options ? { options } : {})
+  });
   if (error) throw error;
-  return toIdentity(data?.user || null);
+  return {
+    user: toIdentity(data?.user || null),
+    session: data?.session || null
+  };
 }
 
 export async function requestPasswordReset(supabaseClient, { email, redirectTo }) {
