@@ -2,12 +2,37 @@ function getModal() {
   return document.getElementById("idesussAuthModal");
 }
 
+function setAuthShellLocked(locked) {
+  document.body?.classList.toggle("idesuss-auth-open", locked);
+
+  const toggle = document.getElementById("menuToggle");
+  const menu = document.getElementById("idesussMenu");
+
+  if (locked) {
+    if (menu) menu.style.display = "none";
+    toggle?.setAttribute("aria-expanded", "false");
+    toggle?.setAttribute("aria-hidden", "true");
+  } else {
+    toggle?.removeAttribute("aria-hidden");
+  }
+}
+
 function ensureAuthStyles() {
   if (document.getElementById("idesussAuthStyles")) return;
 
   const style = document.createElement("style");
   style.id = "idesussAuthStyles";
   style.textContent = `
+    body.idesuss-auth-open {
+      overflow: hidden !important;
+    }
+
+    body.idesuss-auth-open #menuToggle,
+    body.idesuss-auth-open #idesussMenu {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
     .idesuss-auth-card {
       position: relative;
       width: min(420px, calc(100% - 32px));
@@ -158,7 +183,7 @@ export function ensureAuthModal() {
   modal.style.cssText = `
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: 100000;
     display: none;
     align-items: center;
     justify-content: center;
@@ -295,6 +320,7 @@ export function openAuthModal(mode = "login") {
   }
 
   if (message) message.textContent = "";
+  setAuthShellLocked(true);
   modal.style.display = "flex";
 
   window.setTimeout(() => {
@@ -309,4 +335,5 @@ export function openAuthModal(mode = "login") {
 export function closeAuthModal() {
   const modal = getModal();
   if (modal) modal.style.display = "none";
+  setAuthShellLocked(false);
 }

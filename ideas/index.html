@@ -12,6 +12,8 @@
     main{width:min(820px,100%);margin:0 auto}
     .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
     .brand{font-size:1.25rem;font-weight:900}
+    .lang-select{min-height:44px;padding:10px 12px;border:1px solid #b9c9dc;border-radius:13px;background:#fff;color:#17324d;font-weight:800}
+    .top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .back{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border:1px solid #b9c9dc;border-radius:13px;background:#fff;color:#17324d;text-decoration:none;font-weight:800}
     .card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:clamp(20px,4vw,34px);box-shadow:0 24px 70px rgba(23,50,77,.12);margin-bottom:18px}
     h1{margin:0 0 8px;font-size:clamp(2rem,6vw,3.2rem);letter-spacing:-.04em}
@@ -48,52 +50,61 @@
 <main>
   <div class="top">
     <div class="brand">Idesüss™</div>
-    <a class="back" href="/">← Főoldal</a>
+    <div class="top-actions">
+      <select id="ideasLangSelect" class="lang-select" aria-label="Language">
+        <option value="hu">🇭🇺 Magyar</option><option value="en">🇬🇧 English</option>
+        <option value="nl">🇳🇱 Nederlands</option><option value="ro">🇷🇴 Română</option>
+        <option value="pl">🇵🇱 Polski</option><option value="hr">🇭🇷 Hrvatski</option>
+        <option value="be">🇧🇾 Беларуская</option>
+      </select>
+      <a id="ideasBack" class="back" href="/">← Főoldal</a>
+    </div>
   </div>
 
   <section class="card">
-    <h1>💡 Ötletláda</h1>
-    <p class="lead">Van valami, amit hiányolsz, megváltoztatnál vagy hozzáadnál az Idesüss-höz? Írd meg. Olyan ötlet is értékes lehet, ami nekünk eszünkbe sem jutott.</p>
-    <div class="examples">
+    <h1 id="ideasTitle">💡 Ötletláda</h1>
+    <p id="ideasLead" class="lead">Van valami, amit hiányolsz, megváltoztatnál vagy hozzáadnál az Idesüss-höz? Írd meg. Olyan ötlet is értékes lehet, ami nekünk eszünkbe sem jutott.</p>
+    <div id="ideasExamples" class="examples">
       Jöhet új funkció vagy szolgáltatás, jobb szabály, használhatósági változtatás, hiányzó lehetőség, közösségi ötlet, finanszírozási vagy támogatási megoldás — gyakorlatilag bármi, amitől szerinted jobb lehet az Idesüss. A beküldéseket átnézzük és értékeljük; a technikailag megvalósítható és az Idesüss alapelveivel összeegyeztethető javaslatok bekerülhetnek a fejlesztésbe.
     </div>
 
-    <div id="loginRequired" class="login-card hidden">
-      Az ötlet beküldéséhez jelentkezz be az Idesüss-fiókodba. <a href="/#login">Bejelentkezés</a>
-    </div>
+    <div id="loginRequired" class="login-card hidden"><span id="loginRequiredText">Az ötlet beküldéséhez jelentkezz be az Idesüss-fiókodba.</span> <a id="loginRequiredLink" href="/#login">Bejelentkezés</a></div>
 
     <form id="ideaForm" class="hidden">
       <label>
-        Rövid cím
+        <span id="ideaTitleLabel">Rövid cím</span>
         <input id="ideaTitle" name="title" maxlength="120" minlength="3" required placeholder="Például: Kedvenc rádióadók megosztása" />
       </label>
       <label>
-        Az ötlet
+        <span id="ideaBodyLabel">Az ötlet</span>
         <textarea id="ideaBody" name="body" maxlength="5000" minlength="10" required placeholder="Írd le, mit változtatnál, mit adnál hozzá, és ha fontos, azt is, hogy szerinted miért lenne hasznos."></textarea>
         <span id="bodyCounter" class="counter">0 / 5000</span>
       </label>
       <label class="anon-option">
         <input id="anonymousToReviewers" type="checkbox" />
         <span>
-          Név nélkül szeretném beküldeni.
-          <small>Alapértelmezésben az ötlet a profilneveddel együtt kerül hozzánk. Ha ezt bejelölöd, a normál értékelés során nem jelenítjük meg a nevedet. A beküldés technikailag továbbra is a fiókodhoz kötődik, hogy visszaélés, zaklatás vagy szabálysértés esetén szükség esetén visszakövethető legyen.</small>
+          <span id="anonymousLabel">Név nélkül szeretném beküldeni.</span>
+          <small id="anonymousHelp">Alapértelmezésben az ötlet a profilneveddel együtt kerül hozzánk. Ha ezt bejelölöd, a normál értékelés során nem jelenítjük meg a nevedet. A beküldés technikailag továbbra is a fiókodhoz kötődik, hogy visszaélés, zaklatás vagy szabálysértés esetén szükség esetén visszakövethető legyen.</small>
         </span>
       </label>
       <button id="submitBtn" type="submit">Ötlet beküldése</button>
     </form>
     <div id="submitStatus" class="status" aria-live="polite"></div>
-    <p class="privacy">A beküldött ötlet nem jelenik meg automatikusan nyilvánosan. A saját korábbi beküldéseidet ezen az oldalon vissza tudod nézni.</p>
+    <p id="ideasPrivacy" class="privacy">A beküldött ötlet nem jelenik meg automatikusan nyilvánosan. A saját korábbi beküldéseidet ezen az oldalon vissza tudod nézni.</p>
   </section>
 
   <section id="myIdeasCard" class="card hidden">
-    <h2>Saját beküldéseim</h2>
-    <p class="lead">Itt láthatod az ötleteid aktuális feldolgozási állapotát.</p>
+    <h2 id="myIdeasTitle">Saját beküldéseim</h2>
+    <p id="myIdeasLead" class="lead">Itt láthatod az ötleteid aktuális feldolgozási állapotát.</p>
     <div id="myIdeas" class="ideas"></div>
   </section>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
+<script type="module">
+import { initIdeasLanguage, ideasT, getIdeasLocale } from "./ideas-language.js";
+initIdeasLanguage();
+
 const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -111,14 +122,9 @@ const myIdeas = document.getElementById("myIdeas");
 
 let currentUser = null;
 
-const statusLabels = {
-  new: "Beérkezett",
-  reviewing: "Vizsgálat alatt",
-  accepted: "Elfogadva",
-  planned: "Tervezve",
-  implemented: "Megvalósítva",
-  rejected: "Lezárva"
-};
+function statusLabel(status) {
+  return ideasT("status." + status) || status;
+}
 
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({
@@ -140,7 +146,7 @@ async function loadIdeas() {
 
   myIdeasCard.classList.remove("hidden");
   if (!data || data.length === 0) {
-    myIdeas.innerHTML = '<div class="idea">Még nincs beküldött ötleted.</div>';
+    myIdeas.innerHTML = '<div class="idea">' + esc(ideasT("empty")) + '</div>';
     return;
   }
 
@@ -148,9 +154,9 @@ async function loadIdeas() {
     <article class="idea">
       <div class="idea-head">
         <div class="idea-title">${esc(item.title)}</div>
-        <span class="badge">${esc(statusLabels[item.status] || item.status)}</span>
+        <span class="badge">${esc(statusLabel(item.status))}</span>
       </div>
-      <div class="idea-date">${new Date(item.created_at).toLocaleString("hu-HU")}</div>
+      <div class="idea-date">${new Date(item.created_at).toLocaleString(getIdeasLocale())}</div>
     </article>
   `).join("");
 }
@@ -182,7 +188,7 @@ form.addEventListener("submit", async (event) => {
 
   submitBtn.disabled = true;
   statusEl.className = "status";
-  statusEl.textContent = "Beküldés…";
+  statusEl.textContent = ideasT("submitting");
 
   const { error } = await client.from("idea_submissions").insert({
     user_id: currentUser.id,
@@ -196,16 +202,18 @@ form.addEventListener("submit", async (event) => {
   if (error) {
     console.error("Idea submit error", error);
     statusEl.className = "status err";
-    statusEl.textContent = "A beküldés most nem sikerült. Kérlek próbáld újra.";
+    statusEl.textContent = ideasT("submitFail");
     return;
   }
 
   form.reset();
   bodyCounter.textContent = "0 / 5000";
   statusEl.className = "status ok";
-  statusEl.textContent = "Köszönjük — az ötlet megérkezett.";
+  statusEl.textContent = ideasT("submitOk");
   await loadIdeas();
 });
+
+window.addEventListener("idesuss:ideas-languagechange", () => { if (currentUser) loadIdeas(); });
 
 init().catch(error => {
   console.error("Idea box init failed", error);

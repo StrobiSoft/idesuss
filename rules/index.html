@@ -16,6 +16,8 @@
     main{width:min(820px,100%);margin:0 auto}
     .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
     .brand{font-size:1.25rem;font-weight:900}
+    .lang-select{min-height:44px;padding:10px 12px;border:1px solid #b9c9dc;border-radius:13px;background:#fff;color:#17324d;font-weight:800}
+    .top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .back{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border:1px solid #b9c9dc;border-radius:13px;background:#fff;color:#17324d;text-decoration:none;font-weight:800}
     .card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:clamp(20px,4vw,34px);box-shadow:0 24px 70px rgba(23,50,77,.12)}
     h1{margin:0 0 8px;font-size:clamp(2rem,6vw,3.2rem);letter-spacing:-.04em}
@@ -34,30 +36,39 @@
   <main>
     <div class="top">
       <div class="brand">Idesüss™</div>
-      <a class="back" href="/">← Főoldal</a>
+      <div class="top-actions">
+        <select id="rulesLangSelect" class="lang-select" aria-label="Language">
+          <option value="hu">🇭🇺 Magyar</option><option value="en">🇬🇧 English</option>
+          <option value="nl">🇳🇱 Nederlands</option><option value="ro">🇷🇴 Română</option>
+          <option value="pl">🇵🇱 Polski</option><option value="hr">🇭🇷 Hrvatski</option>
+          <option value="be">🇧🇾 Беларуская</option>
+        </select>
+        <a id="rulesBack" class="back" href="/">← Főoldal</a>
+      </div>
     </div>
 
     <article class="card">
-      <h1>Házirend</h1>
-      <p class="lead">Ez a nyilvános házirend az Idesüss minden felhasználójára egyformán vonatkozik. A szabályok célja, hogy a közös felületek biztonságosak és vállalhatók maradjanak.</p>
+      <h1 id="rulesTitle">Házirend</h1>
+      <p id="rulesLead" class="lead">Ez a nyilvános házirend az Idesüss minden felhasználójára egyformán vonatkozik. A szabályok célja, hogy a közös felületek biztonságosak és vállalhatók maradjanak.</p>
 
       <section class="rule">
-        <div class="rule-kicker">1. szabály · Profilkép / avatar</div>
-        <h2>A profilképnek közösségi felületre alkalmasnak kell lennie.</h2>
-        <p>Pornográf, szexuálisan explicit, illetve intim testrészeket szándékosan feltáró vagy szexuális kitárulkozást ábrázoló kép avatárként nem használható.</p>
-        <p>A saját feltöltésű profilképek ellenőrzés után válhatnak nyilvánossá. A szabályba ütköző kép elutasítható vagy eltávolítható.</p>
-        <div class="sanction"><strong>Szankció:</strong> súlyos vagy szándékos szabálysértés esetén a fiók azonnal felfüggeszthető; ismételt vagy kirívó visszaélés a fiók végleges megszüntetéséhez vezethet.</div>
+        <div id="ruleKicker" class="rule-kicker">1. szabály · Profilkép / avatar</div>
+        <h2 id="ruleHeading">A profilképnek közösségi felületre alkalmasnak kell lennie.</h2>
+        <p id="ruleP1">Pornográf, szexuálisan explicit, illetve intim testrészeket szándékosan feltáró vagy szexuális kitárulkozást ábrázoló kép avatárként nem használható.</p>
+        <p id="ruleP2">A saját feltöltésű profilképek ellenőrzés után válhatnak nyilvánossá. A szabályba ütköző kép elutasítható vagy eltávolítható.</p>
+        <div id="ruleSanction" class="sanction"><strong>Szankció:</strong> súlyos vagy szándékos szabálysértés esetén a fiók azonnal felfüggeszthető; ismételt vagy kirívó visszaélés a fiók végleges megszüntetéséhez vezethet.</div>
       </section>
 
       <hr />
 
-      <section class="en" lang="en">
+      <section id="legacyEnglishSummary" class="en" lang="en" hidden>
         <h2>House Rules — English summary</h2>
         <p><strong>Rule 1 — Profile images / avatars:</strong> Pornographic, sexually explicit, deliberately exposed intimate imagery, or sexual exhibitionism is not permitted as a profile image. User-uploaded images may become public only after review. Serious or deliberate violations may result in immediate account suspension; repeated or extreme abuse may result in permanent account termination.</p>
       </section>
 
-      <p class="version">1. verzió · 2026-09-20</p>
+      <p id="rulesVersion" class="version">1. verzió · 2026-09-20</p>
     </article>
   </main>
+  <script type="module" src="./rules-language.js"></script>
 </body>
 </html>

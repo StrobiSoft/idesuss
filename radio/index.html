@@ -23,7 +23,7 @@
     button,select,input{font:inherit}
     .shell{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:22px 0 38px}
     .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .brand{font-weight:900;font-size:1.2rem;letter-spacing:.02em}.top-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.back{border:1px solid #35506d;border-radius:12px;padding:10px 14px;font-weight:800;background:#132033;color:#eaf4ff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .brand{font-weight:900;font-size:1.2rem;letter-spacing:.02em}.top-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}.language-select{border:1px solid #35506d;border-radius:12px;padding:10px 12px;font-weight:800;background:#132033;color:#eaf4ff;cursor:pointer}.back{border:1px solid #35506d;border-radius:12px;padding:10px 14px;font-weight:800;background:#132033;color:#eaf4ff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
     .radio-face{border:1px solid #33465d;border-radius:24px;background:linear-gradient(180deg,#172335,#0f1825);box-shadow:0 28px 70px rgba(0,0,0,.42);padding:20px}
     .face-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:16px;flex-wrap:wrap}
     h1{margin:0;font-size:1.5rem}.subtitle{margin:5px 0 0;color:var(--muted)}
@@ -44,16 +44,25 @@
     <div class="top">
       <div class="brand">Idesüss™ Radio</div>
       <div class="top-nav">
-        <a class="back" href="../">← Főoldal</a>
-        <a class="back" href="../app/">▶ Webapp</a>
+        <select id="radioLangSelect" class="language-select" aria-label="Language">
+          <option value="hu">🇭🇺 Magyar</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="nl">🇳🇱 Nederlands</option>
+          <option value="ro">🇷🇴 Română</option>
+          <option value="pl">🇵🇱 Polski</option>
+          <option value="hr">🇭🇷 Hrvatski</option>
+          <option value="be">🇧🇾 Беларуская</option>
+        </select>
+        <a class="back" href="../" data-radio-i18n="home">← Főoldal</a>
+        <a class="back" href="../app/" data-radio-i18n="webapp">▶ Webapp</a>
       </div>
     </div>
 
     <section class="radio-face" aria-label="Idesüss rádió">
       <div class="face-head">
         <div>
-          <h1>📻 Rádió</h1>
-          <p class="subtitle">Élő rádióállomások, gyors csatornaváltás és személyes presetek egy helyen.</p>
+          <h1 data-radio-i18n="title">📻 Rádió</h1>
+          <p class="subtitle" data-radio-i18n="subtitle">Élő rádióállomások, gyors csatornaváltás és személyes presetek egy helyen.</p>
         </div>
         <div class="tier">
           <span id="tierBadge" class="badge">Betöltés…</span>
@@ -67,30 +76,30 @@
 
       <div class="display">
         <div>
-          <div class="eyebrow">Live radio</div>
-          <div id="nowPlaying" class="now">Nincs kiválasztott állomás</div>
-          <div id="radioStatus" class="status" role="status" aria-live="polite">Válassz egy állomást a listából, vagy indíts hangtesztet.</div>
+          <div class="eyebrow" data-radio-i18n="live">Live radio</div>
+          <div id="nowPlaying" class="now" data-radio-i18n="none">Nincs kiválasztott állomás</div>
+          <div id="radioStatus" class="status" role="status" aria-live="polite" data-radio-i18n="choose">Válassz egy állomást a listából, vagy indíts hangtesztet.</div>
         </div>
         <div class="volume-wrap">
-          <label for="volumeSlider">Hangerő</label>
+          <label for="volumeSlider" data-radio-i18n="volume">Hangerő</label>
           <input id="volumeSlider" type="range" min="0" max="100" step="1" value="70" />
         </div>
       </div>
 
       <div class="transport">
-        <button id="playPauseBtn" class="primary" type="button">▶ Lejátszás</button>
-        <button id="stopBtn" type="button">■ Leállítás</button>
-        <button id="audioTestBtn" type="button">🔊 Hangteszt</button>
+        <button id="playPauseBtn" class="primary" type="button" data-radio-i18n="play">▶ Lejátszás</button>
+        <button id="stopBtn" type="button" data-radio-i18n="stop">■ Leállítás</button>
+        <button id="audioTestBtn" type="button" data-radio-i18n="test">🔊 Hangteszt</button>
       </div>
 
-      <div class="section-title">Állomások</div>
+      <div class="section-title" data-radio-i18n="stations">Állomások</div>
       <div id="stationList" class="stations"></div>
 
-      <div class="section-title">Csatornagombok / presetek</div>
+      <div class="section-title" data-radio-i18n="presets">Csatornagombok / presetek</div>
       <div id="presetGrid" class="presets"></div>
       <div id="saveHint" class="note"></div>
 
-      <div class="note">
+      <div class="note" data-radio-i18n="note">
         Az 1-es preset induláskor egy, a választott nyelvhez illő népszerű állomást ajánl. Ez csak kezdőbeállítás: bejelentkezés után bármikor lecserélheted a saját választásodra.
       </div>
     </section>

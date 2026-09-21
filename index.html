@@ -593,13 +593,6 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
-      padding: 0 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.56);
-      border: 1px solid rgba(31,56,96,0.12);
-      font-weight: 800;
-      color: #2d5189;
       white-space: nowrap;
     }
 
@@ -818,8 +811,62 @@
       .hero-grid, .info-grid, .about-grid { grid-template-columns: 1fr; }
       .hero-webapp-btn { min-width: 0; width: 100%; }
     }
-    .footer-action-btn {
+    .hero-banner-link,
+.footer-action-btn {
   text-decoration: none;
+  border: 1px solid rgba(13, 91, 215, 0.20);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.98), rgba(220,232,255,0.94));
+  color: #173b74;
+  border-radius: 16px;
+  min-height: 44px;
+  padding: 11px 18px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.98),
+    inset 0 -3px 6px rgba(13,91,215,0.14),
+    0 12px 24px rgba(13,91,215,0.22),
+    0 4px 9px rgba(0,0,0,0.14);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.hero-banner-link:hover,
+.footer-action-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, #ffffff, #edf3ff);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,1),
+    inset 0 -3px 7px rgba(13,91,215,0.16),
+    0 16px 30px rgba(13,91,215,0.28),
+    0 6px 12px rgba(0,0,0,0.16);
+}
+
+.hero-banner-link:active,
+.footer-action-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 4px 8px rgba(13,91,215,0.18),
+    0 5px 12px rgba(13,91,215,0.18);
+}
+
+#openBtn {
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.34),
+    inset 0 -3px 7px rgba(0,0,0,0.16),
+    0 16px 30px rgba(13,91,215,0.34),
+    0 6px 14px rgba(0,0,0,0.18) !important;
+}
+
+#openBtn:hover {
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.42),
+    inset 0 -3px 7px rgba(0,0,0,0.18),
+    0 20px 36px rgba(13,91,215,0.40),
+    0 8px 16px rgba(0,0,0,0.20) !important;
+}
+
+.footer-action-btn {
   border: 1px solid rgba(13, 91, 215, 0.18);
   background: linear-gradient(
     180deg,
@@ -1324,17 +1371,15 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
 
   <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp"></button>
 
-  <button class="idesussMenuBtn" id="openRadioBtn" type="button">📻 Rádió</button>
+  <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio"></button>
 
-  <button class="idesussMenuBtn" id="openRulesBtn" type="button">📜 Házirend</button>
+  <button class="idesussMenuBtn" id="openRulesBtn" type="button" data-i18n="menuRules"></button>
 
   <div class="menu-idea-row">
-    <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button">💡 Ötletláda</button>
-    <span class="menu-info" tabindex="0" aria-label="Mi az Ötletláda?">
+    <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas"></button>
+    <span class="menu-info" tabindex="0" data-i18n-aria-label="menuIdeasInfoLabel">
       i
-      <span class="menu-info-tooltip" role="tooltip">
-        Ide írhatsz bármit, amitől szerinted jobb lehet az Idesüss: új szabályt, funkciót vagy szolgáltatást, hiányzó lehetőséget, változtatási javaslatot, akár finanszírozási vagy támogatási ötletet is. A beküldéseket átnézzük és értékeljük; a megvalósítható, az Idesüss elveivel összeegyeztethető ötletek bekerülhetnek a fejlesztésbe.
-      </span>
+      <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo"></span>
     </span>
   </div>
 
@@ -1367,6 +1412,7 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
     <option value="ro">RO Română</option>
     <option value="pl">PL Polski</option>
     <option value="hr">HR Hrvatski</option>
+    <option value="be">BY Беларуская</option>
   </select>
 
   <span id="headerClock" class="header-clock-inline">00:00</span>
@@ -1479,11 +1525,6 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
               </div>
              <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details"></button>
             </div>
-            <div class="hero-footer-links idesuss-footer-actions">
-              <button class="footer-action-btn" type="button" data-panel="how" data-i18n="heroHow"></button>
-              <button class="footer-action-btn" type="button" data-panel="about" data-i18n="heroAbout"></button>
-              <a class="footer-action-btn" href="https://idesuss.net/app" data-i18n="heroWebapp"></a>
-            </div>
           </div>
         </div>
       </div>
@@ -1582,40 +1623,23 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
   </footer>
 
   <script type="module">
-    import lang from "./js/lang/modules/Home/lang/hu.js";
+    import { initHomeLanguage } from "./js/lang/home-language.js?v=20260921-shared-lang1";
 
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-
-    document.getElementById('year').textContent = new Date().getFullYear();
-    function applyTranslations(section) {
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.dataset.i18n;
-    const value = section[key];
-
-    if (typeof value === "string") {
-      el.textContent = value;
+    function updateHeaderClock() {
+      const clock = document.getElementById("headerClock");
+      if (!clock) return;
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      clock.textContent = `${hh}:${mm}`;
     }
-  });
-}
 
-applyTranslations(lang.home);
-
-    // Itt folytathatod a JS logikát (dict, óra, stb.)
-
-  function updateHeaderClock() {
-    const clock = document.getElementById("headerClock");
-    if (!clock) return;
-
-    const now = new Date();
-    const hh = String(now.getHours()).padStart(2, "0");
-    const mm = String(now.getMinutes()).padStart(2, "0");
-
-    clock.textContent = `${hh}:${mm}`;
-  }
-
-  updateHeaderClock();
-  setInterval(updateHeaderClock, 1000);
-</script>
+    updateHeaderClock();
+    setInterval(updateHeaderClock, 1000);
+    initHomeLanguage().catch((error) => console.error("Home language init failed", error));
+  </script>
 
 <script src="js/resolver.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1684,7 +1708,11 @@ async function updateOnlineCount() {
 
   if (!error) {
     const el = document.getElementById("onlineUsersCounter");
-if (el) el.textContent = `☻ ${count || 0} online most`;
+if (el) {
+  el.dataset.count = String(count || 0);
+  const template = window.idesussHomeTranslations?.onlineUsersCounter || "👁 {count} online";
+  el.textContent = template.replace("{count}", el.dataset.count);
+}
   }
 }
 
@@ -1730,11 +1758,7 @@ async function registerVisitSession() {
   }
 
   const { data, error: statError } = await supabaseClient.rpc(
-    "increment_site_stat",
-    {
-      stat_name: "total_visits",
-      amount: 1
-    }
+    "register_site_visit"
   );
 
   if (statError) {
@@ -1745,7 +1769,9 @@ async function registerVisitSession() {
   console.log("Visit registered. Total visits:", data);
   const totalEl = document.getElementById("totalVisitsCounter");
 if (totalEl) {
-  totalEl.textContent = `🌍 ${data} összes látogatás`;
+  totalEl.dataset.count = String(data ?? 0);
+  const template = window.idesussHomeTranslations?.totalVisitsCounter || "🌍 {count} total visits";
+  totalEl.textContent = template.replace("{count}", totalEl.dataset.count);
 }
 }
 async function loadTotalVisits() {
@@ -1763,7 +1789,9 @@ async function loadTotalVisits() {
   const totalEl = document.getElementById("totalVisitsCounter");
 
   if (totalEl && data) {
-    totalEl.textContent = `🌍 ${data.value} összes látogatás`;
+    totalEl.dataset.count = String(data.value ?? 0);
+    const template = window.idesussHomeTranslations?.totalVisitsCounter || "🌍 {count} total visits";
+    totalEl.textContent = template.replace("{count}", totalEl.dataset.count);
   }
 }
 
@@ -1787,21 +1815,19 @@ if (!lastVisit || now - Number(lastVisit) > cooldown) {
 </script>
 
 <script type="module">
-  import lang from "./js/lang/modules/Home/lang/hu.js";
-
   document.addEventListener("DOMContentLoaded", function () {
 const infoPanel = document.getElementById("infoPanel");
 const infoPanelTitle = document.getElementById("infoPanelTitle");
 const infoPanelText = document.getElementById("infoPanelText");
 const infoPanelClose = document.getElementById("infoPanelClose");
 
-const panelTexts = {
-  how: lang.home.how,
-  about: lang.home.about,
-  android: lang.home.android
-};
+function getPanelTexts() {
+  const home = window.idesussHomeTranslations || {};
+  return { how: home.how, about: home.about, android: home.android };
+}
+
 function openInfoPanel(type) {
-  const data = panelTexts[type];
+  const data = getPanelTexts()[type];
   if (!data || !infoPanel || !infoPanelTitle || !infoPanelText) return;
 
   infoPanelTitle.textContent = data.title;

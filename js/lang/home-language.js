@@ -1,37 +1,20 @@
-const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "be"];
-const HOME_LANG_STORAGE_KEY = "idesuss_home_lang";
+import {
+  getIdesussLanguage,
+  setIdesussLanguage,
+  subscribeIdesussLanguage,
+  normalizeIdesussLanguage
+} from "../shared/language-preference.js";
 
-function ensureBelarusianHomeOption(languageSelect) {
-  if (!languageSelect || languageSelect.querySelector('option[value="be"]')) return;
-
-  const option = document.createElement("option");
-  option.value = "be";
-  option.textContent = "BY Беларуская";
-  languageSelect.appendChild(option);
-}
+const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "nl", "ro", "pl", "hr", "be"];
 
 function getSafeHomeLanguage(langCode) {
-  if (SUPPORTED_HOME_LANGUAGES.includes(langCode)) {
-    return langCode;
-  }
-  return "hu";
-}
-
-function getInitialHomeLanguage() {
-  const saved = window.localStorage.getItem(HOME_LANG_STORAGE_KEY);
-  if (SUPPORTED_HOME_LANGUAGES.includes(saved)) {
-    return saved;
-  }
-
-  const browserLanguage = (window.navigator.language || "hu").slice(0, 2).toLowerCase();
-  return getSafeHomeLanguage(browserLanguage);
+  const normalized = normalizeIdesussLanguage(langCode);
+  return SUPPORTED_HOME_LANGUAGES.includes(normalized) ? normalized : "hu";
 }
 
 function getTranslationValue(section, key) {
   return key.split(".").reduce(function (current, part) {
-    if (!current || typeof current !== "object") {
-      return undefined;
-    }
+    if (!current || typeof current !== "object") return undefined;
     return current[part];
   }, section);
 }
@@ -40,43 +23,56 @@ function applyHomeTranslations(section) {
   document.querySelectorAll("[data-i18n]").forEach(function (element) {
     const key = element.dataset.i18n;
     const value = getTranslationValue(section, key);
-
     if (typeof value === "string") {
-      element.textContent = value;
+      const count = element.dataset.count;
+      element.textContent = count != null ? value.replace("{count}", count) : value;
     }
+  });
+
+  document.querySelectorAll("[data-i18n-aria-label]").forEach(function (element) {
+    const key = element.dataset.i18nAriaLabel;
+    const value = getTranslationValue(section, key);
+    if (typeof value === "string") element.setAttribute("aria-label", value);
   });
 }
 
-async function loadHomeLanguage(langCode) {
+export async function loadHomeLanguage(langCode, { persist = true } = {}) {
   const safeLanguage = getSafeHomeLanguage(langCode);
   const languageModule = await import("./modules/Home/lang/" + safeLanguage + ".js");
   const homeTranslations = languageModule.default.home || {};
 
+  window.idesussHomeTranslations = homeTranslations;
   document.documentElement.lang = safeLanguage;
-  window.localStorage.setItem(HOME_LANG_STORAGE_KEY, safeLanguage);
+  if (persist) setIdesussLanguage(safeLanguage);
 
   const languageSelect = document.getElementById("langSelect");
-  if (languageSelect) {
-    ensureBelarusianHomeOption(languageSelect);
-    languageSelect.value = safeLanguage;
-  }
+  if (languageSelect) languageSelect.value = safeLanguage;
 
   applyHomeTranslations(homeTranslations);
+  window.dispatchEvent(new CustomEvent("idesuss:home-language-applied", {
+    detail: { language: safeLanguage, translations: homeTranslations }
+  }));
 }
 
 export async function initHomeLanguage() {
   const languageSelect = document.getElementById("langSelect");
-  const initialLanguage = getInitialHomeLanguage();
+  const initialLanguage = getSafeHomeLanguage(getIdesussLanguage());
 
   if (languageSelect) {
-    ensureBelarusianHomeOption(languageSelect);
     languageSelect.value = initialLanguage;
     languageSelect.addEventListener("change", function (event) {
-      loadHomeLanguage(event.target.value).catch(function () {
+      loadHomeLanguage(event.target.value).catch(function (error) {
+        console.error("Home language switch failed", error);
         loadHomeLanguage("hu");
       });
     });
   }
 
-  await loadHomeLanguage(initialLanguage);
+  subscribeIdesussLanguage((language) => {
+    const safeLanguage = getSafeHomeLanguage(language);
+    if (safeLanguage === document.documentElement.lang) return;
+    loadHomeLanguage(safeLanguage, { persist: false }).catch(console.error);
+  });
+
+  await loadHomeLanguage(initialLanguage, { persist: false });
 }

@@ -50,6 +50,12 @@ export default {
 
     clear: "Clear",
 
+    menuRadio: "📻 Radio",
+    menuRules: "📜 House rules",
+    menuIdeas: "💡 Idea Box",
+    menuIdeasInfoLabel: "What is the Idea Box?",
+    menuIdeasInfo: "Send anything you think could make Idesüss better: a new rule, feature or service, a missing option, a change request, or even a funding or support idea. We review submissions and feasible ideas that fit Idesüss principles may enter development.",
+
     details: "Details",
 
     profile: "👤 Profile",

@@ -50,6 +50,12 @@ export default {
 
     clear: "Törlés",
 
+    menuRadio: "📻 Rádió",
+    menuRules: "📜 Házirend",
+    menuIdeas: "💡 Ötletláda",
+    menuIdeasInfoLabel: "Mi az Ötletláda?",
+    menuIdeasInfo: "Ide írhatsz bármit, amitől szerinted jobb lehet az Idesüss: új szabályt, funkciót vagy szolgáltatást, hiányzó lehetőséget, változtatási javaslatot, akár finanszírozási vagy támogatási ötletet is. A beküldéseket átnézzük és értékeljük; a megvalósítható, az Idesüss elveivel összeegyeztethető ötletek bekerülhetnek a fejlesztésbe.",
+
     details: "Részletek",
     
     profile: "👤 Profil",

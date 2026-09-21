@@ -71,6 +71,15 @@ jobs:
           node --check app/language-options.js
           node --check js/shared/auth-service.js
           node --check js/shared/profile-service.js
+          node --check js/shared/language-preference.js
+          node --check js/lang/home-language.js
+          node --check js/lang/modules/Home/lang/hu.js
+          node --check js/lang/modules/Home/lang/en.js
+          node --check js/lang/modules/Home/lang/nl.js
+          node --check js/lang/modules/Home/lang/ro.js
+          node --check js/lang/modules/Home/lang/pl.js
+          node --check js/lang/modules/Home/lang/hr.js
+          node --check js/lang/modules/Home/lang/be.js
           node --check js/menu/auth-shell.js
           node --check js/menu/auth-controller.js
           node --check js/menu/profile.js
@@ -81,6 +90,9 @@ jobs:
           node --check radio/radio-engine.js
           node --check radio/radio-entitlements.js
           node --check radio/radio-stations.js
+          node --check radio/radio-language.js
           node --check radio/radio-app.js
+          node --check rules/rules-language.js
+          node --check ideas/ideas-language.js
       - name: Validate generated radio development audio
         run: node tools/validate-radio-dev-audio.mjs

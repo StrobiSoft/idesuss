@@ -23,6 +23,7 @@ function normalizedLocale(raw) {
 
 export function detectRadioLocale() {
   const candidates = [
+    window.localStorage?.getItem("idesuss_lang"),
     window.localStorage?.getItem("idesuss_home_lang"),
     window.localStorage?.getItem("ides_lang"),
     document.documentElement?.lang,

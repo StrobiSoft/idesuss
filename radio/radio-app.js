@@ -2,6 +2,7 @@ import { IdesussRadioEngine } from "./radio-engine.js";
 import { loadRadioCapabilities, loadSavedRadioChannels, saveRadioChannel } from "./radio-entitlements.js";
 import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation, createDevelopmentExternalStation, getLocaleFavoriteStationSeed, resolveFavoriteStation, detectRadioLocale } from "./radio-stations.js";
 import { loadSharedRadioCatalog } from "./radio-api-client.js";
+import { initRadioLanguage, radioT } from "./radio-language.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
 const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
@@ -67,13 +68,14 @@ async function prepareStations() {
 
   return localeFavorite;
 }
-const STREAM_STATE_TEXT = {
-  loading:"Streamforrás betöltése…", ready:"A stream készen áll a lejátszásra.",
-  buffering:"Pufferelés…", stalled:"A stream nem küld adatot; várakozás az újracsatlakozásra…",
-  playing:"Élő adás lejátszása folyamatban.", paused:"Lejátszás szüneteltetve.",
-  stopped:"Lejátszás leállítva.", ended:"A stream véget ért.",
-  unconfigured:"Az állomáshoz még nincs streamforrás bekötve."
-};
+function streamStateText(state) {
+  const key = {
+    loading:"loading", ready:"ready", buffering:"buffering", stalled:"stalled",
+    playing:"playing", paused:"paused", stopped:"stopped", ended:"ended",
+    unconfigured:"streamMissing"
+  }[state];
+  return key ? radioT(key) : "";
+}
 
 const storedVolume = Number(localStorage.getItem(VOLUME_STORAGE_KEY));
 const initialVolume = Number.isFinite(storedVolume) ? Math.min(1, Math.max(0, storedVolume)) : 0.7;
@@ -97,7 +99,7 @@ function tierLabel(tier) {
   if (tier==="premium_plus") return "Premium Plus";
   if (tier==="premium") return "Premium";
   if (tier==="registered") return "Free";
-  return "Vendég";
+  return radioT("guest");
 }
 function requiredTierForSlot(slot) {
   if (slot<=2) return "Free";
@@ -116,8 +118,8 @@ function applySkin(requestedSkin,{persist=true}={}) {
 function savedRowToStation(row) {
   return normalizeRadioStation({
     id:row?.metadata?.station_id||row?.channel_key||"saved-station",
-    name:row?.channel_name||"Mentett állomás",
-    info:row?.metadata?.info||"Mentett rádióállomás",
+    name:row?.channel_name||radioT("savedStation"),
+    info:row?.metadata?.info||radioT("savedStation"),
     streamUrl:row?.stream_url||"",
     streamType:row?.metadata?.stream_type||"auto",
     artwork:row?.metadata?.artwork||"",
@@ -137,7 +139,7 @@ function indexSavedPresets(rows) {
 }
 async function selectStation(station,message=null) {
   const normalized=normalizeRadioStation(station);
-  if (!normalized) { setStatus("Érvénytelen rádióállomás-adat."); return; }
+  if (!normalized) { setStatus(radioT("unavailable")); return; }
   selectedStation=normalized;
   engine.audio.loop = normalized.id === "idesuss-demo-tone";
   try {
@@ -176,8 +178,8 @@ function renderStations() {
       button,
       "span",
       station.sourceStatus === "unconfigured"
-        ? `${station.info || "Rádióállomás"} · Élő stream még nincs bekötve`
-        : (station.info || "Rádióállomás")
+        ? `${station.info || radioT("radioStation")} · Élő stream még nincs bekötve`
+        : (station.info || radioT("radioStation"))
     );
     button.addEventListener("click",()=>selectStation(station));
     host.appendChild(button);
@@ -194,7 +196,7 @@ function renderPresets() {
     button.className=`preset${unlocked?"":" locked"}${stored?" saved":""}`;
     button.disabled=!unlocked;
     appendTextElement(button,"b",rule.slot);
-    appendTextElement(button,"small",stationForButton?.name||(unlocked?"üres":requiredTierForSlot(rule.slot)));
+    appendTextElement(button,"small",stationForButton?.name||(unlocked?radioT("empty"):requiredTierForSlot(rule.slot)));
     button.title=unlocked
       ? (stationForButton?`${stationForButton.name} betöltése`:"Üres preset — a kiválasztott állomás mentése")
       : `${requiredTierForSlot(rule.slot)} csomag szükséges`;
@@ -217,7 +219,7 @@ function renderPresets() {
         setStatus("A szerveroldali preset-mentési jogosultság még nem aktív ehhez a csomaghoz.");
         return;
       }
-      if (!selectedStation) { setStatus("Mentéshez előbb válassz állomást."); return; }
+      if (!selectedStation) { setStatus(radioT("selectFirst")); return; }
       try {
         await saveRadioChannel(radioClient,radioUser?.id,rule.slot,selectedStation);
         savedPresets[rule.slot]={...selectedStation};
@@ -235,8 +237,8 @@ function bindControls() {
   $("#playPauseBtn")?.addEventListener("click",async()=>{
     try { await engine.toggle(); }
     catch (error) {
-      if (error.message==="NO_STATION") setStatus("Előbb válassz állomást.");
-      else if (error.message==="STREAM_NOT_CONFIGURED") setStatus("Ehhez az állomáshoz még nincs streamforrás bekötve.");
+      if (error.message==="NO_STATION") setStatus(radioT("selectFirst"));
+      else if (error.message==="STREAM_NOT_CONFIGURED") setStatus(radioT("streamMissing"));
       else setStatus(`Lejátszási hiba: ${error.message}`);
     }
   });
@@ -272,8 +274,9 @@ function bindEngineEvents() {
   engine.addEventListener("state",(event)=>{
     const state=event.detail?.state;
     const button=$("#playPauseBtn");
-    if (button) button.textContent=state==="playing"?"⏸ Szünet":"▶ Lejátszás";
-    if (STREAM_STATE_TEXT[state]) setStatus(STREAM_STATE_TEXT[state]);
+    if (button) button.textContent=state==="playing"?radioT("pause"):radioT("play");
+    const stateText = streamStateText(state);
+    if (stateText) setStatus(stateText);
   });
   engine.addEventListener("volume",(event)=>{
     const slider=$("#volumeSlider");
@@ -282,7 +285,17 @@ function bindEngineEvents() {
   engine.addEventListener("error",(event)=>setStatus(event.detail?.message||"Rádióhiba történt."));
 }
 async function init() {
+  initRadioLanguage();
   bindControls(); bindEngineEvents();
+
+  window.addEventListener("idesuss:radio-languagechange", async () => {
+    await prepareStations();
+    renderTier();
+    renderStations();
+    renderPresets();
+    const button = $("#playPauseBtn");
+    if (button) button.textContent = engine.audio?.paused === false ? radioT("pause") : radioT("play");
+  });
 
   const localeFavorite = await prepareStations();
   renderStations();
@@ -296,7 +309,7 @@ async function init() {
         : "A rádiómotor készen áll. Nyomd meg a Lejátszás gombot az Idesüss Demo hangmintához."
     );
   } else {
-    setStatus("Jelenleg nincs elérhető rádióállomás.");
+    setStatus(radioT("unavailable"));
   }
 
   try {
