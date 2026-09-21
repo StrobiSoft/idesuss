@@ -130,6 +130,8 @@ export async function resolveFavoriteStation(seed) {
 
       return normalizeRadioStation({
         ...seed,
+        catalogManaged: false,
+        distributionStatus: "directory_resolved",
         name: String(match.name || seed.name).trim() || seed.name,
         info: seed.info || "Ajánlott kezdőállomás",
         streamUrl: String(match.url_resolved || match.url || "").trim(),
