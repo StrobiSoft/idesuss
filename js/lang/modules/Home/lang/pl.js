@@ -8,6 +8,7 @@ inputSubtitle:"TikTok, YouTube, Instagram Reel, filmy z Facebooka i inne obsług
 inputLabel:"Publiczny adres URL filmu", clipboardChecking:"Sprawdzanie schowka…", installStateUnknown:"Ładowanie stanu instalacji…",
 publicLinksOnly:"Tylko publiczne linki", heroBannerText:"Niektóre urządzenia z Androidem nie są obsługiwane!",
 footerDesc:"Strona główna + punkt wejścia do miniaplikacji dla obsługiwanych publicznych linków wideo.",
+menuRadio:"📻 Radio", menuRules:"📜 Regulamin", menuIdeas:"💡 Skrzynka pomysłów", menuIdeasInfoLabel:"Czym jest Skrzynka pomysłów?", menuIdeasInfo:"Możesz przesłać wszystko, co Twoim zdaniem może ulepszyć Idesüss: nową zasadę, funkcję lub usługę, brakującą możliwość, propozycję zmiany, a nawet pomysł na finansowanie lub wsparcie. Przeglądamy zgłoszenia, a wykonalne propozycje zgodne z zasadami Idesüss mogą trafić do rozwoju.",
 paste:"Wklej", open:"Otwórz", clear:"Wyczyść", details:"Szczegóły", profile:"👤 Profil", logout:"🚪 Wyloguj",
 register:"Rejestracja", login:"Zaloguj się", or:"lub",
 how:{title:"Jak to działa?",text:"Wklej publiczny link do filmu, a następnie naciśnij przycisk otwierania. Idesüss spróbuje otworzyć treść w prosty i szybki sposób."},
