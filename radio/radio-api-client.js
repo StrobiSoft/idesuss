@@ -44,7 +44,8 @@ export async function loadSharedRadioCatalog(locale, apiBase = getConfiguredRadi
       streamType: "auto",
       enabled: station?.enabled !== false,
       catalogManaged: true,
-      distributionStatus: "approved",
+      serverManagedPlayback: true,
+      distributionStatus: "server_managed",
       sourceStatus: playbackUrl ? "configured" : "unconfigured",
       isLocaleFavorite: Boolean(station?.preferred)
     };
