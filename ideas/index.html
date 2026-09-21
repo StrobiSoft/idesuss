@@ -121,6 +121,9 @@ const myIdeasCard = document.getElementById("myIdeasCard");
 const myIdeas = document.getElementById("myIdeas");
 
 let currentUser = null;
+let submitInFlight = false;
+let lastSubmissionSignature = "";
+let lastSubmissionAt = 0;
 
 function statusLabel(status) {
   return ideasT("status." + status) || status;
@@ -180,37 +183,58 @@ bodyEl.addEventListener("input", () => {
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!currentUser) return;
+  if (!currentUser || submitInFlight) return;
 
   const title = titleEl.value.trim();
   const body = bodyEl.value.trim();
-  if (title.length < 3 || body.length < 10) return;
-
-  submitBtn.disabled = true;
-  statusEl.className = "status";
-  statusEl.textContent = ideasT("submitting");
-
-  const { error } = await client.from("idea_submissions").insert({
-    user_id: currentUser.id,
-    title,
-    body,
-    anonymous_to_reviewers: Boolean(anonymousToReviewers?.checked)
-  });
-
-  submitBtn.disabled = false;
-
-  if (error) {
-    console.error("Idea submit error", error);
+  if (title.length < 3 || body.length < 10) {
     statusEl.className = "status err";
     statusEl.textContent = ideasT("submitFail");
     return;
   }
 
-  form.reset();
-  bodyCounter.textContent = "0 / 5000";
-  statusEl.className = "status ok";
-  statusEl.textContent = ideasT("submitOk");
-  await loadIdeas();
+  const anonymous = Boolean(anonymousToReviewers?.checked);
+  const signature = JSON.stringify([title, body, anonymous]);
+  const now = Date.now();
+
+  if (signature === lastSubmissionSignature && now - lastSubmissionAt < 60_000) {
+    statusEl.className = "status ok";
+    statusEl.textContent = ideasT("submitOk");
+    return;
+  }
+
+  submitInFlight = true;
+  submitBtn.disabled = true;
+  statusEl.className = "status";
+  statusEl.textContent = ideasT("submitting");
+
+  try {
+    const { error } = await client.from("idea_submissions").insert({
+      user_id: currentUser.id,
+      title,
+      body,
+      anonymous_to_reviewers: anonymous
+    });
+
+    if (error) {
+      console.error("Idea submit error", error);
+      statusEl.className = "status err";
+      statusEl.textContent = ideasT("submitFail");
+      return;
+    }
+
+    lastSubmissionSignature = signature;
+    lastSubmissionAt = Date.now();
+
+    form.reset();
+    bodyCounter.textContent = "0 / 5000";
+    statusEl.className = "status ok";
+    statusEl.textContent = ideasT("submitOk");
+    await loadIdeas();
+  } finally {
+    submitInFlight = false;
+    submitBtn.disabled = false;
+  }
 });
 
 window.addEventListener("idesuss:ideas-languagechange", () => { if (currentUser) loadIdeas(); });
