@@ -16,7 +16,7 @@ const QUOTE_BY_LANGUAGE = {
   ro: "RON",
   pl: "PLN",
   hr: "EUR",
-  be: "BYN"
+  be: "EUR"
 };
 
 let lastRequestKey = "";
@@ -102,8 +102,8 @@ function renderRates(payload) {
 
   if (sourceDate) {
     sourceDate.textContent = payload?.sourceDate
-      ? t("sourceDate", "MNB rate date: {date}").replace("{date}", formatSourceDate(payload.sourceDate))
-      : t("source", "MNB official daily rate");
+      ? t("sourceDate", "ECB rate date: {date}").replace("{date}", formatSourceDate(payload.sourceDate))
+      : t("source", "ECB daily reference rate");
   }
 
   if (status) {
