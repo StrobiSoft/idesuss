@@ -11,6 +11,16 @@ footerDesc:"Pagină principală + punct de acces mini-aplicație pentru linkuri 
 menuRadio:"📻 Radio", menuRules:"📜 Regulament", menuIdeas:"💡 Cutia cu idei", menuIdeasInfoLabel:"Ce este Cutia cu idei?", menuIdeasInfo:"Poți trimite orice crezi că ar putea face Idesüss mai bun: o regulă nouă, o funcție sau un serviciu, o opțiune lipsă, o propunere de schimbare sau chiar o idee de finanțare ori sprijin. Analizăm propunerile, iar cele realizabile și compatibile cu principiile Idesüss pot intra în dezvoltare.",
 paste:"Lipește", open:"Deschide", clear:"Șterge", details:"Detalii", profile:"👤 Profil", logout:"🚪 Deconectare",
 register:"Înregistrare", login:"Autentificare", or:"sau",
+fx: {
+  "title": "Cursuri valutare oficiale zilnice",
+  "source": "Curs oficial zilnic MNB",
+  "sourceDate": "Data cursului MNB: {date}",
+  "loading": "se încarcă…",
+  "updated": "actualizat",
+  "unavailable": "indisponibil temporar",
+  "note": "Sursa: Magyar Nemzeti Bank (Banca Națională a Ungariei). Cursurile oficiale sunt actualizate în zilele lucrătoare MNB; Idesüss nu urmărește variațiile pieței din timpul zilei."
+},
+
 how:{title:"Cum funcționează?",text:"Lipește un link video public, apoi apasă butonul de deschidere. Idesüss va încerca să deschidă conținutul simplu și rapid."},
 about:{title:"Despre",text:"Idesüss a fost inspirat de un vechi prieten foarte bun. Felul lui de a gândi, obiceiurile și perspectiva sa aparte asupra lumii m-au făcut să încep să mă gândesc la această pagină. Este puțin paranoic și puțin leneș, așa că pentru o vreme pagina era cât pe ce să se numească „Lazy Driver”. În cele din urmă a devenit Idesüss și nu regret deloc. Numele se potrivește mult mai bine atmosferei și intenției paginii, fără să fie jignitor pentru persoana care a inspirat ideea."},
 android:{title:"Compatibilitate Android",text:"Pe unele dispozitive sau browsere Android, deschiderea videoclipurilor poate funcționa diferit. Idesüss încearcă să gestioneze linkul cât mai simplu, dar din cauza limitărilor platformei conținutul se poate deschide uneori doar pe un site extern sau într-o aplicație."}

@@ -72,7 +72,17 @@ export default {
 
     or: "vagy",
 
-    how: {
+    fx: {
+      "title": "Napi hivatalos árfolyamok",
+      "source": "MNB napi hivatalos árfolyam",
+      "sourceDate": "MNB árfolyamnap: {date}",
+      "loading": "betöltés…",
+      "updated": "frissítve",
+      "unavailable": "átmenetileg nem elérhető",
+      "note": "Forrás: Magyar Nemzeti Bank. Az MNB hivatalos devizaárfolyamai munkanapokon frissülnek; az Idesüss a napon belüli piaci ingadozást nem követi."
+    },
+
+how: {
       title: "Hogyan működik?",
       text: "Másolj be egy nyilvános videólinket, majd nyomd meg a megnyitás gombot. Az Idesüss megpróbálja egyszerűen és gyorsan megnyitni a tartalmat."
     },

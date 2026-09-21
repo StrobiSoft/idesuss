@@ -70,7 +70,17 @@ export default {
 
     or: "or",
 
-    how: {
+    fx: {
+      "title": "Official daily exchange rates",
+      "source": "MNB official daily rate",
+      "sourceDate": "MNB rate date: {date}",
+      "loading": "loading…",
+      "updated": "updated",
+      "unavailable": "temporarily unavailable",
+      "note": "Source: Magyar Nemzeti Bank (Central Bank of Hungary). Official exchange rates are updated on MNB business days; Idesüss does not track intraday market movements."
+    },
+
+how: {
       title: "How does it work?",
       text: "Paste a public video link, then press the open button. Idesüss will try to open the content in a simple and fast way."
     },
