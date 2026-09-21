@@ -33,7 +33,10 @@ async function prepareStations() {
     STATIONS = normalizedShared;
   } else {
     const builtInStations = getEnabledRadioStations();
-    localeFavorite = builtInStations.find(
+    const localeRecommendations = builtInStations
+      .filter((station) => station.preferredLocale === locale && station.recommendedSlot)
+      .sort((a, b) => a.recommendedSlot - b.recommendedSlot);
+    localeFavorite = localeRecommendations[0] || builtInStations.find(
       (station) => station.isLocaleFavorite && station.preferredLocale === locale
     ) || null;
 
@@ -58,9 +61,13 @@ async function prepareStations() {
     ...(developmentExternalStation ? [developmentExternalStation] : [])
   ];
 
+  const localeRecommendations = STATIONS
+    .filter((station) => station.preferredLocale === locale && station.recommendedSlot)
+    .sort((a, b) => a.recommendedSlot - b.recommendedSlot);
+
   PRESET_RULES = Array.from({ length: 8 }, (_unused, index) => ({
     slot: index + 1,
-    freeStation: index === 0 ? (localeFavorite || null) : null
+    freeStation: index < 2 ? (localeRecommendations[index] || (index === 0 ? localeFavorite : null)) : null
   }));
 
   return localeFavorite;
