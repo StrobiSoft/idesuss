@@ -215,6 +215,31 @@ function ensureAuthStyles() {
       text-decoration: none;
     }
 
+    .idesuss-auth-toast {
+      position: fixed;
+      left: 50%;
+      top: max(18px, env(safe-area-inset-top));
+      z-index: 100100;
+      width: min(560px, calc(100% - 28px));
+      transform: translate(-50%, -12px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(16, 48, 82, .96);
+      color: #fff;
+      font-weight: 800;
+      line-height: 1.4;
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(8, 20, 38, .30);
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .idesuss-auth-toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
     @media (max-width: 520px) {
       #idesussAuthModal {
         align-items: flex-start !important;
@@ -464,4 +489,29 @@ export function closeAuthModal() {
   const modal = getModal();
   if (modal) modal.style.display = "none";
   setAuthShellLocked(false);
+}
+
+
+let authToastTimer = null;
+
+export function showAuthToast(message, duration = 5200) {
+  if (!message) return;
+  ensureAuthStyles();
+
+  let toast = document.getElementById("idesussAuthToast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "idesussAuthToast";
+    toast.className = "idesuss-auth-toast";
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  window.clearTimeout(authToastTimer);
+  requestAnimationFrame(() => toast.classList.add("show"));
+  authToastTimer = window.setTimeout(() => {
+    toast.classList.remove("show");
+  }, duration);
 }
