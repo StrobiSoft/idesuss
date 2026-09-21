@@ -14,6 +14,7 @@ on:
       - 'radio/**'
       - 'friends/**'
       - 'tools/validate-friends-page.mjs'
+      - 'tools/validate-password-recovery-flow.mjs'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-webapp-locales.mjs'
@@ -82,6 +83,8 @@ jobs:
           node --check js/lang/modules/auth/lang/auth.js
       - name: Validate friends and private messaging slice
         run: node tools/validate-friends-page.mjs
+      - name: Validate password recovery flow
+        run: node tools/validate-password-recovery-flow.mjs
       - name: Validate radio module syntax
         run: |
           node --check radio/radio-engine.js
