@@ -146,7 +146,13 @@ async function loadFxRates({ force = false } = {}) {
       body: { quote }
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error("FX Edge Function error", { error, data });
+      throw error;
+    }
+    if (!data?.rates || !Object.keys(data.rates).length) {
+      throw new Error("FX Edge Function returned no rates.");
+    }
     lastRequestKey = requestKey;
     renderRates(data);
   } catch (error) {

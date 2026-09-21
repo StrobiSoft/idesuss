@@ -153,6 +153,10 @@ function ensureAuthStyles() {
       outline: none;
     }
 
+    .auth-password-toggle svg[hidden] {
+      display: none !important;
+    }
+
     .auth-password-toggle svg {
       width: 21px;
       height: 21px;
