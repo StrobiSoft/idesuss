@@ -1,1 +1,0 @@
-{ "playBtnText": "REDĂ", "footerText": "Powered by StZoo" }
