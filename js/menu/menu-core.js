@@ -1,4 +1,4 @@
-import { initRootAuthController } from "./auth-controller.js?v=20260920-auth2";
+import { initRootAuthController } from "./auth-controller.js?v=20260921-auth3";
 import { openProfilePanel } from "./profile.js?v=20260920-avatar1";
 
 function initFloatingMenu() {
