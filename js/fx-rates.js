@@ -16,7 +16,7 @@ const QUOTE_BY_LANGUAGE = {
   ro: "RON",
   pl: "PLN",
   hr: "EUR",
-  be: "EUR"
+  be: "BYN"
 };
 
 let lastRequestKey = "";
