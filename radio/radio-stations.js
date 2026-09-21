@@ -1,13 +1,36 @@
-export const RADIO_STATIONS = Object.freeze([]);
+export const RADIO_STATIONS = Object.freeze([
+  ["hu-radio-1","Rádió 1","https://icast.connectmedia.hu/5201/live.mp3","mp3","HU","hu",1,"https://radio1.hu/"],
+  ["hu-slager-fm","Sláger FM","https://slagerfm.netregator.hu:7813/slagerfm128.mp3","mp3","HU","hu",2,"https://slagerfm.hu/"],
+  ["nl-slam","SLAM!","https://stream.slam.nl/slam_mp3","mp3","NL","nl",1,"https://www.slam.nl/"],
+  ["nl-npo-radio-2","NPO Radio 2","https://icecast.omroep.nl/radio2-bb-aac","aac","NL","nl",2,"https://www.nporadio2.nl/"],
+  ["ro-kiss-fm","Kiss FM","https://live.kissfm.ro/kissfm.aacp","aac","RO","ro",1,"https://www.kissfm.ro/"],
+  ["ro-radio-zu","Radio ZU","https://ivm.antenaplay.ro/liveaudio/radiozu/playlist.m3u8","hls","RO","ro",2,"https://radiozu.ro/"],
+  ["pl-radio-eska","Radio ESKA","https://radio.stream.smcdn.pl/icradio-p/2380-1.aac/playlist.m3u8","hls","PL","pl",1,"https://www.eska.pl/"],
+  ["pl-rmf-fm","RMF FM","https://rs102-krk-cyfronet.rmfstream.pl/rmf_fm","mp3","PL","pl",2,"https://www.rmf.fm/"],
+  ["hr-bravo","bravo!","https://relay1.social3.hr/radio/8310/radio.mp3","mp3","HR","hr",1,"https://bravo.hr/"],
+  ["hr-otvoreni","Otvoreni Radio","https://stream.otvoreni.hr/otvoreni","mp3","HR","hr",2,"https://www.otvoreni.hr/"],
+  ["be-novoe-radio","Novoe Radio","https://live.novoeradio.by:444/live/novoeradio_aac128/icecast.audio","aac","BY","be",1,"https://novoeradio.by/"],
+  ["be-radius-fm","Radius FM","https://stream2.datacenter.by/radiusfm_main","aac","BY","be",2,"https://radiusfm.by/"],
+  ["en-bbc-radio-2","BBC Radio 2","https://as-hls-ww.live.cf.md.bbci.co.uk/pool_904/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d96000.norewind.m3u8","hls","GB","en",1,"https://www.bbc.co.uk/sounds/play/live:bbc_radio_two"],
+  ["en-capital-fm","Capital FM","https://media-ssl.musicradio.com/CapitalUK","mp3","GB","en",2,"https://www.capitalfm.com/"]
+].map(([id,name,streamUrl,streamType,countryCode,preferredLocale,recommendedSlot,homepage]) => Object.freeze({
+  id,name,streamUrl,streamType,countryCode,preferredLocale,recommendedSlot,homepage,
+  info: "Idesüss ajánlott élő rádió",
+  enabled: true,
+  catalogManaged: true,
+  distributionStatus: "approved",
+  sourceStatus: "configured",
+  isLocaleFavorite: recommendedSlot === 1
+})));
 
 export const RADIO_FAVORITES_BY_LOCALE = Object.freeze({
-  hu: Object.freeze({ id: "fav-hu-retro", name: "Retro Rádió", directoryName: "Retro Rádió", countryCode: "HU" }),
-  en: Object.freeze({ id: "fav-en-bbc-radio-2", name: "BBC Radio 2", directoryName: "BBC Radio 2", countryCode: "GB" }),
-  nl: Object.freeze({ id: "fav-nl-npo-radio-2", name: "NPO Radio 2", directoryName: "NPO Radio 2", countryCode: "NL" }),
-  ro: Object.freeze({ id: "fav-ro-kiss-fm", name: "Kiss FM", directoryName: "Kiss FM", countryCode: "RO" }),
-  pl: Object.freeze({ id: "fav-pl-rmf-fm", name: "RMF FM", directoryName: "RMF FM", countryCode: "PL" }),
-  hr: Object.freeze({ id: "fav-hr-bravo", name: "bravo!", directoryName: "bravo!", countryCode: "HR" }),
-  be: Object.freeze({ id: "fav-be-radio-roks", name: "Радио РОКС", directoryName: "Радио РОКС", countryCode: "BY" })
+  hu: Object.freeze({ id: "hu-radio-1", name: "Rádió 1", directoryName: "Rádió 1", countryCode: "HU" }),
+  en: Object.freeze({ id: "en-bbc-radio-2", name: "BBC Radio 2", directoryName: "BBC Radio 2", countryCode: "GB" }),
+  nl: Object.freeze({ id: "nl-slam", name: "SLAM!", directoryName: "SLAM!", countryCode: "NL" }),
+  ro: Object.freeze({ id: "ro-kiss-fm", name: "Kiss FM", directoryName: "Kiss FM", countryCode: "RO" }),
+  pl: Object.freeze({ id: "pl-radio-eska", name: "Radio ESKA", directoryName: "Radio ESKA", countryCode: "PL" }),
+  hr: Object.freeze({ id: "hr-bravo", name: "bravo!", directoryName: "bravo!", countryCode: "HR" }),
+  be: Object.freeze({ id: "be-novoe-radio", name: "Novoe Radio", directoryName: "Novoe Radio", countryCode: "BY" })
 });
 
 const RADIO_DIRECTORY_ENDPOINTS = Object.freeze([
@@ -114,6 +137,8 @@ export async function resolveFavoriteStation(seed) {
 
       return normalizeRadioStation({
         ...seed,
+        catalogManaged: false,
+        distributionStatus: "directory_resolved",
         name: String(match.name || seed.name).trim() || seed.name,
         info: seed.info || "Ajánlott kezdőállomás",
         streamUrl: String(match.url_resolved || match.url || "").trim(),
@@ -162,6 +187,7 @@ export function normalizeRadioStation(station) {
     countryCode: station.countryCode ? String(station.countryCode).trim().toUpperCase() : "",
     preferredLocale: station.preferredLocale ? String(station.preferredLocale).trim().toLowerCase() : "",
     isLocaleFavorite: Boolean(station.isLocaleFavorite),
+    recommendedSlot: Number(station.recommendedSlot) || 0,
     directoryStationUuid: station.directoryStationUuid ? String(station.directoryStationUuid).trim() : ""
   };
 }

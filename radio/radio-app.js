@@ -9,7 +9,6 @@ const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
 const AVAILABLE_SKINS = new Set(["default", "night-drive", "classic-black"]);
 const DEV_PARAMS = new URLSearchParams(window.location.search);
 const DEV_AUDIO_MODE = DEV_PARAMS.get("dev") === "1";
-const productionDemoTone = createDevelopmentToneStation();
 const developmentTone = DEV_AUDIO_MODE ? createDevelopmentToneStation() : null;
 const developmentExternalStation = DEV_AUDIO_MODE
   ? createDevelopmentExternalStation(DEV_PARAMS.get("stream"), DEV_PARAMS.get("type") || "auto")
@@ -34,38 +33,41 @@ async function prepareStations() {
     STATIONS = normalizedShared;
   } else {
     const builtInStations = getEnabledRadioStations();
+    const localeRecommendations = builtInStations
+      .filter((station) => station.preferredLocale === locale && station.recommendedSlot)
+      .sort((a, b) => a.recommendedSlot - b.recommendedSlot);
+    localeFavorite = localeRecommendations[0] || builtInStations.find(
+      (station) => station.isLocaleFavorite && station.preferredLocale === locale
+    ) || null;
 
-    if (DEV_AUDIO_MODE) {
+    if (!localeFavorite) {
       const localeFavoriteSeed = getLocaleFavoriteStationSeed(locale);
       try {
         localeFavorite = await resolveFavoriteStation(localeFavoriteSeed);
       } catch (error) {
-        console.warn("Development radio favorite could not be resolved", error);
+        console.warn("Locale radio favorite could not be resolved", error);
       }
     }
+
     STATIONS = [
       ...(localeFavorite ? [localeFavorite] : []),
       ...builtInStations.filter((station) => !localeFavorite || station.id !== localeFavorite.id)
     ];
   }
 
-  const demoStation = productionDemoTone?.station ? {
-    ...productionDemoTone.station,
-    id: "idesuss-demo-tone",
-    name: "Idesüss Demo",
-    info: "Helyben generált hangminta — a rádiómotor azonnali kipróbálásához"
-  } : null;
-
   STATIONS = [
     ...STATIONS,
-    ...(demoStation ? [demoStation] : []),
     ...(developmentTone?.station ? [developmentTone.station] : []),
     ...(developmentExternalStation ? [developmentExternalStation] : [])
   ];
 
+  const localeRecommendations = STATIONS
+    .filter((station) => station.preferredLocale === locale && station.recommendedSlot)
+    .sort((a, b) => a.recommendedSlot - b.recommendedSlot);
+
   PRESET_RULES = Array.from({ length: 8 }, (_unused, index) => ({
     slot: index + 1,
-    freeStation: index === 0 ? (localeFavorite || null) : null
+    freeStation: index < 2 ? (localeRecommendations[index] || (index === 0 ? localeFavorite : null)) : null
   }));
 
   return localeFavorite;
@@ -82,7 +84,7 @@ function streamStateText(state) {
 const storedVolume = Number(localStorage.getItem(VOLUME_STORAGE_KEY));
 const initialVolume = Number.isFinite(storedVolume) ? Math.min(1, Math.max(0, storedVolume)) : 0.7;
 const engine = new IdesussRadioEngine({ initialVolume });
-let capabilities = { tier:"signed_out", label:"Vendég", canSaveRadioChannels:false, maxRadioPresets:0, canUseCustomSkins:false, canUsePremiumPlusFeatures:false };
+let capabilities = { tier:"signed_out", label:"Vendég", canSaveRadioChannels:false, maxRadioPresets:0, canUseCustomSkins:false, canUsePremiumPlusFeatures:false, canUseRadioDiagnostics:false };
 let selectedStation = null;
 let radioClient = null;
 let radioUser = null;
@@ -162,6 +164,11 @@ function renderTier() {
     : "A presetek mentéséhez bejelentkezés szükséges.";
   const skin=$("#skinSelect");
   if (skin) Array.from(skin.options).forEach((option)=>{ if (option.value!=="default") option.disabled=!capabilities.canUseCustomSkins; });
+  const audioTestButton=$("#audioTestBtn");
+  if (audioTestButton) {
+    audioTestButton.hidden=!capabilities.canUseRadioDiagnostics;
+    audioTestButton.disabled=!capabilities.canUseRadioDiagnostics;
+  }
   const preferredSkin=localStorage.getItem(SKIN_STORAGE_KEY)||"default";
   const activeSkin=applySkin(preferredSkin,{persist:false});
   if (activeSkin!==preferredSkin) localStorage.setItem(SKIN_STORAGE_KEY,activeSkin);
@@ -246,6 +253,7 @@ function bindControls() {
   });
   $("#stopBtn")?.addEventListener("click",()=>engine.stop());
   $("#audioTestBtn")?.addEventListener("click",async()=>{
+    if (!capabilities.canUseRadioDiagnostics) return;
     try {
       audioTestTone?.revoke?.();
       audioTestTone=createDevelopmentToneStation();
@@ -302,13 +310,13 @@ async function init() {
   const localeFavorite = await prepareStations();
   renderStations();
 
-  const initialStation = localeFavorite || STATIONS.find((station) => station.id === "idesuss-demo-tone") || STATIONS[0] || null;
+  const initialStation = localeFavorite || STATIONS[0] || null;
   if (initialStation) {
     await selectStation(
       initialStation,
       localeFavorite
         ? `${localeFavorite.name} készen áll. Nyomd meg a Lejátszás gombot az élő adáshoz.`
-        : "A rádiómotor készen áll. Nyomd meg a Lejátszás gombot az Idesüss Demo hangmintához."
+        : `${initialStation.name} készen áll. Nyomd meg a Lejátszás gombot az élő adáshoz.`
     );
   } else {
     setStatus(radioT("unavailable"));
@@ -328,7 +336,6 @@ async function init() {
   renderTier(); renderPresets();
 }
 window.addEventListener("beforeunload",()=>{
-  productionDemoTone?.revoke?.();
   developmentTone?.revoke?.();
   audioTestTone?.revoke?.();
   engine.destroy();
