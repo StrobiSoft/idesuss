@@ -16,6 +16,7 @@ import {
 } from "./auth-shell.js?v=20260920-auth2";
 
 let identity = null;
+let profileNickname = "";
 let unsubscribeAuth = null;
 let recoveryRequested = false;
 
@@ -64,6 +65,25 @@ function homeText(key, fallback) {
   return typeof value === "string" && value ? value : fallback;
 }
 
+function localizeAuthError(error) {
+  const message = String(error?.message || "").toLowerCase();
+
+  if (message.includes("email rate limit exceeded")) {
+    return "Túl sok e-mailt kértünk rövid időn belül. Várj néhány percet, majd próbáld újra.";
+  }
+  if (message.includes("invalid login credentials")) return "Hibás e-mail cím vagy jelszó.";
+  if (message.includes("email not confirmed")) return "Az e-mail címed még nincs megerősítve. Ellenőrizd a postafiókodat.";
+  if (message.includes("user already registered") || message.includes("already registered")) {
+    return "Ezzel az e-mail címmel már létezik fiók.";
+  }
+  if (message.includes("password should be")) return "A megadott jelszó nem felel meg a biztonsági követelményeknek.";
+  if (message.includes("auth session missing")) {
+    return "A munkamenet már nem érvényes. Nyisd meg újra a műveletet, vagy jelentkezz be ismét.";
+  }
+
+  return error?.message || "A művelet nem sikerült. Próbáld újra.";
+}
+
 function updateButtons() {
   const loginBtn = document.getElementById("loginBtn");
   const registerBtn = document.getElementById("registerBtn");
@@ -71,7 +91,7 @@ function updateButtons() {
 
   if (loginBtn && registerBtn) {
     if (identity) {
-      loginBtn.textContent = identity.email || homeText("login", "Bejelentkezés");
+      loginBtn.textContent = profileNickname || identity.email || homeText("login", "Bejelentkezés");
       registerBtn.textContent = homeText("logout", "🚪 Kijelentkezés").replace(/^🚪\s*/, "");
     } else {
       loginBtn.textContent = homeText("login", "Bejelentkezés");
@@ -90,6 +110,9 @@ async function maybeOpenProfile() {
 
   try {
     const profile = await loadMyProfile(getClient());
+    profileNickname = profile?.nickname || "";
+    updateButtons();
+
     if (!profile?.profile_completed) {
       await openProfilePanel();
     }
@@ -102,6 +125,7 @@ async function performSignOut() {
   try {
     await signOut(getClient());
     identity = null;
+    profileNickname = "";
     updateButtons();
   } catch (error) {
     console.error("Shared sign-out failed", error);
@@ -130,7 +154,7 @@ async function handlePasswordResetRequest() {
     );
   } catch (error) {
     console.error("Password reset request failed", error);
-    setMessage(error?.message || "A jelszó-visszaállító e-mail küldése nem sikerült.");
+    setMessage(localizeAuthError(error));
   }
 }
 
@@ -171,7 +195,7 @@ async function handleSubmit(event) {
       window.setTimeout(closeAuthModal, 650);
     } catch (error) {
       console.error("Password update failed", error);
-      setMessage(error?.message || "Az új jelszó mentése nem sikerült.");
+      setMessage(localizeAuthError(error));
     }
     return;
   }
@@ -227,7 +251,7 @@ async function handleSubmit(event) {
       return;
     }
 
-    setMessage(error?.message || "A művelet nem sikerült.");
+    setMessage(localizeAuthError(error));
   }
 }
 
@@ -268,6 +292,12 @@ function bindHandlers() {
     const modal = document.getElementById("idesussAuthModal");
     openAuthModal(modal?.dataset.mode === "register" ? "login" : "register");
   });
+
+  window.addEventListener("idesuss:profile-saved", (event) => {
+    if (!identity) return;
+    profileNickname = event?.detail?.nickname || "";
+    updateButtons();
+  });
 }
 
 export async function initRootAuthController() {
@@ -280,6 +310,7 @@ export async function initRootAuthController() {
   if (unsubscribeAuth) unsubscribeAuth();
   unsubscribeAuth = subscribeAuthState(client, async (nextIdentity, event) => {
     identity = nextIdentity;
+    profileNickname = "";
     updateButtons();
 
     if (event === "PASSWORD_RECOVERY") {
@@ -299,6 +330,7 @@ export async function initRootAuthController() {
     identity = null;
   }
 
+  profileNickname = "";
   updateButtons();
 
   if (recoveryRequested) {
