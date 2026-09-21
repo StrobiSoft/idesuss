@@ -13,12 +13,12 @@ paste:"Wklej", open:"Otwórz", clear:"Wyczyść", details:"Szczegóły", profile
 register:"Rejestracja", login:"Zaloguj się", or:"lub",
 fx: {
   "title": "Oficjalne dzienne kursy walut",
-  "source": "Oficjalny dzienny kurs MNB",
-  "sourceDate": "Data kursu MNB: {date}",
+  "source": "Dzienny kurs referencyjny ECB",
+  "sourceDate": "Data kursu ECB: {date}",
   "loading": "ładowanie…",
   "updated": "zaktualizowano",
   "unavailable": "tymczasowo niedostępne",
-  "note": "Źródło: Magyar Nemzeti Bank (Narodowy Bank Węgier). Oficjalne kursy są aktualizowane w dni robocze MNB; Idesüss nie śledzi zmian rynkowych w ciągu dnia."
+  "note": "Źródło: Europejski Bank Centralny (ECB). Kursy referencyjne ECB są aktualizowane w dni robocze; Idesüss nie śledzi zmian rynkowych w ciągu dnia."
 },
 
 how:{title:"Jak to działa?",text:"Wklej publiczny link do filmu, a następnie naciśnij przycisk otwierania. Idesüss spróbuje otworzyć treść w prosty i szybki sposób."},
