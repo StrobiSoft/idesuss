@@ -12,7 +12,8 @@ import { openProfilePanel } from "./profile.js?v=20260921-prod-refresh1";
 import {
   closeAuthModal,
   ensureAuthModal,
-  openAuthModal
+  openAuthModal,
+  showAuthToast
 } from "./auth-shell.js?v=20260921-prod-refresh1";
 
 let identity = null;
@@ -238,7 +239,8 @@ async function handleSubmit(event) {
         updateButtons();
         document.getElementById("authPassword").value = "";
         document.getElementById("authPasswordRepeat").value = "";
-        setMessage("Regisztráció elküldve. Küldtünk egy megerősítő e-mailt; a fiók az e-mail-cím megerősítése után lesz aktív.");
+        closeAuthModal();
+        showAuthToast("Regisztráció elküldve. Küldtünk egy megerősítő e-mailt; a fiók az e-mail-cím megerősítése után lesz aktív.");
         return;
       }
 
