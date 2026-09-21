@@ -2,7 +2,7 @@ const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
 
 const TIER_RANK = { signed_out: 0, registered: 1, premium: 2, premium_plus: 3 };
-const DEFAULT_PRESET_LIMITS = { signed_out: 0, registered: 2, premium: 6, premium_plus: 8 };
+const DEFAULT_PRESET_LIMITS = { signed_out: 0, registered: 2, premium: 4, premium_plus: 8 };
 
 function loadSupabaseLibrary() {
   if (window.supabase?.createClient) return Promise.resolve(window.supabase);
@@ -39,7 +39,9 @@ function capabilityEnvelope(tier, canSaveRadioChannels, canUseRadioSkins, maxRad
     tier: normalized,
     label: normalized === "premium_plus" ? "Premium Plus" : normalized === "premium" ? "Premium" : "Free",
     canSaveRadioChannels: Boolean(canSaveRadioChannels),
-    maxRadioPresets: Number.isInteger(parsedLimit) && parsedLimit >= 0 ? Math.min(8, parsedLimit) : fallbackLimit,
+    maxRadioPresets: Number.isInteger(parsedLimit) && parsedLimit >= 0
+      ? Math.min(fallbackLimit, parsedLimit)
+      : fallbackLimit,
     canUseCustomSkins: typeof canUseRadioSkins === "boolean" ? canUseRadioSkins : tierAllowsRadioSkins,
     canUsePremiumPlusFeatures: TIER_RANK[normalized] >= TIER_RANK.premium_plus,
     canUseRadioDiagnostics: false

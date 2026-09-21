@@ -106,9 +106,21 @@ function tierLabel(tier) {
   return radioT("guest");
 }
 function requiredTierForSlot(slot) {
-  if (slot<=2) return "Free";
-  if (slot<=6) return "Premium";
+  if (slot === 1) return radioT("guest");
+  if (slot === 2) return radioT("registeredOnly");
+  if (slot<=4) return "Premium";
   return "Premium Plus";
+}
+function canUsePresetSlot(slot) {
+  if (slot === 1) return true;
+  if (!radioUser) return false;
+  return slot <= capabilities.maxRadioPresets;
+}
+function canPlayStation(station) {
+  if (!station) return false;
+  if (station.recommendedSlot === 1) return true;
+  if (station.recommendedSlot === 2) return Boolean(radioUser);
+  return Boolean(radioUser);
 }
 function applySkin(requestedSkin,{persist=true}={}) {
   const wanted=AVAILABLE_SKINS.has(requestedSkin)?requestedSkin:"default";
@@ -144,6 +156,7 @@ function indexSavedPresets(rows) {
 async function selectStation(station,message=null) {
   const normalized=normalizeRadioStation(station);
   if (!normalized) { setStatus(radioT("unavailable")); return; }
+  if (!canPlayStation(normalized)) { setStatus(radioT("registeredOnly")); return; }
   selectedStation=normalized;
   engine.audio.loop = normalized.id === "idesuss-demo-tone";
   try {
@@ -160,8 +173,8 @@ function renderTier() {
   if (badge) badge.textContent=capabilities.label||tierLabel(capabilities.tier);
   const saveHint=$("#saveHint");
   if (saveHint) saveHint.textContent=radioUser
-    ? `A csomagodban ${capabilities.maxRadioPresets} menthető rádiópreset érhető el.`
-    : "A presetek mentéséhez bejelentkezés szükséges.";
+    ? radioT("saveCount",{count:capabilities.maxRadioPresets})
+    : radioT("saveLogin");
   const skin=$("#skinSelect");
   if (skin) Array.from(skin.options).forEach((option)=>{ if (option.value!=="default") option.disabled=!capabilities.canUseCustomSkins; });
   const audioTestButton=$("#audioTestBtn");
@@ -187,25 +200,35 @@ function renderStations() {
       button,
       "span",
       station.sourceStatus === "unconfigured"
-        ? `${station.info || radioT("radioStation")} · Élő stream még nincs bekötve`
-        : (station.info || radioT("radioStation"))
+        ? radioT("streamMissing")
+        : radioT("recommended")
     );
-    button.addEventListener("click",()=>selectStation(station));
+    const playable=canPlayStation(station);
+    if (!playable) {
+      button.classList.add("locked");
+      button.setAttribute("aria-disabled","true");
+      button.title=radioT("registeredOnly");
+    }
+    button.addEventListener("click",()=>playable ? selectStation(station) : setStatus(radioT("registeredOnly")));
     host.appendChild(button);
   });
 }
 function renderPresets() {
   const host=$("#presetGrid"); if (!host) return; host.replaceChildren();
   PRESET_RULES.forEach((rule)=>{
-    const unlocked=Boolean(radioUser)&&rule.slot<=capabilities.maxRadioPresets;
+    const unlocked=canUsePresetSlot(rule.slot);
     const stored=savedPresets[rule.slot]||null;
     const fallback=rule.freeStation||null;
     const stationForButton=stored||fallback;
     const button=document.createElement("button"); button.type="button";
-    button.className=`preset${unlocked?"":" locked"}${stored?" saved":""}`;
+    button.className=`preset${unlocked?" unlocked":" locked"}${stored?" saved":""}`;
     button.disabled=!unlocked;
-    appendTextElement(button,"b",rule.slot);
-    appendTextElement(button,"small",stationForButton?.name||(unlocked?radioT("empty"):requiredTierForSlot(rule.slot)));
+    const number=appendTextElement(button,"b",rule.slot);
+    if (unlocked) number.classList.add("open-lock");
+    const label = !unlocked && rule.slot === 2
+      ? radioT("registeredOnly")
+      : (stationForButton?.name||(unlocked?radioT("empty"):requiredTierForSlot(rule.slot)));
+    appendTextElement(button,"small",label);
     button.title=unlocked
       ? (stationForButton?`${stationForButton.name} betöltése`:"Üres preset — a kiválasztott állomás mentése")
       : `${requiredTierForSlot(rule.slot)} csomag szükséges`;
@@ -216,13 +239,13 @@ function renderPresets() {
       }
 
       if (fallback && (!selectedStation || selectedStation.id === fallback.id)) {
-        await selectStation(fallback,"Ajánlott kezdőállomás kiválasztva.");
+        await selectStation(fallback,radioT("recommendedSelected"));
         return;
       }
 
       if (!capabilities.canSaveRadioChannels) {
         if (fallback) {
-          await selectStation(fallback,"Ajánlott kezdőállomás kiválasztva.");
+          await selectStation(fallback,radioT("recommendedSelected"));
           return;
         }
         setStatus("A szerveroldali preset-mentési jogosultság még nem aktív ehhez a csomaghoz.");
@@ -248,7 +271,7 @@ function bindControls() {
     catch (error) {
       if (error.message==="NO_STATION") setStatus(radioT("selectFirst"));
       else if (error.message==="STREAM_NOT_CONFIGURED") setStatus(radioT("streamMissing"));
-      else setStatus(`Lejátszási hiba: ${error.message}`);
+      else setStatus(radioT("playbackError",{error:error.message}));
     }
   });
   $("#stopBtn")?.addEventListener("click",()=>engine.stop());
@@ -315,8 +338,8 @@ async function init() {
     await selectStation(
       initialStation,
       localeFavorite
-        ? `${localeFavorite.name} készen áll. Nyomd meg a Lejátszás gombot az élő adáshoz.`
-        : `${initialStation.name} készen áll. Nyomd meg a Lejátszás gombot az élő adáshoz.`
+        ? radioT("readyStation",{station:localeFavorite.name})
+        : radioT("readyStation",{station:initialStation.name})
     );
   } else {
     setStatus(radioT("unavailable"));
