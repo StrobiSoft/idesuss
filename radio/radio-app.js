@@ -9,7 +9,6 @@ const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
 const AVAILABLE_SKINS = new Set(["default", "night-drive", "classic-black"]);
 const DEV_PARAMS = new URLSearchParams(window.location.search);
 const DEV_AUDIO_MODE = DEV_PARAMS.get("dev") === "1";
-const productionDemoTone = createDevelopmentToneStation();
 const developmentTone = DEV_AUDIO_MODE ? createDevelopmentToneStation() : null;
 const developmentExternalStation = DEV_AUDIO_MODE
   ? createDevelopmentExternalStation(DEV_PARAMS.get("stream"), DEV_PARAMS.get("type") || "auto")
@@ -34,8 +33,11 @@ async function prepareStations() {
     STATIONS = normalizedShared;
   } else {
     const builtInStations = getEnabledRadioStations();
+    localeFavorite = builtInStations.find(
+      (station) => station.isLocaleFavorite && station.preferredLocale === locale
+    ) || null;
 
-    if (DEV_AUDIO_MODE) {
+    if (!localeFavorite && DEV_AUDIO_MODE) {
       const localeFavoriteSeed = getLocaleFavoriteStationSeed(locale);
       try {
         localeFavorite = await resolveFavoriteStation(localeFavoriteSeed);
@@ -43,22 +45,15 @@ async function prepareStations() {
         console.warn("Development radio favorite could not be resolved", error);
       }
     }
+
     STATIONS = [
       ...(localeFavorite ? [localeFavorite] : []),
       ...builtInStations.filter((station) => !localeFavorite || station.id !== localeFavorite.id)
     ];
   }
 
-  const demoStation = productionDemoTone?.station ? {
-    ...productionDemoTone.station,
-    id: "idesuss-demo-tone",
-    name: "Idesüss Demo",
-    info: "Helyben generált hangminta — a rádiómotor azonnali kipróbálásához"
-  } : null;
-
   STATIONS = [
     ...STATIONS,
-    ...(demoStation ? [demoStation] : []),
     ...(developmentTone?.station ? [developmentTone.station] : []),
     ...(developmentExternalStation ? [developmentExternalStation] : [])
   ];
@@ -302,13 +297,13 @@ async function init() {
   const localeFavorite = await prepareStations();
   renderStations();
 
-  const initialStation = localeFavorite || STATIONS.find((station) => station.id === "idesuss-demo-tone") || STATIONS[0] || null;
+  const initialStation = localeFavorite || STATIONS[0] || null;
   if (initialStation) {
     await selectStation(
       initialStation,
       localeFavorite
         ? `${localeFavorite.name} készen áll. Nyomd meg a Lejátszás gombot az élő adáshoz.`
-        : "A rádiómotor készen áll. Nyomd meg a Lejátszás gombot az Idesüss Demo hangmintához."
+        : `${initialStation.name} készen áll. Nyomd meg a Lejátszás gombot az élő adáshoz.`
     );
   } else {
     setStatus(radioT("unavailable"));
@@ -328,7 +323,6 @@ async function init() {
   renderTier(); renderPresets();
 }
 window.addEventListener("beforeunload",()=>{
-  productionDemoTone?.revoke?.();
   developmentTone?.revoke?.();
   audioTestTone?.revoke?.();
   engine.destroy();
