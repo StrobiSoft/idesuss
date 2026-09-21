@@ -42,6 +42,9 @@
     .anon-option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid #dce7f3;border-radius:14px;background:#f8fbff;font-weight:700}
     .anon-option input{width:18px;height:18px;margin:2px 0 0;flex:0 0 auto}
     .anon-option small{display:block;margin-top:4px;color:var(--muted);font-weight:600;line-height:1.45}
+    .state-note{padding:14px;border:1px dashed #c8d8e8;border-radius:14px;background:#fbfdff;color:var(--muted)}
+    .retry-btn{margin-top:10px;min-height:40px;padding:8px 13px;font-size:.9rem;background:#fff;color:#0d5bd7;border:1px solid #9dbbe8}
+    @media (max-width:560px){.idea-head{align-items:stretch;flex-direction:column}.badge{align-self:flex-start}.card{border-radius:20px}}
   </style>
 </head>
 <body>
@@ -76,7 +79,7 @@
         <input id="anonymousToReviewers" type="checkbox" />
         <span>
           Név nélkül szeretném beküldeni.
-          <small>Alapértelmezésben az ötlet a profilneveddel együtt kerül hozzánk. Ha ezt bejelölöd, a normál értékelés során nem jelenítjük meg a nevedet. A beküldés technikailag továbbra is a fiókodhoz kötődik, hogy visszaélés, zaklatás vagy szabálysértés esetén szükség esetén visszakövethető legyen.</small>
+          <small>Ha ezt bejelölöd, az ötletet értékelő munkatársak nem látják a profilnevedet. A beküldés a háttérben továbbra is a fiókodhoz kötődik a visszaélések kezelhetősége miatt.</small>
         </span>
       </label>
       <button id="submitBtn" type="submit">Ötlet beküldése</button>
@@ -110,6 +113,9 @@ const myIdeasCard = document.getElementById("myIdeasCard");
 const myIdeas = document.getElementById("myIdeas");
 
 let currentUser = null;
+let submitInFlight = false;
+let lastSubmissionSignature = "";
+let lastSubmissionAt = 0;
 
 const statusLabels = {
   new: "Beérkezett",
@@ -126,8 +132,57 @@ function esc(value) {
   })[ch]);
 }
 
+function renderIdeasState(message, { retry = false } = {}) {
+  myIdeas.replaceChildren();
+  const box = document.createElement("div");
+  box.className = "state-note";
+  box.textContent = message;
+  myIdeas.appendChild(box);
+
+  if (retry) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "retry-btn";
+    button.textContent = "Újrapróbálás";
+    button.addEventListener("click", () => loadIdeas());
+    box.appendChild(document.createElement("br"));
+    box.appendChild(button);
+  }
+}
+
+function renderIdeaRow(item) {
+  const article = document.createElement("article");
+  article.className = "idea";
+
+  const head = document.createElement("div");
+  head.className = "idea-head";
+
+  const title = document.createElement("div");
+  title.className = "idea-title";
+  title.textContent = String(item?.title || "");
+
+  const badge = document.createElement("span");
+  badge.className = "badge";
+  badge.textContent = statusLabels[item?.status] || String(item?.status || "Ismeretlen állapot");
+
+  const date = document.createElement("div");
+  date.className = "idea-date";
+  const created = new Date(item?.created_at);
+  date.textContent = Number.isNaN(created.getTime())
+    ? "Dátum nem elérhető"
+    : created.toLocaleString("hu-HU");
+
+  head.append(title, badge);
+  article.append(head, date);
+  return article;
+}
+
 async function loadIdeas() {
   if (!currentUser) return;
+
+  myIdeasCard.classList.remove("hidden");
+  renderIdeasState("Saját beküldéseid betöltése…");
+
   const { data, error } = await client
     .from("idea_submissions")
     .select("id,title,status,created_at")
@@ -135,24 +190,16 @@ async function loadIdeas() {
 
   if (error) {
     console.error("Idea list error", error);
+    renderIdeasState("A saját beküldéseid most nem tölthetők be.", { retry: true });
     return;
   }
 
-  myIdeasCard.classList.remove("hidden");
   if (!data || data.length === 0) {
-    myIdeas.innerHTML = '<div class="idea">Még nincs beküldött ötleted.</div>';
+    renderIdeasState("Még nincs beküldött ötleted. Az első ötleted itt fog megjelenni.");
     return;
   }
 
-  myIdeas.innerHTML = data.map(item => `
-    <article class="idea">
-      <div class="idea-head">
-        <div class="idea-title">${esc(item.title)}</div>
-        <span class="badge">${esc(statusLabels[item.status] || item.status)}</span>
-      </div>
-      <div class="idea-date">${new Date(item.created_at).toLocaleString("hu-HU")}</div>
-    </article>
-  `).join("");
+  myIdeas.replaceChildren(...data.map(renderIdeaRow));
 }
 
 async function init() {
@@ -174,42 +221,66 @@ bodyEl.addEventListener("input", () => {
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!currentUser) return;
+  if (!currentUser || submitInFlight) return;
 
   const title = titleEl.value.trim();
   const body = bodyEl.value.trim();
-  if (title.length < 3 || body.length < 10) return;
-
-  submitBtn.disabled = true;
-  statusEl.className = "status";
-  statusEl.textContent = "Beküldés…";
-
-  const { error } = await client.from("idea_submissions").insert({
-    user_id: currentUser.id,
-    title,
-    body,
-    anonymous_to_reviewers: Boolean(anonymousToReviewers?.checked)
-  });
-
-  submitBtn.disabled = false;
-
-  if (error) {
-    console.error("Idea submit error", error);
+  if (title.length < 3 || body.length < 10) {
     statusEl.className = "status err";
-    statusEl.textContent = "A beküldés most nem sikerült. Kérlek próbáld újra.";
+    statusEl.textContent = "A cím legalább 3, a leírás legalább 10 karakter legyen.";
     return;
   }
 
-  form.reset();
-  bodyCounter.textContent = "0 / 5000";
-  statusEl.className = "status ok";
-  statusEl.textContent = "Köszönjük — az ötlet megérkezett.";
-  await loadIdeas();
+  const anonymous = Boolean(anonymousToReviewers?.checked);
+  const signature = JSON.stringify([title, body, anonymous]);
+  const now = Date.now();
+
+  if (signature === lastSubmissionSignature && now - lastSubmissionAt < 60_000) {
+    statusEl.className = "status ok";
+    statusEl.textContent = "Ezt az ötletet már elküldted — nem küldjük be még egyszer.";
+    return;
+  }
+
+  submitInFlight = true;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Beküldés…";
+  statusEl.className = "status";
+  statusEl.textContent = "Az ötlet küldése folyamatban…";
+
+  try {
+    const { error } = await client.from("idea_submissions").insert({
+      user_id: currentUser.id,
+      title,
+      body,
+      anonymous_to_reviewers: anonymous
+    });
+
+    if (error) {
+      console.error("Idea submit error", error);
+      statusEl.className = "status err";
+      statusEl.textContent = "A beküldés most nem sikerült. Az ötleted a mezőkben maradt; próbáld újra.";
+      return;
+    }
+
+    lastSubmissionSignature = signature;
+    lastSubmissionAt = Date.now();
+
+    form.reset();
+    bodyCounter.textContent = "0 / 5000";
+    statusEl.className = "status ok";
+    statusEl.textContent = "Köszönjük — az ötlet megérkezett és bekerült a saját beküldéseid közé.";
+    await loadIdeas();
+  } finally {
+    submitInFlight = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Ötlet beküldése";
+  }
 });
 
 init().catch(error => {
   console.error("Idea box init failed", error);
-  loginRequired.classList.remove("hidden");
+  statusEl.className = "status err";
+  statusEl.textContent = "Az Ötletláda most nem tudta ellenőrizni a bejelentkezést. Frissítsd az oldalt, vagy próbáld újra később.";
 });
 </script>
 </body>
