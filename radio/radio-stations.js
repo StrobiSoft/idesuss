@@ -46,7 +46,7 @@ export function getLocaleFavoriteStationSeed(locale = detectRadioLocale()) {
     streamType: "auto",
     enabled: true,
     catalogManaged: true,
-    distributionStatus: "approved",
+    distributionStatus: "unreviewed",
     sourceStatus: "resolving",
     directoryName: config.directoryName,
     countryCode: config.countryCode,
@@ -141,7 +141,8 @@ export function normalizeRadioStation(station) {
   const streamUrl = String(station.streamUrl || "").trim();
   const catalogManaged = Boolean(station.catalogManaged);
   const distributionStatus = String(station.distributionStatus || (catalogManaged ? "unreviewed" : "user_managed")).trim();
-  const sourceApproved = !catalogManaged || distributionStatus === "approved";
+  const serverManagedPlayback = Boolean(station.serverManagedPlayback);
+  const sourceApproved = !catalogManaged || distributionStatus === "approved" || serverManagedPlayback;
 
   return {
     id, name,
@@ -151,6 +152,7 @@ export function normalizeRadioStation(station) {
     enabled: station.enabled !== false,
     catalogManaged,
     distributionStatus,
+    serverManagedPlayback,
     sourceStatus: sourceApproved
       ? String(station.sourceStatus || (streamUrl ? "configured" : "unconfigured")).trim()
       : "blocked_unapproved_source",
