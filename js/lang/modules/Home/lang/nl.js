@@ -8,6 +8,7 @@ inputSubtitle:"TikTok, YouTube, Instagram Reel, Facebook-video en andere onderst
 inputLabel:"Openbare video-URL", clipboardChecking:"Klembord controleren…", installStateUnknown:"Installatiestatus laden…",
 publicLinksOnly:"Alleen openbare links", heroBannerText:"Sommige Android-apparaten worden niet ondersteund!",
 footerDesc:"Startpagina + mini-app toegang voor ondersteunde openbare videolinks.",
+menuRadio:"📻 Radio", menuRules:"📜 Huisregels", menuIdeas:"💡 Ideeënbus", menuIdeasInfoLabel:"Wat is de Ideeënbus?", menuIdeasInfo:"Stuur alles waarvan jij denkt dat Idesüss er beter van wordt: een nieuwe regel, functie of dienst, een ontbrekende mogelijkheid, een wijzigingsvoorstel of zelfs een idee voor financiering of ondersteuning. We beoordelen inzendingen; haalbare ideeën die passen bij de principes van Idesüss kunnen in ontwikkeling gaan.",
 paste:"Plakken", open:"Openen", clear:"Wissen", details:"Details", profile:"👤 Profiel", logout:"🚪 Uitloggen",
 register:"Registreren", login:"Inloggen", or:"of",
 how:{title:"Hoe werkt het?",text:"Plak een openbare videolink en druk daarna op openen. Idesüss probeert de inhoud zo eenvoudig en snel mogelijk te openen."},
