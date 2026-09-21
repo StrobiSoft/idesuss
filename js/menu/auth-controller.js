@@ -59,6 +59,11 @@ function setMessage(text) {
   if (target) target.textContent = text || "";
 }
 
+function homeText(key, fallback) {
+  const value = window.idesussHomeTranslations?.[key];
+  return typeof value === "string" && value ? value : fallback;
+}
+
 function updateButtons() {
   const loginBtn = document.getElementById("loginBtn");
   const registerBtn = document.getElementById("registerBtn");
@@ -66,15 +71,16 @@ function updateButtons() {
 
   if (loginBtn && registerBtn) {
     if (identity) {
-      loginBtn.textContent = identity.email || "Belépve";
-      registerBtn.textContent = "Kijelentkezés";
+      loginBtn.textContent = identity.email || homeText("login", "Bejelentkezés");
+      registerBtn.textContent = homeText("logout", "🚪 Kijelentkezés").replace(/^🚪\s*/, "");
     } else {
-      loginBtn.textContent = "Bejelentkezés";
-      registerBtn.textContent = "Regisztráció";
+      loginBtn.textContent = homeText("login", "Bejelentkezés");
+      registerBtn.textContent = homeText("register", "Regisztráció");
     }
   }
 
   if (menuLogout) {
+    menuLogout.textContent = homeText("logout", "🚪 Kijelentkezés");
     menuLogout.hidden = !identity;
   }
 }
@@ -307,3 +313,8 @@ export async function initRootAuthController() {
     unsubscribeAuth = null;
   };
 }
+
+
+window.addEventListener("idesuss:home-language-applied", () => {
+  updateButtons();
+});
