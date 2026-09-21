@@ -12,6 +12,8 @@ on:
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
       - 'radio/**'
+      - 'friends/**'
+      - 'tools/validate-friends-page.mjs'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-webapp-locales.mjs'
@@ -34,6 +36,8 @@ on:
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
       - 'radio/**'
+      - 'friends/**'
+      - 'tools/validate-friends-page.mjs'
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
@@ -76,6 +80,8 @@ jobs:
           node --check js/menu/profile.js
           node --check js/menu/menu-core.js
           node --check js/lang/modules/auth/lang/auth.js
+      - name: Validate friends and private messaging slice
+        run: node tools/validate-friends-page.mjs
       - name: Validate radio module syntax
         run: |
           node --check radio/radio-engine.js
