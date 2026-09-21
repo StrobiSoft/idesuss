@@ -1,7 +1,23 @@
-export const RADIO_STATIONS = Object.freeze([]);
+export const RADIO_STATIONS = Object.freeze([
+  Object.freeze({
+    id: "hu-slager-fm",
+    name: "Sláger FM",
+    info: "Élő magyar rádió · 128 kbps MP3",
+    streamUrl: "https://slagerfm.netregator.hu:7813/slagerfm128.mp3",
+    streamType: "mp3",
+    enabled: true,
+    catalogManaged: true,
+    distributionStatus: "approved",
+    sourceStatus: "configured",
+    homepage: "https://slagerfm.hu/",
+    countryCode: "HU",
+    preferredLocale: "hu",
+    isLocaleFavorite: true
+  })
+]);
 
 export const RADIO_FAVORITES_BY_LOCALE = Object.freeze({
-  hu: Object.freeze({ id: "fav-hu-retro", name: "Retro Rádió", directoryName: "Retro Rádió", countryCode: "HU" }),
+  hu: Object.freeze({ id: "hu-slager-fm", name: "Sláger FM", directoryName: "Sláger FM", countryCode: "HU" }),
   en: Object.freeze({ id: "fav-en-bbc-radio-2", name: "BBC Radio 2", directoryName: "BBC Radio 2", countryCode: "GB" }),
   nl: Object.freeze({ id: "fav-nl-npo-radio-2", name: "NPO Radio 2", directoryName: "NPO Radio 2", countryCode: "NL" }),
   ro: Object.freeze({ id: "fav-ro-kiss-fm", name: "Kiss FM", directoryName: "Kiss FM", countryCode: "RO" }),
