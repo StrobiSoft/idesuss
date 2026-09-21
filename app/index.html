@@ -979,6 +979,16 @@
             return dict[key] || fallback || key;
         }
 
+        const LANGUAGE_SYNC_NOTES = {
+            hu: 'A választott nyelv az Idesüss összes oldalán érvényes.',
+            en: 'The selected language applies across all Idesüss pages.',
+            nl: 'De gekozen taal geldt op alle Idesüss-pagina’s.',
+            ro: 'Limba selectată se aplică pe toate paginile Idesüss.',
+            pl: 'Wybrany język obowiązuje na wszystkich stronach Idesüss.',
+            hr: 'Odabrani jezik vrijedi na svim Idesüss stranicama.',
+            be: 'Выбраная мова дзейнічае на ўсіх старонках Idesüss.'
+        };
+
         const MENU_LABELS = {
             hu: { home: 'Főoldal', radio: 'Rádió', rules: 'Házirend', menu: 'Menü' },
             en: { home: 'Home', radio: 'Radio', rules: 'House rules', menu: 'Menu' },
@@ -1011,7 +1021,7 @@
             els.counterNote.textContent = t('counterNote', 'The counter does not increase on every refresh.');
             els.langBoxLabel.textContent = t('langBoxLabel', 'Language');
             els.currentLangText.textContent = '🌐 ' + currentLang.toUpperCase();
-            els.langSubnote.textContent = t('langSubnote', 'Hungarian browser → Hungarian UI, everything else → English.');
+            els.langSubnote.textContent = LANGUAGE_SYNC_NOTES[currentLang] || LANGUAGE_SYNC_NOTES.en;
             els.urlInput.placeholder = t('textareaPlaceholder', 'Paste the link here...');
             els.playBtnText.textContent = t('playBtnText', 'PLAY');
             els.pasteBtn.textContent = t('pasteBtn', 'PASTE');
