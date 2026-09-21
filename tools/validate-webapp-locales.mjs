@@ -69,6 +69,19 @@ if (!fs.existsSync(appIndex)) {
   if (!source.includes("els.urlInput.addEventListener('input'")) {
     failures.push('app/index.html: manual input does not clear stale status messages');
   }
+
+  if (!source.includes('<html lang="hu" translate="no" class="notranslate">') ||
+      !source.includes('<meta name="google" content="notranslate" />')) {
+    failures.push('app/index.html: browser auto-translation guard is missing');
+  }
+
+  if (!source.includes("const SUPPORTED_LANGS = ['hu', 'en', 'nl', 'ro', 'pl', 'be'];")) {
+    failures.push('app/index.html: Belarusian is not part of the runtime supported locale set');
+  }
+
+  if (!source.includes('window.loadLanguage = loadLanguage;')) {
+    failures.push('app/index.html: extended locale loader is not exposed to the language bridge');
+  }
 }
 
 if (!fs.existsSync(homeIndex)) {
