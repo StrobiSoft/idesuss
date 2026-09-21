@@ -23,7 +23,10 @@ function applyHomeTranslations(section) {
   document.querySelectorAll("[data-i18n]").forEach(function (element) {
     const key = element.dataset.i18n;
     const value = getTranslationValue(section, key);
-    if (typeof value === "string") element.textContent = value;
+    if (typeof value === "string") {
+      const count = element.dataset.count;
+      element.textContent = count != null ? value.replace("{count}", count) : value;
+    }
   });
 }
 
@@ -32,6 +35,7 @@ export async function loadHomeLanguage(langCode, { persist = true } = {}) {
   const languageModule = await import("./modules/Home/lang/" + safeLanguage + ".js");
   const homeTranslations = languageModule.default.home || {};
 
+  window.idesussHomeTranslations = homeTranslations;
   document.documentElement.lang = safeLanguage;
   if (persist) setIdesussLanguage(safeLanguage);
 
@@ -39,6 +43,9 @@ export async function loadHomeLanguage(langCode, { persist = true } = {}) {
   if (languageSelect) languageSelect.value = safeLanguage;
 
   applyHomeTranslations(homeTranslations);
+  window.dispatchEvent(new CustomEvent("idesuss:home-language-applied", {
+    detail: { language: safeLanguage, translations: homeTranslations }
+  }));
 }
 
 export async function initHomeLanguage() {
