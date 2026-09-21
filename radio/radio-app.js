@@ -288,7 +288,8 @@ async function init() {
   initRadioLanguage();
   bindControls(); bindEngineEvents();
 
-  window.addEventListener("idesuss:radio-languagechange", () => {
+  window.addEventListener("idesuss:radio-languagechange", async () => {
+    await prepareStations();
     renderTier();
     renderStations();
     renderPresets();
