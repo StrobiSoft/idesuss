@@ -28,6 +28,8 @@ export default {
 
     openWebapp: "Open webapp",
 
+    openRadio: "Open radio",
+
     inputTitle: "Paste a public video link",
 
     inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.",
