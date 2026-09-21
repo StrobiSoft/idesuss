@@ -221,16 +221,23 @@ input:focus-visible {
   overflow: hidden;
 }
 
-#menuToggle svg {
+#menuToggle {
+  grid-template-rows: repeat(3, 3px) !important;
+  align-content: center !important;
+  row-gap: 4px !important;
+}
+
+#menuToggle .menu-bar {
   display: block !important;
   width: 24px !important;
-  height: 24px !important;
+  height: 3px !important;
   margin: 0 !important;
   padding: 0 !important;
-  fill: none !important;
-  stroke: currentColor !important;
-  stroke-width: 2.2 !important;
-  stroke-linecap: round;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  transform: none !important;
   pointer-events: none;
 }
 
