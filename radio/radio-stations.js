@@ -5,13 +5,13 @@ export const RADIO_STATIONS = Object.freeze([
   ["nl-npo-radio-2","NPO Radio 2","https://icecast.omroep.nl/radio2-bb-aac","aac","NL","nl",2,"https://www.nporadio2.nl/"],
   ["ro-kiss-fm","Kiss FM","https://live.kissfm.ro/kissfm.aacp","aac","RO","ro",1,"https://www.kissfm.ro/"],
   ["ro-radio-zu","Radio ZU","https://ivm.antenaplay.ro/liveaudio/radiozu/playlist.m3u8","hls","RO","ro",2,"https://radiozu.ro/"],
-  ["pl-radio-eska","Radio ESKA","https://radio.stream.smcdn.pl/icradio-p/2380-1.aac/playlist.m3u8","hls","PL","pl",1,"https://www.eska.pl/"],
+  ["pl-rmf-maxxx","RMF MAXXX","https://rs9-krk2-cyfronet.rmfstream.pl/RMFMAXXX48","aac","PL","pl",1,"https://www.rmfmaxx.pl/"],
   ["pl-rmf-fm","RMF FM","https://rs102-krk-cyfronet.rmfstream.pl/rmf_fm","mp3","PL","pl",2,"https://www.rmf.fm/"],
   ["hr-bravo","bravo!","https://relay1.social3.hr/radio/8310/radio.mp3","mp3","HR","hr",1,"https://bravo.hr/"],
   ["hr-otvoreni","Otvoreni Radio","https://stream.otvoreni.hr/otvoreni","mp3","HR","hr",2,"https://www.otvoreni.hr/"],
   ["be-novoe-radio","Novoe Radio","https://live.novoeradio.by:444/live/novoeradio_aac128/icecast.audio","aac","BY","be",1,"https://novoeradio.by/"],
   ["be-radius-fm","Radius FM","https://stream2.datacenter.by/radiusfm_main","aac","BY","be",2,"https://radiusfm.by/"],
-  ["en-bbc-radio-2","BBC Radio 2","https://as-hls-ww.live.cf.md.bbci.co.uk/pool_904/live/ww/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d96000.norewind.m3u8","hls","GB","en",1,"https://www.bbc.co.uk/sounds/play/live:bbc_radio_two"],
+  ["en-heart-uk","Heart UK","https://media-ssl.musicradio.com/HeartUKMP3","mp3","GB","en",1,"https://www.heart.co.uk/"],
   ["en-capital-fm","Capital FM","https://media-ssl.musicradio.com/CapitalUK","mp3","GB","en",2,"https://www.capitalfm.com/"]
 ].map(([id,name,streamUrl,streamType,countryCode,preferredLocale,recommendedSlot,homepage]) => Object.freeze({
   id,name,streamUrl,streamType,countryCode,preferredLocale,recommendedSlot,homepage,
@@ -25,10 +25,10 @@ export const RADIO_STATIONS = Object.freeze([
 
 export const RADIO_FAVORITES_BY_LOCALE = Object.freeze({
   hu: Object.freeze({ id: "hu-radio-1", name: "Rádió 1", directoryName: "Rádió 1", countryCode: "HU" }),
-  en: Object.freeze({ id: "en-bbc-radio-2", name: "BBC Radio 2", directoryName: "BBC Radio 2", countryCode: "GB" }),
+  en: Object.freeze({ id: "en-heart-uk", name: "Heart UK", directoryName: "Heart UK", countryCode: "GB" }),
   nl: Object.freeze({ id: "nl-slam", name: "SLAM!", directoryName: "SLAM!", countryCode: "NL" }),
   ro: Object.freeze({ id: "ro-kiss-fm", name: "Kiss FM", directoryName: "Kiss FM", countryCode: "RO" }),
-  pl: Object.freeze({ id: "pl-radio-eska", name: "Radio ESKA", directoryName: "Radio ESKA", countryCode: "PL" }),
+  pl: Object.freeze({ id: "pl-rmf-maxxx", name: "RMF MAXXX", directoryName: "RMF MAXXX", countryCode: "PL" }),
   hr: Object.freeze({ id: "hr-bravo", name: "bravo!", directoryName: "bravo!", countryCode: "HR" }),
   be: Object.freeze({ id: "be-novoe-radio", name: "Novoe Radio", directoryName: "Novoe Radio", countryCode: "BY" })
 });
