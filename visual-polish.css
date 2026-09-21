@@ -209,7 +209,7 @@ input:focus-visible {
   color: #173b74 !important;
 }
 
-/* Floating menu */
+/* Header-integrated menu */
 #menuToggle {
   display: flex !important;
   align-items: center !important;
@@ -217,10 +217,15 @@ input:focus-visible {
   padding: 0 !important;
   line-height: 1 !important;
   color: #fff !important;
+  position: relative !important;
+  inset: auto !important;
 }
 
 #idesussMenu {
-  position: fixed !important;
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  right: 0 !important;
+  left: auto !important;
   max-width: calc(100vw - 28px);
 }
 
@@ -365,7 +370,7 @@ input:focus-visible {
 
   .auth-chip {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
     align-items: center;
   }
 
@@ -460,17 +465,15 @@ input:focus-visible {
   }
 
   #menuToggle {
-    top: max(12px, env(safe-area-inset-top)) !important;
-    right: max(12px, env(safe-area-inset-right)) !important;
     width: 44px !important;
     height: 44px !important;
   }
 
   #idesussMenu {
-    top: calc(max(12px, env(safe-area-inset-top)) + 54px) !important;
-    right: max(12px, env(safe-area-inset-right)) !important;
-    left: max(12px, env(safe-area-inset-left));
-    min-width: 0 !important;
+    top: calc(100% + 10px) !important;
+    right: 0 !important;
+    left: auto !important;
+    min-width: min(220px, calc(100vw - 24px)) !important;
   }
 
   .viewer-shell-top {
