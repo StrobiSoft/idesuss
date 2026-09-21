@@ -6,14 +6,14 @@ import {
   signUp,
   subscribeAuthState,
   updatePassword
-} from "../shared/auth-service.js?v=20260920-auth2";
-import { loadMyProfile } from "../shared/profile-service.js?v=20260920-auth2";
-import { openProfilePanel } from "./profile.js?v=20260920-auth2";
+} from "../shared/auth-service.js?v=20260921-prod-refresh1";
+import { loadMyProfile } from "../shared/profile-service.js?v=20260921-prod-refresh1";
+import { openProfilePanel } from "./profile.js?v=20260921-prod-refresh1";
 import {
   closeAuthModal,
   ensureAuthModal,
   openAuthModal
-} from "./auth-shell.js?v=20260920-auth2";
+} from "./auth-shell.js?v=20260921-prod-refresh1";
 
 let identity = null;
 let profileNickname = "";
