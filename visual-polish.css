@@ -211,14 +211,27 @@ input:focus-visible {
 
 /* Header-integrated menu */
 #menuToggle {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: grid !important;
+  place-items: center !important;
   padding: 0 !important;
-  line-height: 1 !important;
+  line-height: 0 !important;
   color: #fff !important;
   position: relative !important;
   inset: auto !important;
+  overflow: hidden;
+}
+
+#menuToggle svg {
+  display: block !important;
+  width: 24px !important;
+  height: 24px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 2.2 !important;
+  stroke-linecap: round;
+  pointer-events: none;
 }
 
 #idesussMenu {
