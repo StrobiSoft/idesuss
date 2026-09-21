@@ -6,7 +6,7 @@ import {
 } from "../shared/language-preference.js";
 
 const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "nl", "ro", "pl", "hr", "be"];
-const HOME_LANGUAGE_ASSET_VERSION = "20260921-byn1";
+const HOME_LANGUAGE_ASSET_VERSION = "20260921-byn2";
 let languageLoadRevision = 0;
 
 function getSafeHomeLanguage(langCode) {
