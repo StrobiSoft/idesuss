@@ -11,6 +11,16 @@ footerDesc:"Strona główna + punkt wejścia do miniaplikacji dla obsługiwanych
 menuRadio:"📻 Radio", menuRules:"📜 Regulamin", menuIdeas:"💡 Skrzynka pomysłów", menuIdeasInfoLabel:"Czym jest Skrzynka pomysłów?", menuIdeasInfo:"Możesz przesłać wszystko, co Twoim zdaniem może ulepszyć Idesüss: nową zasadę, funkcję lub usługę, brakującą możliwość, propozycję zmiany, a nawet pomysł na finansowanie lub wsparcie. Przeglądamy zgłoszenia, a wykonalne propozycje zgodne z zasadami Idesüss mogą trafić do rozwoju.",
 paste:"Wklej", open:"Otwórz", clear:"Wyczyść", details:"Szczegóły", profile:"👤 Profil", logout:"🚪 Wyloguj",
 register:"Rejestracja", login:"Zaloguj się", or:"lub",
+fx: {
+  "title": "Oficjalne dzienne kursy walut",
+  "source": "Oficjalny dzienny kurs MNB",
+  "sourceDate": "Data kursu MNB: {date}",
+  "loading": "ładowanie…",
+  "updated": "zaktualizowano",
+  "unavailable": "tymczasowo niedostępne",
+  "note": "Źródło: Magyar Nemzeti Bank (Narodowy Bank Węgier). Oficjalne kursy są aktualizowane w dni robocze MNB; Idesüss nie śledzi zmian rynkowych w ciągu dnia."
+},
+
 how:{title:"Jak to działa?",text:"Wklej publiczny link do filmu, a następnie naciśnij przycisk otwierania. Idesüss spróbuje otworzyć treść w prosty i szybki sposób."},
 about:{title:"O nas",text:"Idesüss powstał z inspiracji bardzo starym, dobrym przyjacielem. Jego sposób myślenia, nawyki i wyjątkowe spojrzenie na świat sprawiły, że zacząłem myśleć o tej stronie. Jest trochę paranoiczny i trochę leniwy, dlatego przez pewien czas strona prawie nazywała się „Lazy Driver”. Ostatecznie została Idesüss i wcale tego nie żałuję. Nazwa znacznie lepiej oddaje klimat i zamysł strony, a jednocześnie nie jest krzywdząca dla osoby, która zainspirowała cały pomysł."},
 android:{title:"Zgodność z Androidem",text:"Na niektórych urządzeniach lub w przeglądarkach Android otwieranie filmów może działać inaczej. Idesüss próbuje obsłużyć link możliwie najprościej, ale z powodu ograniczeń platformy treść może czasem otworzyć się tylko w zewnętrznej witrynie lub aplikacji."}
