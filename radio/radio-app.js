@@ -33,14 +33,16 @@ async function prepareStations() {
     localeFavorite = normalizedShared.find((station) => station.isLocaleFavorite) || normalizedShared[0] || null;
     STATIONS = normalizedShared;
   } else {
-    const localeFavoriteSeed = getLocaleFavoriteStationSeed(locale);
-    try {
-      localeFavorite = await resolveFavoriteStation(localeFavoriteSeed);
-    } catch (error) {
-      console.warn("Locale radio favorite could not be resolved", error);
-    }
-
     const builtInStations = getEnabledRadioStations();
+
+    if (DEV_AUDIO_MODE) {
+      const localeFavoriteSeed = getLocaleFavoriteStationSeed(locale);
+      try {
+        localeFavorite = await resolveFavoriteStation(localeFavoriteSeed);
+      } catch (error) {
+        console.warn("Development radio favorite could not be resolved", error);
+      }
+    }
     STATIONS = [
       ...(localeFavorite ? [localeFavorite] : []),
       ...builtInStations.filter((station) => !localeFavorite || station.id !== localeFavorite.id)
