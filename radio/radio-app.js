@@ -2,7 +2,8 @@ import { IdesussRadioEngine } from "./radio-engine.js";
 import { loadRadioCapabilities, loadSavedRadioChannels, saveRadioChannel } from "./radio-entitlements.js";
 import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation, createDevelopmentExternalStation, getLocaleFavoriteStationSeed, resolveFavoriteStation, detectRadioLocale } from "./radio-stations.js";
 import { loadSharedRadioCatalog } from "./radio-api-client.js";
-import { initRadioLanguage, radioT } from "./radio-language.js";
+import { initRadioLanguage, radioT, getRadioLanguage } from "./radio-language.js";
+import { openRadioDirectory } from "./radio-directory.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
 const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
@@ -208,7 +209,48 @@ function renderPresets() {
     button.title=unlocked
       ? (stationForButton?`${stationForButton.name} betöltése`:"Üres preset — a kiválasztott állomás mentése")
       : `${requiredTierForSlot(rule.slot)} csomag szükséges`;
-    button.addEventListener("click",async()=>{
+    let longPressTimer=null;
+    let longPressTriggered=false;
+    const cancelLongPress=()=>{ if (longPressTimer) window.clearTimeout(longPressTimer); longPressTimer=null; };
+    button.addEventListener("pointerdown",(event)=>{
+      if (!unlocked) return;
+      if (event.pointerType==="mouse" && event.button!==0) return;
+      longPressTriggered=false;
+      cancelLongPress();
+      longPressTimer=window.setTimeout(async()=>{
+        longPressTriggered=true;
+        if (navigator.vibrate) navigator.vibrate(25);
+        await openRadioDirectory({
+          slot:rule.slot,
+          locale:getRadioLanguage(),
+          canSave:Boolean(radioUser && capabilities.canSaveRadioChannels),
+          onPreview:async(station)=>{
+            await selectStation(station,radioT("directoryPreviewing",{station:station.name}));
+            await engine.play();
+          },
+          onSave:async(station)=>{
+            if (!radioUser || !capabilities.canSaveRadioChannels) return false;
+            await saveRadioChannel(radioClient,radioUser.id,rule.slot,station);
+            savedPresets[rule.slot]={...station};
+            await selectStation(station,radioT("directorySaved",{station:station.name,slot:rule.slot}));
+            renderPresets();
+            return true;
+          }
+        });
+      },550);
+    });
+    ["pointerup","pointercancel","pointerleave"].forEach((eventName)=>{
+      button.addEventListener(eventName,cancelLongPress);
+    });
+    button.addEventListener("contextmenu",(event)=>{
+      if (unlocked) event.preventDefault();
+    });
+    button.addEventListener("click",async(event)=>{
+      if (longPressTriggered) {
+        event.preventDefault();
+        longPressTriggered=false;
+        return;
+      }
       if (stored) {
         await selectStation(stored,"Mentett preset kiválasztva; stream ellenőrzése…");
         return;
