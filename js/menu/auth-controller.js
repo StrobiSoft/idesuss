@@ -6,17 +6,18 @@ import {
   signUp,
   subscribeAuthState,
   updatePassword
-} from "../shared/auth-service.js?v=20260920-auth2";
-import { loadMyProfile } from "../shared/profile-service.js?v=20260920-auth2";
-import { openProfilePanel } from "./profile.js?v=20260920-auth2";
+} from "../shared/auth-service.js?v=20260921-auth3";
+import { loadMyProfile } from "../shared/profile-service.js?v=20260921-auth3";
+import { openProfilePanel } from "./profile.js?v=20260921-auth3";
 import {
   closeAuthModal,
   ensureAuthModal,
   openAuthModal
-} from "./auth-shell.js?v=20260920-auth2";
+} from "./auth-shell.js?v=20260921-auth3";
 
 let identity = null;
 let unsubscribeAuth = null;
+let recoveryEventSeen = false;
 
 function getClient() {
   if (!window.supabaseClient) throw new Error("Missing Supabase client.");
@@ -30,6 +31,30 @@ function authMessage() {
 function setMessage(text) {
   const target = authMessage();
   if (target) target.textContent = text || "";
+}
+
+function isPasswordResetReturn() {
+  const search = new URLSearchParams(window.location.search);
+  if (search.get("password-reset") === "1" || search.get("type") === "recovery") return true;
+
+  const rawHash = String(window.location.hash || "");
+  if (rawHash.toLowerCase() === "#password-reset") return true;
+
+  const hashParams = new URLSearchParams(rawHash.replace(/^#/, ""));
+  return hashParams.get("type") === "recovery";
+}
+
+function clearPasswordResetReturnMarker() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("password-reset");
+  url.searchParams.delete("type");
+  url.hash = "";
+  history.replaceState(null, "", url.pathname + url.search);
+}
+
+function openPasswordReset(identityOverride = identity) {
+  openAuthModal("reset", { email: identityOverride?.email || "" });
+  setMessage("Add meg kétszer az új jelszót.");
 }
 
 function updateButtons() {
@@ -89,7 +114,7 @@ async function handlePasswordResetRequest() {
   try {
     await requestPasswordReset(getClient(), {
       email,
-      redirectTo: new URL("/#password-reset", window.location.origin).href
+      redirectTo: new URL("/?password-reset=1", window.location.origin).href
     });
 
     setMessage(
@@ -133,9 +158,7 @@ async function handleSubmit(event) {
       identity = await updatePassword(getClient(), { password });
       updateButtons();
       setMessage("A jelszó sikeresen megváltozott.");
-      if (window.location.hash === "#password-reset") {
-        history.replaceState(null, "", window.location.pathname + window.location.search);
-      }
+      clearPasswordResetReturnMarker();
       window.setTimeout(closeAuthModal, 650);
     } catch (error) {
       console.error("Password update failed", error);
@@ -243,6 +266,20 @@ export async function initRootAuthController() {
   ensureAuthModal();
   bindHandlers();
 
+  if (unsubscribeAuth) unsubscribeAuth();
+  unsubscribeAuth = subscribeAuthState(client, async (nextIdentity, event) => {
+    identity = nextIdentity;
+    updateButtons();
+
+    if (event === "PASSWORD_RECOVERY") {
+      recoveryEventSeen = true;
+      openPasswordReset(nextIdentity);
+      return;
+    }
+
+    if (identity && !isPasswordResetReturn()) await maybeOpenProfile();
+  });
+
   try {
     identity = await currentIdentity(client);
   } catch (error) {
@@ -251,21 +288,12 @@ export async function initRootAuthController() {
   }
 
   updateButtons();
-  if (identity) await maybeOpenProfile();
 
-  if (unsubscribeAuth) unsubscribeAuth();
-  unsubscribeAuth = subscribeAuthState(client, async (nextIdentity, event) => {
-    identity = nextIdentity;
-    updateButtons();
-
-    if (event === "PASSWORD_RECOVERY") {
-      openAuthModal("reset");
-      setMessage("Állíts be egy új jelszót.");
-      return;
-    }
-
-    if (identity) await maybeOpenProfile();
-  });
+  if (isPasswordResetReturn()) {
+    if (identity && !recoveryEventSeen) openPasswordReset(identity);
+  } else if (identity) {
+    await maybeOpenProfile();
+  }
 
   return () => {
     unsubscribeAuth?.();
