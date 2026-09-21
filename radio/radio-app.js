@@ -37,12 +37,12 @@ async function prepareStations() {
       (station) => station.isLocaleFavorite && station.preferredLocale === locale
     ) || null;
 
-    if (!localeFavorite && DEV_AUDIO_MODE) {
+    if (!localeFavorite) {
       const localeFavoriteSeed = getLocaleFavoriteStationSeed(locale);
       try {
         localeFavorite = await resolveFavoriteStation(localeFavoriteSeed);
       } catch (error) {
-        console.warn("Development radio favorite could not be resolved", error);
+        console.warn("Locale radio favorite could not be resolved", error);
       }
     }
 
@@ -77,7 +77,7 @@ function streamStateText(state) {
 const storedVolume = Number(localStorage.getItem(VOLUME_STORAGE_KEY));
 const initialVolume = Number.isFinite(storedVolume) ? Math.min(1, Math.max(0, storedVolume)) : 0.7;
 const engine = new IdesussRadioEngine({ initialVolume });
-let capabilities = { tier:"signed_out", label:"Vendég", canSaveRadioChannels:false, maxRadioPresets:0, canUseCustomSkins:false, canUsePremiumPlusFeatures:false };
+let capabilities = { tier:"signed_out", label:"Vendég", canSaveRadioChannels:false, maxRadioPresets:0, canUseCustomSkins:false, canUsePremiumPlusFeatures:false, canUseRadioDiagnostics:false };
 let selectedStation = null;
 let radioClient = null;
 let radioUser = null;
@@ -157,6 +157,11 @@ function renderTier() {
     : "A presetek mentéséhez bejelentkezés szükséges.";
   const skin=$("#skinSelect");
   if (skin) Array.from(skin.options).forEach((option)=>{ if (option.value!=="default") option.disabled=!capabilities.canUseCustomSkins; });
+  const audioTestButton=$("#audioTestBtn");
+  if (audioTestButton) {
+    audioTestButton.hidden=!capabilities.canUseRadioDiagnostics;
+    audioTestButton.disabled=!capabilities.canUseRadioDiagnostics;
+  }
   const preferredSkin=localStorage.getItem(SKIN_STORAGE_KEY)||"default";
   const activeSkin=applySkin(preferredSkin,{persist:false});
   if (activeSkin!==preferredSkin) localStorage.setItem(SKIN_STORAGE_KEY,activeSkin);
@@ -241,6 +246,7 @@ function bindControls() {
   });
   $("#stopBtn")?.addEventListener("click",()=>engine.stop());
   $("#audioTestBtn")?.addEventListener("click",async()=>{
+    if (!capabilities.canUseRadioDiagnostics) return;
     try {
       audioTestTone?.revoke?.();
       audioTestTone=createDevelopmentToneStation();
