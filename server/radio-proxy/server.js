@@ -7,6 +7,66 @@ const HOST = process.env.HOST || "127.0.0.1";
 const MAX_REDIRECTS = 4;
 const CONNECT_TIMEOUT_MS = 10_000;
 const ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+const SPY_TRAP_WINDOW_MS = 15 * 60 * 1000;
+const SPY_TRAP_ESCALATE_MS = 60 * 60 * 1000;
+const spyTrapEvents = new Map();
+
+const SPY_TRAP_PATHS = [
+  /^\/(?:\.env|\.git(?:\/|$)|wp-admin(?:\/|$)|phpmyadmin(?:\/|$)|admin(?:\/|$)|server-status$)/i,
+  /(?:\.bak|\.sql|\.pem|id_rsa|passwd)$/i
+];
+
+function clientAddress(req) {
+  if (process.env.IDESUSS_TRUST_PROXY === "1") {
+    const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+    if (forwarded) return forwarded;
+  }
+  return req.socket.remoteAddress || "unknown";
+}
+
+function spyTrapState(req, pathname) {
+  if (!SPY_TRAP_PATHS.some((pattern) => pattern.test(pathname))) return null;
+  const now = Date.now();
+  const key = clientAddress(req);
+  const previous = spyTrapEvents.get(key) || [];
+  const recent = previous.filter((time) => now - time < SPY_TRAP_ESCALATE_MS);
+  recent.push(now);
+  spyTrapEvents.set(key, recent);
+
+  const withinWindow = recent.filter((time) => now - time < SPY_TRAP_WINDOW_MS).length;
+  const level = withinWindow >= 4 || recent.length >= 8 ? 3 : withinWindow >= 2 ? 2 : 1;
+
+  console.warn(JSON.stringify({
+    event: "spy_trap",
+    level,
+    at: new Date(now).toISOString(),
+    client: key,
+    method: req.method,
+    path: pathname,
+    userAgent: String(req.headers["user-agent"] || "").slice(0, 240)
+  }));
+
+  return level;
+}
+
+function spyTrapResponse(res, level) {
+  if (level === 1) {
+    return json(res, 404, {
+      error: "not_found",
+      notice: "Unusual access attempt detected. Thank you for your interest."
+    });
+  }
+  if (level === 2) {
+    return json(res, 403, {
+      error: "access_denied",
+      notice: "Repeated abnormal access attempts have been detected and are being recorded as a security event. Stop this activity."
+    });
+  }
+  return json(res, 403, {
+    error: "security_escalation",
+    notice: "Continued abnormal access attempts are being preserved for security review and possible escalation to the relevant service provider or authorities."
+  });
+}
 
 function loadStations() {
   const raw = process.env.IDESUSS_RADIO_STATIONS_JSON || "{}";
@@ -81,6 +141,10 @@ const server = http.createServer(async (req,res) => {
   try {
     const url = new URL(req.url || "/", "http://localhost");
     if (req.method !== "GET" && req.method !== "HEAD") return json(res,405,{error:"method_not_allowed"});
+
+    const trapLevel = spyTrapState(req, url.pathname);
+    if (trapLevel) return spyTrapResponse(res, trapLevel);
+
     if (url.pathname === "/healthz") return json(res,200,{ok:true,stations:stations.size});
     if (url.pathname === "/v1/radio/catalog") return json(res,200,{schemaVersion:1,stations:catalog(url.searchParams.get("locale") || "")});
 
