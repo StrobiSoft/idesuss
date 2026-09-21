@@ -13,12 +13,12 @@ paste:"Zalijepi", open:"Otvori", clear:"Obriši", details:"Detalji", profile:"�
 register:"Registracija", login:"Prijava", or:"ili",
 fx: {
   "title": "Službeni dnevni tečajevi",
-  "source": "Službeni dnevni tečaj MNB-a",
-  "sourceDate": "Datum tečaja MNB-a: {date}",
+  "source": "Dnevni referentni tečaj ECB-a",
+  "sourceDate": "Datum tečaja ECB-a: {date}",
   "loading": "učitavanje…",
   "updated": "ažurirano",
   "unavailable": "privremeno nedostupno",
-  "note": "Izvor: Magyar Nemzeti Bank (Mađarska narodna banka). Službeni tečajevi ažuriraju se radnim danima MNB-a; Idesüss ne prati tržišna kretanja unutar dana."
+  "note": "Izvor: Europska središnja banka (ECB). Referentni tečajevi ECB-a ažuriraju se radnim danima; Idesüss ne prati tržišna kretanja unutar dana."
 },
 
 how:{title:"Kako radi?",text:"Zalijepi javnu poveznicu na video, zatim pritisni gumb za otvaranje. Idesüss će pokušati otvoriti sadržaj jednostavno i brzo."},

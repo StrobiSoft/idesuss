@@ -72,12 +72,12 @@ export default {
 
     fx: {
       "title": "Official daily exchange rates",
-      "source": "MNB official daily rate",
-      "sourceDate": "MNB rate date: {date}",
+      "source": "ECB daily reference rate",
+      "sourceDate": "ECB rate date: {date}",
       "loading": "loading…",
       "updated": "updated",
       "unavailable": "temporarily unavailable",
-      "note": "Source: Magyar Nemzeti Bank (Central Bank of Hungary). Official exchange rates are updated on MNB business days; Idesüss does not track intraday market movements."
+      "note": "Source: European Central Bank (ECB). ECB reference rates are updated on business days; Idesüss does not track intraday market movements."
     },
 
 how: {

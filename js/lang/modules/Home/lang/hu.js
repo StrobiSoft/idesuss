@@ -74,12 +74,12 @@ export default {
 
     fx: {
       "title": "Napi hivatalos árfolyamok",
-      "source": "MNB napi hivatalos árfolyam",
-      "sourceDate": "MNB árfolyamnap: {date}",
+      "source": "ECB napi referenciaárfolyam",
+      "sourceDate": "ECB árfolyamnap: {date}",
       "loading": "betöltés…",
       "updated": "frissítve",
       "unavailable": "átmenetileg nem elérhető",
-      "note": "Forrás: Magyar Nemzeti Bank. Az MNB hivatalos devizaárfolyamai munkanapokon frissülnek; az Idesüss a napon belüli piaci ingadozást nem követi."
+      "note": "Forrás: Európai Központi Bank (ECB). Az ECB referenciaárfolyamai munkanapokon frissülnek; az Idesüss a napon belüli piaci ingadozást nem követi."
     },
 
 how: {

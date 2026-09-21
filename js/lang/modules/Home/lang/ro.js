@@ -13,12 +13,12 @@ paste:"Lipește", open:"Deschide", clear:"Șterge", details:"Detalii", profile:"
 register:"Înregistrare", login:"Autentificare", or:"sau",
 fx: {
   "title": "Cursuri valutare oficiale zilnice",
-  "source": "Curs oficial zilnic MNB",
-  "sourceDate": "Data cursului MNB: {date}",
+  "source": "Curs de referință zilnic ECB",
+  "sourceDate": "Data cursului ECB: {date}",
   "loading": "se încarcă…",
   "updated": "actualizat",
   "unavailable": "indisponibil temporar",
-  "note": "Sursa: Magyar Nemzeti Bank (Banca Națională a Ungariei). Cursurile oficiale sunt actualizate în zilele lucrătoare MNB; Idesüss nu urmărește variațiile pieței din timpul zilei."
+  "note": "Sursa: Banca Centrală Europeană (ECB). Cursurile de referință ECB sunt actualizate în zilele lucrătoare; Idesüss nu urmărește variațiile pieței din timpul zilei."
 },
 
 how:{title:"Cum funcționează?",text:"Lipește un link video public, apoi apasă butonul de deschidere. Idesüss va încerca să deschidă conținutul simplu și rapid."},

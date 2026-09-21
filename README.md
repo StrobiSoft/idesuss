@@ -14,6 +14,6 @@ See [docs/deployment-architecture.md](docs/deployment-architecture.md) for the d
 
 ## Daily exchange rates
 
-The public homepage also shows the official daily MNB mid-market reference rates for EUR/HUF, USD/HUF, GBP/HUF and CHF/HUF.
+The public homepage shows daily foreign-exchange reference rates derived from the European Central Bank (ECB) euro reference-rate feed.
 
-These are not intraday market quotes. The Magyar Nemzeti Bank fixes the official rates at 11:00 on MNB business days; the published values remain valid until the next official fixing. The Idesüss UI labels this limitation explicitly.
+These are reference rates rather than intraday market quotes. Idesüss derives the displayed cross-rates from the ECB's euro-based daily reference rates and labels this limitation explicitly.
