@@ -7,6 +7,7 @@ function initFloatingMenu() {
   const openWebappBtn = document.getElementById("openWebappBtn");
   const openRulesBtn = document.getElementById("openRulesBtn");
   const openIdeaBoxBtn = document.getElementById("openIdeaBoxBtn");
+  const openFriendsBtn = document.getElementById("openFriendsBtn");
 
   if (!toggle || !menu) return;
 
@@ -45,6 +46,10 @@ function initFloatingMenu() {
 
   openIdeaBoxBtn?.addEventListener("click", () => {
     window.location.href = "/ideas/";
+  });
+
+  openFriendsBtn?.addEventListener("click", () => {
+    window.location.href = "/friends/";
   });
 
   menu.querySelectorAll("button").forEach((button) => {
