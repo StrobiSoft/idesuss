@@ -798,6 +798,7 @@
                     <nav id="appMenu" class="app-menu" aria-label="Idesüss menü">
                         <a id="appMenuHome" class="app-menu-link" href="/"><span aria-hidden="true">🏠</span><span>Főoldal</span></a>
                         <a id="appMenuRadio" class="app-menu-link" href="/radio/"><span aria-hidden="true">📻</span><span>Rádió</span></a>
+                        <a id="appMenuFriends" class="app-menu-link" href="/friends/"><span aria-hidden="true">👥</span><span>Barátok</span></a>
                         <a id="appMenuRules" class="app-menu-link" href="/rules/"><span aria-hidden="true">📜</span><span>Házirend</span></a>
                     </nav>
                 </div>
@@ -927,6 +928,7 @@
             appMenu: document.getElementById('appMenu'),
             appMenuHome: document.getElementById('appMenuHome'),
             appMenuRadio: document.getElementById('appMenuRadio'),
+            appMenuFriends: document.getElementById('appMenuFriends'),
             appMenuRules: document.getElementById('appMenuRules'),
             rulesLink: document.getElementById('rulesLink')
         };
@@ -971,21 +973,23 @@
         }
 
         const MENU_LABELS = {
-            hu: { home: 'Főoldal', radio: 'Rádió', rules: 'Házirend', menu: 'Menü' },
-            en: { home: 'Home', radio: 'Radio', rules: 'House rules', menu: 'Menu' },
-            nl: { home: 'Startpagina', radio: 'Radio', rules: 'Huisregels', menu: 'Menu' },
-            ro: { home: 'Pagina principală', radio: 'Radio', rules: 'Regulament', menu: 'Meniu' },
-            pl: { home: 'Strona główna', radio: 'Radio', rules: 'Regulamin', menu: 'Menu' },
-            be: { home: 'Галоўная', radio: 'Радыё', rules: 'Правілы', menu: 'Меню' }
+            hu: { home: 'Főoldal', radio: 'Rádió', friends: 'Barátok', rules: 'Házirend', menu: 'Menü' },
+            en: { home: 'Home', radio: 'Radio', friends: 'Friends', rules: 'House rules', menu: 'Menu' },
+            nl: { home: 'Startpagina', radio: 'Radio', friends: 'Vrienden', rules: 'Huisregels', menu: 'Menu' },
+            ro: { home: 'Pagina principală', radio: 'Radio', friends: 'Prieteni', rules: 'Regulament', menu: 'Meniu' },
+            pl: { home: 'Strona główna', radio: 'Radio', friends: 'Znajomi', rules: 'Regulamin', menu: 'Menu' },
+            be: { home: 'Галоўная', radio: 'Радыё', friends: 'Сябры', rules: 'Правілы', menu: 'Меню' }
         };
 
         function updateAppMenuLanguage() {
             const labels = MENU_LABELS[currentLang] || MENU_LABELS.en;
             const homeLabel = els.appMenuHome?.querySelector('span:last-child');
             const radioLabel = els.appMenuRadio?.querySelector('span:last-child');
+            const friendsLabel = els.appMenuFriends?.querySelector('span:last-child');
             const rulesLabel = els.appMenuRules?.querySelector('span:last-child');
             if (homeLabel) homeLabel.textContent = labels.home;
             if (radioLabel) radioLabel.textContent = labels.radio;
+            if (friendsLabel) friendsLabel.textContent = labels.friends;
             if (rulesLabel) rulesLabel.textContent = labels.rules;
             if (els.rulesLink) els.rulesLink.textContent = labels.rules;
             if (els.appMenuToggle) els.appMenuToggle.setAttribute('aria-label', labels.menu);
