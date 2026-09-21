@@ -1,0 +1,16 @@
+export default { common:{appName:"Idesüss"}, home:{
+totalVisitsCounter:"🌍 Łączna liczba wizyt: {count}", onlineUsersCounter:"👁 {count} online teraz",
+heroHow:"⚙️ Jak to działa", heroAbout:"ℹ️ O nas", heroWebapp:"▶️ Webapp",
+footerHow:"⚙️ Jak to działa", footerAbout:"ℹ️ O nas", footerOpenWebapp:"📱 Webapp", footerShare:"📤 Udostępnij",
+brandSubtitle:"Strona główna + miniaplikacja", heroLead:"Wypróbuj naszą popularną miniaplikację bezpośrednio na stronie głównej!",
+openWebapp:"Otwórz webapp", inputTitle:"Wklej publiczny link do filmu",
+inputSubtitle:"TikTok, YouTube, Instagram Reel, filmy z Facebooka i inne obsługiwane publiczne linki.",
+inputLabel:"Publiczny adres URL filmu", clipboardChecking:"Sprawdzanie schowka…", installStateUnknown:"Ładowanie stanu instalacji…",
+publicLinksOnly:"Tylko publiczne linki", heroBannerText:"Niektóre urządzenia z Androidem nie są obsługiwane!",
+footerDesc:"Strona główna + punkt wejścia do miniaplikacji dla obsługiwanych publicznych linków wideo.",
+paste:"Wklej", open:"Otwórz", clear:"Wyczyść", details:"Szczegóły", profile:"👤 Profil", logout:"🚪 Wyloguj",
+register:"Rejestracja", login:"Zaloguj się", or:"lub",
+how:{title:"Jak to działa?",text:"Wklej publiczny link do filmu, a następnie naciśnij przycisk otwierania. Idesüss spróbuje otworzyć treść w prosty i szybki sposób."},
+about:{title:"O nas",text:"Idesüss powstał z inspiracji bardzo starym, dobrym przyjacielem. Jego sposób myślenia, nawyki i wyjątkowe spojrzenie na świat sprawiły, że zacząłem myśleć o tej stronie. Jest trochę paranoiczny i trochę leniwy, dlatego przez pewien czas strona prawie nazywała się „Lazy Driver”. Ostatecznie została Idesüss i wcale tego nie żałuję. Nazwa znacznie lepiej oddaje klimat i zamysł strony, a jednocześnie nie jest krzywdząca dla osoby, która zainspirowała cały pomysł."},
+android:{title:"Zgodność z Androidem",text:"Na niektórych urządzeniach lub w przeglądarkach Android otwieranie filmów może działać inaczej. Idesüss próbuje obsłużyć link możliwie najprościej, ale z powodu ograniczeń platformy treść może czasem otworzyć się tylko w zewnętrznej witrynie lub aplikacji."}
+}};
