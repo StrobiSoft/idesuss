@@ -28,6 +28,12 @@ function applyHomeTranslations(section) {
       element.textContent = count != null ? value.replace("{count}", count) : value;
     }
   });
+
+  document.querySelectorAll("[data-i18n-aria-label]").forEach(function (element) {
+    const key = element.dataset.i18nAriaLabel;
+    const value = getTranslationValue(section, key);
+    if (typeof value === "string") element.setAttribute("aria-label", value);
+  });
 }
 
 export async function loadHomeLanguage(langCode, { persist = true } = {}) {
