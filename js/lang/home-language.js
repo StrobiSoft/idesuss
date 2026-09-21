@@ -6,6 +6,7 @@ import {
 } from "../shared/language-preference.js";
 
 const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "nl", "ro", "pl", "hr", "be"];
+const HOME_LANGUAGE_ASSET_VERSION = "20260921-menu-sync2";
 
 function getSafeHomeLanguage(langCode) {
   const normalized = normalizeIdesussLanguage(langCode);
@@ -38,8 +39,20 @@ function applyHomeTranslations(section) {
 
 export async function loadHomeLanguage(langCode, { persist = true } = {}) {
   const safeLanguage = getSafeHomeLanguage(langCode);
-  const languageModule = await import("./modules/Home/lang/" + safeLanguage + ".js");
-  const homeTranslations = languageModule.default.home || {};
+
+  const [languageModule, fallbackModule] = await Promise.all([
+    import("./modules/Home/lang/" + safeLanguage + ".js?v=" + HOME_LANGUAGE_ASSET_VERSION),
+    safeLanguage === "hu"
+      ? Promise.resolve(null)
+      : import("./modules/Home/lang/hu.js?v=" + HOME_LANGUAGE_ASSET_VERSION)
+  ]);
+
+  const selectedTranslations = languageModule.default.home || {};
+  const fallbackTranslations = fallbackModule?.default?.home || {};
+  const homeTranslations = {
+    ...fallbackTranslations,
+    ...selectedTranslations
+  };
 
   window.idesussHomeTranslations = homeTranslations;
   document.documentElement.lang = safeLanguage;
