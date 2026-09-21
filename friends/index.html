@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Idesüss — Barátok és üzenetek</title>
+  <meta name="description" content="Barátlista, barátkérés és privát/offline üzenetek az Idesüssben." />
+  <style>
+    :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17324d;background:#f4f7fb;--line:#d7e0ea;--muted:#5e748d;--primary:#0d5bd7;--ok:#1f7a46;--danger:#a92323}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#eef5ff,#f8fbff);padding:max(18px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+    main{width:min(1080px,100%);margin:0 auto}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+    .brand{font-size:1.25rem;font-weight:900}.back{display:inline-flex;min-height:44px;padding:10px 14px;border:1px solid #b9c9dc;border-radius:13px;background:#fff;color:#17324d;text-decoration:none;font-weight:800}
+    .grid{display:grid;grid-template-columns:minmax(300px,.9fr) minmax(360px,1.4fr);gap:18px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 20px 60px rgba(23,50,77,.10)}
+    h1,h2,h3{margin-top:0}.lead,.muted{color:var(--muted);line-height:1.55}
+    .section{margin-top:22px}.stack{display:grid;gap:10px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border:1px solid #dce7f3;border-radius:14px;background:#f8fbff}
+    .person{display:flex;gap:10px;align-items:center;min-width:0}.avatar{font-size:1.5rem}.name{font-weight:900;overflow:hidden;text-overflow:ellipsis}.small{font-size:.82rem;color:var(--muted)}
+    button,input,textarea{font:inherit}input,textarea{width:100%;border:1px solid #cfdbe8;border-radius:13px;padding:12px 13px;color:#17324d;background:#fff}
+    textarea{min-height:90px;resize:vertical}.actions{display:flex;gap:8px;flex-wrap:wrap}
+    button{border:0;border-radius:12px;padding:10px 13px;font-weight:800;cursor:pointer;background:#0d5bd7;color:#fff}button.secondary{background:#fff;color:#0d5bd7;border:1px solid #9dbbe8}button.danger{background:#fff;color:#a92323;border:1px solid #e2aaaa}button:disabled{opacity:.55;cursor:not-allowed}
+    .status{min-height:22px;margin-top:10px;font-weight:700}.err{color:var(--danger)}.ok{color:var(--ok)}
+    .thread{display:grid;gap:10px;max-height:52vh;overflow:auto;padding:4px}.msg{max-width:82%;padding:10px 12px;border-radius:14px;background:#eef4ff;white-space:pre-wrap;word-break:break-word}.msg.mine{margin-left:auto;background:#dceaff}.msg-meta{font-size:.74rem;color:var(--muted);margin-top:5px}
+    .empty{padding:14px;border:1px dashed #c8d8e8;border-radius:14px;color:var(--muted);background:#fbfdff}.hidden{display:none!important}.unread{display:inline-flex;min-width:22px;height:22px;align-items:center;justify-content:center;border-radius:999px;background:#0d5bd7;color:#fff;font-size:.75rem;font-weight:900}
+    @media(max-width:820px){.grid{grid-template-columns:1fr}.thread{max-height:44vh}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="top"><div class="brand">Idesüss™</div><a class="back" href="/">← Főoldal</a></div>
+  <div id="loginRequired" class="card hidden">A barátokhoz és privát üzenetekhez jelentkezz be. <a href="/#login">Bejelentkezés</a></div>
+
+  <div id="app" class="grid hidden">
+    <section class="card">
+      <h1>👥 Barátok</h1>
+      <p class="lead">Keresés pontos Idesüss-becenév alapján. A telefonod névjegyzékét nem töltjük fel.</p>
+
+      <div class="section">
+        <h3>Barát hozzáadása</h3>
+        <div class="actions">
+          <input id="nicknameSearch" maxlength="80" placeholder="Pontos becenév" aria-label="Pontos becenév" />
+          <button id="searchBtn" type="button">Keresés</button>
+        </div>
+        <div id="searchResult" class="status" aria-live="polite"></div>
+      </div>
+
+      <div class="section"><h3>Bejövő kérések</h3><div id="incoming" class="stack"></div></div>
+      <div class="section"><h3>Barátaim</h3><div id="friends" class="stack"></div></div>
+      <div class="section"><h3>Elküldött kérések</h3><div id="outgoing" class="stack"></div></div>
+      <div id="friendStatus" class="status" aria-live="polite"></div>
+    </section>
+
+    <section class="card">
+      <h2 id="threadTitle">Privát üzenetek</h2>
+      <p id="threadHint" class="lead">Válassz egy barátot a beszélgetés megnyitásához.</p>
+      <div id="thread" class="thread"></div>
+      <form id="messageForm" class="section hidden">
+        <textarea id="messageBody" maxlength="4000" placeholder="Írj privát üzenetet…" required></textarea>
+        <div class="actions">
+          <button id="sendBtn" type="submit">Küldés</button>
+          <button id="refreshBtn" class="secondary" type="button">Frissítés</button>
+        </div>
+        <div id="messageStatus" class="status" aria-live="polite"></div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const els = Object.fromEntries([
+  "loginRequired","app","nicknameSearch","searchBtn","searchResult","incoming","friends","outgoing","friendStatus",
+  "threadTitle","threadHint","thread","messageForm","messageBody","sendBtn","refreshBtn","messageStatus"
+].map(id => [id, document.getElementById(id)]));
+
+let currentUser = null;
+let friendships = [];
+let unreadBySender = new Map();
+let selectedFriend = null;
+let sending = false;
+
+function setState(host, text) {
+  host.replaceChildren();
+  const box = document.createElement("div");
+  box.className = "empty";
+  box.textContent = text;
+  host.appendChild(box);
+}
+
+function formatDate(value) {
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? "" : d.toLocaleString("hu-HU");
+}
+
+function rpcError(error) {
+  const raw = String(error?.message || "");
+  if (raw.includes("FRIENDSHIP_ALREADY_EXISTS")) return "Már van kapcsolat vagy függő kérés köztetek.";
+  if (raw.includes("USER_NOT_FOUND")) return "Nem található ilyen felhasználó.";
+  if (raw.includes("ENTITLEMENT_REQUIRED")) return "Ehhez az üzenetküldéshez a fiókod jelenlegi csomagja nem ad jogosultságot.";
+  if (raw.includes("FRIENDSHIP_REQUIRED")) return "Privát üzenetet jelenleg elfogadott barátnak küldhetsz.";
+  return "A művelet most nem sikerült.";
+}
+
+function personRow(item, actions = []) {
+  const row = document.createElement("div");
+  row.className = "row";
+
+  const person = document.createElement("div");
+  person.className = "person";
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = item.other_avatar_emoji || "🙂";
+
+  const text = document.createElement("div");
+  const name = document.createElement("div");
+  name.className = "name";
+  name.textContent = item.other_nickname || "Idesüss felhasználó";
+  const small = document.createElement("div");
+  small.className = "small";
+  small.textContent = item.status === "accepted" ? "Barát" : (item.direction === "incoming" ? "Barátkérés érkezett" : "Kérés elküldve");
+  text.append(name, small);
+  person.append(avatar, text);
+
+  const controls = document.createElement("div");
+  controls.className = "actions";
+  const unread = unreadBySender.get(item.other_id) || 0;
+  if (unread && item.status === "accepted") {
+    const badge = document.createElement("span");
+    badge.className = "unread";
+    badge.textContent = String(Math.min(unread, 99));
+    controls.appendChild(badge);
+  }
+
+  for (const action of actions) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = action.label;
+    if (action.kind) button.className = action.kind;
+    button.addEventListener("click", action.run);
+    controls.appendChild(button);
+  }
+
+  row.append(person, controls);
+  return row;
+}
+
+async function loadUnread() {
+  unreadBySender = new Map();
+  const { data, error } = await client
+    .from("direct_messages")
+    .select("sender_id")
+    .eq("recipient_id", currentUser.id)
+    .is("read_at", null);
+
+  if (error) {
+    console.error("Unread load failed", error);
+    return;
+  }
+
+  for (const row of data || []) {
+    unreadBySender.set(row.sender_id, (unreadBySender.get(row.sender_id) || 0) + 1);
+  }
+}
+
+async function loadFriendships() {
+  setState(els.friends, "Barátlista betöltése…");
+  const [{ data, error }] = await Promise.all([
+    client.rpc("list_my_friendships"),
+    loadUnread()
+  ]);
+
+  if (error) {
+    console.error("Friendship load failed", error);
+    setState(els.friends, "A barátlista most nem tölthető be.");
+    return;
+  }
+
+  friendships = data || [];
+  renderFriendships();
+}
+
+function renderFriendships() {
+  els.incoming.replaceChildren();
+  els.friends.replaceChildren();
+  els.outgoing.replaceChildren();
+
+  const incoming = friendships.filter(x => x.status === "pending" && x.direction === "incoming");
+  const accepted = friendships.filter(x => x.status === "accepted");
+  const outgoing = friendships.filter(x => x.status === "pending" && x.direction === "outgoing");
+
+  if (!incoming.length) setState(els.incoming, "Nincs új barátkérés.");
+  if (!accepted.length) setState(els.friends, "Még nincs elfogadott barátod.");
+  if (!outgoing.length) setState(els.outgoing, "Nincs függő elküldött kérés.");
+
+  incoming.forEach(item => els.incoming.appendChild(personRow(item, [
+    { label: "Elfogadás", run: () => acceptFriendship(item) },
+    { label: "Elutasítás", kind: "danger", run: () => removeFriendship(item.friendship_id) }
+  ])));
+
+  accepted.forEach(item => els.friends.appendChild(personRow(item, [
+    { label: "Üzenet", run: () => openThread(item) },
+    { label: "Eltávolítás", kind: "danger", run: () => removeFriendship(item.friendship_id) }
+  ])));
+
+  outgoing.forEach(item => els.outgoing.appendChild(personRow(item, [
+    { label: "Visszavonás", kind: "danger", run: () => removeFriendship(item.friendship_id) }
+  ])));
+}
+
+async function acceptFriendship(item) {
+  els.friendStatus.textContent = "Barátkérés elfogadása…";
+  const { error } = await client.rpc("accept_friendship", { p_friendship_id: item.friendship_id });
+  if (error) {
+    els.friendStatus.className = "status err";
+    els.friendStatus.textContent = rpcError(error);
+    return;
+  }
+  els.friendStatus.className = "status ok";
+  els.friendStatus.textContent = "Barátkérés elfogadva.";
+  await loadFriendships();
+}
+
+async function removeFriendship(friendshipId) {
+  const { error } = await client.rpc("remove_friendship", { p_friendship_id: friendshipId });
+  if (error) {
+    els.friendStatus.className = "status err";
+    els.friendStatus.textContent = rpcError(error);
+    return;
+  }
+  if (selectedFriend?.friendship_id === friendshipId) closeThread();
+  els.friendStatus.className = "status ok";
+  els.friendStatus.textContent = "Kapcsolat frissítve.";
+  await loadFriendships();
+}
+
+els.searchBtn.addEventListener("click", async () => {
+  const nickname = els.nicknameSearch.value.trim();
+  if (nickname.length < 2) {
+    els.searchResult.className = "status err";
+    els.searchResult.textContent = "Írd be a pontos becenevet.";
+    return;
+  }
+
+  els.searchBtn.disabled = true;
+  els.searchResult.className = "status";
+  els.searchResult.textContent = "Keresés…";
+
+  const { data, error } = await client.rpc("find_idesuss_user_by_nickname", { p_nickname: nickname });
+  els.searchBtn.disabled = false;
+
+  if (error) {
+    console.error("Nickname search failed", error);
+    els.searchResult.className = "status err";
+    els.searchResult.textContent = rpcError(error);
+    return;
+  }
+
+  const found = data?.[0];
+  if (!found) {
+    els.searchResult.className = "status";
+    els.searchResult.textContent = "Nem található ilyen pontos becenév.";
+    return;
+  }
+
+  const existing = friendships.find(x => x.other_id === found.id);
+  if (existing) {
+    els.searchResult.className = "status";
+    els.searchResult.textContent = existing.status === "accepted"
+      ? "Ő már a barátod."
+      : "Már van függő barátkérés köztetek.";
+    return;
+  }
+
+  els.searchResult.replaceChildren();
+  const wrap = document.createElement("div");
+  wrap.className = "row";
+  const label = document.createElement("span");
+  label.textContent = `${found.avatar_emoji || "🙂"} ${found.nickname}`;
+  const add = document.createElement("button");
+  add.type = "button";
+  add.textContent = "Barátkérés küldése";
+  add.addEventListener("click", async () => {
+    add.disabled = true;
+    const { error: requestError } = await client.rpc("request_friendship", { p_addressee: found.id });
+    if (requestError) {
+      add.disabled = false;
+      els.searchResult.className = "status err";
+      els.searchResult.textContent = rpcError(requestError);
+      return;
+    }
+    els.searchResult.className = "status ok";
+    els.searchResult.textContent = "Barátkérés elküldve.";
+    els.nicknameSearch.value = "";
+    await loadFriendships();
+  });
+  wrap.append(label, add);
+  els.searchResult.appendChild(wrap);
+});
+
+function closeThread() {
+  selectedFriend = null;
+  els.threadTitle.textContent = "Privát üzenetek";
+  els.threadHint.textContent = "Válassz egy barátot a beszélgetés megnyitásához.";
+  els.thread.replaceChildren();
+  els.messageForm.classList.add("hidden");
+}
+
+async function openThread(item) {
+  selectedFriend = item;
+  els.threadTitle.textContent = `💬 ${item.other_nickname || "Barát"}`;
+  els.threadHint.textContent = "A korábbi üzenetek akkor is megmaradnak, ha a másik fél éppen nincs online.";
+  els.messageForm.classList.remove("hidden");
+  await loadThread();
+}
+
+async function loadThread() {
+  if (!selectedFriend) return;
+  setState(els.thread, "Üzenetek betöltése…");
+
+  const otherId = selectedFriend.other_id;
+  const filter = `and(sender_id.eq.${currentUser.id},recipient_id.eq.${otherId}),and(sender_id.eq.${otherId},recipient_id.eq.${currentUser.id})`;
+  const { data, error } = await client
+    .from("direct_messages")
+    .select("id,sender_id,recipient_id,body,created_at,read_at")
+    .or(filter)
+    .order("created_at", { ascending: true })
+    .limit(500);
+
+  if (error) {
+    console.error("Message history failed", error);
+    setState(els.thread, "Az üzenetek most nem tölthetők be.");
+    return;
+  }
+
+  els.thread.replaceChildren();
+  if (!data?.length) setState(els.thread, "Még nincs üzenet köztetek.");
+
+  for (const item of data || []) {
+    const box = document.createElement("div");
+    box.className = `msg${item.sender_id === currentUser.id ? " mine" : ""}`;
+    const body = document.createElement("div");
+    body.textContent = item.body;
+    const meta = document.createElement("div");
+    meta.className = "msg-meta";
+    meta.textContent = formatDate(item.created_at) + (item.sender_id === currentUser.id && item.read_at ? " · olvasva" : "");
+    box.append(body, meta);
+    els.thread.appendChild(box);
+  }
+
+  els.thread.scrollTop = els.thread.scrollHeight;
+
+  const { error: readError } = await client.rpc("mark_direct_messages_read", { p_sender: otherId });
+  if (readError) console.error("Read marker failed", readError);
+  unreadBySender.delete(otherId);
+  renderFriendships();
+}
+
+els.messageForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!selectedFriend || sending) return;
+
+  const body = els.messageBody.value.trim();
+  if (!body) return;
+
+  sending = true;
+  els.sendBtn.disabled = true;
+  els.messageStatus.className = "status";
+  els.messageStatus.textContent = "Küldés…";
+
+  try {
+    const { error } = await client.rpc("send_direct_message", {
+      p_recipient: selectedFriend.other_id,
+      p_body: body
+    });
+    if (error) {
+      els.messageStatus.className = "status err";
+      els.messageStatus.textContent = rpcError(error);
+      return;
+    }
+
+    els.messageBody.value = "";
+    els.messageStatus.className = "status ok";
+    els.messageStatus.textContent = "Üzenet elküldve.";
+    await loadThread();
+  } finally {
+    sending = false;
+    els.sendBtn.disabled = false;
+  }
+});
+
+els.refreshBtn.addEventListener("click", loadThread);
+
+async function init() {
+  const { data: { user }, error } = await client.auth.getUser();
+  if (error) throw error;
+  currentUser = user || null;
+
+  if (!currentUser) {
+    els.loginRequired.classList.remove("hidden");
+    return;
+  }
+
+  els.app.classList.remove("hidden");
+  await loadFriendships();
+}
+
+init().catch(error => {
+  console.error("Friends init failed", error);
+  els.loginRequired.classList.remove("hidden");
+});
+</script>
+</body>
+</html>
