@@ -108,7 +108,7 @@ function tierLabel(tier) {
 function requiredTierForSlot(slot) {
   if (slot === 1) return radioT("guest");
   if (slot === 2) return radioT("registeredOnly");
-  if (slot<=6) return "Premium";
+  if (slot<=4) return "Premium";
   return "Premium Plus";
 }
 function canUsePresetSlot(slot) {
