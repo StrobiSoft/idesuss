@@ -1667,7 +1667,11 @@ async function updateOnlineCount() {
 
   if (!error) {
     const el = document.getElementById("onlineUsersCounter");
-if (el) el.textContent = `☻ ${count || 0} online most`;
+if (el) {
+  el.dataset.count = String(count || 0);
+  const template = window.idesussHomeTranslations?.onlineUsersCounter || "👁 {count} online";
+  el.textContent = template.replace("{count}", el.dataset.count);
+}
   }
 }
 
@@ -1728,7 +1732,9 @@ async function registerVisitSession() {
   console.log("Visit registered. Total visits:", data);
   const totalEl = document.getElementById("totalVisitsCounter");
 if (totalEl) {
-  totalEl.textContent = `🌍 ${data} összes látogatás`;
+  totalEl.dataset.count = String(data ?? 0);
+  const template = window.idesussHomeTranslations?.totalVisitsCounter || "🌍 {count} total visits";
+  totalEl.textContent = template.replace("{count}", totalEl.dataset.count);
 }
 }
 async function loadTotalVisits() {
@@ -1746,7 +1752,9 @@ async function loadTotalVisits() {
   const totalEl = document.getElementById("totalVisitsCounter");
 
   if (totalEl && data) {
-    totalEl.textContent = `🌍 ${data.value} összes látogatás`;
+    totalEl.dataset.count = String(data.value ?? 0);
+    const template = window.idesussHomeTranslations?.totalVisitsCounter || "🌍 {count} total visits";
+    totalEl.textContent = template.replace("{count}", totalEl.dataset.count);
   }
 }
 
@@ -1770,21 +1778,19 @@ if (!lastVisit || now - Number(lastVisit) > cooldown) {
 </script>
 
 <script type="module">
-  import lang from "./js/lang/modules/Home/lang/hu.js";
-
   document.addEventListener("DOMContentLoaded", function () {
 const infoPanel = document.getElementById("infoPanel");
 const infoPanelTitle = document.getElementById("infoPanelTitle");
 const infoPanelText = document.getElementById("infoPanelText");
 const infoPanelClose = document.getElementById("infoPanelClose");
 
-const panelTexts = {
-  how: lang.home.how,
-  about: lang.home.about,
-  android: lang.home.android
-};
+function getPanelTexts() {
+  const home = window.idesussHomeTranslations || {};
+  return { how: home.how, about: home.about, android: home.android };
+}
+
 function openInfoPanel(type) {
-  const data = panelTexts[type];
+  const data = getPanelTexts()[type];
   if (!data || !infoPanel || !infoPanelTitle || !infoPanelText) return;
 
   infoPanelTitle.textContent = data.title;
