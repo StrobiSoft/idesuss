@@ -8,6 +8,7 @@ inputSubtitle:"TikTok, YouTube, Instagram Reel, Facebook video i druge podržane
 inputLabel:"Javni URL videa", clipboardChecking:"Provjera međuspremnika…", installStateUnknown:"Učitavanje statusa instalacije…",
 publicLinksOnly:"Samo javne poveznice", heroBannerText:"Neki Android uređaji nisu podržani!",
 footerDesc:"Početna stranica + ulaz u mini aplikaciju za podržane javne video poveznice.",
+menuRadio:"📻 Radio", menuRules:"📜 Kućni red", menuIdeas:"💡 Kutija ideja", menuIdeasInfoLabel:"Što je Kutija ideja?", menuIdeasInfo:"Pošalji sve što bi po tvom mišljenju moglo poboljšati Idesüss: novo pravilo, funkciju ili uslugu, mogućnost koja nedostaje, prijedlog promjene ili čak ideju za financiranje i podršku. Pregledavamo prijedloge, a izvedive ideje usklađene s načelima Idesüssa mogu ući u razvoj.",
 paste:"Zalijepi", open:"Otvori", clear:"Obriši", details:"Detalji", profile:"👤 Profil", logout:"🚪 Odjava",
 register:"Registracija", login:"Prijava", or:"ili",
 how:{title:"Kako radi?",text:"Zalijepi javnu poveznicu na video, zatim pritisni gumb za otvaranje. Idesüss će pokušati otvoriti sadržaj jednostavno i brzo."},
