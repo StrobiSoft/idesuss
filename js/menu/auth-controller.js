@@ -17,6 +17,33 @@ import {
 
 let identity = null;
 let unsubscribeAuth = null;
+let recoveryRequested = false;
+
+function isPasswordRecoveryLocation() {
+  const url = new URL(window.location.href);
+  const hash = url.hash.toLowerCase();
+  const authMode = (url.searchParams.get("auth") || "").toLowerCase();
+  const type = (url.searchParams.get("type") || "").toLowerCase();
+
+  return (
+    authMode === "password-reset" ||
+    type === "recovery" ||
+    hash === "#password-reset" ||
+    hash.includes("type=recovery")
+  );
+}
+
+function clearPasswordRecoveryLocation() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("auth");
+  url.searchParams.delete("type");
+
+  if (url.hash === "#password-reset" || url.hash.toLowerCase().includes("type=recovery")) {
+    url.hash = "";
+  }
+
+  history.replaceState(null, "", url.pathname + url.search + url.hash);
+}
 
 function getClient() {
   if (!window.supabaseClient) throw new Error("Missing Supabase client.");
@@ -89,7 +116,7 @@ async function handlePasswordResetRequest() {
   try {
     await requestPasswordReset(getClient(), {
       email,
-      redirectTo: new URL("/#password-reset", window.location.origin).href
+      redirectTo: new URL("/?auth=password-reset", window.location.origin).href
     });
 
     setMessage(
@@ -131,11 +158,10 @@ async function handleSubmit(event) {
 
     try {
       identity = await updatePassword(getClient(), { password });
+      recoveryRequested = false;
       updateButtons();
       setMessage("A jelszó sikeresen megváltozott.");
-      if (window.location.hash === "#password-reset") {
-        history.replaceState(null, "", window.location.pathname + window.location.search);
-      }
+      clearPasswordRecoveryLocation();
       window.setTimeout(closeAuthModal, 650);
     } catch (error) {
       console.error("Password update failed", error);
@@ -243,6 +269,23 @@ export async function initRootAuthController() {
   ensureAuthModal();
   bindHandlers();
 
+  recoveryRequested = isPasswordRecoveryLocation();
+
+  if (unsubscribeAuth) unsubscribeAuth();
+  unsubscribeAuth = subscribeAuthState(client, async (nextIdentity, event) => {
+    identity = nextIdentity;
+    updateButtons();
+
+    if (event === "PASSWORD_RECOVERY") {
+      recoveryRequested = true;
+      openAuthModal("reset");
+      setMessage("Állíts be egy új jelszót.");
+      return;
+    }
+
+    if (identity && !recoveryRequested) await maybeOpenProfile();
+  });
+
   try {
     identity = await currentIdentity(client);
   } catch (error) {
@@ -251,21 +294,13 @@ export async function initRootAuthController() {
   }
 
   updateButtons();
-  if (identity) await maybeOpenProfile();
 
-  if (unsubscribeAuth) unsubscribeAuth();
-  unsubscribeAuth = subscribeAuthState(client, async (nextIdentity, event) => {
-    identity = nextIdentity;
-    updateButtons();
-
-    if (event === "PASSWORD_RECOVERY") {
-      openAuthModal("reset");
-      setMessage("Állíts be egy új jelszót.");
-      return;
-    }
-
-    if (identity) await maybeOpenProfile();
-  });
+  if (recoveryRequested) {
+    openAuthModal("reset");
+    setMessage("Állíts be egy új jelszót.");
+  } else if (identity) {
+    await maybeOpenProfile();
+  }
 
   return () => {
     unsubscribeAuth?.();
