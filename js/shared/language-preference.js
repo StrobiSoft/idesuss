@@ -3,7 +3,7 @@ export const IDESUSS_SUPPORTED_LANGUAGES = Object.freeze(["hu", "en", "nl", "ro"
 
 const LEGACY_KEYS = Object.freeze(["idesuss_home_lang", "ides_lang"]);
 
-export function normalizeIdesussLanguage(value, fallback = "hu") {
+export function normalizeIdesussLanguage(value, fallback = "en") {
   const code = String(value || "").trim().toLowerCase().split(/[-_]/)[0];
   return IDESUSS_SUPPORTED_LANGUAGES.includes(code) ? code : fallback;
 }
@@ -20,7 +20,7 @@ export function getIdesussLanguage() {
     }
   }
 
-  return normalizeIdesussLanguage(window.navigator.language || "hu");
+  return "en";
 }
 
 export function setIdesussLanguage(language, { notify = true } = {}) {
