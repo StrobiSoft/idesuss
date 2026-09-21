@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu" translate="no" class="notranslate">
 <head>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
     <link rel="shortcut icon" href="/favicon.png">
@@ -12,6 +12,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#0f172a" />
+    <meta name="google" content="notranslate" />
 
     <style>
         :root {
@@ -892,7 +893,7 @@
         };
 
         const VISIT_COOLDOWN_MS = 12 * 60 * 60 * 1000;
-        const SUPPORTED_LANGS = ['hu', 'en', 'nl', 'ro', 'pl'];
+        const SUPPORTED_LANGS = ['hu', 'en', 'nl', 'ro', 'pl', 'be'];
 
         const els = {
             brandSub: document.getElementById('brandSub'),
@@ -948,6 +949,7 @@
             if (browserLang.startsWith('nl')) return 'nl';
             if (browserLang.startsWith('ro')) return 'ro';
             if (browserLang.startsWith('pl')) return 'pl';
+            if (browserLang.startsWith('be')) return 'be';
             return 'en';
         }
 
@@ -967,6 +969,8 @@
                 }
             }
         }
+
+        window.loadLanguage = loadLanguage;
 
         function t(key, fallback = '') {
             return dict[key] || fallback || key;
@@ -997,6 +1001,8 @@
 
         function applyLanguage() {
             document.documentElement.lang = currentLang;
+            document.documentElement.setAttribute('translate', 'no');
+            document.documentElement.classList.add('notranslate');
             updateAppMenuLanguage();
             document.getElementById('aboutCloseBtn').textContent = t('aboutCloseBtn', 'OK');
 
