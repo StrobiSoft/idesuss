@@ -13,12 +13,12 @@ paste:"Plakken", open:"Openen", clear:"Wissen", details:"Details", profile:"👤
 register:"Registreren", login:"Inloggen", or:"of",
 fx: {
   "title": "Officiële dagelijkse wisselkoersen",
-  "source": "Officiële dagelijkse MNB-koers",
-  "sourceDate": "MNB-koersdatum: {date}",
+  "source": "Dagelijkse ECB-referentiekoers",
+  "sourceDate": "ECB-koersdatum: {date}",
   "loading": "laden…",
   "updated": "bijgewerkt",
   "unavailable": "tijdelijk niet beschikbaar",
-  "note": "Bron: Magyar Nemzeti Bank (Hongaarse centrale bank). Officiële wisselkoersen worden op MNB-werkdagen bijgewerkt; Idesüss volgt geen koersschommelingen binnen de dag."
+  "note": "Bron: Europese Centrale Bank (ECB). De ECB-referentiekoersen worden op werkdagen bijgewerkt; Idesüss volgt geen koersschommelingen binnen de dag."
 },
 
 how:{title:"Hoe werkt het?",text:"Plak een openbare videolink en druk daarna op openen. Idesüss probeert de inhoud zo eenvoudig en snel mogelijk te openen."},
