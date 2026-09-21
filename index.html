@@ -255,6 +255,68 @@
 }
     .auth-chip{
   gap:10px;
+  position:relative;
+  padding-right:8px;
+}
+
+.header-menu-toggle{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  display:grid;
+  place-items:center;
+  border:none;
+  border-radius:13px;
+  background:linear-gradient(135deg,#0d5bd7,#4da3ff);
+  color:#fff;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),
+    0 8px 20px rgba(13,91,215,.28);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+
+.header-menu-toggle:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.45),
+    0 10px 24px rgba(13,91,215,.36);
+}
+
+.header-menu-toggle:active{
+  transform:translateY(1px);
+}
+
+.header-dropdown-menu{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  min-width:220px;
+  padding:12px;
+  border-radius:20px;
+  background:rgba(15,25,40,.96);
+  backdrop-filter:blur(18px);
+  box-shadow:0 20px 60px rgba(0,0,0,.30);
+  display:none;
+  flex-direction:column;
+  gap:10px;
+  z-index:70;
+}
+
+@media (max-width:760px){
+  .auth-chip{
+    width:100%;
+    justify-content:space-between;
+  }
+
+  .header-dropdown-menu{
+    right:0;
+    left:0;
+    min-width:0;
+    width:100%;
+  }
 }
 
 .auth-link{
@@ -1320,72 +1382,6 @@ body.viewer-open #idesussMenu {
   </style>
 </head>
 <body>
-<button
-id="menuToggle"
-style="
-display:flex;
-align-items:center;
-justify-content:center;
-line-height:1;
-padding:0;
-position:fixed;
-top:18px;
-right:18px;
-width:46px;
-height:46px;
-border-radius:14px;
-border:none;
-background:linear-gradient(135deg,#0d5bd7,#4da3ff);
-backdrop-filter:blur(10px);
-color:white;
-font-size:28px;
-cursor:pointer;
-z-index:99999;
-box-shadow:0 10px 28px rgba(0,0,0,.35);
-"
-
->
-☰
-</button>
-
-<div
-  id="idesussMenu"
-  style="
-    position:absolute;
-    top:72px;
-    right:18px;
-    min-width:220px;
-    padding:12px;
-    border-radius:20px;
-    background:rgba(15,25,40,.94);
-    backdrop-filter:blur(18px);
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
-    display:none;
-    flex-direction:column;
-    gap:10px;
-    z-index:2000;
-  "
->
-
-  <button class="idesussMenuBtn" id="openProfileBtn" data-i18n="profile"></button>
-
-  <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp"></button>
-
-  <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio"></button>
-
-  <button class="idesussMenuBtn" id="openRulesBtn" type="button" data-i18n="menuRules"></button>
-
-  <div class="menu-idea-row">
-    <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas"></button>
-    <span class="menu-info" tabindex="0" data-i18n-aria-label="menuIdeasInfoLabel">
-      i
-      <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo"></span>
-    </span>
-  </div>
-
-  <button class="idesussMenuBtn" id="logoutBtnMenu" data-i18n="logout"></button>
-
-</div>
   <header class="site-header">
     <div class="container header-inner">
       <a href="#top" class="brand-wrap" aria-label="Idesüss főoldal">
@@ -1398,30 +1394,53 @@ box-shadow:0 10px 28px rgba(0,0,0,.35);
 
       <div class="header-actions">
 
-  <div class="header-chip auth-chip">
-    <button id="loginBtn" class="auth-link" type="button" data-i18n="login"></button>
-    <span class="auth-separator" data-i18n="or"></span>
-    <button id="registerBtn" class="auth-link" type="button" data-i18n="register"></button>
-  </div>
+        <div class="header-chip lang-clock-chip">
+          <span id="headerClock" class="header-clock-inline">00:00</span>
 
-  <div class="header-chip lang-clock-chip">
-  <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
-    <option value="hu">HU Magyar</option>
-    <option value="en">GB English</option>
-    <option value="nl">NL Nederlands</option>
-    <option value="ro">RO Română</option>
-    <option value="pl">PL Polski</option>
-    <option value="hr">HR Hrvatski</option>
-    <option value="be">BY Беларуская</option>
-  </select>
+          <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
+            <option value="hu">HU Magyar</option>
+            <option value="en">GB English</option>
+            <option value="nl">NL Nederlands</option>
+            <option value="ro">RO Română</option>
+            <option value="pl">PL Polski</option>
+            <option value="hr">HR Hrvatski</option>
+            <option value="be">BY Беларуская</option>
+          </select>
+        </div>
 
-  <span id="headerClock" class="header-clock-inline">00:00</span>
-</div>
-  </div>
+        <div class="header-chip auth-chip">
+          <button id="loginBtn" class="auth-link" type="button" data-i18n="login"></button>
+          <span class="auth-separator" data-i18n="or"></span>
+          <button id="registerBtn" class="auth-link" type="button" data-i18n="register"></button>
 
+          <button
+            id="menuToggle"
+            class="header-menu-toggle"
+            type="button"
+            aria-label="Menü"
+            aria-haspopup="true"
+          >☰</button>
 
-
-</div>
+          <div id="idesussMenu" class="header-dropdown-menu">
+            <button class="idesussMenuBtn" id="openProfileBtn" data-i18n="profile"></button>
+            
+              <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp"></button>
+            
+              <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio"></button>
+            
+              <button class="idesussMenuBtn" id="openRulesBtn" type="button" data-i18n="menuRules"></button>
+            
+              <div class="menu-idea-row">
+                <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas"></button>
+                <span class="menu-info" tabindex="0" data-i18n-aria-label="menuIdeasInfoLabel">
+                  i
+                  <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo"></span>
+                </span>
+              </div>
+            
+              <button class="idesussMenuBtn" id="logoutBtnMenu" data-i18n="logout"></button>
+          </div>
+        </div>
 
       </div>
     </div>
