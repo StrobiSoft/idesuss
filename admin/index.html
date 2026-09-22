@@ -33,6 +33,10 @@
     .card[hidden],#adminContent[hidden]{display:none!important}
     .status{margin-top:10px;padding:12px 14px;border-radius:13px;background:rgba(255,255,255,.06);color:var(--muted)}
     .denied{border-color:rgba(248,113,113,.45)}
+    .user-search{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}
+    .user-search input{flex:1 1 280px;min-height:42px;border:1px solid #3b5875;border-radius:12px;background:#0b1929;color:var(--text);padding:10px 12px;outline:none}
+    .user-search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(77,163,255,.14)}
+    .user-search .hint{font-size:.84rem;color:var(--muted)}
     .user-list{display:grid;gap:10px;margin-top:12px}
     .user-row{display:grid;grid-template-columns:minmax(180px,1.5fr) minmax(140px,.8fr) minmax(160px,1fr);gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.035)}
     .user-name{font-weight:900;overflow-wrap:anywhere}.user-meta{font-size:.86rem;color:var(--muted);overflow-wrap:anywhere}
@@ -81,6 +85,10 @@
         <h2>👑 Platform Owner</h2>
         <p class="owner-note">Ez a rész kizárólag az egyetlen Platform Owner számára érhető el.</p>
         <p class="muted">Szerepkörök kezelése és díjmentes Premium/Premium Plus jogosultság adása. A díjmentes prémium nem ad adminpanel-hozzáférést.</p>
+        <div class="user-search">
+          <input id="ownerUserSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Keresés becenév vagy e-mail cím alapján…" aria-label="Felhasználó keresése" />
+          <span class="hint">A találatok relevancia szerint kerülnek előre.</span>
+        </div>
         <div id="ownerUserList" class="user-list"></div>
         <div id="ownerStatus" class="status">Felhasználók betöltése…</div>
       </article>
@@ -88,6 +96,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./admin.js?v=20260923-admin1"></script>
+  <script type="module" src="./admin.js?v=20260923-admin-search1"></script>
 </body>
 </html>
