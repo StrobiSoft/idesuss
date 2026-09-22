@@ -329,7 +329,7 @@ function bindEngineEvents() {
     const button=$("#playPauseBtn");
     if (button) {
       const playing=state==="playing";
-      button.textContent=playing?`⏸ ${radioT("pause")}`:`▶ ${radioT("play")}`;
+      button.textContent=playing?radioT("pause"):radioT("play");
       button.setAttribute("aria-pressed",playing?"true":"false");
     }
     const stateText = streamStateText(state);
@@ -352,7 +352,7 @@ async function init() {
     const button = $("#playPauseBtn");
     if (button) {
       const playing=engine.audio?.paused===false;
-      button.textContent=playing?`⏸ ${radioT("pause")}`:`▶ ${radioT("play")}`;
+      button.textContent=playing?radioT("pause"):radioT("play");
       button.setAttribute("aria-pressed",playing?"true":"false");
     }
   });
