@@ -217,6 +217,7 @@
         }
 
         .install-btn,
+        .top-nav-link,
         .lang-area {
             min-height: 44px;
             border: 1px solid var(--line);
@@ -227,13 +228,33 @@
             -webkit-backdrop-filter: blur(12px);
         }
 
-        .install-btn {
+        .install-btn,
+        .top-nav-link {
             padding: 10px 14px;
             font-size: 13px;
             line-height: 1.2;
             font-weight: 800;
             cursor: pointer;
             white-space: nowrap;
+        }
+
+        .top-nav-link {
+            min-height: 44px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.075);
+            color: #fff;
+            border-radius: 14px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .top-nav-link:hover {
+            background: rgba(255,255,255,0.13);
+            border-color: rgba(125,211,252,0.28);
         }
 
         .lang-area {
@@ -795,6 +816,9 @@
                     </select>
                 </div>
 
+                <a id="appTopHome" class="top-nav-link" href="/">← Főoldal</a>
+                <a id="appTopRadio" class="top-nav-link" href="/radio/">📻 Rádió</a>
+
                 <div class="app-menu-wrap">
                     <button id="appMenuToggle" class="app-menu-toggle" type="button" aria-label="Menü" aria-expanded="false" aria-controls="appMenu">☰</button>
                     <nav id="appMenu" class="app-menu" aria-label="Idesüss menü">
@@ -926,6 +950,8 @@
             inputCard: document.getElementById('inputCard'),
             ytFrame: document.getElementById('ytFrame'),
             goBtn: document.getElementById('goBtn'),
+            appTopHome: document.getElementById('appTopHome'),
+            appTopRadio: document.getElementById('appTopRadio'),
             appMenuToggle: document.getElementById('appMenuToggle'),
             appMenu: document.getElementById('appMenu'),
             appMenuHome: document.getElementById('appMenuHome'),
@@ -1006,6 +1032,8 @@
             const rulesLabel = els.appMenuRules?.querySelector('span:last-child');
             if (homeLabel) homeLabel.textContent = labels.home;
             if (radioLabel) radioLabel.textContent = labels.radio;
+            if (els.appTopHome) els.appTopHome.textContent = `← ${labels.home}`;
+            if (els.appTopRadio) els.appTopRadio.textContent = `📻 ${labels.radio}`;
             if (rulesLabel) rulesLabel.textContent = labels.rules;
             if (els.rulesLink) els.rulesLink.textContent = labels.rules;
             if (els.appMenuToggle) els.appMenuToggle.setAttribute('aria-label', labels.menu);
