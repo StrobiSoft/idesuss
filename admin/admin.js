@@ -56,13 +56,15 @@ function createSelect(options, value) {
   return select;
 }
 
-async function loadOwnerUsers() {
+async function loadOwnerUsers(query = "") {
   const list = $("#ownerUserList");
   const status = $("#ownerStatus");
   list.replaceChildren();
   text(status, "Felhasználók betöltése…");
 
-  const { data, error } = await client.rpc("owner_list_users");
+  const rpcName = query.trim() ? "owner_search_users" : "owner_list_users";
+  const args = query.trim() ? { p_query: query.trim(), p_limit: 50 } : undefined;
+  const { data, error } = await client.rpc(rpcName, args);
   if (error) {
     console.error("Owner user list failed", error);
     text(status, "A felhasználólista nem tölthető be.");
@@ -150,7 +152,28 @@ async function loadOwnerUsers() {
     list.appendChild(row);
   }
 
-  text(status, `${(data || []).length} felhasználó betöltve.`);
+  text(
+    status,
+    query.trim()
+      ? `${(data || []).length} találat erre: „${query.trim()}”.`
+      : `${(data || []).length} felhasználó betöltve.`
+  );
+}
+
+function initOwnerSearch() {
+  const input = $("#ownerUserSearch");
+  if (!input) return;
+
+  let timer = null;
+  input.addEventListener("input", () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      loadOwnerUsers(input.value).catch((error) => {
+        console.error("Owner search failed", error);
+        text($("#ownerStatus"), "A keresés nem sikerült.");
+      });
+    }, 250);
+  });
 }
 
 async function boot() {
@@ -169,6 +192,7 @@ async function boot() {
     showCapabilities(access);
 
     if (access?.capabilities?.platform_owner) {
+      initOwnerSearch();
       await loadOwnerUsers();
     }
   } catch (error) {

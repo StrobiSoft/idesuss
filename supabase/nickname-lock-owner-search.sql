@@ -1,0 +1,19 @@
+-- Idesüss immutable nickname + owner user search
+-- Applied to production Supabase on 2026-09-23.
+--
+-- Rules:
+-- 1. A nickname can be chosen once, during first completed profile save.
+-- 2. After profile_completed=true, nickname and nickname_normalized are immutable
+--    for ordinary authenticated client writes.
+-- 3. save_my_profile rejects a changed nickname with NICKNAME_LOCKED.
+-- 4. Platform Owner can search users by nickname or email through
+--    owner_search_users(query, limit); non-owner callers are rejected by
+--    private.assert_platform_owner().
+--
+-- The live database function/trigger definitions are the source of truth.
+-- This file records the intended security contract for repository review.
+
+-- Expected behavior examples:
+-- save_my_profile('new-name', ...) after completed profile => NICKNAME_LOCKED
+-- direct authenticated UPDATE profiles SET nickname=... => original nickname preserved
+-- owner_search_users('name-or-email', 50) => ranked matches for Platform Owner only

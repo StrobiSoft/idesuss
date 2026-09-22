@@ -191,7 +191,10 @@ async function renderProfile(panel, profile, user) {
 
       <label class="profile-placeholder">
         <strong>Becenév</strong>
-        <input id="profileNickname" type="text" maxlength="40" value="${escapeHtml(nickname)}" autocomplete="nickname" />
+        <input id="profileNickname" type="text" maxlength="40" value="${escapeHtml(nickname)}" autocomplete="nickname"${nicknameLocked ? ' readonly aria-readonly="true"' : ""} />
+        <span class="profile-nickname-note">${nicknameLocked
+          ? "A becenév végleges és ehhez a fiókhoz tartozik. Új becenévhez új fiók szükséges."
+          : "A becenevet csak egyszer választhatod meg. Az első profilmentés után végleg ehhez a fiókhoz kötődik."}</span>
       </label>
 
       <label class="profile-placeholder">
