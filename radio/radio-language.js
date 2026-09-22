@@ -7,6 +7,7 @@ import {
 
 const TEXT = {
   hu: {
+    savedPresetReady:"{station} betöltve az 1-es mentett presetből.",
     login:"👤 Bejelentkezés", profile:"👤 Profil",
     directoryTitle:"Rádióválasztó — {slot}. preset", directorySearch:"Állomás neve", directoryCountry:"Ország", directoryLanguage:"Nyelv", directoryGenre:"Műfaj / címke", directorySearchPlaceholder:"Pl. Petőfi, jazz, BBC…", directoryGenrePlaceholder:"Pl. rock, news, dance", directorySearchButton:"Keresés", directoryAllCountries:"Minden ország", directoryAllLanguages:"Minden nyelv", directoryLoading:"Rádióállomások betöltése…", directoryNoResults:"Nincs találat ezekkel a szűrőkkel.", directoryResultCount:"{count} állomás betöltve.", directoryPreview:"▶ Próba", directorySave:"Mentés a presetre", directorySignInSave:"A preset mentéséhez bejelentkezés szükséges.", directorySaved:"{station} elmentve a(z) {slot}. presetre.", directorySaveError:"A rádió mentése nem sikerült.", directoryLoadError:"A külső rádiókatalógus most nem érhető el.", directoryClose:"Rádióválasztó bezárása", directoryPreviewing:"{station} próbahallgatása…",
    
@@ -26,6 +27,7 @@ const TEXT = {
     unavailable:"Jelenleg nincs elérhető rádióállomás.", language:"Nyelv"
   },
   en: {
+    savedPresetReady:"{station} loaded from saved preset 1.",
     login:"👤 Sign in", profile:"👤 Profile",
     directoryTitle:"Radio picker — preset {slot}", directorySearch:"Station name", directoryCountry:"Country", directoryLanguage:"Language", directoryGenre:"Genre / tag", directorySearchPlaceholder:"E.g. BBC, jazz, Heart…", directoryGenrePlaceholder:"E.g. rock, news, dance", directorySearchButton:"Search", directoryAllCountries:"All countries", directoryAllLanguages:"All languages", directoryLoading:"Loading radio stations…", directoryNoResults:"No stations match these filters.", directoryResultCount:"{count} stations loaded.", directoryPreview:"▶ Preview", directorySave:"Save to preset", directorySignInSave:"Sign in to save this preset.", directorySaved:"{station} saved to preset {slot}.", directorySaveError:"The station could not be saved.", directoryLoadError:"The external radio directory is unavailable right now.", directoryClose:"Close radio picker", directoryPreviewing:"Previewing {station}…",
    
@@ -44,6 +46,7 @@ const TEXT = {
     unavailable:"No radio station is currently available.", language:"Language"
   },
   nl: {
+    savedPresetReady:"{station} geladen uit opgeslagen preset 1.",
     login:"👤 Inloggen", profile:"👤 Profiel",
     directoryTitle:"Radio kiezen — preset {slot}", directorySearch:"Stationsnaam", directoryCountry:"Land", directoryLanguage:"Taal", directoryGenre:"Genre / tag", directorySearchPlaceholder:"Bijv. NPO, jazz, SLAM…", directoryGenrePlaceholder:"Bijv. rock, nieuws, dance", directorySearchButton:"Zoeken", directoryAllCountries:"Alle landen", directoryAllLanguages:"Alle talen", directoryLoading:"Radiostations laden…", directoryNoResults:"Geen stations gevonden met deze filters.", directoryResultCount:"{count} stations geladen.", directoryPreview:"▶ Proberen", directorySave:"Opslaan in preset", directorySignInSave:"Log in om deze preset op te slaan.", directorySaved:"{station} opgeslagen in preset {slot}.", directorySaveError:"Het station kon niet worden opgeslagen.", directoryLoadError:"De externe radiogids is nu niet beschikbaar.", directoryClose:"Radiokiezer sluiten", directoryPreviewing:"Voorbeeld van {station}…",
    
@@ -62,6 +65,7 @@ const TEXT = {
     unavailable:"Er is momenteel geen radiostation beschikbaar.", language:"Taal"
   },
   ro: {
+    savedPresetReady:"{station} încărcat din presetul 1 salvat.",
     login:"👤 Autentificare", profile:"👤 Profil",
     directoryTitle:"Selector radio — presetarea {slot}", directorySearch:"Numele postului", directoryCountry:"Țară", directoryLanguage:"Limbă", directoryGenre:"Gen / etichetă", directorySearchPlaceholder:"Ex. Kiss FM, jazz, BBC…", directoryGenrePlaceholder:"Ex. rock, știri, dance", directorySearchButton:"Caută", directoryAllCountries:"Toate țările", directoryAllLanguages:"Toate limbile", directoryLoading:"Se încarcă posturile radio…", directoryNoResults:"Niciun post nu corespunde filtrelor.", directoryResultCount:"{count} posturi încărcate.", directoryPreview:"▶ Ascultă", directorySave:"Salvează în presetare", directorySignInSave:"Autentifică-te pentru a salva presetarea.", directorySaved:"{station} a fost salvat în presetarea {slot}.", directorySaveError:"Postul nu a putut fi salvat.", directoryLoadError:"Catalogul radio extern nu este disponibil acum.", directoryClose:"Închide selectorul radio", directoryPreviewing:"Previzualizare {station}…",
    
@@ -80,6 +84,7 @@ const TEXT = {
     unavailable:"Momentan nu este disponibil niciun post radio.", language:"Limbă"
   },
   pl: {
+    savedPresetReady:"{station} wczytano z zapisanego presetu 1.",
     login:"👤 Zaloguj się", profile:"👤 Profil",
     directoryTitle:"Wybór radia — preset {slot}", directorySearch:"Nazwa stacji", directoryCountry:"Kraj", directoryLanguage:"Język", directoryGenre:"Gatunek / tag", directorySearchPlaceholder:"Np. RMF, jazz, BBC…", directoryGenrePlaceholder:"Np. rock, wiadomości, dance", directorySearchButton:"Szukaj", directoryAllCountries:"Wszystkie kraje", directoryAllLanguages:"Wszystkie języki", directoryLoading:"Ładowanie stacji radiowych…", directoryNoResults:"Brak stacji dla tych filtrów.", directoryResultCount:"Załadowano {count} stacji.", directoryPreview:"▶ Posłuchaj", directorySave:"Zapisz w presecie", directorySignInSave:"Zaloguj się, aby zapisać preset.", directorySaved:"{station} zapisano w presecie {slot}.", directorySaveError:"Nie udało się zapisać stacji.", directoryLoadError:"Zewnętrzny katalog radia jest teraz niedostępny.", directoryClose:"Zamknij wybór radia", directoryPreviewing:"Odsłuch {station}…",
    
@@ -98,6 +103,7 @@ const TEXT = {
     unavailable:"Obecnie żadna stacja radiowa nie jest dostępna.", language:"Język"
   },
   hr: {
+    savedPresetReady:"{station} učitan iz spremljenog preseta 1.",
     login:"👤 Prijava", profile:"👤 Profil",
     directoryTitle:"Odabir radija — preset {slot}", directorySearch:"Naziv postaje", directoryCountry:"Država", directoryLanguage:"Jezik", directoryGenre:"Žanr / oznaka", directorySearchPlaceholder:"Npr. bravo, jazz, BBC…", directoryGenrePlaceholder:"Npr. rock, vijesti, dance", directorySearchButton:"Traži", directoryAllCountries:"Sve države", directoryAllLanguages:"Svi jezici", directoryLoading:"Učitavanje radijskih postaja…", directoryNoResults:"Nema postaja za ove filtre.", directoryResultCount:"Učitano je {count} postaja.", directoryPreview:"▶ Poslušaj", directorySave:"Spremi u preset", directorySignInSave:"Prijavi se za spremanje preseta.", directorySaved:"{station} je spremljen u preset {slot}.", directorySaveError:"Postaju nije moguće spremiti.", directoryLoadError:"Vanjski radijski katalog trenutačno nije dostupan.", directoryClose:"Zatvori odabir radija", directoryPreviewing:"Preslušavanje {station}…",
    
@@ -116,6 +122,7 @@ const TEXT = {
     unavailable:"Trenutno nema dostupnih radijskih postaja.", language:"Jezik"
   },
   be: {
+    savedPresetReady:"{station} загружана з захаванага прэсэта 1.",
     login:"👤 Увайсці", profile:"👤 Профіль",
     directoryTitle:"Выбар радыё — прэсэт {slot}", directorySearch:"Назва станцыі", directoryCountry:"Краіна", directoryLanguage:"Мова", directoryGenre:"Жанр / тэг", directorySearchPlaceholder:"Напр. Radius, jazz, BBC…", directoryGenrePlaceholder:"Напр. rock, навіны, dance", directorySearchButton:"Пошук", directoryAllCountries:"Усе краіны", directoryAllLanguages:"Усе мовы", directoryLoading:"Загрузка радыёстанцый…", directoryNoResults:"Па гэтых фільтрах нічога не знойдзена.", directoryResultCount:"Загружана станцый: {count}.", directoryPreview:"▶ Паслухаць", directorySave:"Захаваць у прэсэт", directorySignInSave:"Увайдзі, каб захаваць прэсэт.", directorySaved:"{station} захавана ў прэсэт {slot}.", directorySaveError:"Не ўдалося захаваць станцыю.", directoryLoadError:"Знешні радыёкаталог зараз недаступны.", directoryClose:"Закрыць выбар радыё", directoryPreviewing:"Праслухоўванне {station}…",
    
