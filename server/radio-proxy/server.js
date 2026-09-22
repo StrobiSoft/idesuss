@@ -1,12 +1,14 @@
 import http from "node:http";
 import dns from "node:dns/promises";
 import net from "node:net";
+import crypto from "node:crypto";
 
 const PORT = Number(process.env.PORT || 8787);
 const HOST = process.env.HOST || "127.0.0.1";
 const MAX_REDIRECTS = 4;
 const CONNECT_TIMEOUT_MS = 10_000;
 const ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+const HLS_SECRET = process.env.IDESUSS_RADIO_HLS_SECRET || "";
 const SPY_TRAP_WINDOW_MS = 15 * 60 * 1000;
 const SPY_TRAP_ESCALATE_MS = 60 * 60 * 1000;
 const spyTrapEvents = new Map();
@@ -97,7 +99,7 @@ function isForbiddenIp(address) {
 
 async function validatePublicHttpsUrl(raw) {
   const url = new URL(raw);
-  if (url.protocol !== "https:" || url.username || url.password || url.port) throw new Error("UNSAFE_SOURCE_URL");
+  if (url.protocol !== "https:" || url.username || url.password) throw new Error("UNSAFE_SOURCE_URL");
   const answers = await dns.lookup(url.hostname, { all: true, verbatim: true });
   if (!answers.length || answers.some(({address}) => isForbiddenIp(address))) throw new Error("UNSAFE_SOURCE_HOST");
   return url;
@@ -126,9 +128,99 @@ async function fetchStream(url, redirects = 0) {
   } finally { clearTimeout(timeout); }
 }
 
+function corsHeaders() {
+  return { "Access-Control-Allow-Origin": process.env.IDESUSS_RADIO_CORS_ORIGIN || "https://idesuss.net" };
+}
+
 function json(res, status, payload) {
-  res.writeHead(status, { "Content-Type":"application/json; charset=utf-8", "Cache-Control":"no-store", "X-Content-Type-Options":"nosniff" });
+  res.writeHead(status, {
+    "Content-Type":"application/json; charset=utf-8",
+    "Cache-Control":"no-store",
+    "X-Content-Type-Options":"nosniff",
+    ...corsHeaders()
+  });
   res.end(JSON.stringify(payload));
+}
+
+function isHls(upstream) {
+  const type = String(upstream.headers.get("content-type") || "").toLowerCase();
+  return type.includes("mpegurl") || type.includes("m3u8") || new URL(upstream.url).pathname.toLowerCase().endsWith(".m3u8");
+}
+
+function signHlsTarget(stationId, target) {
+  if (!HLS_SECRET) throw new Error("HLS_SECRET_REQUIRED");
+  return crypto.createHmac("sha256", HLS_SECRET).update(`${stationId}\n${target}`).digest("base64url");
+}
+
+function safeEqual(a, b) {
+  const left = Buffer.from(String(a || ""));
+  const right = Buffer.from(String(b || ""));
+  return left.length === right.length && crypto.timingSafeEqual(left, right);
+}
+
+function hlsProxyPath(stationId, target) {
+  const u = Buffer.from(target).toString("base64url");
+  const s = signHlsTarget(stationId, target);
+  return `/v1/radio/hls/${stationId}?u=${encodeURIComponent(u)}&s=${encodeURIComponent(s)}`;
+}
+
+function resolveHlsTarget(stationId, encoded, signature) {
+  if (!HLS_SECRET) throw new Error("HLS_SECRET_REQUIRED");
+  const target = Buffer.from(String(encoded || ""), "base64url").toString("utf8");
+  if (!target || !safeEqual(signature, signHlsTarget(stationId, target))) throw new Error("INVALID_HLS_TOKEN");
+  return target;
+}
+
+function rewriteHlsManifest(text, stationId, baseUrl) {
+  const rewrite = (raw) => {
+    const value = String(raw || "").trim();
+    if (!value || value.startsWith("data:")) return value;
+    return hlsProxyPath(stationId, new URL(value, baseUrl).toString());
+  };
+
+  return String(text || "")
+    .split(/\r?\n/)
+    .map((line) => {
+      if (!line) return line;
+      if (!line.startsWith("#")) return rewrite(line);
+      return line.replace(/URI="([^"]+)"/g, (_match, uri) => `URI="${rewrite(uri)}"`);
+    })
+    .join("\n");
+}
+
+async function relayUpstream(req, res, stationId, upstream) {
+  if (!upstream.ok || !upstream.body) return json(res,503,{error:"upstream_unavailable"});
+
+  if (isHls(upstream)) {
+    if (!HLS_SECRET) return json(res,503,{error:"hls_proxy_not_configured"});
+    const manifest = rewriteHlsManifest(await upstream.text(), stationId, upstream.url);
+    res.writeHead(200, {
+      "Content-Type":"application/vnd.apple.mpegurl; charset=utf-8",
+      "Cache-Control":"no-store, no-transform",
+      "X-Content-Type-Options":"nosniff",
+      ...corsHeaders()
+    });
+    if (req.method === "HEAD") return res.end();
+    return res.end(manifest);
+  }
+
+  const contentType = upstream.headers.get("content-type") || "audio/mpeg";
+  res.writeHead(200, {
+    "Content-Type": contentType,
+    "Cache-Control":"no-store, no-transform",
+    "X-Content-Type-Options":"nosniff",
+    ...corsHeaders()
+  });
+  if (req.method === "HEAD") return res.end();
+
+  const reader = upstream.body.getReader();
+  req.on("close", () => reader.cancel().catch(()=>{}));
+  while (true) {
+    const {done,value} = await reader.read();
+    if (done) break;
+    if (!res.write(value)) await new Promise(resolve => res.once("drain",resolve));
+  }
+  res.end();
 }
 
 function catalog(locale) {
@@ -148,30 +240,24 @@ const server = http.createServer(async (req,res) => {
     if (url.pathname === "/healthz") return json(res,200,{ok:true,stations:stations.size});
     if (url.pathname === "/v1/radio/catalog") return json(res,200,{schemaVersion:1,stations:catalog(url.searchParams.get("locale") || "")});
 
-    const match = /^\/v1\/radio\/stream\/([a-z0-9][a-z0-9-]{0,63})$/.exec(url.pathname);
-    if (!match) return json(res,404,{error:"not_found"});
-    const station = stations.get(match[1]);
-    if (!station) return json(res,404,{error:"unknown_station"});
-
-    const upstream = await fetchStream(station.sourceUrl);
-    if (!upstream.ok || !upstream.body) return json(res,503,{error:"upstream_unavailable"});
-
-    const contentType = upstream.headers.get("content-type") || "audio/mpeg";
-    res.writeHead(200, {
-      "Content-Type": contentType,
-      "Cache-Control":"no-store, no-transform",
-      "X-Content-Type-Options":"nosniff",
-      "Access-Control-Allow-Origin": process.env.IDESUSS_RADIO_CORS_ORIGIN || "https://idesuss.net"
-    });
-    if (req.method === "HEAD") { res.end(); return; }
-    const reader = upstream.body.getReader();
-    req.on("close", () => reader.cancel().catch(()=>{}));
-    while (true) {
-      const {done,value} = await reader.read();
-      if (done) break;
-      if (!res.write(value)) await new Promise(resolve => res.once("drain",resolve));
+    const streamMatch = /^\/v1\/radio\/stream\/([a-z0-9][a-z0-9-]{0,63})$/.exec(url.pathname);
+    if (streamMatch) {
+      const station = stations.get(streamMatch[1]);
+      if (!station) return json(res,404,{error:"unknown_station"});
+      const upstream = await fetchStream(station.sourceUrl);
+      return relayUpstream(req, res, station.id, upstream);
     }
-    res.end();
+
+    const hlsMatch = /^\/v1\/radio\/hls\/([a-z0-9][a-z0-9-]{0,63})$/.exec(url.pathname);
+    if (hlsMatch) {
+      const station = stations.get(hlsMatch[1]);
+      if (!station) return json(res,404,{error:"unknown_station"});
+      const target = resolveHlsTarget(station.id, url.searchParams.get("u"), url.searchParams.get("s"));
+      const upstream = await fetchStream(target);
+      return relayUpstream(req, res, station.id, upstream);
+    }
+
+    return json(res,404,{error:"not_found"});
   } catch (error) {
     console.error(error);
     if (!res.headersSent) json(res,503,{error:"stream_proxy_error"});
