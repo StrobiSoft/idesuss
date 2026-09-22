@@ -18,6 +18,7 @@ import {
 
 let identity = null;
 let profileNickname = "";
+let profileRole = "user";
 let unsubscribeAuth = null;
 let recoveryRequested = false;
 
@@ -93,6 +94,7 @@ function updateButtons() {
   const loginBtn = document.getElementById("loginBtn");
   const registerBtn = document.getElementById("registerBtn");
   const menuLogout = document.getElementById("logoutBtnMenu");
+  const adminPanelBtn = document.getElementById("openAdminPanelBtn");
 
   if (loginBtn && registerBtn) {
     if (identity) {
@@ -108,6 +110,10 @@ function updateButtons() {
     menuLogout.textContent = homeText("logout", "🚪 Kijelentkezés");
     menuLogout.hidden = !identity;
   }
+
+  if (adminPanelBtn) {
+    adminPanelBtn.hidden = !identity || !["moderator", "admin", "owner"].includes(profileRole);
+  }
 }
 
 async function maybeOpenProfile() {
@@ -116,6 +122,7 @@ async function maybeOpenProfile() {
   try {
     const profile = await loadMyProfile(getClient());
     profileNickname = profile?.nickname || "";
+    profileRole = profile?.role || "user";
     updateButtons();
 
     if (!profile?.profile_completed) {
@@ -131,6 +138,7 @@ async function performSignOut() {
     await signOut(getClient());
     identity = null;
     profileNickname = "";
+    profileRole = "user";
     updateButtons();
   } catch (error) {
     console.error("Shared sign-out failed", error);
@@ -325,6 +333,7 @@ export async function initRootAuthController() {
   unsubscribeAuth = subscribeAuthState(client, async (nextIdentity, event) => {
     identity = nextIdentity;
     profileNickname = "";
+    profileRole = "user";
     updateButtons();
 
     if (event === "PASSWORD_RECOVERY") {
