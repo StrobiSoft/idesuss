@@ -252,18 +252,21 @@ function renderPresets() {
         return;
       }
       if (stored) {
-        await selectStation(stored,"Mentett preset kiválasztva; stream ellenőrzése…");
+        await selectStation(stored,"Mentett preset kiválasztva; lejátszás indul…");
+        await engine.play();
         return;
       }
 
       if (fallback && (!selectedStation || selectedStation.id === fallback.id)) {
         await selectStation(fallback,radioT("recommendedSelected"));
+        await engine.play();
         return;
       }
 
       if (!capabilities.canSaveRadioChannels) {
         if (fallback) {
           await selectStation(fallback,radioT("recommendedSelected"));
+          await engine.play();
           return;
         }
         setStatus("A szerveroldali preset-mentési jogosultság még nem aktív ehhez a csomaghoz.");
@@ -292,7 +295,6 @@ function bindControls() {
       else setStatus(radioT("playbackError",{error:error.message}));
     }
   });
-  $("#stopBtn")?.addEventListener("click",()=>engine.stop());
   $("#audioTestBtn")?.addEventListener("click",async()=>{
     if (!capabilities.canUseRadioDiagnostics) return;
     try {
@@ -325,7 +327,11 @@ function bindEngineEvents() {
   engine.addEventListener("state",(event)=>{
     const state=event.detail?.state;
     const button=$("#playPauseBtn");
-    if (button) button.textContent=state==="playing"?radioT("pause"):radioT("play");
+    if (button) {
+      const playing=state==="playing";
+      button.textContent=playing?`⏸ ${radioT("pause")}`:`▶ ${radioT("play")}`;
+      button.setAttribute("aria-pressed",playing?"true":"false");
+    }
     const stateText = streamStateText(state);
     if (stateText) setStatus(stateText);
   });
@@ -344,7 +350,11 @@ async function init() {
     renderTier();
     renderPresets();
     const button = $("#playPauseBtn");
-    if (button) button.textContent = engine.audio?.paused === false ? radioT("pause") : radioT("play");
+    if (button) {
+      const playing=engine.audio?.paused===false;
+      button.textContent=playing?`⏸ ${radioT("pause")}`:`▶ ${radioT("play")}`;
+      button.setAttribute("aria-pressed",playing?"true":"false");
+    }
   });
 
   const localeFavorite = await prepareStations();
