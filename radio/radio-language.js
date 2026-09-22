@@ -7,6 +7,7 @@ import {
 
 const TEXT = {
   hu: {
+    login:"👤 Bejelentkezés", profile:"👤 Profil",
     directoryTitle:"Rádióválasztó — {slot}. preset", directorySearch:"Állomás neve", directoryCountry:"Ország", directoryLanguage:"Nyelv", directoryGenre:"Műfaj / címke", directorySearchPlaceholder:"Pl. Petőfi, jazz, BBC…", directoryGenrePlaceholder:"Pl. rock, news, dance", directorySearchButton:"Keresés", directoryAllCountries:"Minden ország", directoryAllLanguages:"Minden nyelv", directoryLoading:"Rádióállomások betöltése…", directoryNoResults:"Nincs találat ezekkel a szűrőkkel.", directoryResultCount:"{count} állomás betöltve.", directoryPreview:"▶ Próba", directorySave:"Mentés a presetre", directorySignInSave:"A preset mentéséhez bejelentkezés szükséges.", directorySaved:"{station} elmentve a(z) {slot}. presetre.", directorySaveError:"A rádió mentése nem sikerült.", directoryLoadError:"A külső rádiókatalógus most nem érhető el.", directoryClose:"Rádióválasztó bezárása", directoryPreviewing:"{station} próbahallgatása…",
    
     registeredOnly:"Regisztrált felhasználóknak", recommended:"Idesüss ajánlott élő rádió", saveLogin:"A presetek mentéséhez bejelentkezés szükséges.", saveCount:"A csomagodban {count} menthető rádiópreset érhető el.", recommendedSelected:"Ajánlott kezdőállomás kiválasztva.", readyStation:"{station} készen áll. Nyomd meg a Lejátszás gombot az élő adáshoz.", playbackError:"Lejátszási hiba: {error}", streamPlaybackFailed:"A rádió stream lejátszása nem sikerült.",
@@ -25,6 +26,7 @@ const TEXT = {
     unavailable:"Jelenleg nincs elérhető rádióállomás.", language:"Nyelv"
   },
   en: {
+    login:"👤 Sign in", profile:"👤 Profile",
     directoryTitle:"Radio picker — preset {slot}", directorySearch:"Station name", directoryCountry:"Country", directoryLanguage:"Language", directoryGenre:"Genre / tag", directorySearchPlaceholder:"E.g. BBC, jazz, Heart…", directoryGenrePlaceholder:"E.g. rock, news, dance", directorySearchButton:"Search", directoryAllCountries:"All countries", directoryAllLanguages:"All languages", directoryLoading:"Loading radio stations…", directoryNoResults:"No stations match these filters.", directoryResultCount:"{count} stations loaded.", directoryPreview:"▶ Preview", directorySave:"Save to preset", directorySignInSave:"Sign in to save this preset.", directorySaved:"{station} saved to preset {slot}.", directorySaveError:"The station could not be saved.", directoryLoadError:"The external radio directory is unavailable right now.", directoryClose:"Close radio picker", directoryPreviewing:"Previewing {station}…",
    
     registeredOnly:"Registered users only", recommended:"Idesüss recommended live radio", saveLogin:"Sign in to save presets.", saveCount:"Your plan includes {count} savable radio presets.", recommendedSelected:"Recommended starter station selected.", readyStation:"{station} is ready. Press Play for the live broadcast.", playbackError:"Playback error: {error}", streamPlaybackFailed:"The radio stream could not be played.",
@@ -42,6 +44,7 @@ const TEXT = {
     unavailable:"No radio station is currently available.", language:"Language"
   },
   nl: {
+    login:"👤 Inloggen", profile:"👤 Profiel",
     directoryTitle:"Radio kiezen — preset {slot}", directorySearch:"Stationsnaam", directoryCountry:"Land", directoryLanguage:"Taal", directoryGenre:"Genre / tag", directorySearchPlaceholder:"Bijv. NPO, jazz, SLAM…", directoryGenrePlaceholder:"Bijv. rock, nieuws, dance", directorySearchButton:"Zoeken", directoryAllCountries:"Alle landen", directoryAllLanguages:"Alle talen", directoryLoading:"Radiostations laden…", directoryNoResults:"Geen stations gevonden met deze filters.", directoryResultCount:"{count} stations geladen.", directoryPreview:"▶ Proberen", directorySave:"Opslaan in preset", directorySignInSave:"Log in om deze preset op te slaan.", directorySaved:"{station} opgeslagen in preset {slot}.", directorySaveError:"Het station kon niet worden opgeslagen.", directoryLoadError:"De externe radiogids is nu niet beschikbaar.", directoryClose:"Radiokiezer sluiten", directoryPreviewing:"Voorbeeld van {station}…",
    
     registeredOnly:"Alleen voor geregistreerde gebruikers", recommended:"Idesüss aanbevolen live radio", saveLogin:"Log in om presets op te slaan.", saveCount:"Je abonnement bevat {count} opslagbare radiopresets.", recommendedSelected:"Aanbevolen startstation geselecteerd.", readyStation:"{station} is klaar. Druk op Afspelen voor de live-uitzending.", playbackError:"Afspeelfout: {error}", streamPlaybackFailed:"De radiostream kon niet worden afgespeeld.",
@@ -59,6 +62,7 @@ const TEXT = {
     unavailable:"Er is momenteel geen radiostation beschikbaar.", language:"Taal"
   },
   ro: {
+    login:"👤 Autentificare", profile:"👤 Profil",
     directoryTitle:"Selector radio — presetarea {slot}", directorySearch:"Numele postului", directoryCountry:"Țară", directoryLanguage:"Limbă", directoryGenre:"Gen / etichetă", directorySearchPlaceholder:"Ex. Kiss FM, jazz, BBC…", directoryGenrePlaceholder:"Ex. rock, știri, dance", directorySearchButton:"Caută", directoryAllCountries:"Toate țările", directoryAllLanguages:"Toate limbile", directoryLoading:"Se încarcă posturile radio…", directoryNoResults:"Niciun post nu corespunde filtrelor.", directoryResultCount:"{count} posturi încărcate.", directoryPreview:"▶ Ascultă", directorySave:"Salvează în presetare", directorySignInSave:"Autentifică-te pentru a salva presetarea.", directorySaved:"{station} a fost salvat în presetarea {slot}.", directorySaveError:"Postul nu a putut fi salvat.", directoryLoadError:"Catalogul radio extern nu este disponibil acum.", directoryClose:"Închide selectorul radio", directoryPreviewing:"Previzualizare {station}…",
    
     registeredOnly:"Doar pentru utilizatori înregistrați", recommended:"Radio live recomandat de Idesüss", saveLogin:"Autentifică-te pentru a salva presetările.", saveCount:"Planul tău include {count} presetări radio salvabile.", recommendedSelected:"Postul recomandat a fost selectat.", readyStation:"{station} este gata. Apasă Redare pentru transmisia live.", playbackError:"Eroare de redare: {error}", streamPlaybackFailed:"Streamul radio nu a putut fi redat.",
@@ -76,6 +80,7 @@ const TEXT = {
     unavailable:"Momentan nu este disponibil niciun post radio.", language:"Limbă"
   },
   pl: {
+    login:"👤 Zaloguj się", profile:"👤 Profil",
     directoryTitle:"Wybór radia — preset {slot}", directorySearch:"Nazwa stacji", directoryCountry:"Kraj", directoryLanguage:"Język", directoryGenre:"Gatunek / tag", directorySearchPlaceholder:"Np. RMF, jazz, BBC…", directoryGenrePlaceholder:"Np. rock, wiadomości, dance", directorySearchButton:"Szukaj", directoryAllCountries:"Wszystkie kraje", directoryAllLanguages:"Wszystkie języki", directoryLoading:"Ładowanie stacji radiowych…", directoryNoResults:"Brak stacji dla tych filtrów.", directoryResultCount:"Załadowano {count} stacji.", directoryPreview:"▶ Posłuchaj", directorySave:"Zapisz w presecie", directorySignInSave:"Zaloguj się, aby zapisać preset.", directorySaved:"{station} zapisano w presecie {slot}.", directorySaveError:"Nie udało się zapisać stacji.", directoryLoadError:"Zewnętrzny katalog radia jest teraz niedostępny.", directoryClose:"Zamknij wybór radia", directoryPreviewing:"Odsłuch {station}…",
    
     registeredOnly:"Tylko dla zarejestrowanych użytkowników", recommended:"Polecane radio na żywo Idesüss", saveLogin:"Zaloguj się, aby zapisywać presety.", saveCount:"Twój pakiet obejmuje {count} zapisywalnych presetów radiowych.", recommendedSelected:"Wybrano polecaną stację startową.", readyStation:"{station} jest gotowe. Naciśnij Odtwórz, aby słuchać na żywo.", playbackError:"Błąd odtwarzania: {error}", streamPlaybackFailed:"Nie udało się odtworzyć strumienia radiowego.",
@@ -93,6 +98,7 @@ const TEXT = {
     unavailable:"Obecnie żadna stacja radiowa nie jest dostępna.", language:"Język"
   },
   hr: {
+    login:"👤 Prijava", profile:"👤 Profil",
     directoryTitle:"Odabir radija — preset {slot}", directorySearch:"Naziv postaje", directoryCountry:"Država", directoryLanguage:"Jezik", directoryGenre:"Žanr / oznaka", directorySearchPlaceholder:"Npr. bravo, jazz, BBC…", directoryGenrePlaceholder:"Npr. rock, vijesti, dance", directorySearchButton:"Traži", directoryAllCountries:"Sve države", directoryAllLanguages:"Svi jezici", directoryLoading:"Učitavanje radijskih postaja…", directoryNoResults:"Nema postaja za ove filtre.", directoryResultCount:"Učitano je {count} postaja.", directoryPreview:"▶ Poslušaj", directorySave:"Spremi u preset", directorySignInSave:"Prijavi se za spremanje preseta.", directorySaved:"{station} je spremljen u preset {slot}.", directorySaveError:"Postaju nije moguće spremiti.", directoryLoadError:"Vanjski radijski katalog trenutačno nije dostupan.", directoryClose:"Zatvori odabir radija", directoryPreviewing:"Preslušavanje {station}…",
    
     registeredOnly:"Samo za registrirane korisnike", recommended:"Idesüss preporučeni radio uživo", saveLogin:"Prijavi se za spremanje preseta.", saveCount:"Tvoj paket uključuje {count} radijskih preseta za spremanje.", recommendedSelected:"Odabrana je preporučena početna postaja.", readyStation:"{station} je spreman. Pritisni Reproduciraj za prijenos uživo.", playbackError:"Pogreška reprodukcije: {error}", streamPlaybackFailed:"Radijski stream nije moguće reproducirati.",
@@ -110,6 +116,7 @@ const TEXT = {
     unavailable:"Trenutno nema dostupnih radijskih postaja.", language:"Jezik"
   },
   be: {
+    login:"👤 Увайсці", profile:"👤 Профіль",
     directoryTitle:"Выбар радыё — прэсэт {slot}", directorySearch:"Назва станцыі", directoryCountry:"Краіна", directoryLanguage:"Мова", directoryGenre:"Жанр / тэг", directorySearchPlaceholder:"Напр. Radius, jazz, BBC…", directoryGenrePlaceholder:"Напр. rock, навіны, dance", directorySearchButton:"Пошук", directoryAllCountries:"Усе краіны", directoryAllLanguages:"Усе мовы", directoryLoading:"Загрузка радыёстанцый…", directoryNoResults:"Па гэтых фільтрах нічога не знойдзена.", directoryResultCount:"Загружана станцый: {count}.", directoryPreview:"▶ Паслухаць", directorySave:"Захаваць у прэсэт", directorySignInSave:"Увайдзі, каб захаваць прэсэт.", directorySaved:"{station} захавана ў прэсэт {slot}.", directorySaveError:"Не ўдалося захаваць станцыю.", directoryLoadError:"Знешні радыёкаталог зараз недаступны.", directoryClose:"Закрыць выбар радыё", directoryPreviewing:"Праслухоўванне {station}…",
    
     registeredOnly:"Толькі для зарэгістраваных карыстальнікаў", recommended:"Рэкамендаванае Idesüss жывое радыё", saveLogin:"Увайдзі, каб захоўваць прэсэты.", saveCount:"Твой тарыф дазваляе захоўваць {count} радыёпрэсэтаў.", recommendedSelected:"Выбрана рэкамендаваная пачатковая станцыя.", readyStation:"{station} гатовая. Націсні Прайграць для жывога эфіру.", playbackError:"Памылка прайгравання: {error}", streamPlaybackFailed:"Не ўдалося прайграць радыёпаток.",
