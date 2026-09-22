@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Idesüss — Rádió</title>
-  <link rel="stylesheet" href="./radio-skins.css?v=20260921-radio-directory1" />
+  <link rel="stylesheet" href="./radio-skins.css?v=20260922-radio-player1" />
   <style>
     :root{
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -30,7 +30,7 @@
     .tier{display:flex;align-items:center;gap:10px}.badge{border:1px solid #365f8e;border-radius:999px;padding:7px 12px;background:#10253f;color:#8dc5ff;font-weight:850}.skin-select{background:#101b29;color:#eef6ff;border:1px solid #34506d;border-radius:10px;padding:8px 10px}
     .display{background:linear-gradient(180deg,#071523,#0a1c2d);border:1px solid #25415f;border-radius:18px;padding:18px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;min-height:150px}
     .eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:#70b7ff;font-weight:850}.now{font-size:clamp(1.6rem,4vw,2.5rem);font-weight:900;margin:8px 0 6px}.status{color:#b6c7da;min-height:1.4em}.volume-wrap{display:grid;gap:7px;min-width:210px}.volume-wrap label{font-size:.82rem;color:var(--muted);font-weight:800}.volume-wrap input{width:100%;accent-color:var(--accent)}
-    .transport{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.transport button{border:1px solid #3a5876;border-radius:13px;padding:11px 16px;font-weight:850;cursor:pointer;background:#142238;color:#edf6ff}.transport .primary{background:linear-gradient(135deg,#0d5bd7,#4da3ff);border-color:#4da3ff}
+    .transport{position:sticky;bottom:max(14px,env(safe-area-inset-bottom));z-index:120;display:flex;align-items:center;gap:10px;width:max-content;max-width:100%;margin:16px auto 0;padding:9px;border:1px solid rgba(154,196,236,.32);border-radius:22px;background:linear-gradient(135deg,rgba(20,42,67,.72),rgba(8,20,34,.62));box-shadow:0 18px 45px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(18px) saturate(145%);-webkit-backdrop-filter:blur(18px) saturate(145%)}.transport button{border:1px solid rgba(126,180,232,.45);border-radius:15px;padding:12px 18px;font-weight:850;cursor:pointer;background:rgba(20,34,56,.66);color:#edf6ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}.transport .primary{min-width:150px;background:linear-gradient(135deg,rgba(13,91,215,.88),rgba(77,163,255,.82));border-color:rgba(126,190,255,.82)}
     .section-title{margin:22px 0 10px;font-size:.88rem;text-transform:uppercase;letter-spacing:.1em;color:#8fa8c1}
     .stations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.station{border:1px solid #31465d;border-radius:14px;padding:13px;text-align:left;background:#121f31;color:#f3f8ff;cursor:pointer}.station:hover{border-color:#4f83b8}.station.locked{opacity:.42;cursor:not-allowed}.station.locked:hover{border-color:#31465d}.station strong{display:block;margin-bottom:4px}.station span{color:var(--muted);font-size:.88rem}
     .presets{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px}.preset{min-height:68px;border:1px solid #3b5774;border-radius:12px;background:linear-gradient(180deg,#1a2c43,#111c2b);color:#fff;cursor:pointer;display:grid;place-items:center;padding:8px}.preset b{font-size:1.15rem}.preset small{font-size:.68rem;color:#a9bdd1;text-transform:capitalize}.preset.saved{box-shadow:inset 0 0 0 1px rgba(77,163,255,.4)}.preset.locked{opacity:.38;cursor:not-allowed}.preset.unlocked{opacity:1}.preset.unlocked b{font-size:1.35rem;color:#fff;text-shadow:0 0 10px rgba(255,255,255,.18)}.preset b{display:inline-flex;align-items:center;gap:8px}.preset-lock{position:relative;display:inline-block;width:16px;height:13px;border:2px solid currentColor;border-radius:3px;color:#7b8795}.preset-lock::before{content:"";position:absolute;width:10px;height:9px;border:2px solid currentColor;border-bottom:0;border-radius:8px 8px 0 0;left:1px;top:-10px;transform-origin:left bottom}.preset-lock.is-open{color:#ffd84d;filter:drop-shadow(0 0 5px rgba(255,216,77,.75))}.preset-lock.is-open::before{transform:translate(5px,-1px) rotate(32deg)}.preset-lock.is-closed{color:#7b8795}
@@ -97,8 +97,7 @@
       </div>
 
       <div class="transport">
-        <button id="playPauseBtn" class="primary" type="button" data-radio-i18n="play">▶ Lejátszás</button>
-        <button id="stopBtn" type="button" data-radio-i18n="stop">■ Leállítás</button>
+        <button id="playPauseBtn" class="primary" type="button" aria-pressed="false">▶ Lejátszás</button>
         <button id="audioTestBtn" type="button" hidden disabled data-radio-i18n="test">🔊 Hangteszt</button>
       </div>
 
@@ -113,6 +112,6 @@
     </section>
   </main>
 
-  <script type="module" src="./radio-app.js?v=20260921-radio-directory1"></script>
+  <script type="module" src="./radio-app.js?v=20260922-radio-player1"></script>
 </body>
 </html>

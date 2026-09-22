@@ -12,6 +12,7 @@ on:
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
       - 'radio/**'
+      - 'server/radio-proxy/**'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-webapp-locales.mjs'
@@ -34,6 +35,7 @@ on:
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
       - 'radio/**'
+      - 'server/radio-proxy/**'
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
@@ -44,12 +46,25 @@ on:
       - 'js/resolver.js'
       - '.github/workflows/validate-webapp-locales.yml'
 
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-webapp-locales-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
       - name: Validate webapp locale parity and bridge wiring
@@ -96,3 +111,63 @@ jobs:
           node --check ideas/ideas-language.js
       - name: Validate generated radio development audio
         run: node tools/validate-radio-dev-audio.mjs
+
+      - name: Validate radio proxy syntax
+        run: node --check server/radio-proxy/server.js
+
+      - name: Validate radio proxy API and Spy Trap
+        env:
+          HOST: 127.0.0.1
+          PORT: 8787
+          IDESUSS_RADIO_HLS_SECRET: ci-test-secret-not-production
+          IDESUSS_RADIO_CORS_ORIGIN: https://idesuss.net
+          IDESUSS_RADIO_STATIONS_JSON: '{"test-radio":{"name":"Test Radio","sourceUrl":"https://example.com:444/live.mp3","locales":["en"]}}'
+        run: |
+          set -euo pipefail
+          node server/radio-proxy/server.js >/tmp/radio-proxy.log 2>&1 &
+          proxy_pid=$!
+          cleanup() {
+            kill "$proxy_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          ready=false
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:8787/healthz >/tmp/health.json; then
+              ready=true
+              break
+            fi
+            sleep 0.25
+          done
+          test "$ready" = true
+          grep -q '"ok":true' /tmp/health.json
+
+          curl --fail --silent 'http://127.0.0.1:8787/v1/radio/catalog?locale=en' >/tmp/catalog.json
+          grep -q '"test-radio"' /tmp/catalog.json
+
+          cors=$(curl --silent --dump-header - --output /dev/null http://127.0.0.1:8787/healthz | tr -d '\r' | awk -F': ' 'tolower($1)=="access-control-allow-origin"{print $2}')
+          test "$cors" = "https://idesuss.net"
+
+          method=$(curl --silent --request POST --output /tmp/post.json --write-out '%{http_code}' http://127.0.0.1:8787/healthz)
+          missing=$(curl --silent --output /tmp/missing.json --write-out '%{http_code}' http://127.0.0.1:8787/v1/radio/stream/does-not-exist)
+          test "$method" = "405"
+          test "$missing" = "404"
+          grep -q '"method_not_allowed"' /tmp/post.json
+          grep -q '"unknown_station"' /tmp/missing.json
+
+          first=$(curl --silent --output /tmp/spy1.json --write-out '%{http_code}' http://127.0.0.1:8787/.env)
+          second=$(curl --silent --output /tmp/spy2.json --write-out '%{http_code}' http://127.0.0.1:8787/.env)
+          third=$(curl --silent --output /tmp/spy3.json --write-out '%{http_code}' http://127.0.0.1:8787/.env)
+          fourth=$(curl --silent --output /tmp/spy4.json --write-out '%{http_code}' http://127.0.0.1:8787/.env)
+          test "$first" = "404"
+          test "$second" = "403"
+          test "$third" = "403"
+          test "$fourth" = "403"
+          grep -q '"not_found"' /tmp/spy1.json
+          grep -q '"access_denied"' /tmp/spy2.json
+          grep -q '"access_denied"' /tmp/spy3.json
+          grep -q '"security_escalation"' /tmp/spy4.json
+
+      - name: Show radio proxy log on failure
+        if: failure()
+        run: cat /tmp/radio-proxy.log 2>/dev/null || true
