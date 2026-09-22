@@ -172,6 +172,11 @@ async function selectStation(station,message=null) {
 function renderTier() {
   const badge=$("#tierBadge");
   if (badge) badge.textContent=capabilities.label||tierLabel(capabilities.tier);
+  const userBtn=$("#radioUserBtn");
+  if (userBtn) {
+    userBtn.textContent = radioUser ? radioT("profile") : radioT("login");
+    userBtn.href = radioUser ? "/#profile" : "/#login";
+  }
   const saveHint=$("#saveHint");
   if (saveHint) saveHint.textContent=radioUser
     ? radioT("saveCount",{count:capabilities.maxRadioPresets})
