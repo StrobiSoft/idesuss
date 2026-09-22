@@ -1542,6 +1542,67 @@ body.viewer-open #idesussMenu {
       white-space: nowrap;
     }
 
+    .native-download-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .native-download-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 112px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 12px 28px rgba(22,44,77,.08);
+      color: #17324d;
+    }
+
+    .native-download-card[aria-disabled="true"] {
+      cursor: default;
+    }
+
+    .native-download-icon {
+      width: 54px;
+      height: 54px;
+      flex: 0 0 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: #eef5fb;
+      font-size: 1.8rem;
+      box-shadow: inset 0 0 0 1px #d7e4ef;
+    }
+
+    .native-download-copy strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1.15rem;
+    }
+
+    .native-download-copy span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: .9rem;
+    }
+
+    .native-download-state {
+      margin-left: auto;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: #edf2f7;
+      border: 1px solid #d6e0e9;
+      color: #61758a;
+      font-size: .76rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
     .membership-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1671,7 +1732,9 @@ body.viewer-open #idesussMenu {
     .membership-guarantee p { margin: 6px 0 0; }
 
     @media (max-width: 900px) {
+      .native-download-grid,
       .membership-grid { grid-template-columns: 1fr; }
+      .native-download-state { margin-left: 0; }
     }
   </style>
 
@@ -1904,6 +1967,26 @@ body.viewer-open #idesussMenu {
           <p class="membership-preview-note">A három szint egymásra épül. A VIP támogatói státusz: jelenleg nem ad további funkciót, hanem az Idesüss fejlesztésének támogatását és kiemelt megjelenést jelenti.</p>
         </div>
         <div class="membership-preview-badge">TESZT · nem publikus</div>
+      </div>
+
+      <div class="native-download-grid" aria-label="Natív alkalmazások">
+        <a class="native-download-card" href="#" aria-disabled="true" data-store="google-play" title="A link publikáláskor aktiválódik">
+          <span class="native-download-icon" aria-hidden="true">▶</span>
+          <span class="native-download-copy">
+            <strong>Google Play</strong>
+            <span>Az Idesüss natív Android alkalmazása innen lesz elérhető a publikálás után.</span>
+          </span>
+          <span class="native-download-state">HAMAROSAN</span>
+        </a>
+
+        <a class="native-download-card" href="#" aria-disabled="true" data-store="apple-app-store" title="A link publikáláskor aktiválódik">
+          <span class="native-download-icon" aria-hidden="true"></span>
+          <span class="native-download-copy">
+            <strong>Apple App Store</strong>
+            <span>Az Idesüss natív iPhone/iPad alkalmazása innen lesz elérhető a publikálás után.</span>
+          </span>
+          <span class="native-download-state">HAMAROSAN</span>
+        </a>
       </div>
 
       <div class="membership-grid">
@@ -2480,6 +2563,10 @@ if (closeViewerBtn && viewerShell && viewerFrame) {
 (function initMembershipPreviewGate() {
   const panel = document.getElementById("membershipPreview");
   if (!panel) return;
+
+  panel.querySelectorAll('.native-download-card[aria-disabled="true"]').forEach((link) => {
+    link.addEventListener("click", (event) => event.preventDefault());
+  });
 
   const host = window.location.hostname;
   const isPrivateHost =
