@@ -84,7 +84,7 @@ export async function loadRadioCapabilities() {
     console.warn("Radio admin role lookup failed", profileError);
   }
 
-  capabilities.canUseRadioDiagnostics = profileData?.role === "admin";
+  capabilities.canUseRadioDiagnostics = ["admin", "owner"].includes(profileData?.role);
   return { client, user, capabilities };
 }
 
