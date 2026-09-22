@@ -1482,6 +1482,180 @@ body.viewer-open #idesussMenu {
   visibility: visible;
 }
   </style>
+
+  <style id="membershipPreviewStyles">
+    .membership-preview {
+      width: min(var(--maxw), calc(100% - 32px));
+      margin: 0 auto 26px;
+    }
+
+    .membership-preview[hidden] { display: none !important; }
+
+    .membership-preview-shell {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: clamp(20px, 3vw, 32px);
+      background:
+        radial-gradient(circle at top right, rgba(255,181,71,.18), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(243,247,251,.98));
+      box-shadow: var(--shadow);
+    }
+
+    .membership-preview-head {
+      display: flex;
+      gap: 18px;
+      align-items: end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .membership-preview-kicker {
+      margin: 0 0 6px;
+      color: var(--primary);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: .76rem;
+    }
+
+    .membership-preview-title {
+      margin: 0;
+      color: #102542;
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+      line-height: 1.05;
+    }
+
+    .membership-preview-note {
+      max-width: 620px;
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .membership-preview-badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid #f3c26f;
+      background: #fff7e6;
+      color: #7a5312;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .membership-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .membership-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 100%;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 12px 28px rgba(22,44,77,.08);
+      overflow: hidden;
+    }
+
+    .membership-card::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 5px;
+      background: #8aa5bf;
+    }
+
+    .membership-card.plus::after {
+      background: linear-gradient(90deg, #0d5bd7, #4da3ff);
+    }
+
+    .membership-card.vip {
+      border-color: #e7bf67;
+      background:
+        radial-gradient(circle at top right, rgba(255,196,73,.18), transparent 34%),
+        rgba(255,255,255,.96);
+    }
+
+    .membership-card.vip::after {
+      background: linear-gradient(90deg, #9c6a12, #f2c14e, #ffe7a2, #b77a16);
+    }
+
+    .membership-card h3 {
+      margin: 0;
+      color: #17324d;
+      font-size: 1.35rem;
+    }
+
+    .membership-tier-sub {
+      margin: -8px 0 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .membership-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      color: #102542;
+    }
+
+    .membership-price strong {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .membership-price span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .membership-annual {
+      margin-top: -8px;
+      color: var(--success);
+      font-size: .9rem;
+      font-weight: 850;
+    }
+
+    .membership-features {
+      margin: 0;
+      padding-left: 1.1rem;
+      color: #314b66;
+    }
+
+    .membership-features li + li { margin-top: 7px; }
+
+    .membership-card.vip .membership-vip-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: max-content;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: #fff4cf;
+      border: 1px solid #e7bf67;
+      color: #8a5a0a;
+      font-weight: 950;
+      letter-spacing: .04em;
+    }
+
+    .membership-card-foot {
+      margin-top: auto;
+      padding-top: 4px;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 900px) {
+      .membership-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
 </head>
 <body>
   <header class="site-header">
@@ -1700,6 +1874,64 @@ body.viewer-open #idesussMenu {
     <p id="infoPanelText"></p>
   </div>
 </div>
+
+
+  <section id="membershipPreview" class="membership-preview" hidden aria-labelledby="membershipPreviewTitle">
+    <div class="membership-preview-shell">
+      <div class="membership-preview-head">
+        <div>
+          <p class="membership-preview-kicker">Tagsági rendszer — belső előnézet</p>
+          <h2 id="membershipPreviewTitle" class="membership-preview-title">Válassz tagsági szintet</h2>
+          <p class="membership-preview-note">A három szint egymásra épül. A VIP támogatói státusz: jelenleg nem ad további funkciót, hanem az Idesüss fejlesztésének támogatását és kiemelt megjelenést jelenti.</p>
+        </div>
+        <div class="membership-preview-badge">TESZT · nem publikus</div>
+      </div>
+
+      <div class="membership-grid">
+        <article class="membership-card">
+          <h3>Premium</h3>
+          <p class="membership-tier-sub">Az első fizetős szolgáltatási szint</p>
+          <div class="membership-price"><strong>€3</strong><span>/ hó</span></div>
+          <div class="membership-annual">Éves példaár: €30</div>
+          <ul class="membership-features">
+            <li>A Premium számára elérhető extra szolgáltatások.</li>
+            <li>A későbbi jogosultsági mátrix alaprétege.</li>
+            <li>Az éves előfizetés kedvezményes lehet.</li>
+          </ul>
+          <p class="membership-card-foot">Az ár csak vizuális tesztadat, még nem végleges.</p>
+        </article>
+
+        <article class="membership-card plus">
+          <h3>Premium Plus</h3>
+          <p class="membership-tier-sub">Premium tagságra épülő magasabb szint</p>
+          <div class="membership-price"><strong>+€2</strong><span>/ hó</span></div>
+          <div class="membership-annual">Éves példaár: +€20 · összesen €50/év</div>
+          <ul class="membership-features">
+            <li>Csak aktív Premium tagság mellett érhető el.</li>
+            <li>Tartalmazza a Premium minden szolgáltatását.</li>
+            <li>Megnyitja a lehetőséget a VIP támogatói státuszra.</li>
+          </ul>
+          <p class="membership-card-foot">Az ár csak vizuális tesztadat, még nem végleges.</p>
+        </article>
+
+        <article class="membership-card vip">
+          <span class="membership-vip-mark">★ VIP</span>
+          <h3>VIP támogatói tagság</h3>
+          <p class="membership-tier-sub">Premium Plus tagság fölötti támogatói státusz</p>
+          <div class="membership-price"><strong>+€1</strong><span>/ hó</span></div>
+          <div class="membership-annual">Éves példaár: +€10 · összesen €60/év</div>
+          <ul class="membership-features">
+            <li>Csak Premium Plus tagsággal érhető el.</li>
+            <li>A VIP előfizető az Idesüss fejlesztését és fenntartását támogatja.</li>
+            <li>A név kiemelt, aranyszínű megjelenést és VIP jelölést kap.</li>
+            <li>Jelenleg nem tartalmaz további szolgáltatási funkciót.</li>
+          </ul>
+          <p class="membership-card-foot">A VIP státusz később fizetett vagy Platform Owner által adományozott forrásból is származhat; az adminjogoktól teljesen független.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
 
   <footer class="footer">
     <div class="container">
@@ -2217,6 +2449,28 @@ if (closeViewerBtn && viewerShell && viewerFrame) {
 
 <script type="module" src="./js/fx-rates.js?v=20260921-byn2"></script>
 <script type="module" src="./js/menu/menu-core.js?v=20260922-profile-avatar2"></script>
+
+
+<script>
+(function initMembershipPreviewGate() {
+  const panel = document.getElementById("membershipPreview");
+  if (!panel) return;
+
+  const host = window.location.hostname;
+  const isPrivateHost =
+    host === "localhost" ||
+    host === "127.0.0.1" ||
+    host.startsWith("192.168.") ||
+    host.startsWith("10.") ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(host);
+
+  const requested = new URLSearchParams(window.location.search).get("membership-preview") === "1";
+
+  if (isPrivateHost && requested) {
+    panel.hidden = false;
+  }
+})();
+</script>
 
 </body>
 </html>
