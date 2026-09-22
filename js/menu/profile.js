@@ -63,8 +63,25 @@ function profileSaveErrorText(error) {
   return raw ? `A profil mentése nem sikerült: ${raw}` : "A profil mentése nem sikerült.";
 }
 
+async function loadAvatarImageSource(file) {
+  if (typeof createImageBitmap === "function") {
+    return createImageBitmap(file, { imageOrientation: "from-image" });
+  }
+
+  const url = URL.createObjectURL(file);
+  try {
+    const image = new Image();
+    image.decoding = "async";
+    image.src = url;
+    await image.decode();
+    return image;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
 async function createCroppedAvatarFile(file, positionX, positionY, zoom) {
-  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+  const bitmap = await loadAvatarImageSource(file);
   try {
     const minSide = Math.min(bitmap.width, bitmap.height);
     const cropSize = Math.max(1, minSide / Math.max(1, zoom));
