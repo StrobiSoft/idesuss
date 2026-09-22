@@ -116,6 +116,7 @@ async function createCroppedAvatarFile(file, positionX, positionY, zoom) {
 
 async function renderProfile(panel, profile, user) {
   const nickname = profile?.nickname || "";
+  const nicknameLocked = profile?.profile_completed === true && Boolean(profile?.nickname_normalized || nickname);
   const avatar = APPROVED_AVATAR_EMOJIS.includes(profile?.avatar_emoji) ? profile.avatar_emoji : "🙂";
   const visibility = profile?.email_visibility || "hidden";
   let submissions = [];
