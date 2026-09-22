@@ -5,7 +5,8 @@ import {
   loadMyProfile,
   saveMyProfile,
   subscribeToMyProfile,
-  uploadAvatarSubmission
+  uploadAvatarSubmission,
+  validateAvatarFile
 } from "../shared/profile-service.js?v=20260920-avatar1";
 
 let unsubscribeProfile = null;
@@ -41,6 +42,59 @@ function submissionStatusText(submissions = []) {
   if (latest.status === "approved") return "A legutóbbi saját képed jóváhagyva.";
   if (latest.status === "rejected") return "A legutóbbi saját kép nem került jóváhagyásra.";
   return "";
+}
+
+function avatarErrorText(error) {
+  if (error?.code === "AVATAR_SIZE") return "A kép legfeljebb 2 MB lehet.";
+  if (error?.code === "AVATAR_TYPE") return "Csak JPEG, PNG vagy WebP kép tölthető fel.";
+  if (error?.code === "AUTH_REQUIRED") return "A kép beküldéséhez be kell jelentkezni.";
+  return error?.message ? `A kép beküldése nem sikerült: ${error.message}` : "A kép beküldése nem sikerült.";
+}
+
+function profileSaveErrorText(error) {
+  const raw = `${error?.code || ""} ${error?.message || ""} ${error?.details || ""}`.trim();
+  if (error?.code === "TAKEN" || raw.includes("INVALID_NICKNAME:TAKEN")) return "Ez a becenév már használatban van.";
+  if (raw.includes("INVALID_NICKNAME:EMPTY")) return "A becenév nem lehet üres.";
+  if (raw.includes("INVALID_NICKNAME:RESERVED_SUFFIX")) return "Ez a becenév-végződés fenntartott.";
+  if (raw.includes("INVALID_NICKNAME:RESERVED")) return "Ez a becenév fenntartott, válassz másikat.";
+  if (raw.includes("INVALID_PROFILE:AVATAR_REQUIRED")) return "Válassz avatart a profil mentéséhez.";
+  if (raw.includes("INVALID_PROFILE:EMAIL_VISIBILITY")) return "Érvénytelen e-mail láthatósági beállítás.";
+  if (raw.includes("AUTH_REQUIRED")) return "A profil mentéséhez újra be kell jelentkezni.";
+  return raw ? `A profil mentése nem sikerült: ${raw}` : "A profil mentése nem sikerült.";
+}
+
+async function createCroppedAvatarFile(file, positionX, positionY, zoom) {
+  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+  try {
+    const minSide = Math.min(bitmap.width, bitmap.height);
+    const cropSize = Math.max(1, minSide / Math.max(1, zoom));
+    const centerX = (Math.min(100, Math.max(0, positionX)) / 100) * bitmap.width;
+    const centerY = (Math.min(100, Math.max(0, positionY)) / 100) * bitmap.height;
+    const sx = Math.min(bitmap.width - cropSize, Math.max(0, centerX - cropSize / 2));
+    const sy = Math.min(bitmap.height - cropSize, Math.max(0, centerY - cropSize / 2));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 512;
+    const context = canvas.getContext("2d", { alpha: true });
+    if (!context) throw new Error("A képvágó nem indítható.");
+
+    context.drawImage(bitmap, sx, sy, cropSize, cropSize, 0, 0, 512, 512);
+    const outputType = file.type === "image/png" ? "image/png" : file.type === "image/webp" ? "image/webp" : "image/jpeg";
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (result) => result ? resolve(result) : reject(new Error("A kép előkészítése nem sikerült.")),
+        outputType,
+        outputType === "image/png" ? undefined : 0.9
+      );
+    });
+
+    const baseName = String(file.name || "avatar").replace(/\.[^.]+$/, "");
+    const extension = outputType === "image/png" ? "png" : outputType === "image/webp" ? "webp" : "jpg";
+    return new File([blob], `${baseName}-idesuss-avatar.${extension}`, { type: outputType });
+  } finally {
+    bitmap.close?.();
+  }
 }
 
 async function renderProfile(panel, profile, user) {
@@ -92,6 +146,22 @@ async function renderProfile(panel, profile, user) {
 
           <button id="openAvatarUpload" class="profile-avatar-upload-link" type="button">Saját kép feltöltése</button>
           <input id="profileAvatarFile" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+
+          <div id="avatarCropEditor" class="avatar-crop-editor" hidden>
+            <div id="avatarCropFrame" class="avatar-crop-frame" aria-label="Avatar kép pozicionálása">
+              <img id="avatarCropImage" alt="Avatar előnézet" draggable="false" />
+            </div>
+            <p class="avatar-crop-help">Húzd a képet a kívánt helyre. A csúszkával nagyíthatsz vagy kicsinyíthetsz.</p>
+            <label class="avatar-crop-zoom">
+              <span>Nagyítás</span>
+              <input id="avatarCropZoom" type="range" min="1" max="3" step="0.05" value="1" />
+            </label>
+            <div class="avatar-crop-actions">
+              <button id="acceptAvatarCrop" class="avatar-crop-action primary" type="button">Kép elfogadása</button>
+              <button id="cancelAvatarCrop" class="avatar-crop-action" type="button">Mégse</button>
+            </div>
+          </div>
+
           <p class="profile-avatar-rule">
             Saját kép csak ellenőrzés után válhat nyilvános avatárrá. Pornográf, szexuálisan explicit vagy intim testrészeket szándékosan feltáró kép nem engedélyezett.
             <a href="/rules/" target="_blank" rel="noopener">Házirend</a>
@@ -131,46 +201,149 @@ async function renderProfile(panel, profile, user) {
     toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
   });
 
+  let pendingAvatarFile = null;
+  let pendingAvatarObjectUrl = "";
+  let pendingAvatarAccepted = false;
+  let cropPositionX = 50;
+  let cropPositionY = 50;
+  let cropZoom = 1;
+
+  const preview = document.getElementById("profileAvatarPreview");
+  const cropEditor = document.getElementById("avatarCropEditor");
+  const cropFrame = document.getElementById("avatarCropFrame");
+  const cropImage = document.getElementById("avatarCropImage");
+  const cropZoomInput = document.getElementById("avatarCropZoom");
+  const uploadMessage = document.getElementById("avatarUploadMessage");
+
+  const clearPendingAvatar = () => {
+    if (pendingAvatarObjectUrl) URL.revokeObjectURL(pendingAvatarObjectUrl);
+    pendingAvatarObjectUrl = "";
+    pendingAvatarFile = null;
+    pendingAvatarAccepted = false;
+    cropPositionX = 50;
+    cropPositionY = 50;
+    cropZoom = 1;
+    if (cropEditor) cropEditor.hidden = true;
+  };
+
+  const updateCropPreview = () => {
+    if (!cropImage) return;
+    cropImage.style.objectPosition = `${cropPositionX}% ${cropPositionY}%`;
+    cropImage.style.transform = `scale(${cropZoom})`;
+  };
+
+  const renderPendingPhotoPreview = () => {
+    if (!preview || !pendingAvatarObjectUrl) return;
+    preview.textContent = "";
+    const image = document.createElement("img");
+    image.src = pendingAvatarObjectUrl;
+    image.alt = "Kiválasztott avatar előnézete";
+    image.style.objectPosition = `${cropPositionX}% ${cropPositionY}%`;
+    image.style.transform = `scale(${cropZoom})`;
+    preview.appendChild(image);
+  };
+
   document.querySelectorAll(".profile-avatar-choice").forEach((button) => {
     button.addEventListener("click", () => {
+      clearPendingAvatar();
       const next = button.dataset.avatar || "🙂";
       const input = document.getElementById("profileAvatar");
-      const preview = document.getElementById("profileAvatarPreview");
       if (input) input.value = next;
-      if (preview) preview.textContent = next;
+      if (preview) {
+        preview.replaceChildren();
+        preview.textContent = next;
+      }
 
       document.querySelectorAll(".profile-avatar-choice").forEach((item) => {
         const selected = item === button;
         item.classList.toggle("selected", selected);
         item.setAttribute("aria-pressed", selected ? "true" : "false");
       });
+      if (uploadMessage) uploadMessage.textContent = submissionStatusText(submissions);
     });
   });
 
   const fileInput = document.getElementById("profileAvatarFile");
   document.getElementById("openAvatarUpload")?.addEventListener("click", () => fileInput?.click());
 
-  fileInput?.addEventListener("change", async () => {
+  fileInput?.addEventListener("change", () => {
     const file = fileInput.files?.[0];
     if (!file) return;
 
-    const message = document.getElementById("avatarUploadMessage");
-    if (message) message.textContent = "Feltöltés…";
-
-    try {
-      await uploadAvatarSubmission(window.supabaseClient, file);
-      if (message) {
-        message.textContent = "A kép feltöltve. Ellenőrzésig nem jelenik meg nyilvános avatárként.";
-      }
+    const validation = validateAvatarFile(file);
+    if (!validation.ok) {
+      if (uploadMessage) uploadMessage.textContent = validation.reason === "SIZE"
+        ? "A kép legfeljebb 2 MB lehet."
+        : validation.reason === "TYPE"
+          ? "Csak JPEG, PNG vagy WebP kép tölthető fel."
+          : "Nem sikerült kiválasztani a képet.";
       fileInput.value = "";
-    } catch (error) {
-      console.error("Avatar upload failed", error);
-      if (message) {
-        if (error?.code === "AVATAR_SIZE") message.textContent = "A kép legfeljebb 2 MB lehet.";
-        else if (error?.code === "AVATAR_TYPE") message.textContent = "Csak JPEG, PNG vagy WebP kép tölthető fel.";
-        else message.textContent = "A kép feltöltése nem sikerült.";
-      }
+      return;
     }
+
+    clearPendingAvatar();
+    pendingAvatarFile = file;
+    pendingAvatarObjectUrl = URL.createObjectURL(file);
+    if (cropImage) cropImage.src = pendingAvatarObjectUrl;
+    if (cropZoomInput) cropZoomInput.value = "1";
+    updateCropPreview();
+    if (cropEditor) cropEditor.hidden = false;
+    if (uploadMessage) uploadMessage.textContent = "A kép még nincs beküldve. Állítsd be, majd fogadd el.";
+    fileInput.value = "";
+  });
+
+  cropZoomInput?.addEventListener("input", () => {
+    cropZoom = Math.max(1, Number(cropZoomInput.value) || 1);
+    updateCropPreview();
+  });
+
+  let dragPointerId = null;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragBaseX = 50;
+  let dragBaseY = 50;
+
+  cropFrame?.addEventListener("pointerdown", (event) => {
+    if (!pendingAvatarFile) return;
+    dragPointerId = event.pointerId;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragBaseX = cropPositionX;
+    dragBaseY = cropPositionY;
+    cropFrame.setPointerCapture?.(event.pointerId);
+  });
+
+  cropFrame?.addEventListener("pointermove", (event) => {
+    if (dragPointerId !== event.pointerId || !cropFrame) return;
+    const rect = cropFrame.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    cropPositionX = Math.min(100, Math.max(0, dragBaseX + ((event.clientX - dragStartX) / rect.width) * 100));
+    cropPositionY = Math.min(100, Math.max(0, dragBaseY + ((event.clientY - dragStartY) / rect.height) * 100));
+    updateCropPreview();
+  });
+
+  const stopDrag = (event) => {
+    if (dragPointerId !== event.pointerId) return;
+    dragPointerId = null;
+  };
+  cropFrame?.addEventListener("pointerup", stopDrag);
+  cropFrame?.addEventListener("pointercancel", stopDrag);
+
+  document.getElementById("acceptAvatarCrop")?.addEventListener("click", () => {
+    if (!pendingAvatarFile) return;
+    pendingAvatarAccepted = true;
+    if (cropEditor) cropEditor.hidden = true;
+    renderPendingPhotoPreview();
+    if (uploadMessage) uploadMessage.textContent = "A kép elfogadva. Csak a Profil mentése gombbal kerül elővizsgálatra.";
+  });
+
+  document.getElementById("cancelAvatarCrop")?.addEventListener("click", () => {
+    clearPendingAvatar();
+    if (preview) {
+      preview.replaceChildren();
+      preview.textContent = document.getElementById("profileAvatar")?.value || "🙂";
+    }
+    if (uploadMessage) uploadMessage.textContent = submissionStatusText(submissions);
   });
 
   document.getElementById("saveProfilePanel")?.addEventListener("click", async () => {
@@ -184,19 +357,41 @@ async function renderProfile(panel, profile, user) {
         email_visibility: document.getElementById("profileEmailVisibility")?.value || "hidden"
       });
 
+      let avatarSubmitted = false;
+      let avatarSubmissionError = null;
+      if (pendingAvatarFile && pendingAvatarAccepted) {
+        try {
+          const croppedFile = await createCroppedAvatarFile(
+            pendingAvatarFile,
+            cropPositionX,
+            cropPositionY,
+            cropZoom
+          );
+          await uploadAvatarSubmission(window.supabaseClient, croppedFile);
+          avatarSubmitted = true;
+        } catch (error) {
+          console.error("Avatar submission after profile save failed", error);
+          avatarSubmissionError = error;
+        }
+      }
+
       window.dispatchEvent(new CustomEvent("idesuss:profile-saved", {
         detail: { nickname: saved?.nickname || "" }
       }));
 
-      if (message) message.textContent = "Profil mentve.";
+      clearPendingAvatar();
       await renderProfile(panel, saved, user);
+      const nextMessage = document.getElementById("profilePanelMessage");
+      if (nextMessage) {
+        nextMessage.textContent = avatarSubmissionError
+          ? `A profil mentve, de a kép nem került elővizsgálatra. ${avatarErrorText(avatarSubmissionError)}`
+          : avatarSubmitted
+            ? "Profil mentve. A kép elővizsgálatra elküldve."
+            : "Profil mentve.";
+      }
     } catch (error) {
       console.error("Profile save failed", error);
-      if (message) {
-        message.textContent = error?.code === "TAKEN"
-          ? "Ez a becenév már használatban van."
-          : "A profil mentése nem sikerült.";
-      }
+      if (message) message.textContent = profileSaveErrorText(error);
     }
   });
 }
