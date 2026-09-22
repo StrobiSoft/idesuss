@@ -39,7 +39,12 @@ input:focus-visible {
 .profile-panel-close::before,
 #pasteBtn::before,
 #openBtn::before,
-#clearBtn::before {
+#clearBtn::before,
+.profile-avatar-choice::before,
+.profile-avatar-open::before,
+.profile-avatar-upload-link::before,
+.menu-profile-btn::before,
+.avatar-crop-action::before {
   display: none !important;
 }
 
@@ -530,4 +535,18 @@ input:focus-visible {
     scroll-behavior: auto !important;
     transition: none !important;
   }
+}
+
+/* Profile avatar controls must keep emoji/content physically centered. */
+.profile-avatar-choice {
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  transform: none !important;
+}
+
+.profile-avatar-choice:hover,
+.profile-avatar-choice:active {
+  transform: none !important;
 }
