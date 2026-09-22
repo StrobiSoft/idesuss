@@ -364,18 +364,6 @@ async function init() {
 
   const localeFavorite = await prepareStations();
 
-  const initialStation = localeFavorite || STATIONS[0] || null;
-  if (initialStation) {
-    await selectStation(
-      initialStation,
-      localeFavorite
-        ? radioT("readyStation",{station:localeFavorite.name})
-        : radioT("readyStation",{station:initialStation.name})
-    );
-  } else {
-    setStatus(radioT("unavailable"));
-  }
-
   try {
     const result=await loadRadioCapabilities();
     capabilities=result.capabilities; radioClient=result.client; radioUser=result.user;
@@ -387,6 +375,19 @@ async function init() {
     console.error("Radio entitlement or preset load failed",error);
     setStatus("A jogosultsági állapot nem tölthető be; biztonsági okból vendég módban működünk.");
   }
+
+  const initialStation = savedPresets[1] || localeFavorite || STATIONS[0] || null;
+  if (initialStation) {
+    await selectStation(
+      initialStation,
+      savedPresets[1]
+        ? radioT("savedPresetReady",{station:initialStation.name})
+        : radioT("readyStation",{station:initialStation.name})
+    );
+  } else {
+    setStatus(radioT("unavailable"));
+  }
+
   renderTier(); renderPresets();
 }
 window.addEventListener("beforeunload",()=>{
