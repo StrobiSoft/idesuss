@@ -25,6 +25,8 @@ let unsubscribeAuth = null;
 let recoveryRequested = false;
 let socialSummaryTimer = null;
 let socialSummaryChannel = null;
+let moderationSummaryTimer = null;
+let moderationSummaryChannel = null;
 
 function isPasswordRecoveryLocation() {
   const url = new URL(window.location.href);
@@ -108,6 +110,8 @@ function updateButtons() {
   const adminPanelBtn = document.getElementById("openAdminPanelBtn");
   const messagesBtn = document.getElementById("openMessagesBtn");
   const messagesBadge = document.getElementById("messagesUnreadBadge");
+  const moderationInboxBtn = document.getElementById("moderationInboxBtn");
+  const moderationInboxBadge = document.getElementById("moderationInboxBadge");
 
   if (loginBtn && registerBtn) {
     if (identity) {
@@ -135,6 +139,13 @@ function updateButtons() {
   if (!identity && messagesBadge) {
     messagesBadge.hidden = true;
     messagesBadge.textContent = "";
+  }
+
+  const canReviewAvatars = Boolean(identity) && ["moderator", "admin", "owner"].includes(profileRole);
+  if (moderationInboxBtn) moderationInboxBtn.hidden = !canReviewAvatars;
+  if (!canReviewAvatars && moderationInboxBadge) {
+    moderationInboxBadge.hidden = true;
+    moderationInboxBadge.textContent = "";
   }
 }
 
@@ -187,6 +198,52 @@ function startSocialSummaryPolling() {
   socialSummaryTimer = window.setInterval(refreshSocialSummary, 60000);
 }
 
+
+async function refreshModerationSummary() {
+  const button = document.getElementById("moderationInboxBtn");
+  const badge = document.getElementById("moderationInboxBadge");
+  if (!identity || !button || !badge || !["moderator", "admin", "owner"].includes(profileRole)) return;
+
+  try {
+    const { data, error } = await getClient().rpc("get_avatar_review_summary");
+    if (error) throw error;
+    const allowed = data?.allowed === true;
+    const pending = Number(data?.pending || 0);
+    button.hidden = !allowed;
+    badge.textContent = pending > 99 ? "99+" : String(pending);
+    badge.hidden = !allowed || pending < 1;
+  } catch (error) {
+    console.error("Moderation summary load failed", error);
+  }
+}
+
+function stopModerationSummaryWatch() {
+  if (moderationSummaryTimer) window.clearInterval(moderationSummaryTimer);
+  moderationSummaryTimer = null;
+  if (moderationSummaryChannel) {
+    getClient().removeChannel(moderationSummaryChannel);
+    moderationSummaryChannel = null;
+  }
+}
+
+function startModerationSummaryWatch() {
+  stopModerationSummaryWatch();
+  if (!identity || !["moderator", "admin", "owner"].includes(profileRole)) return;
+
+  refreshModerationSummary();
+
+  moderationSummaryChannel = getClient()
+    .channel("idesuss-avatar-moderation-summary")
+    .on("postgres_changes", {
+      event: "*",
+      schema: "public",
+      table: "avatar_submissions"
+    }, refreshModerationSummary)
+    .subscribe();
+
+  moderationSummaryTimer = window.setInterval(refreshModerationSummary, 60000);
+}
+
 async function maybeOpenProfile() {
   if (!identity) return;
 
@@ -196,6 +253,7 @@ async function maybeOpenProfile() {
     profileRole = profile?.role || "user";
     updateButtons();
     startSocialSummaryPolling();
+    startModerationSummaryWatch();
 
     if (!profile?.profile_completed) {
       await openProfilePanel();
@@ -212,6 +270,7 @@ async function performSignOut() {
     profileNickname = "";
     profileRole = "user";
     stopSocialSummaryWatch();
+    stopModerationSummaryWatch();
     updateButtons();
   } catch (error) {
     console.error("Shared sign-out failed", error);
@@ -363,6 +422,7 @@ function bindHandlers() {
   const submitBtn = document.getElementById("authSubmitBtn");
   const forgotBtn = document.getElementById("authForgotPassword");
   const modeSwitch = document.getElementById("authModeSwitch");
+  const moderationInboxBtn = document.getElementById("moderationInboxBtn");
 
   loginBtn?.addEventListener("click", (event) => {
     event.preventDefault();
@@ -394,6 +454,10 @@ function bindHandlers() {
     openAuthModal(modal?.dataset.mode === "register" ? "login" : "register");
   });
 
+  moderationInboxBtn?.addEventListener("click", () => {
+    window.location.href = "/admin/#avatar-review";
+  });
+
   window.addEventListener("idesuss:profile-saved", (event) => {
     if (!identity) return;
     profileNickname = event?.detail?.nickname || "";
@@ -415,6 +479,7 @@ export async function initRootAuthController() {
     profileRole = "user";
     updateButtons();
     startSocialSummaryPolling();
+    startModerationSummaryWatch();
 
     if (event === "PASSWORD_RECOVERY") {
       recoveryRequested = true;
@@ -447,6 +512,7 @@ export async function initRootAuthController() {
     unsubscribeAuth?.();
     unsubscribeAuth = null;
     stopSocialSummaryWatch();
+    stopModerationSummaryWatch();
   };
 }
 

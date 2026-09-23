@@ -2,6 +2,7 @@ import {
   APPROVED_AVATAR_EMOJIS,
   STAFF_AVATAR_EMOJI,
   getCurrentUser,
+  getProfileAvatarImageUrl,
   loadMyAvatarSubmissions,
   loadMyProfile,
   saveMyProfile,
@@ -9,7 +10,7 @@ import {
   subscribeToMyProfile,
   uploadAvatarSubmission,
   validateAvatarFile
-} from "../shared/profile-service.js?v=20260923-staff-avatar1";
+} from "../shared/profile-service.js?v=20260923-avatar-review1";
 import { shellT, subscribeShellLanguage } from "../shared/shell-language.js";
 
 let unsubscribeProfile = null;
@@ -130,9 +131,12 @@ async function renderProfile(panel, profile, user) {
   const visibility = profile?.email_visibility || "hidden";
   const presenceVisibility = profile?.presence_visibility || "friends";
   let submissions = [];
+  let approvedAvatarUrl = "";
 
   try {
     submissions = await loadMyAvatarSubmissions(window.supabaseClient);
+    approvedAvatarUrl = await getProfileAvatarImageUrl(window.supabaseClient, profile);
+  
   } catch (error) {
     console.error("Avatar submission status load failed", error);
   }
@@ -153,7 +157,7 @@ async function renderProfile(panel, profile, user) {
       <div class="profile-placeholder profile-avatar-section">
         <strong>${shellT("avatar")}</strong>
         <div class="profile-avatar-current" aria-live="polite">
-          <span id="profileAvatarPreview" class="profile-avatar-preview" aria-hidden="true">${escapeHtml(avatar)}</span>
+          <span id="profileAvatarPreview" class="profile-avatar-preview" aria-hidden="true">${approvedAvatarUrl ? `<img src="${escapeHtml(approvedAvatarUrl)}" alt="" />` : escapeHtml(avatar)}</span>
           <button id="toggleAvatarPicker" class="profile-avatar-open" type="button" aria-expanded="false" aria-controls="profileAvatarPicker"${isStaffAvatarLocked ? " disabled" : ""}>
             ${isStaffAvatarLocked ? shellT("serviceAvatar") : shellT("chooseAvatar")}
           </button>

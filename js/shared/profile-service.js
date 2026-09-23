@@ -186,6 +186,20 @@ export const APPROVED_AVATAR_EMOJIS = Object.freeze([
 ]);
 
 const AVATAR_SUBMISSION_BUCKET = "avatar-submissions";
+
+export async function getProfileAvatarImageUrl(supabaseClient, profile, expiresIn = 3600) {
+  const client = requireClient(supabaseClient);
+  const path = profile?.avatar_image_path;
+  if (!path) return "";
+
+  const { data, error } = await client.storage
+    .from(AVATAR_SUBMISSION_BUCKET)
+    .createSignedUrl(path, expiresIn);
+
+  if (error) throw error;
+  return data?.signedUrl || "";
+}
+
 const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
 const AVATAR_ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
