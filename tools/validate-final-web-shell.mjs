@@ -9,6 +9,11 @@ const authShell = fs.readFileSync("js/menu/auth-shell.js","utf8");
 const authController = fs.readFileSync("js/menu/auth-controller.js","utf8");
 const profile = fs.readFileSync("js/menu/profile.js","utf8");
 const shellLanguage = fs.readFileSync("js/shared/shell-language.js","utf8");
+const pwa = fs.readFileSync("js/pwa.js","utf8");
+const manifest = fs.readFileSync("manifest.webmanifest","utf8");
+const radioIndex = fs.readFileSync("radio/index.html","utf8");
+const radioEngine = fs.readFileSync("radio/radio-engine.js","utf8");
+const radioApp = fs.readFileSync("radio/radio-app.js","utf8");
 
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
@@ -30,6 +35,12 @@ assert(profile.includes('shellT') && profile.includes('subscribeShellLanguage'),
 assert(profile.includes('profileEulaAccepted') && profile.includes('acceptCurrentEula'),"profile EULA acceptance gate missing");
 assert(index.includes('href="/eula/"'),"EULA link missing from homepage");
 assert(serviceWorker.includes('"/eula/"'),"EULA page missing from static cache");
+assert(index.includes('/js/pwa.js?v=20260923-pwa1'),"root PWA registration module missing");
+assert(pwa.includes('navigator.serviceWorker.register("/service-worker.js"'),"root service worker registration missing");
+assert(radioIndex.includes('rel="manifest"') && radioIndex.includes('/js/pwa.js?v=20260923-pwa1'),"Radio PWA wiring missing");
+assert(radioEngine.includes('navigator.mediaSession.setActionHandler') && radioEngine.includes('nexttrack') && radioEngine.includes('previoustrack'),"Radio Media Session transport incomplete");
+assert(radioApp.includes('media-next') && radioApp.includes('media-previous'),"Radio Media Session station navigation missing");
+assert(manifest.includes('"shortcuts"') && manifest.includes('"/radio/"'),"PWA shortcuts missing");
 assert(index.includes('/js/pwa-register.js?v=20260923-pwa1'),"root PWA registration missing");
 assert(serviceWorker.includes('/js/pwa-register.js?v=20260923-pwa1'),"PWA registration module missing from cache");
 assert(menuCore.includes('navigator.serviceWorker.register("/service-worker.js"'),"root PWA service-worker registration missing");
