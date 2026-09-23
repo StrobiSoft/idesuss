@@ -99,6 +99,7 @@ jobs:
           node --check js/shared/auth-service.js
           node --check js/shared/profile-service.js
           node --check js/shared/language-preference.js
+          node --check js/shared/shell-language.js
           node --check js/shared/supabase-client.js
           node --check js/lang/home-language.js
           node --check js/lang/modules/Home/lang/hu.js
