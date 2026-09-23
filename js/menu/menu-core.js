@@ -2,6 +2,15 @@ import { initRootAuthController } from "./auth-controller.js?v=20260923-avatar-r
 import { openProfilePanel } from "./profile.js?v=20260923-eula1";
 import { initSettingsPreferences, openSettingsPanel } from "./settings.js?v=20260923-finalweb1";
 
+
+function registerRootServiceWorker() {
+  if (!("serviceWorker" in navigator)) return;
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js", { scope: "/" })
+      .catch((error) => console.error("Root service worker registration failed", error));
+  }, { once: true });
+}
+
 function initFloatingMenu() {
   const toggle = document.getElementById("menuToggle");
   const menu = document.getElementById("idesussMenu");
@@ -84,6 +93,8 @@ function handleRequestedPanel() {
     }, 0);
   }
 }
+
+registerRootServiceWorker();
 
 document.addEventListener("DOMContentLoaded", async () => {
   initSettingsPreferences();
