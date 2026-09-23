@@ -67,7 +67,9 @@ export class IdesussRadioEngine extends EventTarget {
 
   #syncMediaSessionMetadata() {
     if (!("mediaSession" in navigator) || typeof MediaMetadata === "undefined") return;
-    const artwork = this.station?.artwork ? [{ src: this.station.artwork }] : [];
+    const artwork = this.station?.artwork
+      ? [{ src: this.station.artwork }]
+      : [{ src: new URL("/favicon.png", window.location.origin).href, sizes: "512x512", type: "image/png" }];
     try {
       navigator.mediaSession.metadata = this.station
         ? new MediaMetadata({
@@ -77,6 +79,7 @@ export class IdesussRadioEngine extends EventTarget {
             artwork
           })
         : null;
+      if (this.station) navigator.mediaSession.playbackState = this.audio.paused ? "paused" : "playing";
     } catch {}
   }
 
