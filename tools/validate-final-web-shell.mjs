@@ -30,7 +30,7 @@ assert(profile.includes('shellT') && profile.includes('subscribeShellLanguage'),
 assert(profile.includes('profileEulaAccepted') && profile.includes('acceptCurrentEula'),"profile EULA acceptance gate missing");
 assert(index.includes('href="/eula/"'),"EULA link missing from homepage");
 assert(serviceWorker.includes('"/eula/"'),"EULA page missing from static cache");
-assert(menuCore.includes('navigator.serviceWorker.register("/service-worker.js"\'),"root PWA service-worker registration missing");
+assert(menuCore.includes('navigator.serviceWorker.register("/service-worker.js"'),"root PWA service-worker registration missing");
 assert(index.includes('.profile-eula input[type="checkbox"]'),"mobile EULA checkbox sizing guard missing");
 assert(index.includes('.moderation-inbox-badge[hidden]'),"moderation badge hidden-state guard missing");
 for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
