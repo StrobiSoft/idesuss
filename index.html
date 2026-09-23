@@ -1800,6 +1800,49 @@ function getVisitorId() {
 }
 
 const visitorId = getVisitorId();
+const ONLINE_TAB_PREFIX = "idesuss_online_tab_";
+const ONLINE_TAB_TTL_MS = 45000;
+
+function getTabId() {
+  let id = sessionStorage.getItem("idesuss_online_tab_id");
+  if (!id) {
+    id = crypto.randomUUID();
+    sessionStorage.setItem("idesuss_online_tab_id", id);
+  }
+  return id;
+}
+
+const tabId = getTabId();
+const tabStorageKey = ONLINE_TAB_PREFIX + tabId;
+
+function touchOnlineTab() {
+  localStorage.setItem(tabStorageKey, String(Date.now()));
+}
+
+function getActiveOnlineTabs() {
+  const now = Date.now();
+  const active = [];
+
+  for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+    const key = localStorage.key(index);
+    if (!key?.startsWith(ONLINE_TAB_PREFIX)) continue;
+
+    const seenAt = Number(localStorage.getItem(key));
+    if (!Number.isFinite(seenAt) || now - seenAt > ONLINE_TAB_TTL_MS) {
+      localStorage.removeItem(key);
+      continue;
+    }
+
+    active.push(key.slice(ONLINE_TAB_PREFIX.length));
+  }
+
+  return active.sort();
+}
+
+function isOnlineLeader() {
+  const active = getActiveOnlineTabs();
+  return active.length > 0 && active[0] === tabId;
+}
 
 async function heartbeatOnline() {
   const now = new Date().toISOString();
@@ -1845,16 +1888,31 @@ if (el) {
   }
 }
 
-heartbeatOnline();
-updateOnlineCount();
+touchOnlineTab();
 
-setInterval(() => {
-  heartbeatOnline();
-  updateOnlineCount();
-}, HEARTBEAT_INTERVAL_MS);
+async function runOnlinePresenceTick() {
+  touchOnlineTab();
 
-window.addEventListener("beforeunload", () => {
-  setOffline();
+  if (isOnlineLeader()) {
+    await heartbeatOnline();
+    await updateOnlineCount();
+  }
+}
+
+runOnlinePresenceTick();
+
+setInterval(runOnlinePresenceTick, HEARTBEAT_INTERVAL_MS);
+
+window.addEventListener("storage", (event) => {
+  if (event.key?.startsWith(ONLINE_TAB_PREFIX)) {
+    window.setTimeout(runOnlinePresenceTick, 0);
+  }
+});
+
+window.addEventListener("pagehide", () => {
+  localStorage.removeItem(tabStorageKey);
+  const remainingTabs = getActiveOnlineTabs();
+  if (remainingTabs.length === 0) setOffline();
 });
 
 console.log("Supabase connected");
