@@ -22,6 +22,7 @@ let profileRole = "user";
 let unsubscribeAuth = null;
 let recoveryRequested = false;
 let socialSummaryTimer = null;
+let socialSummaryChannel = null;
 
 function isPasswordRecoveryLocation() {
   const url = new URL(window.location.href);
@@ -143,13 +144,38 @@ async function refreshSocialSummary() {
   }
 }
 
-function startSocialSummaryPolling() {
+function stopSocialSummaryWatch() {
   if (socialSummaryTimer) window.clearInterval(socialSummaryTimer);
   socialSummaryTimer = null;
+  if (socialSummaryChannel) {
+    getClient().removeChannel(socialSummaryChannel);
+    socialSummaryChannel = null;
+  }
+}
 
+function startSocialSummaryPolling() {
+  stopSocialSummaryWatch();
   if (!identity) return;
+
   refreshSocialSummary();
-  socialSummaryTimer = window.setInterval(refreshSocialSummary, 15000);
+
+  socialSummaryChannel = getClient()
+    .channel(`idesuss-social-summary-${identity.id}`)
+    .on("postgres_changes", {
+      event: "INSERT",
+      schema: "public",
+      table: "direct_messages",
+      filter: `recipient_id=eq.${identity.id}`
+    }, refreshSocialSummary)
+    .on("postgres_changes", {
+      event: "*",
+      schema: "public",
+      table: "friendships"
+    }, refreshSocialSummary)
+    .subscribe();
+
+  // Fallback for reconnect gaps; Realtime is the primary path.
+  socialSummaryTimer = window.setInterval(refreshSocialSummary, 60000);
 }
 
 async function maybeOpenProfile() {
@@ -176,8 +202,7 @@ async function performSignOut() {
     identity = null;
     profileNickname = "";
     profileRole = "user";
-    if (socialSummaryTimer) window.clearInterval(socialSummaryTimer);
-    socialSummaryTimer = null;
+    stopSocialSummaryWatch();
     updateButtons();
   } catch (error) {
     console.error("Shared sign-out failed", error);
@@ -406,8 +431,7 @@ export async function initRootAuthController() {
   return () => {
     unsubscribeAuth?.();
     unsubscribeAuth = null;
-    if (socialSummaryTimer) window.clearInterval(socialSummaryTimer);
-    socialSummaryTimer = null;
+    stopSocialSummaryWatch();
   };
 }
 

@@ -1,88 +1,120 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Idesüss™ — Üzenetek</title>
-  <meta name="theme-color" content="#07111f" />
+  <title>Idesüss™ — Messages</title>
+  <meta name="theme-color" content="#0d5bd7" />
   <link rel="icon" href="/favicon.png" />
   <style>
-    :root{--bg:#06111f;--panel:#102033;--panel2:#0b1827;--line:#294967;--text:#f5f8fc;--muted:#9db2c7;--accent:#4da3ff;--ok:#4ade80;--danger:#f87171;--warn:#f6c453}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,rgba(77,163,255,.15),transparent 30%),linear-gradient(180deg,#0b1727,var(--bg))}
-    button,input,textarea{font:inherit} button{cursor:pointer}
-    a{color:inherit;text-decoration:none}
-    .shell{width:min(1200px,calc(100% - 24px));margin:0 auto;padding:20px 0 40px}
-    .top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-    .brand{font-weight:900}.nav{display:flex;gap:8px;flex-wrap:wrap}
-    .nav a,.tab,.action{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.05);color:var(--text);padding:10px 13px;font-weight:800}
-    .tabs{display:flex;gap:8px;margin-bottom:14px}.tab.active{background:#0d5bd7;border-color:#4da3ff}
-    .panel{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,rgba(18,37,59,.96),rgba(10,25,40,.96));box-shadow:0 24px 70px rgba(0,0,0,.3)}
-    .messages-layout{display:grid;grid-template-columns:330px 1fr;min-height:650px;overflow:hidden}
-    .threads{border-right:1px solid var(--line);padding:12px;overflow:auto}
-    .thread{width:100%;text-align:left;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--text);padding:12px;margin-bottom:8px}
-    .thread:hover,.thread.active{background:rgba(255,255,255,.06);border-color:var(--line)}
-    .thread-top{display:flex;justify-content:space-between;gap:8px}.thread-name{font-weight:900}.muted{color:var(--muted)}
-    .unread{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:#0d5bd7;font-weight:900}
-    .conversation{display:grid;grid-template-rows:auto 1fr auto;min-width:0}
-    .conversation-head{padding:14px 16px;border-bottom:1px solid var(--line);font-weight:900}
-    .messages{padding:16px;overflow:auto;display:flex;flex-direction:column;gap:10px}
-    .bubble{max-width:78%;padding:10px 12px;border-radius:16px;background:#142a42;border:1px solid #294967}
-    .bubble.mine{align-self:flex-end;background:#0d3d75}.bubble.system{align-self:stretch;max-width:none;background:#182638;border-style:dashed}
-    .message-meta{font-size:.75rem;color:var(--muted);margin-top:5px}.friend-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .friend-actions button{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#0b1929;color:var(--text);font-weight:800}
-    .friend-actions .yes{background:#155c36}.friend-actions .no{background:#6b2530}.friend-actions .later{background:#725a19}
-    .composer{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}.composer textarea{flex:1;resize:none;min-height:46px;max-height:140px;border:1px solid #3b5875;border-radius:12px;background:#0b1929;color:var(--text);padding:11px}
-    .section{padding:16px}.search-row{display:flex;gap:8px;flex-wrap:wrap}.search-row input{flex:1 1 260px;border:1px solid #3b5875;border-radius:12px;background:#0b1929;color:var(--text);padding:11px}
-    .results,.friends-list{display:grid;gap:10px;margin-top:14px}.person{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035)}
-    .avatar{font-size:1.6rem;margin-right:8px}.status{margin-top:10px;color:var(--muted)}[hidden]{display:none!important}
-    @media(max-width:760px){.messages-layout{grid-template-columns:1fr;min-height:0}.threads{border-right:none;border-bottom:1px solid var(--line);max-height:260px}.conversation{min-height:560px}.bubble{max-width:90%}}
+    :root{--bg:#f4f7fb;--surface:#fff;--surface-alt:#eef3f9;--line:#d7e0ea;--text:#17324d;--muted:#5e748d;--primary:#0d5bd7;--primary-dark:#0b4cb3;--primary-soft:#e7f0ff;--danger:#c53030;--success:#1f9d55;--shadow:0 12px 32px rgba(22,44,77,.10);--radius:18px}
+    *{box-sizing:border-box} html,body{min-height:100%} body{margin:0;background:linear-gradient(180deg,#edf4ff 0,#f7f9fc 32%,var(--bg) 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    button,input,textarea,select{font:inherit} button{cursor:pointer} a{color:inherit;text-decoration:none} [hidden]{display:none!important}
+    .shell{width:min(1240px,calc(100% - 24px));margin:0 auto;padding:18px 0 36px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+    .brand{display:flex;align-items:center;gap:9px;font-weight:900;font-size:1.1rem}.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .nav a,.soft-btn,.tab,.action{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);padding:10px 13px;font-weight:800;box-shadow:0 2px 7px rgba(22,44,77,.04)}
+    .nav a:hover,.soft-btn:hover,.tab:hover,.action:hover{border-color:#adc5e2;background:#f9fbff}
+    .language{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:.9rem}.language select{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--surface);color:var(--text)}
+    .tabs{display:flex;gap:8px;margin-bottom:12px}.tab.active{background:var(--primary);border-color:var(--primary);color:white}
+    .panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+    .auth-card{padding:24px;text-align:center}.auth-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.primary{background:var(--primary)!important;border-color:var(--primary)!important;color:#fff!important}
+    .messages-layout{display:grid;grid-template-columns:340px 1fr;min-height:670px}
+    .threads-pane{border-right:1px solid var(--line);background:#fbfcfe;min-width:0}.threads-head{padding:14px 14px 8px;font-weight:900}.threads{padding:7px 10px 14px;overflow:auto;max-height:670px}
+    .thread{width:100%;text-align:left;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--text);padding:12px;margin-bottom:7px}.thread:hover,.thread.active{background:var(--primary-soft);border-color:#b7cff2}
+    .thread-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.thread-name{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.thread-preview{margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .unread{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:var(--primary);color:#fff;font-weight:900;font-size:.8rem}
+    .conversation{display:grid;grid-template-rows:auto 1fr auto;min-width:0;min-height:0}.conversation-head{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);font-weight:900;background:#fbfcfe}
+    .back-btn{display:none;border:0;background:transparent;color:var(--primary);font-weight:900;padding:8px}.messages{padding:18px;overflow:auto;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,#fff,#f8fbff)}
+    .bubble{max-width:78%;padding:10px 12px;border-radius:16px;background:#eef4fb;border:1px solid #cfdfef;box-shadow:0 2px 8px rgba(22,44,77,.04)}.bubble.mine{align-self:flex-end;background:#dcecff;border-color:#b6d2f5}.bubble.system{align-self:stretch;max-width:none;background:#fff7e6;border:1px dashed #e5b75f}
+    .message-meta{font-size:.76rem;color:var(--muted);margin-top:5px}.friend-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.friend-actions button{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;color:var(--text);font-weight:800}
+    .composer-wrap{border-top:1px solid var(--line);background:#fff;padding:10px 12px}.composer{display:flex;gap:8px;align-items:flex-end}.composer textarea{flex:1;resize:none;min-height:46px;max-height:140px;border:1px solid #b8c9db;border-radius:14px;background:#fff;color:var(--text);padding:11px 12px;outline:none}.composer textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(13,91,215,.10)}
+    .send-status{min-height:18px;margin-top:6px;color:var(--muted);font-size:.8rem}.send-status.error{color:var(--danger)}
+    .section{padding:18px}.search-row{display:flex;gap:8px;flex-wrap:wrap}.search-row input{flex:1 1 260px;border:1px solid #b8c9db;border-radius:12px;background:#fff;color:var(--text);padding:11px}.muted{color:var(--muted)}.status{margin-top:10px;color:var(--muted)}
+    .results,.friends-list{display:grid;gap:10px;margin-top:14px}.person{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fbfcfe}.avatar{font-size:1.6rem;margin-right:8px}.status-badge{display:inline-flex;margin-top:5px;padding:3px 8px;border-radius:999px;background:var(--surface-alt);color:var(--muted);font-size:.78rem;font-weight:800}
+    .settings-card{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:10px 0}.switch{width:48px;height:28px;accent-color:var(--primary)}
+    .setting-status{min-height:20px;color:var(--muted);font-size:.85rem;margin-top:8px}
+    @media(max-width:760px){
+      .shell{width:min(100% - 12px,760px);padding-top:8px}.nav a:nth-of-type(n+2){display:none}.messages-layout{grid-template-columns:1fr;min-height:calc(100vh - 150px)}.threads-pane{border-right:0}.threads{max-height:none}.conversation{display:none;min-height:calc(100vh - 150px)}.panel.mobile-conversation .threads-pane{display:none}.panel.mobile-conversation .conversation{display:grid}.back-btn{display:inline-block}.bubble{max-width:90%}.topbar{padding:0 4px}.section{padding:14px}.person{grid-template-columns:1fr}.person>.friend-actions{justify-content:flex-start}
+    }
   </style>
 </head>
 <body>
   <main class="shell">
-    <header class="top">
-      <div class="brand">💬 Idesüss™ Üzenetek</div>
-      <nav class="nav"><a href="/">← Főoldal</a><a href="/app/">▶ Webapp</a><a href="/radio/">📻 Rádió</a></nav>
+    <header class="topbar">
+      <div class="brand">💬 <span>Idesüss™</span> <span data-msg-i18n="title">Messages</span></div>
+      <div class="nav">
+        <a href="/" data-msg-i18n="home">Home</a>
+        <a href="/app/" data-msg-i18n="webapp">Webapp</a>
+        <a href="/radio/" data-msg-i18n="radio">Radio</a>
+        <label class="language"><span data-msg-i18n="language">Language</span><select id="messagesLanguageSelect" aria-label="Language"></select></label>
+      </div>
     </header>
 
-    <div class="tabs">
-      <button id="messagesTab" class="tab active" type="button">Üzenetek</button>
-      <button id="friendsTab" class="tab" type="button">Barátok</button>
+    <div class="tabs" id="mainTabs">
+      <button id="messagesTab" class="tab active" type="button" data-msg-i18n="messages">Messages</button>
+      <button id="friendsTab" class="tab" type="button" data-msg-i18n="friends">Friends</button>
     </div>
 
-    <section id="authRequired" class="panel section" hidden>Az üzenetekhez jelentkezz be az Idesüss főoldalán.</section>
+    <section id="authRequired" class="panel auth-card" hidden>
+      <strong data-msg-i18n="authRequired">Sign in to use messages.</strong>
+      <div class="auth-actions">
+        <button id="messagesLoginBtn" class="action primary" type="button" data-msg-i18n="login">Sign in</button>
+        <button id="messagesRegisterBtn" class="action" type="button" data-msg-i18n="register">Register</button>
+      </div>
+    </section>
 
     <section id="messagesPanel" class="panel">
       <div class="messages-layout">
-        <aside>
+        <aside class="threads-pane">
+          <div class="threads-head" data-msg-i18n="messages">Messages</div>
           <div class="threads" id="threadList"></div>
         </aside>
         <section class="conversation">
-          <div id="conversationHead" class="conversation-head">Válassz beszélgetést</div>
-          <div id="messageList" class="messages"><div class="muted">Itt jelennek meg a privát és rendszerüzenetek.</div></div>
-          <div class="composer">
-            <textarea id="messageInput" maxlength="4000" placeholder="Üzenet…" disabled></textarea>
-            <button id="sendMessageBtn" class="action" type="button" disabled>Küldés</button>
+          <div class="conversation-head">
+            <button id="conversationBackBtn" class="back-btn" type="button">← <span data-msg-i18n="back">Back</span></button>
+            <span id="conversationHead" data-msg-i18n="chooseConversation">Choose a conversation</span>
+          </div>
+          <div id="messageList" class="messages"><div class="muted" data-msg-i18n="emptyConversation">Private and system messages appear here.</div></div>
+          <div id="composerWrap" class="composer-wrap">
+            <div class="composer">
+              <textarea id="messageInput" maxlength="4000" data-msg-placeholder="messagePlaceholder" placeholder="Message…" disabled></textarea>
+              <button id="sendMessageBtn" class="action primary" type="button" disabled data-msg-i18n="send">Send</button>
+            </div>
+            <div id="sendStatus" class="send-status" aria-live="polite"></div>
           </div>
         </section>
       </div>
     </section>
 
     <section id="friendsPanel" class="panel section" hidden>
-      <h2>Barátok</h2>
-      <p class="muted">Keress becenév alapján. E-mail címre itt szándékosan nem lehet keresni.</p>
+      <h2 data-msg-i18n="friendsHeading">Friends</h2>
+      <p class="muted" data-msg-i18n="searchHelp">Search by nickname.</p>
       <div class="search-row">
-        <input id="friendSearchInput" type="search" autocomplete="off" placeholder="Becenév…" />
-        <button id="friendSearchBtn" class="action" type="button">Keresés</button>
+        <input id="friendSearchInput" type="search" autocomplete="off" data-msg-placeholder="nickname" placeholder="Nickname…" />
+        <button id="friendSearchBtn" class="action primary" type="button" data-msg-i18n="search">Search</button>
       </div>
       <div id="friendSearchStatus" class="status"></div>
       <div id="friendSearchResults" class="results"></div>
-      <h3>Kapcsolataim</h3>
+      <h3 data-msg-i18n="myConnections">My connections</h3>
       <div id="friendshipsList" class="friends-list"></div>
+
+      <div class="settings-card">
+        <h3 data-msg-i18n="notifications">Notifications</h3>
+        <div class="setting-row">
+          <label for="pushEnabled" data-msg-i18n="pushEnabled">Message notifications</label>
+          <input id="pushEnabled" class="switch" type="checkbox" checked />
+        </div>
+        <div class="setting-row">
+          <label for="previewEnabled" data-msg-i18n="previewEnabled">Message preview</label>
+          <input id="previewEnabled" class="switch" type="checkbox" checked />
+        </div>
+        <button id="saveNotificationSettingsBtn" class="action primary" type="button" data-msg-i18n="saveSettings">Save</button>
+        <div id="notificationSettingsStatus" class="setting-status" aria-live="polite"></div>
+      </div>
     </section>
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./messages.js?v=20260923-social1"></script>
+
+  <script type="module" src="./messages.js?v=20260923-hardening1"></script>
 </body>
 </html>
