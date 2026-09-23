@@ -2,7 +2,7 @@
   "counterLabel": "Bezoeken",
   "counterNote": "De teller wordt niet bij elke refresh verhoogd.",
   "langBoxLabel": "Taal",
-  "langSubnote": "Hongaarse browser → Hongaarse interface, anders → Engels.",
+  "langSubnote": "De gekozen taal geldt voor de volledige Idesüss-interface.",
   "textareaPlaceholder": "Plak hier de link...",
   "playBtnText": "START",
   "pasteBtn": "PLAKKEN",
