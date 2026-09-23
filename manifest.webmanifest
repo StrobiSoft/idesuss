@@ -18,12 +18,10 @@
       "type": "image/png"
     }
   ],
-  "id": "/",
-  "description": "Idesüss — videólinkek, rádió és közösségi funkciók egy könnyű webes alkalmazásban.",
   "shortcuts": [
     {
-      "name": "Rádió",
-      "short_name": "Rádió",
+      "name": "Idesüss Radio",
+      "short_name": "Radio",
       "url": "/radio/",
       "icons": [
         {
@@ -34,7 +32,7 @@
       ]
     },
     {
-      "name": "Webapp",
+      "name": "Idesüss Webapp",
       "short_name": "Webapp",
       "url": "/app/",
       "icons": [
