@@ -9,7 +9,7 @@ import {
 } from "../shared/auth-service.js?v=20260921-prod-refresh1";
 import { loadMyProfile } from "../shared/profile-service.js?v=20260921-prod-refresh1";
 import { shellT } from "../shared/shell-language.js";
-import { checkPasswordSecurity, PasswordSecurityError } from "../shared/password-security-service.js";
+import { PasswordSecurityError } from "../shared/password-security-service.js";
 import { openProfilePanel } from "./profile.js?v=20260921-prod-refresh1";
 import {
   closeAuthModal,
@@ -99,11 +99,6 @@ function localizePasswordSecurityError(error) {
   if (error.code === "PASSWORD_COMPROMISED") return shellT("passwordCompromised");
   if (error.code === "PASSWORD_SECURITY_RATE_LIMITED") return shellT("passwordSecurityRateLimited");
   return shellT("passwordSecurityUnavailable");
-}
-
-async function verifyCandidatePassword(password) {
-  setMessage(shellT("passwordChecking"));
-  await checkPasswordSecurity(password);
 }
 
 function updateButtons() {
@@ -276,9 +271,9 @@ async function handleSubmit(event) {
     }
 
     try {
-      await verifyCandidatePassword(password);
-      setMessage(shellT("authSavingPassword"));
+      setMessage(shellT("passwordChecking"));
       identity = await updatePassword(getClient(), { password });
+      setMessage(shellT("authSavingPassword"));
       recoveryRequested = false;
       updateButtons();
       setMessage(shellT("authPasswordChanged"));
@@ -314,7 +309,7 @@ async function handleSubmit(event) {
     const client = getClient();
 
     if (mode === "register") {
-      await verifyCandidatePassword(password);
+      setMessage(shellT("passwordChecking"));
       const result = await signUp(client, {
         email,
         password,
