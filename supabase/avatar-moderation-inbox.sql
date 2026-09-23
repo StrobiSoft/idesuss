@@ -214,6 +214,13 @@ $function$;
 revoke all on function public.can_read_avatar_submission_object(text) from public;
 grant execute on function public.can_read_avatar_submission_object(text) to anon, authenticated;
 
+drop policy if exists avatar_submissions_review_select on public.avatar_submissions;
+create policy avatar_submissions_review_select
+on public.avatar_submissions
+for select
+to authenticated
+using (public.can_review_avatar_submissions());
+
 drop policy if exists avatar_submission_review_or_approved_read on storage.objects;
 create policy avatar_submission_review_or_approved_read
 on storage.objects
