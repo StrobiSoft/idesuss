@@ -16,6 +16,9 @@ on:
       - 'messages/**'
       - 'supabase/**'
       - 'server/radio-proxy/**'
+      - 'server/security/**'
+      - 'server/password-security/**'
+      - 'tools/mock-hibp-server.mjs'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-webapp-locales.mjs'
@@ -101,6 +104,7 @@ jobs:
           node --check js/shared/language-preference.js
           node --check js/shared/shell-language.js
           node --check js/shared/supabase-client.js
+          node --check js/shared/password-security-service.js
           node --check js/lang/home-language.js
           node --check js/lang/modules/Home/lang/hu.js
           node --check js/lang/modules/Home/lang/en.js
@@ -128,6 +132,84 @@ jobs:
           node --check ideas/ideas-language.js
       - name: Validate generated radio development audio
         run: node tools/validate-radio-dev-audio.mjs
+
+      - name: Validate server security module syntax
+        run: |
+          node --check server/security/spy-trap.js
+          node --check server/password-security/server.js
+          node --check tools/mock-hibp-server.mjs
+
+      - name: Validate password security gateway and Spy Trap
+        env:
+          HOST: 127.0.0.1
+        run: |
+          set -euo pipefail
+
+          PORT=8791 MOCK_HIBP_COMPROMISED_PASSWORD=password node tools/mock-hibp-server.mjs >/tmp/mock-hibp.log 2>&1 &
+          hibp_pid=$!
+
+          NODE_ENV=test \
+          HOST=127.0.0.1 \
+          PORT=8790 \
+          IDESUSS_HIBP_BASE_URL=http://127.0.0.1:8791 \
+          IDESUSS_PASSWORD_ALLOWED_ORIGIN=https://idesuss.net \
+          IDESUSS_PASSWORD_RATE_MAX=50 \
+          node server/password-security/server.js >/tmp/password-security.log 2>&1 &
+          gateway_pid=$!
+
+          cleanup() {
+            kill "$gateway_pid" "$hibp_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          ready=false
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8790/healthz >/tmp/password-health.json; then
+              ready=true
+              break
+            fi
+            sleep 0.2
+          done
+          test "$ready" = true
+          grep -q '"ok":true' /tmp/password-health.json
+
+          safe_candidate='NeverLogThisCandidate-42!'
+          safe_code=$(curl --silent --output /tmp/password-safe.json --write-out '%{http_code}' \
+            -H 'Content-Type: application/json' -H 'Origin: https://idesuss.net' \
+            --data "{\"password\":\"$safe_candidate\"}" \
+            http://127.0.0.1:8790/v1/security/password/check)
+          test "$safe_code" = "200"
+          grep -q '"ok":true' /tmp/password-safe.json
+          grep -q '"compromised":false' /tmp/password-safe.json
+
+          compromised_code=$(curl --silent --output /tmp/password-compromised.json --write-out '%{http_code}' \
+            -H 'Content-Type: application/json' -H 'Origin: https://idesuss.net' \
+            --data '{"password":"password"}' \
+            http://127.0.0.1:8790/v1/security/password/check)
+          test "$compromised_code" = "200"
+          grep -q '"compromised":true' /tmp/password-compromised.json
+          grep -q '"known_compromised_password"' /tmp/password-compromised.json
+
+          bad_origin=$(curl --silent --output /tmp/password-origin.json --write-out '%{http_code}' \
+            -H 'Content-Type: application/json' -H 'Origin: https://evil.example' \
+            --data '{"password":"AnotherCandidate-42!"}' \
+            http://127.0.0.1:8790/v1/security/password/check)
+          test "$bad_origin" = "403"
+
+          first=$(curl --silent --output /tmp/password-spy1.json --write-out '%{http_code}' http://127.0.0.1:8790/.env)
+          second=$(curl --silent --output /tmp/password-spy2.json --write-out '%{http_code}' http://127.0.0.1:8790/.env)
+          third=$(curl --silent --output /tmp/password-spy3.json --write-out '%{http_code}' http://127.0.0.1:8790/.env)
+          fourth=$(curl --silent --output /tmp/password-spy4.json --write-out '%{http_code}' http://127.0.0.1:8790/.env)
+          test "$first" = "403"
+          test "$second" = "403"
+          test "$third" = "403"
+          test "$fourth" = "403"
+          grep -q '"security_escalation"' /tmp/password-spy4.json
+
+          if grep -F "$safe_candidate" /tmp/password-security.log; then
+            echo "Plaintext password leaked into gateway log" >&2
+            exit 1
+          fi
 
       - name: Validate radio proxy syntax
         run: node --check server/radio-proxy/server.js
@@ -185,6 +267,9 @@ jobs:
           grep -q '"access_denied"' /tmp/spy3.json
           grep -q '"security_escalation"' /tmp/spy4.json
 
-      - name: Show radio proxy log on failure
+      - name: Show server security logs on failure
         if: failure()
-        run: cat /tmp/radio-proxy.log 2>/dev/null || true
+        run: |
+          cat /tmp/password-security.log 2>/dev/null || true
+          cat /tmp/mock-hibp.log 2>/dev/null || true
+          cat /tmp/radio-proxy.log 2>/dev/null || true
