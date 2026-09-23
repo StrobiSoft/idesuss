@@ -165,6 +165,19 @@ export async function saveMyProfile(supabaseClient, changes = {}) {
   return saveMyProfileLegacy(client, user, profile, changes);
 }
 
+
+export async function setMyPresenceVisibility(supabaseClient, visibility) {
+  const client = requireClient(supabaseClient);
+  const allowed = new Set(["nobody", "friends", "everyone"]);
+  if (!allowed.has(visibility)) throw profileError("INVALID_PRESENCE_VISIBILITY");
+
+  const { data, error } = await client.rpc("set_my_presence_visibility", {
+    p_visibility: visibility
+  });
+  if (error) throw error;
+  return data;
+}
+
 export const STAFF_AVATAR_EMOJI = "🧑‍💻";
 
 export const APPROVED_AVATAR_EMOJIS = Object.freeze([
