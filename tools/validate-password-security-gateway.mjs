@@ -14,7 +14,8 @@ assert((authService.match(/checkPasswordSecurity\(password\)/g) || []).length >=
   "both sign-up and password update must pass through password security");
 assert(!controller.includes('client.auth.signUp') && !messages.includes('client.auth.signUp'),
   "active web auth surfaces must not bypass shared auth service");
-assert(passwordClient.includes('/api/security/password/check'),"web password client must use same-origin gateway endpoint");
+assert(passwordClient.includes('https://security.idesuss.net/v1/security/password/check'),
+  "web password client must use the dedicated production gateway origin");
 assert(gateway.includes('createHash("sha1")'),"gateway must hash candidate locally");
 assert(gateway.includes('digest.slice(0, 5)') && gateway.includes('digest.slice(5)'),
   "gateway must use HIBP k-anonymity prefix/suffix split");
