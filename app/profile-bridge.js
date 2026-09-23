@@ -72,8 +72,8 @@ async function renderSignedIn(client, profile, user) {
   const label = profile?.nickname || user?.email || "Profil";
   const imageUrl = await getProfileAvatarImageUrl(client, profile).catch(() => "");
 
-  badge.replaceChildren();
   if (imageUrl) {
+    badge.replaceChildren();
     const image = document.createElement("img");
     image.src = imageUrl;
     image.alt = "";
