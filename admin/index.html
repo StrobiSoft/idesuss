@@ -76,9 +76,15 @@
         <p class="muted">A beküldött saját profilképek elővizsgálati felülete. A jogosultság már külön kezelhető, a munkalista bekötése következik.</p>
       </article>
 
-      <article id="userAdminCard" class="card" hidden>
+      <article id="userAdminCard" class="card" hidden style="grid-column:1/-1">
         <h2>👥 Felhasználók</h2>
-        <p class="muted">Adminisztratív felhasználókezelés. A Platform Owner ennél szélesebb, szerepkör-kezelési jogokat kap.</p>
+        <p class="muted">Az admin felhasználót kereshet becenév vagy e-mail cím alapján, és normál felhasználót moderátorrá emelhet. Admin rangot és előfizetési jogosultságot innen nem lehet kiosztani vagy visszavonni.</p>
+        <div class="user-search">
+          <input id="adminUserSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Keresés becenév vagy e-mail cím alapján…" aria-label="Felhasználó keresése" />
+          <span class="hint">Legalább 2 karaktert írj be.</span>
+        </div>
+        <div id="adminUserList" class="user-list"></div>
+        <div id="adminUserStatus" class="status">Keresésre kész.</div>
       </article>
 
       <article id="ownerCard" class="card" hidden style="grid-column:1/-1">
@@ -96,6 +102,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./admin.js?v=20260923-admin-search2"></script>
+  <script type="module" src="./admin.js?v=20260923-admin-user-tools1"></script>
 </body>
 </html>
