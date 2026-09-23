@@ -55,7 +55,9 @@ export class IdesussRadioEngine extends EventTarget {
     const handlers = {
       play: () => this.play().catch((error) => this.#emit("error", { code: error.message, message: "A lejátszás nem indítható." })),
       pause: () => this.pause(),
-      stop: () => this.stop()
+      stop: () => this.stop(),
+      nexttrack: () => this.#emit("media-next"),
+      previoustrack: () => this.#emit("media-previous")
     };
 
     Object.entries(handlers).forEach(([action, handler]) => {
