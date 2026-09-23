@@ -346,7 +346,14 @@ function bindEngineEvents() {
   });
   engine.addEventListener("error",(event)=>setStatus(event.detail?.message||"Rádióhiba történt."));
 }
+function registerRadioServiceWorker() {
+  if (!("serviceWorker" in navigator)) return;
+  navigator.serviceWorker.register("/service-worker.js", { scope: "/" })
+    .catch((error) => console.error("Radio service worker registration failed", error));
+}
+
 async function init() {
+  registerRadioServiceWorker();
   initRadioLanguage();
   bindControls(); bindEngineEvents();
 
