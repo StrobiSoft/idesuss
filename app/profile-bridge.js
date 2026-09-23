@@ -1,5 +1,6 @@
 import {
   getCurrentUser,
+  getProfileAvatarImageUrl,
   loadMyProfile,
   subscribeToMyProfile
 } from "../js/shared/profile-service.js";
@@ -65,11 +66,26 @@ function renderSignedOut() {
   };
 }
 
-function renderSignedIn(profile, user) {
+async function renderSignedIn(client, profile, user) {
   const badge = ensureProfileBadge();
   const avatar = profile?.avatar_emoji || "👤";
   const label = profile?.nickname || user?.email || "Profil";
-  badge.textContent = `${avatar} ${label}`;
+  const imageUrl = await getProfileAvatarImageUrl(client, profile).catch(() => "");
+
+  badge.replaceChildren();
+  if (imageUrl) {
+    const image = document.createElement("img");
+    image.src = imageUrl;
+    image.alt = "";
+    image.style.width = "28px";
+    image.style.height = "28px";
+    image.style.borderRadius = "50%";
+    image.style.objectFit = "cover";
+    badge.append(image, document.createTextNode(` ${label}`));
+  } else {
+    badge.textContent = `${avatar} ${label}`;
+  }
+
   badge.hidden = false;
   badge.onclick = () => {
     window.location.href = "/#profile";
@@ -84,11 +100,11 @@ async function bindSignedInProfile(client, user, generation) {
 
   const profile = await loadMyProfile(client);
   if (generation !== identityGeneration) return;
-  renderSignedIn(profile, user);
+  await renderSignedIn(client, profile, user);
 
   unsubscribeProfile = subscribeToMyProfile(client, user.id, (nextProfile) => {
     if (generation !== identityGeneration) return;
-    renderSignedIn(nextProfile, user);
+    renderSignedIn(client, nextProfile, user).catch((error) => console.error("Webapp avatar refresh failed", error));
   });
 }
 
