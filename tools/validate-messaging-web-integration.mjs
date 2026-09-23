@@ -15,13 +15,15 @@ assert(js.includes('openAuthModal'),"messages must expose shared auth modal");
 assert(js.includes('get_push_preferences') && js.includes('set_push_preferences'),"notification preferences must be wired");
 assert(js.includes('sendLocked') && js.includes('lastFailedBody'),"send de-duplication/retry state missing");
 assert(js.includes('mobile-conversation'),"mobile conversation navigation missing");
+assert(js.includes('isReplyableThread') && js.includes('last_message_type !== "system"'),"system messages must be one-way");
+assert(js.includes('setComposerReplyability(false)'),"system-message composer lock missing");
 assert(js.includes('postgres_changes'),"messages realtime subscription missing");
 assert(auth.includes('idesuss-social-summary-') && auth.includes('postgres_changes'),"root unread badge must use realtime");
 assert(auth.includes('60000'),"root unread badge fallback poll must be reduced to fallback cadence");
 
 for (const id of [
   "messagesLanguageSelect","messagesLoginBtn","messagesRegisterBtn","conversationBackBtn",
-  "sendStatus","pushEnabled","previewEnabled","saveNotificationSettingsBtn"
+  "sendStatus","composerWrap","pushEnabled","previewEnabled","saveNotificationSettingsBtn"
 ]) {
   assert(html.includes(`id="${id}"`),`missing messaging UI element: ${id}`);
 }
@@ -31,6 +33,7 @@ for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
 }
 assert(lang.includes('subscribeIdesussLanguage'),"messaging language must subscribe to global language");
 assert(lang.includes('setIdesussLanguage'),"messaging language selector must update global language");
+assert(lang.includes('systemNoReply'),"system-message one-way notice must be localized");
 
 assert(sharedClient.includes('window.supabaseClient'),"shared Supabase client must reuse global client");
 assert(sharedClient.includes('@supabase/supabase-js@2'),"shared Supabase loader must provide library fallback");
