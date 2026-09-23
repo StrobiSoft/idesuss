@@ -1,0 +1,38 @@
+-- Idesüss admin trust / promotion boundary
+-- Applied to production Supabase on 2026-09-23.
+--
+-- Admin capabilities:
+--   * search users by nickname or e-mail
+--   * promote role=user -> role=moderator directly
+--   * request role=user/moderator -> role=admin
+--
+-- Admin promotion rule:
+--   * an admin may initiate an admin promotion request
+--   * the target does NOT become admin until Platform Owner approves
+--   * after approval, the new admin must accept the current versioned
+--     Adminisztrátori felelősségvállalás before admin powers activate
+--
+-- Explicitly NOT available to admin:
+--   * bypass Platform Owner approval for admin promotions
+--   * demote/change existing admin/owner roles
+--   * grant/revoke complimentary Premium or Premium Plus
+--   * grant/revoke VIP status
+--   * call Platform Owner role/tier/VIP APIs
+--
+-- Public RPCs:
+--   public.admin_search_users(text, integer)
+--   public.admin_promote_user_to_moderator(uuid)
+--   public.admin_request_admin_promotion(uuid)
+--   public.accept_admin_terms()
+--   public.get_admin_terms()
+--   public.owner_list_admin_promotion_requests()
+--   public.owner_decide_admin_promotion_request(uuid, boolean)
+--
+-- Sensitive request and acceptance records live in the private schema.
+-- private.assert_admin_or_owner() requires current admin terms acceptance
+-- for role=admin; Platform Owner bypasses that acceptance gate.
+--
+-- Existing admins at deployment were grandfathered into the current terms
+-- version so the deployment itself does not unexpectedly lock them out.
+-- Future admins must explicitly accept the current terms before admin tools
+-- become usable.

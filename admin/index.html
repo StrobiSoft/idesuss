@@ -44,6 +44,12 @@
     select,button.action{min-height:38px;border:1px solid #3b5875;border-radius:11px;background:#0b1929;color:var(--text);padding:8px 10px}
     button.action{cursor:pointer;font-weight:800}.save{background:linear-gradient(135deg,#0d5bd7,#4da3ff)!important;border-color:#4da3ff!important}
     .owner-note{color:#9ee6b5}
+    .terms-list{margin:12px 0 0;padding-left:1.2rem;color:#d6e3ef;line-height:1.55}
+    .terms-list li+li{margin-top:8px}
+    .terms-accept{display:flex;gap:10px;align-items:flex-start;margin-top:16px;padding:12px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.04)}
+    .request-list{display:grid;gap:10px;margin-top:12px}
+    .request-row{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.035)}
+    .request-actions{display:flex;gap:8px;flex-wrap:wrap}
     @media(max-width:820px){.grid{grid-template-columns:1fr}.user-row{grid-template-columns:1fr}.controls{justify-content:flex-start}}
   </style>
 </head>
@@ -65,6 +71,18 @@
       <div id="accessMessage" class="status">Kapcsolódás…</div>
     </section>
 
+    <section id="adminTermsCard" class="card" hidden style="margin-bottom:14px">
+      <h2 id="adminTermsTitle">Adminisztrátori felelősségvállalás</h2>
+      <p id="adminTermsSummary" class="muted">Az adminisztrátori szabályok betöltése…</p>
+      <ol id="adminTermsList" class="terms-list"></ol>
+      <label class="terms-accept">
+        <input id="adminTermsCheckbox" type="checkbox" />
+        <span>Elolvastam, megértettem és elfogadom az adminisztrátori szabályokat.</span>
+      </label>
+      <button id="acceptAdminTermsBtn" class="action save" type="button" style="margin-top:12px" disabled>Szabályok elfogadása</button>
+      <div id="adminTermsStatus" class="status">Az elfogadás után az adminisztrátori eszközök aktiválódnak.</div>
+    </section>
+
     <section id="adminContent" class="grid" hidden>
       <article id="moderationCard" class="card" hidden>
         <h2>🧭 Moderáció</h2>
@@ -76,15 +94,24 @@
         <p class="muted">A beküldött saját profilképek elővizsgálati felülete. A jogosultság már külön kezelhető, a munkalista bekötése következik.</p>
       </article>
 
-      <article id="userAdminCard" class="card" hidden>
+      <article id="userAdminCard" class="card" hidden style="grid-column:1/-1">
         <h2>👥 Felhasználók</h2>
-        <p class="muted">Adminisztratív felhasználókezelés. A Platform Owner ennél szélesebb, szerepkör-kezelési jogokat kap.</p>
+        <p class="muted">Az admin felhasználót kereshet becenév vagy e-mail cím alapján, normál felhasználót moderátorrá emelhet, és user vagy moderátor adminná emelését kezdeményezheti. Az adminná emelés csak a Platform Owner jóváhagyása után történhet meg. Premium/Premium Plus jogosultságot vagy VIP státuszt admin nem adhat és nem vonhat vissza.</p>
+        <div class="user-search">
+          <input id="adminUserSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Keresés becenév vagy e-mail cím alapján…" aria-label="Felhasználó keresése" />
+          <span class="hint">Legalább 2 karaktert írj be.</span>
+        </div>
+        <div id="adminUserList" class="user-list"></div>
+        <div id="adminUserStatus" class="status">Keresésre kész.</div>
       </article>
 
       <article id="ownerCard" class="card" hidden style="grid-column:1/-1">
         <h2>👑 Platform Owner</h2>
         <p class="owner-note">Ez a rész kizárólag az egyetlen Platform Owner számára érhető el.</p>
-        <p class="muted">Szerepkörök kezelése és díjmentes Premium/Premium Plus jogosultság adása. A díjmentes prémium nem ad adminpanel-hozzáférést.</p>
+        <p class="muted">Szerepkörök kezelése, díjmentes Premium/Premium Plus jogosultság adása és adminná emelési kérelmek jóváhagyása. A díjmentes prémium nem ad adminpanel-hozzáférést.</p>
+        <h3 style="margin:18px 0 8px">Adminná emelési kérelmek</h3>
+        <div id="ownerPromotionRequestList" class="request-list"></div>
+        <div id="ownerPromotionRequestStatus" class="status">Kérelmek betöltése…</div>
         <div class="user-search" data-admin-search-version="2">
           <input id="ownerUserSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Keresés becenév vagy e-mail cím alapján…" aria-label="Felhasználó keresése" />
           <span class="hint">A találatok relevancia szerint kerülnek előre.</span>
@@ -96,6 +123,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="./admin.js?v=20260923-admin-search2"></script>
+  <script type="module" src="./admin.js?v=20260923-admin-approval1"></script>
 </body>
 </html>
