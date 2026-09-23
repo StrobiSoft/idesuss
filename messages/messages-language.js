@@ -32,7 +32,7 @@ const STRINGS = {
     roleAdmin:"Admin", roleModerator:"Moderátor", notifications:"Értesítések",
     pushEnabled:"Üzenetértesítések", previewEnabled:"Üzenet előnézete", saveSettings:"Mentés",
     settingsSaved:"Értesítési beállítások elmentve.", settingsError:"Az értesítési beállítások nem menthetők.",
-    language:"Nyelv", delivered:"Elküldve", failed:"Sikertelen küldés"
+    language:"Nyelv", delivered:"Elküldve", failed:"Sikertelen küldés", systemNoReply:"Ez rendszerüzenet. Erre nem lehet válaszolni."
   },
   en: {
     title:"Messages", messages:"Messages", friends:"Friends", home:"Home", webapp:"Webapp", radio:"Radio",
@@ -59,7 +59,7 @@ const STRINGS = {
     removeConfirm:"Delete this connection?", back:"Back", roleOwner:"Platform Owner", roleAdmin:"Admin",
     roleModerator:"Moderator", notifications:"Notifications", pushEnabled:"Message notifications",
     previewEnabled:"Message preview", saveSettings:"Save", settingsSaved:"Notification settings saved.",
-    settingsError:"Notification settings could not be saved.", language:"Language", delivered:"Sent", failed:"Send failed"
+    settingsError:"Notification settings could not be saved.", language:"Language", delivered:"Sent", failed:"Send failed", systemNoReply:"This is a system message. Replies are disabled."
   },
   nl: {
     title:"Berichten", messages:"Berichten", friends:"Vrienden", home:"Start", webapp:"Webapp", radio:"Radio",
@@ -86,7 +86,7 @@ const STRINGS = {
     removeConfirm:"Deze verbinding verwijderen?", back:"Terug", roleOwner:"Platform Owner", roleAdmin:"Admin",
     roleModerator:"Moderator", notifications:"Meldingen", pushEnabled:"Berichtmeldingen",
     previewEnabled:"Berichtvoorbeeld", saveSettings:"Opslaan", settingsSaved:"Meldingsinstellingen opgeslagen.",
-    settingsError:"Meldingsinstellingen konden niet worden opgeslagen.", language:"Taal", delivered:"Verzonden", failed:"Verzenden mislukt"
+    settingsError:"Meldingsinstellingen konden niet worden opgeslagen.", language:"Taal", delivered:"Verzonden", failed:"Verzenden mislukt", systemNoReply:"Dit is een systeembericht. Antwoorden is uitgeschakeld."
   },
   ro: {
     title:"Mesaje", messages:"Mesaje", friends:"Prieteni", home:"Acasă", webapp:"Webapp", radio:"Radio",
@@ -113,7 +113,7 @@ const STRINGS = {
     removeConfirm:"Ștergi această relație?", back:"Înapoi", roleOwner:"Platform Owner", roleAdmin:"Admin",
     roleModerator:"Moderator", notifications:"Notificări", pushEnabled:"Notificări mesaje",
     previewEnabled:"Previzualizare mesaj", saveSettings:"Salvează", settingsSaved:"Setările de notificare au fost salvate.",
-    settingsError:"Setările de notificare nu pot fi salvate.", language:"Limbă", delivered:"Trimis", failed:"Trimitere eșuată"
+    settingsError:"Setările de notificare nu pot fi salvate.", language:"Limbă", delivered:"Trimis", failed:"Trimitere eșuată", systemNoReply:"Acesta este un mesaj de sistem. Nu se poate răspunde."
   },
   pl: {
     title:"Wiadomości", messages:"Wiadomości", friends:"Znajomi", home:"Start", webapp:"Webapp", radio:"Radio",
@@ -140,7 +140,7 @@ const STRINGS = {
     removeConfirm:"Usunąć tę relację?", back:"Wstecz", roleOwner:"Platform Owner", roleAdmin:"Admin",
     roleModerator:"Moderator", notifications:"Powiadomienia", pushEnabled:"Powiadomienia o wiadomościach",
     previewEnabled:"Podgląd wiadomości", saveSettings:"Zapisz", settingsSaved:"Ustawienia powiadomień zapisane.",
-    settingsError:"Nie udało się zapisać ustawień powiadomień.", language:"Język", delivered:"Wysłano", failed:"Wysyłanie nieudane"
+    settingsError:"Nie udało się zapisać ustawień powiadomień.", language:"Język", delivered:"Wysłano", failed:"Wysyłanie nieudane", systemNoReply:"To wiadomość systemowa. Odpowiedzi są wyłączone."
   },
   hr: {
     title:"Poruke", messages:"Poruke", friends:"Prijatelji", home:"Početna", webapp:"Webapp", radio:"Radio",
@@ -167,7 +167,7 @@ const STRINGS = {
     removeConfirm:"Izbrisati ovu vezu?", back:"Natrag", roleOwner:"Platform Owner", roleAdmin:"Admin",
     roleModerator:"Moderator", notifications:"Obavijesti", pushEnabled:"Obavijesti o porukama",
     previewEnabled:"Pregled poruke", saveSettings:"Spremi", settingsSaved:"Postavke obavijesti spremljene.",
-    settingsError:"Postavke obavijesti se ne mogu spremiti.", language:"Jezik", delivered:"Poslano", failed:"Slanje nije uspjelo"
+    settingsError:"Postavke obavijesti se ne mogu spremiti.", language:"Jezik", delivered:"Poslano", failed:"Slanje nije uspjelo", systemNoReply:"Ovo je sistemska poruka. Odgovaranje je onemogućeno."
   },
   be: {
     title:"Паведамленні", messages:"Паведамленні", friends:"Сябры", home:"Галоўная", webapp:"Webapp", radio:"Радыё",
@@ -194,7 +194,7 @@ const STRINGS = {
     removeConfirm:"Выдаліць гэтую сувязь?", back:"Назад", roleOwner:"Platform Owner", roleAdmin:"Admin",
     roleModerator:"Мадэратар", notifications:"Апавяшчэнні", pushEnabled:"Апавяшчэнні аб паведамленнях",
     previewEnabled:"Папярэдні прагляд", saveSettings:"Захаваць", settingsSaved:"Налады апавяшчэнняў захаваны.",
-    settingsError:"Немагчыма захаваць налады апавяшчэнняў.", language:"Мова", delivered:"Адпраўлена", failed:"Адпраўка не ўдалася"
+    settingsError:"Немагчыма захаваць налады апавяшчэнняў.", language:"Мова", delivered:"Адпраўлена", failed:"Адпраўка не ўдалася", systemNoReply:"Гэта сістэмнае паведамленне. Адказваць на яго нельга."
   }
 };
 
