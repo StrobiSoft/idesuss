@@ -137,7 +137,7 @@ const DICT = {
     avatarMaxSize:"De afbeelding mag maximaal 2 MB zijn.", avatarType:"Alleen JPEG-, PNG- of WebP-afbeeldingen zijn toegestaan.",
     imageSelectFailed:"De afbeelding kon niet worden geselecteerd.", imagePending:"De afbeelding is nog niet ingediend. Positioneer en accepteer deze eerst.",
     imageAccepted:"Afbeelding geaccepteerd. Deze wordt pas bij Profiel opslaan ter controle verzonden.", saving:"Opslaan…",
-    profileSaved:"Profiel opgeslagen.", profileSavedSubmitted:"Profiel opgeslagen. Afbeelding ter controle verzonden."
+    profileSaved:"Profiel opgeslagen.", profileSavedSubmitted:"Profiel opgeslagen. Afbeelding ter controle verzonden.",
     authRateLimit:"Wacht om veiligheidsredenen even voordat je het opnieuw probeert.",
     authInvalidCredentials:"Onjuist e-mailadres of wachtwoord.",
     authEmailNotConfirmed:"Je e-mailadres is nog niet bevestigd. Controleer je inbox.",
@@ -178,7 +178,7 @@ const DICT = {
     avatarMaxSize:"Imaginea poate avea maximum 2 MB.", avatarType:"Se pot încărca doar imagini JPEG, PNG sau WebP.",
     imageSelectFailed:"Imaginea nu a putut fi selectată.", imagePending:"Imaginea nu a fost încă trimisă. Poziționeaz-o și apoi accept-o.",
     imageAccepted:"Imagine acceptată. Va fi trimisă la verificare doar când salvezi profilul.", saving:"Se salvează…",
-    profileSaved:"Profil salvat.", profileSavedSubmitted:"Profil salvat. Imagine trimisă la verificare."
+    profileSaved:"Profil salvat.", profileSavedSubmitted:"Profil salvat. Imagine trimisă la verificare.",
     authRateLimit:"Din motive de securitate, așteaptă puțin înainte de a încerca din nou.",
     authInvalidCredentials:"Adresă de e-mail sau parolă incorectă.",
     authEmailNotConfirmed:"Adresa de e-mail nu este încă confirmată. Verifică inboxul.",
@@ -219,7 +219,7 @@ const DICT = {
     avatarMaxSize:"Obraz może mieć maksymalnie 2 MB.", avatarType:"Można przesyłać tylko obrazy JPEG, PNG lub WebP.",
     imageSelectFailed:"Nie udało się wybrać obrazu.", imagePending:"Obraz nie został jeszcze wysłany. Ustaw go i zaakceptuj.",
     imageAccepted:"Obraz zaakceptowany. Zostanie wysłany do weryfikacji dopiero po zapisaniu profilu.", saving:"Zapisywanie…",
-    profileSaved:"Profil zapisany.", profileSavedSubmitted:"Profil zapisany. Obraz wysłany do weryfikacji."
+    profileSaved:"Profil zapisany.", profileSavedSubmitted:"Profil zapisany. Obraz wysłany do weryfikacji.",
     authRateLimit:"Ze względów bezpieczeństwa odczekaj chwilę przed kolejną próbą.",
     authInvalidCredentials:"Nieprawidłowy adres e-mail lub hasło.",
     authEmailNotConfirmed:"Adres e-mail nie został jeszcze potwierdzony. Sprawdź skrzynkę.",
@@ -260,7 +260,7 @@ const DICT = {
     avatarMaxSize:"Slika može imati najviše 2 MB.", avatarType:"Mogu se prenijeti samo JPEG, PNG ili WebP slike.",
     imageSelectFailed:"Slika se ne može odabrati.", imagePending:"Slika još nije poslana. Namjesti je i prihvati.",
     imageAccepted:"Slika je prihvaćena. Na provjeru se šalje tek kad spremiš profil.", saving:"Spremanje…",
-    profileSaved:"Profil spremljen.", profileSavedSubmitted:"Profil spremljen. Slika je poslana na provjeru."
+    profileSaved:"Profil spremljen.", profileSavedSubmitted:"Profil spremljen. Slika je poslana na provjeru.",
     authRateLimit:"Iz sigurnosnih razloga pričekaj kratko prije novog pokušaja.",
     authInvalidCredentials:"Neispravna e-mail adresa ili lozinka.",
     authEmailNotConfirmed:"E-mail adresa još nije potvrđena. Provjeri poštu.",
@@ -301,7 +301,7 @@ const DICT = {
     avatarMaxSize:"Выява можа быць не больш за 2 МБ.", avatarType:"Можна загружаць толькі JPEG, PNG або WebP.",
     imageSelectFailed:"Не ўдалося выбраць выяву.", imagePending:"Выява яшчэ не адпраўлена. Размясціце і прыміце яе.",
     imageAccepted:"Выява прынята. Яна будзе адпраўлена на праверку толькі пасля захавання профілю.", saving:"Захаванне…",
-    profileSaved:"Профіль захаваны.", profileSavedSubmitted:"Профіль захаваны. Выява адпраўлена на праверку."
+    profileSaved:"Профіль захаваны.", profileSavedSubmitted:"Профіль захаваны. Выява адпраўлена на праверку.",
     authRateLimit:"З меркаванняў бяспекі пачакайце крыху перад новай спробай.",
     authInvalidCredentials:"Няправільны e-mail або пароль.",
     authEmailNotConfirmed:"E-mail яшчэ не пацверджаны. Праверце пошту.",
