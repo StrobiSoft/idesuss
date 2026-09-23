@@ -12,3 +12,9 @@ The reference volume is always the user's radio volume immediately before the in
 
 The HTML5 engine exposes `duckForRinging`, `muteForCall`, and `restoreAfterCall`.
 Native clients may wire platform call/audio-focus events to the same contract.
+
+
+## Explicit Radio navigation
+- Internal Radio navigation requests immediate playback with `?autoplay=1`.
+- The Radio page selects the saved/default station and immediately calls `play()`.
+- If the browser blocks cross-navigation autoplay, the existing Play button remains the fallback; playback is never faked or reported as active unless the media element actually starts.
