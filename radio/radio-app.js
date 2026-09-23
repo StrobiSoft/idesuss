@@ -391,6 +391,19 @@ async function init() {
         ? radioT("savedPresetReady",{station:initialStation.name})
         : radioT("readyStation",{station:initialStation.name})
     );
+
+    const autoplayRequested = new URLSearchParams(window.location.search).get("autoplay") === "1";
+    if (autoplayRequested) {
+      try {
+        await engine.play();
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete("autoplay");
+        window.history.replaceState({}, "", cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+      } catch (error) {
+        console.warn("Radio autoplay was blocked by the browser", error);
+        setStatus(radioT("playbackError",{error:error?.message || "AUTOPLAY_BLOCKED"}));
+      }
+    }
   } else {
     setStatus(radioT("unavailable"));
   }
