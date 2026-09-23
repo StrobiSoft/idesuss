@@ -328,7 +328,24 @@ function bindControls() {
     setStatus(active==="default"?"Idesüss alap skin aktív.":"Premium skin aktív és elmentve.");
   });
 }
+async function stepMediaStation(direction) {
+  if (!STATIONS.length) return;
+  const currentIndex = selectedStation ? STATIONS.findIndex((station) => station.id === selectedStation.id) : -1;
+  const startIndex = currentIndex >= 0 ? currentIndex : 0;
+
+  for (let offset = 1; offset <= STATIONS.length; offset += 1) {
+    const nextIndex = (startIndex + direction * offset + STATIONS.length * 2) % STATIONS.length;
+    const candidate = STATIONS[nextIndex];
+    if (!canPlayStation(candidate) || !candidate?.streamUrl) continue;
+    await selectStation(candidate, radioT("readyStation",{station:candidate.name}));
+    await engine.play();
+    return;
+  }
+}
+
 function bindEngineEvents() {
+  engine.addEventListener("media-next",()=>{ stepMediaStation(1).catch((error)=>console.error("Media Session next failed",error)); });
+  engine.addEventListener("media-previous",()=>{ stepMediaStation(-1).catch((error)=>console.error("Media Session previous failed",error)); });
   engine.addEventListener("state",(event)=>{
     const state=event.detail?.state;
     const button=$("#playPauseBtn");
