@@ -58,7 +58,11 @@ const EN = {
     authRegistrationSuccess:"Registration successful.",
     authLoginSuccess:"Logged in successfully.",
     authAccountExistsHelp:"An account already exists with this email address. Log in or reset your password.",
-    authSetNewPassword:"Set a new password."
+    authSetNewPassword:"Set a new password.",
+    passwordChecking:"Checking password security…",
+    passwordCompromised:"This password appears in a known data breach. Choose a different password.",
+    passwordSecurityUnavailable:"Password security checking is temporarily unavailable. Please try again later.",
+    passwordSecurityRateLimited:"Too many password checks. Wait a little and try again."
 };
 
 const DICT = {
@@ -118,7 +122,11 @@ const DICT = {
     authRegistrationSuccess:"Sikeres regisztráció.",
     authLoginSuccess:"Sikeres bejelentkezés.",
     authAccountExistsHelp:"Ezzel az e-mail címmel már létezik fiók. Jelentkezz be, vagy állítsd vissza a jelszavad.",
-    authSetNewPassword:"Állíts be egy új jelszót."
+    authSetNewPassword:"Állíts be egy új jelszót.",
+    passwordChecking:"A jelszó biztonsági ellenőrzése…",
+    passwordCompromised:"Ez a jelszó ismert adatszivárgásban szerepel. Válassz másik jelszót.",
+    passwordSecurityUnavailable:"A jelszó biztonsági ellenőrzése átmenetileg nem érhető el. Próbáld meg később.",
+    passwordSecurityRateLimited:"Túl sok jelszóellenőrzés történt. Várj egy kicsit, majd próbáld újra."
   },
   nl: {
     ...EN, close:"Sluiten", loginTitle:"Inloggen", registerTitle:"Registreren", resetTitle:"Nieuw wachtwoord instellen",
@@ -160,6 +168,10 @@ const DICT = {
     authLoginSuccess:"Succesvol ingelogd.",
     authAccountExistsHelp:"Er bestaat al een account met dit e-mailadres. Log in of herstel je wachtwoord.",
     authSetNewPassword:"Stel een nieuw wachtwoord in.",
+    passwordChecking:"Wachtwoordbeveiliging controleren…",
+    passwordCompromised:"Dit wachtwoord komt voor in een bekend datalek. Kies een ander wachtwoord.",
+    passwordSecurityUnavailable:"De wachtwoordcontrole is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
+    passwordSecurityRateLimited:"Te veel wachtwoordcontroles. Wacht even en probeer opnieuw.",
   },
   ro: {
     ...EN, close:"Închide", loginTitle:"Autentificare", registerTitle:"Înregistrare", resetTitle:"Setează o parolă nouă",
@@ -201,6 +213,10 @@ const DICT = {
     authLoginSuccess:"Autentificare reușită.",
     authAccountExistsHelp:"Există deja un cont cu această adresă. Autentifică-te sau resetează parola.",
     authSetNewPassword:"Setează o parolă nouă.",
+    passwordChecking:"Se verifică securitatea parolei…",
+    passwordCompromised:"Această parolă apare într-o breșă de date cunoscută. Alege o altă parolă.",
+    passwordSecurityUnavailable:"Verificarea securității parolei este indisponibilă temporar. Încearcă mai târziu.",
+    passwordSecurityRateLimited:"Prea multe verificări de parolă. Așteaptă puțin și încearcă din nou.",
   },
   pl: {
     ...EN, close:"Zamknij", loginTitle:"Logowanie", registerTitle:"Rejestracja", resetTitle:"Ustaw nowe hasło",
@@ -242,6 +258,10 @@ const DICT = {
     authLoginSuccess:"Zalogowano pomyślnie.",
     authAccountExistsHelp:"Konto z tym adresem już istnieje. Zaloguj się lub zresetuj hasło.",
     authSetNewPassword:"Ustaw nowe hasło.",
+    passwordChecking:"Sprawdzanie bezpieczeństwa hasła…",
+    passwordCompromised:"To hasło występuje w znanym wycieku danych. Wybierz inne hasło.",
+    passwordSecurityUnavailable:"Sprawdzanie bezpieczeństwa hasła jest chwilowo niedostępne. Spróbuj później.",
+    passwordSecurityRateLimited:"Zbyt wiele sprawdzeń hasła. Odczekaj chwilę i spróbuj ponownie.",
   },
   hr: {
     ...EN, close:"Zatvori", loginTitle:"Prijava", registerTitle:"Registracija", resetTitle:"Postavi novu lozinku",
@@ -283,6 +303,10 @@ const DICT = {
     authLoginSuccess:"Prijava uspješna.",
     authAccountExistsHelp:"Račun s ovom adresom već postoji. Prijavi se ili resetiraj lozinku.",
     authSetNewPassword:"Postavi novu lozinku.",
+    passwordChecking:"Provjera sigurnosti lozinke…",
+    passwordCompromised:"Ova se lozinka pojavljuje u poznatoj krađi podataka. Odaberi drugu lozinku.",
+    passwordSecurityUnavailable:"Provjera sigurnosti lozinke privremeno nije dostupna. Pokušaj kasnije.",
+    passwordSecurityRateLimited:"Previše provjera lozinke. Pričekaj malo i pokušaj ponovno.",
   },
   be: {
     ...EN, close:"Закрыць", loginTitle:"Уваход", registerTitle:"Рэгістрацыя", resetTitle:"Задаць новы пароль",
@@ -324,6 +348,10 @@ const DICT = {
     authLoginSuccess:"Уваход паспяховы.",
     authAccountExistsHelp:"Акаўнт з такім e-mail ужо існуе. Увайдзіце або скіньце пароль.",
     authSetNewPassword:"Задайце новы пароль.",
+    passwordChecking:"Праверка бяспекі пароля…",
+    passwordCompromised:"Гэты пароль сустракаецца ў вядомай уцечцы даных. Выберыце іншы пароль.",
+    passwordSecurityUnavailable:"Праверка бяспекі пароля часова недаступная. Паспрабуйце пазней.",
+    passwordSecurityRateLimited:"Занадта шмат праверак пароля. Пачакайце крыху і паспрабуйце яшчэ раз.",
   }
 };
 

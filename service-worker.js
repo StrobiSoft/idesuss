@@ -1,4 +1,4 @@
-const CACHE_NAME = "idesuss-root-v7";
+const CACHE_NAME = "idesuss-root-v8";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -7,7 +7,7 @@ const STATIC_ASSETS = [
   "/favicon.png",
   "/fx-rates.css?v=20260921-byn1",
   "/js/fx-rates.js?v=20260921-byn1",
-  "/js/menu/menu-core.js?v=20260923-finalweb1",
+  "/js/menu/menu-core.js?v=20260923-passwordsec1",
   "/js/menu/settings.js?v=20260923-finalweb1",
   "/radio/",
   "/radio/index.html",

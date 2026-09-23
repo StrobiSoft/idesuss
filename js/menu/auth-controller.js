@@ -9,6 +9,7 @@ import {
 } from "../shared/auth-service.js?v=20260921-prod-refresh1";
 import { loadMyProfile } from "../shared/profile-service.js?v=20260921-prod-refresh1";
 import { shellT } from "../shared/shell-language.js";
+import { PasswordSecurityError } from "../shared/password-security-service.js";
 import { openProfilePanel } from "./profile.js?v=20260921-prod-refresh1";
 import {
   closeAuthModal,
@@ -91,6 +92,13 @@ function localizeAuthError(error) {
   }
 
   return error?.message || shellT("authGenericFailed");
+}
+
+function localizePasswordSecurityError(error) {
+  if (!(error instanceof PasswordSecurityError)) return localizeAuthError(error);
+  if (error.code === "PASSWORD_COMPROMISED") return shellT("passwordCompromised");
+  if (error.code === "PASSWORD_SECURITY_RATE_LIMITED") return shellT("passwordSecurityRateLimited");
+  return shellT("passwordSecurityUnavailable");
 }
 
 function updateButtons() {
@@ -262,18 +270,18 @@ async function handleSubmit(event) {
       return;
     }
 
-    setMessage(shellT("authSavingPassword"));
-
     try {
+      setMessage(shellT("passwordChecking"));
       identity = await updatePassword(getClient(), { password });
+      setMessage(shellT("authSavingPassword"));
       recoveryRequested = false;
       updateButtons();
       setMessage(shellT("authPasswordChanged"));
       clearPasswordRecoveryLocation();
       window.setTimeout(closeAuthModal, 650);
     } catch (error) {
-      console.error("Password update failed", error);
-      setMessage(localizeAuthError(error));
+      console.error("Password update failed", error?.code || error?.name || "Error");
+      setMessage(error instanceof PasswordSecurityError ? localizePasswordSecurityError(error) : localizeAuthError(error));
     }
     return;
   }
@@ -301,6 +309,7 @@ async function handleSubmit(event) {
     const client = getClient();
 
     if (mode === "register") {
+      setMessage(shellT("passwordChecking"));
       const result = await signUp(client, {
         email,
         password,
@@ -331,7 +340,12 @@ async function handleSubmit(event) {
     window.setTimeout(closeAuthModal, 350);
     await maybeOpenProfile();
   } catch (error) {
-    console.error("Shared auth action failed", error);
+    console.error("Shared auth action failed", error?.code || error?.name || "Error");
+
+    if (error instanceof PasswordSecurityError) {
+      setMessage(localizePasswordSecurityError(error));
+      return;
+    }
 
     if (mode === "register" && /already|registered|exists/i.test(error?.message || "")) {
       setMessage(shellT("authAccountExistsHelp"));
