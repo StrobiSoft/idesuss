@@ -21,15 +21,18 @@ assert(settings.includes('idesuss_theme') && settings.includes('idesuss_brightne
 assert(!settings.toLowerCase().includes("always on top"),"unsupported always-on-top setting must not be exposed");
 assert(polish.includes('data-idesuss-theme="dark"'),"dark appearance CSS missing");
 assert(polish.includes('--idesuss-dim-opacity'),"brightness/dimming CSS missing");
-assert(serviceWorker.includes('idesuss-root-v10'),"service worker cache version must be bumped");
+assert(serviceWorker.includes('idesuss-root-v11'),"service worker cache version must be bumped");
 assert(serviceWorker.includes('/js/menu/settings.js?v=20260923-finalweb1'),"settings module missing from static cache");
 assert(index.includes('id="moderationInboxBtn"') && index.includes('id="moderationInboxBadge"'),"staff moderation inbox badge missing");
-assert(index.includes('/js/menu/menu-core.js?v=20260923-eula1'),"avatar moderation menu bundle version missing");
+assert(index.includes('/js/menu/menu-core.js?v=20260923-media-pwa1'),"avatar moderation menu bundle version missing");
 assert(authShell.includes('shellT') && authController.includes('shellT'),"auth flow must use shared shell localization");
 assert(profile.includes('shellT') && profile.includes('subscribeShellLanguage'),"profile panel must use shared shell localization");
 assert(profile.includes('profileEulaAccepted') && profile.includes('acceptCurrentEula'),"profile EULA acceptance gate missing");
 assert(index.includes('href="/eula/"'),"EULA link missing from homepage");
 assert(serviceWorker.includes('"/eula/"'),"EULA page missing from static cache");
+assert(menuCore.includes('navigator.serviceWorker.register("/service-worker.js"'),"root PWA service-worker registration missing");
+assert(index.includes('.profile-eula input[type="checkbox"]'),"mobile EULA checkbox sizing guard missing");
+assert(index.includes('.moderation-inbox-badge[hidden]'),"moderation badge hidden-state guard missing");
 for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
   const marker = code === "en" ? "const EN =" : `${code}: {`;
   assert(shellLanguage.includes(marker),`missing shared shell locale: ${code}`);

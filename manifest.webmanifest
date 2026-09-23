@@ -17,5 +17,33 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "id": "/",
+  "description": "Idesüss — videólinkek, rádió és közösségi funkciók egy könnyű webes alkalmazásban.",
+  "shortcuts": [
+    {
+      "name": "Rádió",
+      "short_name": "Rádió",
+      "url": "/radio/",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Webapp",
+      "short_name": "Webapp",
+      "url": "/app/",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }
