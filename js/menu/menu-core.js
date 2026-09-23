@@ -1,5 +1,6 @@
 import { initRootAuthController } from "./auth-controller.js?v=20260923-social1";
 import { openProfilePanel } from "./profile.js?v=20260923-staff-avatar1";
+import { initSettingsPreferences, openSettingsPanel } from "./settings.js?v=20260923-finalweb1";
 
 function initFloatingMenu() {
   const toggle = document.getElementById("menuToggle");
@@ -9,6 +10,7 @@ function initFloatingMenu() {
   const openAdminPanelBtn = document.getElementById("openAdminPanelBtn");
   const openMessagesBtn = document.getElementById("openMessagesBtn");
   const openIdeaBoxBtn = document.getElementById("openIdeaBoxBtn");
+  const openSettingsBtn = document.getElementById("openSettingsBtn");
 
   if (!toggle || !menu) return;
 
@@ -57,6 +59,10 @@ function initFloatingMenu() {
     window.location.href = "/ideas/";
   });
 
+  openSettingsBtn?.addEventListener("click", () => {
+    openSettingsPanel();
+  });
+
   menu.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", () => {
       setOpen(false);
@@ -80,6 +86,7 @@ function handleRequestedPanel() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  initSettingsPreferences();
   initFloatingMenu();
 
   const radioBtn = document.getElementById("openRadioBtn");
