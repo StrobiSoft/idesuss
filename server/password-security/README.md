@@ -50,6 +50,21 @@ Returns service health only.
 - rate limit: 20 checks / 5 minutes / source
 - HIBP timeout: 5 seconds
 
-Expected production routing on VM 101 is same-origin Nginx proxying from
-`/api/security/password/check` to the internal service endpoint
-`/v1/security/password/check`.
+Production routing keeps the static frontend on GitHub Pages and exposes this
+server-side component separately from VM 101:
+
+- public gateway origin: `https://security.idesuss.net`
+- public check endpoint: `POST /v1/security/password/check`
+- internal listener: `http://127.0.0.1:8790`
+- allowed browser origin: `https://idesuss.net`
+
+This avoids moving the public static site away from GitHub Pages merely to add
+one server-side security service.
+
+Deployment prerequisites on VM 101:
+
+1. `security.idesuss.net` resolves to the public IP forwarded to VM 101;
+2. TCP/443 reaches VM 101;
+3. a valid TLS certificate exists at the paths referenced by the versioned
+   Nginx config;
+4. only after those checks pass may the Nginx site be enabled.
