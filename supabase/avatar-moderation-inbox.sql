@@ -39,6 +39,7 @@ as $function$
 $function$;
 
 revoke all on function public.can_review_avatar_submissions() from public;
+revoke execute on function public.can_review_avatar_submissions() from anon;
 grant execute on function public.can_review_avatar_submissions() to authenticated;
 
 create or replace function public.get_avatar_review_summary()
@@ -64,6 +65,7 @@ end;
 $function$;
 
 revoke all on function public.get_avatar_review_summary() from public;
+revoke execute on function public.get_avatar_review_summary() from anon;
 grant execute on function public.get_avatar_review_summary() to authenticated;
 
 create or replace function public.list_pending_avatar_submissions()
@@ -105,6 +107,7 @@ end;
 $function$;
 
 revoke all on function public.list_pending_avatar_submissions() from public;
+revoke execute on function public.list_pending_avatar_submissions() from anon;
 grant execute on function public.list_pending_avatar_submissions() to authenticated;
 
 create or replace function public.review_avatar_submission(
@@ -144,6 +147,15 @@ begin
   end if;
 
   if p_approve then
+    if exists (
+      select 1
+      from public.profiles p
+      where p.id = v_submission.user_id
+        and p.role in ('moderator','admin')
+    ) then
+      raise exception 'AVATAR_SUBMISSION_STAFF_LOCKED';
+    end if;
+
     update public.avatar_submissions
     set status = 'superseded',
         reviewed_at = coalesce(reviewed_at, now()),
@@ -187,6 +199,7 @@ end;
 $function$;
 
 revoke all on function public.review_avatar_submission(uuid,boolean,text) from public;
+revoke execute on function public.review_avatar_submission(uuid,boolean,text) from anon;
 grant execute on function public.review_avatar_submission(uuid,boolean,text) to authenticated;
 
 create or replace function public.can_read_avatar_submission_object(p_name text)
@@ -212,7 +225,8 @@ as $function$
 $function$;
 
 revoke all on function public.can_read_avatar_submission_object(text) from public;
-grant execute on function public.can_read_avatar_submission_object(text) to anon, authenticated;
+revoke execute on function public.can_read_avatar_submission_object(text) from anon;
+grant execute on function public.can_read_avatar_submission_object(text) to authenticated;
 
 drop policy if exists avatar_submissions_review_select on public.avatar_submissions;
 create policy avatar_submissions_review_select
@@ -225,7 +239,7 @@ drop policy if exists avatar_submission_review_or_approved_read on storage.objec
 create policy avatar_submission_review_or_approved_read
 on storage.objects
 for select
-to anon, authenticated
+to authenticated
 using (
   bucket_id = 'avatar-submissions'
   and public.can_read_avatar_submission_object(name)
