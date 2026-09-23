@@ -40,7 +40,7 @@ function showCapabilities(access) {
   $("#adminContent").hidden = false;
   $("#moderationCard").hidden = !caps.moderate_content;
   $("#avatarReviewCard").hidden = !caps.review_avatars;
-  $("#userAdminCard").hidden = !caps.manage_users;
+  $("#userAdminCard").hidden = !caps.manage_users || caps.platform_owner;
   $("#ownerCard").hidden = !caps.platform_owner;
 }
 
@@ -54,6 +54,115 @@ function createSelect(options, value) {
     select.appendChild(option);
   }
   return select;
+}
+
+async function loadAdminUsers(query = "") {
+  const list = $("#adminUserList");
+  const status = $("#adminUserStatus");
+  if (!list || !status) return;
+
+  const normalizedQuery = query.trim();
+  list.replaceChildren();
+
+  if (normalizedQuery.length < 2) {
+    text(status, "Írj be legalább 2 karaktert a kereséshez.");
+    return;
+  }
+
+  text(status, "Keresés…");
+  const { data, error } = await client.rpc("admin_search_users", {
+    p_query: normalizedQuery,
+    p_limit: 50
+  });
+
+  if (error) {
+    console.error("Admin user search failed", error);
+    text(status, "A keresés nem sikerült.");
+    return;
+  }
+
+  for (const user of data || []) {
+    const row = document.createElement("div");
+    row.className = "user-row";
+
+    const identity = document.createElement("div");
+    const name = document.createElement("div");
+    name.className = "user-name";
+    name.textContent = user.nickname || user.email || "Névtelen profil";
+
+    const meta = document.createElement("div");
+    meta.className = "user-meta";
+    meta.textContent = `${user.email || "—"} · ${roleLabel(user.role)}`;
+    identity.append(name, meta);
+
+    const roleBox = document.createElement("div");
+    const roleBadge = document.createElement("span");
+    roleBadge.className = "badge";
+    roleBadge.textContent = roleLabel(user.role);
+    roleBox.append(roleBadge);
+
+    const controls = document.createElement("div");
+    controls.className = "controls";
+
+    if (user.role === "user") {
+      const promote = document.createElement("button");
+      promote.className = "action save";
+      promote.type = "button";
+      promote.textContent = "Moderátorrá emelés";
+      promote.addEventListener("click", async () => {
+        promote.disabled = true;
+        text(status, `${user.nickname || user.email}: moderátorrá emelés…`);
+        try {
+          const { error: promoteError } = await client.rpc("admin_promote_user_to_moderator", {
+            p_user_id: user.id
+          });
+          if (promoteError) throw promoteError;
+
+          text(status, `${user.nickname || user.email}: moderátorrá emelve.`);
+          await loadAdminUsers(normalizedQuery);
+        } catch (error) {
+          console.error("Admin moderator promotion failed", error);
+          text(status, `Műveleti hiba: ${error?.message || "ismeretlen hiba"}`);
+        } finally {
+          promote.disabled = false;
+        }
+      });
+      controls.append(promote);
+    } else {
+      const note = document.createElement("span");
+      note.className = "user-meta";
+      note.textContent = user.role === "moderator"
+        ? "Már moderátor."
+        : "Ezt a rangot admin nem módosíthatja.";
+      controls.append(note);
+    }
+
+    row.append(identity, roleBox, controls);
+    list.appendChild(row);
+  }
+
+  text(
+    status,
+    (data || []).length
+      ? `${(data || []).length} találat erre: „${normalizedQuery}”.`
+      : `Nincs találat erre: „${normalizedQuery}”.`
+  );
+}
+
+function initAdminUserSearch() {
+  const input = $("#adminUserSearch");
+  if (!input) return;
+
+  let timer = null;
+  input.addEventListener("input", () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      loadAdminUsers(input.value).catch((error) => {
+        console.error("Admin user search failed", error);
+        text($("#adminUserStatus"), "A keresés nem sikerült.");
+      });
+    }, 250);
+  });
 }
 
 async function loadOwnerUsers(query = "") {
@@ -194,6 +303,8 @@ async function boot() {
     if (access?.capabilities?.platform_owner) {
       initOwnerSearch();
       await loadOwnerUsers();
+    } else if (access?.capabilities?.manage_users) {
+      initAdminUserSearch();
     }
   } catch (error) {
     console.error("Admin panel startup failed", error);
