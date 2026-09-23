@@ -10,6 +10,7 @@ import {
   uploadAvatarSubmission,
   validateAvatarFile
 } from "../shared/profile-service.js?v=20260923-staff-avatar1";
+import { shellT, subscribeShellLanguage } from "../shared/shell-language.js";
 
 let unsubscribeProfile = null;
 
@@ -40,31 +41,31 @@ function bindClose(panel) {
 function submissionStatusText(submissions = []) {
   const latest = submissions[0];
   if (!latest) return "";
-  if (latest.status === "pending") return "A legutóbbi saját képed ellenőrzésre vár.";
-  if (latest.status === "approved") return "A legutóbbi saját képed jóváhagyva.";
-  if (latest.status === "rejected") return "A legutóbbi saját kép nem került jóváhagyásra.";
+  if (latest.status === "pending") return shellT("submissionPending");
+  if (latest.status === "approved") return shellT("submissionApproved");
+  if (latest.status === "rejected") return shellT("submissionRejected");
   return "";
 }
 
 function avatarErrorText(error) {
-  if (error?.code === "AVATAR_SIZE") return "A kép legfeljebb 2 MB lehet.";
-  if (error?.code === "AVATAR_TYPE") return "Csak JPEG, PNG vagy WebP kép tölthető fel.";
-  if (error?.code === "AUTH_REQUIRED") return "A kép beküldéséhez be kell jelentkezni.";
-  return error?.message ? `A kép beküldése nem sikerült: ${error.message}` : "A kép beküldése nem sikerült.";
+  if (error?.code === "AVATAR_SIZE") return shellT("avatarMaxSize");
+  if (error?.code === "AVATAR_TYPE") return shellT("avatarType");
+  if (error?.code === "AUTH_REQUIRED") return shellT("avatarAuth");
+  return error?.message ? shellT("avatarSubmitFailedDetail",{detail:error.message}) : shellT("avatarSubmitFailed");
 }
 
 function profileSaveErrorText(error) {
   const raw = `${error?.code || ""} ${error?.message || ""} ${error?.details || ""}`.trim();
-  if (error?.code === "TAKEN" || raw.includes("INVALID_NICKNAME:TAKEN")) return "Ez a becenév már használatban van.";
-  if (raw.includes("INVALID_NICKNAME:EMPTY")) return "A becenév nem lehet üres.";
-  if (raw.includes("INVALID_NICKNAME:RESERVED_SUFFIX")) return "Ez a becenév-végződés fenntartott.";
-  if (raw.includes("INVALID_NICKNAME:RESERVED")) return "Ez a becenév fenntartott, válassz másikat.";
-  if (raw.includes("INVALID_PROFILE:STAFF_AVATAR_RESERVED")) return "Ez az avatar kizárólag moderátorok és adminok számára van fenntartva.";
-  if (raw.includes("INVALID_PROFILE:STAFF_AVATAR_LOCKED")) return "Moderátori vagy admin szerepkörben az avatar rögzített.";
-  if (raw.includes("INVALID_PROFILE:AVATAR_REQUIRED")) return "Válassz avatart a profil mentéséhez.";
-  if (raw.includes("INVALID_PROFILE:EMAIL_VISIBILITY")) return "Érvénytelen e-mail láthatósági beállítás.";
-  if (raw.includes("AUTH_REQUIRED")) return "A profil mentéséhez újra be kell jelentkezni.";
-  return raw ? `A profil mentése nem sikerült: ${raw}` : "A profil mentése nem sikerült.";
+  if (error?.code === "TAKEN" || raw.includes("INVALID_NICKNAME:TAKEN")) return shellT("nicknameTaken");
+  if (raw.includes("INVALID_NICKNAME:EMPTY")) return shellT("nicknameEmpty");
+  if (raw.includes("INVALID_NICKNAME:RESERVED_SUFFIX")) return shellT("nicknameReservedSuffix");
+  if (raw.includes("INVALID_NICKNAME:RESERVED")) return shellT("nicknameReserved");
+  if (raw.includes("INVALID_PROFILE:STAFF_AVATAR_RESERVED")) return shellT("staffAvatarReserved");
+  if (raw.includes("INVALID_PROFILE:STAFF_AVATAR_LOCKED")) return shellT("staffAvatarLocked");
+  if (raw.includes("INVALID_PROFILE:AVATAR_REQUIRED")) return shellT("avatarRequired");
+  if (raw.includes("INVALID_PROFILE:EMAIL_VISIBILITY")) return shellT("invalidEmailVisibility");
+  if (raw.includes("AUTH_REQUIRED")) return shellT("profileAuth");
+  return raw ? shellT("profileSaveFailedDetail",{detail:raw}) : shellT("profileSaveFailed");
 }
 
 async function loadAvatarImageSource(file) {
@@ -98,13 +99,13 @@ async function createCroppedAvatarFile(file, positionX, positionY, zoom) {
     canvas.width = 512;
     canvas.height = 512;
     const context = canvas.getContext("2d", { alpha: true });
-    if (!context) throw new Error("A képvágó nem indítható.");
+    if (!context) throw new Error(shellT("cropUnavailable"));
 
     context.drawImage(bitmap, sx, sy, cropSize, cropSize, 0, 0, 512, 512);
     const outputType = file.type === "image/png" ? "image/png" : file.type === "image/webp" ? "image/webp" : "image/jpeg";
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob(
-        (result) => result ? resolve(result) : reject(new Error("A kép előkészítése nem sikerült.")),
+        (result) => result ? resolve(result) : reject(new Error(shellT("imagePrepareFailed"))),
         outputType,
         outputType === "image/png" ? undefined : 0.9
       );
@@ -138,28 +139,28 @@ async function renderProfile(panel, profile, user) {
 
   panel.innerHTML = `
     <div class="profile-panel-card" role="dialog" aria-modal="true" aria-labelledby="profilePanelTitle">
-      <button id="closeProfilePanel" class="profile-panel-close icon-close-btn" type="button" aria-label="Bezárás" title="Bezárás">
+      <button id="closeProfilePanel" class="profile-panel-close icon-close-btn" type="button" aria-label="${shellT("close")}" title="${shellT("close")}">
         ${CLOSE_ICON}
       </button>
-      <h2 id="profilePanelTitle">Profil</h2>
-      <p>Ugyanez a profil használható a főoldalon, a webappban és később a natív alkalmazásban is.</p>
+      <h2 id="profilePanelTitle">${shellT("profileTitle")}</h2>
+      <p>${shellT("profileIntro")}</p>
 
       <div class="profile-placeholder">
-        <strong>Fiók</strong>
+        <strong>${shellT("account")}</strong>
         <span>${escapeHtml(user?.email || "")}</span>
       </div>
 
       <div class="profile-placeholder profile-avatar-section">
-        <strong>Avatar</strong>
+        <strong>${shellT("avatar")}</strong>
         <div class="profile-avatar-current" aria-live="polite">
           <span id="profileAvatarPreview" class="profile-avatar-preview" aria-hidden="true">${escapeHtml(avatar)}</span>
           <button id="toggleAvatarPicker" class="profile-avatar-open" type="button" aria-expanded="false" aria-controls="profileAvatarPicker"${isStaffAvatarLocked ? " disabled" : ""}>
-            ${isStaffAvatarLocked ? "Szolgálati avatar" : "Avatar választása"}
+            ${isStaffAvatarLocked ? shellT("serviceAvatar") : shellT("chooseAvatar")}
           </button>
         </div>
 
         <div id="profileAvatarPicker" class="profile-avatar-picker" hidden>
-          <div class="profile-avatar-grid" role="list" aria-label="Választható avatárok">
+          <div class="profile-avatar-grid" role="list" aria-label="${shellT("avatarsLabel")}">
             ${selectableAvatars.map((emoji) => `
               <button
                 class="profile-avatar-choice${emoji === avatar ? " selected" : ""}"
@@ -172,27 +173,27 @@ async function renderProfile(panel, profile, user) {
           </div>
 
           ${isStaffAvatarLocked
-            ? '<p class="profile-avatar-rule">Moderátori vagy admin szerepkörben ez a szolgálati avatar kötelező, és más avatar vagy saját kép nem választható.</p>'
-            : '<button id="openAvatarUpload" class="profile-avatar-upload-link" type="button">Saját kép feltöltése</button><input id="profileAvatarFile" type="file" accept="image/jpeg,image/png,image/webp" hidden />'}
+            ? `<p class="profile-avatar-rule">${shellT("staffAvatarRule")}</p>`
+            : `<button id="openAvatarUpload" class="profile-avatar-upload-link" type="button">${shellT("uploadOwnImage")}</button><input id="profileAvatarFile" type="file" accept="image/jpeg,image/png,image/webp" hidden />`}
 
           <div id="avatarCropEditor" class="avatar-crop-editor" hidden>
-            <div id="avatarCropFrame" class="avatar-crop-frame" aria-label="Avatar kép pozicionálása">
-              <img id="avatarCropImage" alt="Avatar előnézet" draggable="false" />
+            <div id="avatarCropFrame" class="avatar-crop-frame" aria-label="${shellT("cropPosition")}">
+              <img id="avatarCropImage" alt="${shellT("avatarPreview")}" draggable="false" />
             </div>
-            <p class="avatar-crop-help">Húzd a képet a kívánt helyre. A csúszkával nagyíthatsz vagy kicsinyíthetsz.</p>
+            <p class="avatar-crop-help">${shellT("cropHelp")}</p>
             <label class="avatar-crop-zoom">
-              <span>Nagyítás</span>
+              <span>${shellT("zoom")}</span>
               <input id="avatarCropZoom" type="range" min="1" max="3" step="0.05" value="1" />
             </label>
             <div class="avatar-crop-actions">
-              <button id="acceptAvatarCrop" class="avatar-crop-action primary" type="button">Kép elfogadása</button>
-              <button id="cancelAvatarCrop" class="avatar-crop-action" type="button">Mégse</button>
+              <button id="acceptAvatarCrop" class="avatar-crop-action primary" type="button">${shellT("acceptImage")}</button>
+              <button id="cancelAvatarCrop" class="avatar-crop-action" type="button">${shellT("cancel")}</button>
             </div>
           </div>
 
           <p class="profile-avatar-rule">
-            Saját kép csak ellenőrzés után válhat nyilvános avatárrá. Pornográf, szexuálisan explicit vagy intim testrészeket szándékosan feltáró kép nem engedélyezett.
-            <a href="/rules/" target="_blank" rel="noopener">Házirend</a>
+            ${shellT("avatarRule")}
+            <a href="/rules/" target="_blank" rel="noopener">${shellT("houseRules")}</a>
           </p>
           <div id="avatarUploadMessage" class="profile-avatar-status" aria-live="polite">${escapeHtml(submissionStatusText(submissions))}</div>
         </div>
@@ -201,34 +202,34 @@ async function renderProfile(panel, profile, user) {
       </div>
 
       <label class="profile-placeholder">
-        <strong>Becenév</strong>
+        <strong>${shellT("nickname")}</strong>
         <input id="profileNickname" type="text" maxlength="40" value="${escapeHtml(nickname)}" autocomplete="nickname"${nicknameLocked ? ' readonly aria-readonly="true"' : ""} />
         <span class="profile-nickname-note">${nicknameLocked
-          ? "A becenév végleges és ehhez a fiókhoz tartozik. Új becenévhez új fiók szükséges."
-          : "A becenevet csak egyszer választhatod meg. Az első profilmentés után végleg ehhez a fiókhoz kötődik."}</span>
+          ? shellT("nicknameLocked")
+          : shellT("nicknameFirst")}</span>
       </label>
 
       <label class="profile-placeholder">
-        <strong>E-mail láthatóság</strong>
+        <strong>${shellT("emailVisibility")}</strong>
         <select id="profileEmailVisibility">
-          <option value="hidden"${visibility === "hidden" ? " selected" : ""}>Rejtett</option>
-          <option value="masked"${visibility === "masked" ? " selected" : ""}>Maszkolt</option>
-          <option value="public"${visibility === "public" ? " selected" : ""}>Nyilvános</option>
+          <option value="hidden"${visibility === "hidden" ? " selected" : ""}>${shellT("hidden")}</option>
+          <option value="masked"${visibility === "masked" ? " selected" : ""}>${shellT("masked")}</option>
+          <option value="public"${visibility === "public" ? " selected" : ""}>${shellT("public")}</option>
         </select>
       </label>
 
       <label class="profile-placeholder">
-        <strong>Online állapot láthatósága</strong>
+        <strong>${shellT("presenceVisibility")}</strong>
         <select id="profilePresenceVisibility">
-          <option value="nobody"${presenceVisibility === "nobody" ? " selected" : ""}>Senki</option>
-          <option value="friends"${presenceVisibility === "friends" ? " selected" : ""}>Csak barátok</option>
-          <option value="everyone"${presenceVisibility === "everyone" ? " selected" : ""}>Mindenki</option>
+          <option value="nobody"${presenceVisibility === "nobody" ? " selected" : ""}>${shellT("nobody")}</option>
+          <option value="friends"${presenceVisibility === "friends" ? " selected" : ""}>${shellT("friendsOnly")}</option>
+          <option value="everyone"${presenceVisibility === "everyone" ? " selected" : ""}>${shellT("everyone")}</option>
         </select>
       </label>
 
-      <a class="menu-profile-btn" href="/messages/">Barátok és üzenetek</a>
+      <a class="menu-profile-btn" href="/messages/">${shellT("friendsMessages")}</a>
 
-      <button id="saveProfilePanel" class="menu-profile-btn" type="button">Profil mentése</button>
+      <button id="saveProfilePanel" class="menu-profile-btn" type="button">${shellT("saveProfile")}</button>
       <div id="profilePanelMessage" class="profile-placeholder" aria-live="polite"></div>
     </div>
   `;
@@ -281,7 +282,7 @@ async function renderProfile(panel, profile, user) {
     preview.textContent = "";
     const image = document.createElement("img");
     image.src = pendingAvatarObjectUrl;
-    image.alt = "Kiválasztott avatar előnézete";
+    image.alt = shellT("avatarPreview");
     image.style.objectPosition = `${cropPositionX}% ${cropPositionY}%`;
     image.style.transform = `scale(${cropZoom})`;
     preview.appendChild(image);
@@ -319,10 +320,10 @@ async function renderProfile(panel, profile, user) {
     const validation = validateAvatarFile(file);
     if (!validation.ok) {
       if (uploadMessage) uploadMessage.textContent = validation.reason === "SIZE"
-        ? "A kép legfeljebb 2 MB lehet."
+        ? shellT("avatarMaxSize")
         : validation.reason === "TYPE"
-          ? "Csak JPEG, PNG vagy WebP kép tölthető fel."
-          : "Nem sikerült kiválasztani a képet.";
+          ? shellT("avatarType")
+          : shellT("imageSelectFailed");
       fileInput.value = "";
       return;
     }
@@ -334,7 +335,7 @@ async function renderProfile(panel, profile, user) {
     if (cropZoomInput) cropZoomInput.value = "1";
     updateCropPreview();
     if (cropEditor) cropEditor.hidden = false;
-    if (uploadMessage) uploadMessage.textContent = "A kép még nincs beküldve. Állítsd be, majd fogadd el.";
+    if (uploadMessage) uploadMessage.textContent = shellT("imagePending");
     fileInput.value = "";
   });
 
@@ -380,7 +381,7 @@ async function renderProfile(panel, profile, user) {
     pendingAvatarAccepted = true;
     if (cropEditor) cropEditor.hidden = true;
     renderPendingPhotoPreview();
-    if (uploadMessage) uploadMessage.textContent = "A kép elfogadva. Csak a Profil mentése gombbal kerül elővizsgálatra.";
+    if (uploadMessage) uploadMessage.textContent = shellT("imageAccepted");
   });
 
   document.getElementById("cancelAvatarCrop")?.addEventListener("click", () => {
@@ -394,7 +395,7 @@ async function renderProfile(panel, profile, user) {
 
   document.getElementById("saveProfilePanel")?.addEventListener("click", async () => {
     const message = document.getElementById("profilePanelMessage");
-    if (message) message.textContent = "Mentés…";
+    if (message) message.textContent = shellT("saving");
 
     try {
       const saved = await saveMyProfile(window.supabaseClient, {
@@ -435,10 +436,10 @@ async function renderProfile(panel, profile, user) {
       const nextMessage = document.getElementById("profilePanelMessage");
       if (nextMessage) {
         nextMessage.textContent = avatarSubmissionError
-          ? `A profil mentve, de a kép nem került elővizsgálatra. ${avatarErrorText(avatarSubmissionError)}`
+          ? shellT("profileSavedImageFailed",{detail:avatarErrorText(avatarSubmissionError)})
           : avatarSubmitted
-            ? "Profil mentve. A kép elővizsgálatra elküldve."
-            : "Profil mentve.";
+            ? shellT("profileSavedSubmitted")
+            : shellT("profileSaved");
       }
     } catch (error) {
       console.error("Profile save failed", error);
@@ -450,10 +451,10 @@ async function renderProfile(panel, profile, user) {
 function renderPanelState(panel, body) {
   panel.innerHTML = `
     <div class="profile-panel-card" role="dialog" aria-modal="true" aria-labelledby="profilePanelTitle">
-      <button id="closeProfilePanel" class="profile-panel-close icon-close-btn" type="button" aria-label="Bezárás" title="Bezárás">
+      <button id="closeProfilePanel" class="profile-panel-close icon-close-btn" type="button" aria-label="${shellT("close")}" title="${shellT("close")}">
         ${CLOSE_ICON}
       </button>
-      <h2 id="profilePanelTitle">Profil</h2>
+      <h2 id="profilePanelTitle">${shellT("profileTitle")}</h2>
       <p>${escapeHtml(body)}</p>
     </div>
   `;
@@ -476,13 +477,13 @@ export async function openProfilePanel() {
 
   panel.classList.add("show");
   panel.setAttribute("aria-hidden", "false");
-  renderPanelState(panel, "Betöltés…");
+  renderPanelState(panel, shellT("loading"));
 
   try {
     const user = await getCurrentUser(window.supabaseClient);
 
     if (!user) {
-      renderPanelState(panel, "A profil megnyitásához előbb jelentkezz be.");
+      renderPanelState(panel, shellT("profileLoginRequired"));
       return;
     }
 
@@ -501,12 +502,20 @@ export async function openProfilePanel() {
     });
   } catch (error) {
     console.error("Profile load failed", error);
-    renderPanelState(panel, "A profil betöltése nem sikerült.");
+    renderPanelState(panel, shellT("profileLoadFailed"));
   }
 }
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeProfilePanel(document.getElementById("profilePanel"));
+  }
+});
+
+
+subscribeShellLanguage(() => {
+  const panel = document.getElementById("profilePanel");
+  if (panel?.classList.contains("show")) {
+    openProfilePanel().catch((error) => console.error("Profile relocalization failed", error));
   }
 });
