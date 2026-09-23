@@ -108,10 +108,16 @@ async function saveMyProfileLegacy(client, user, profile, changes) {
     ? changes.email_visibility
     : (profile?.email_visibility || "hidden");
 
+  const isStaff = ["moderator", "admin"].includes(profile?.role);
+  const requestedAvatar = changes.avatar_emoji ?? profile?.avatar_emoji ?? null;
+  if (!isStaff && requestedAvatar === STAFF_AVATAR_EMOJI) {
+    throw profileError("STAFF_AVATAR_RESERVED", "INVALID_PROFILE:STAFF_AVATAR_RESERVED");
+  }
+
   const payload = {
     nickname,
     nickname_normalized: validation.normalized,
-    avatar_emoji: changes.avatar_emoji ?? profile?.avatar_emoji ?? null,
+    avatar_emoji: isStaff ? STAFF_AVATAR_EMOJI : requestedAvatar,
     email_visibility: emailVisibility,
     profile_completed: Boolean(nickname && (changes.avatar_emoji ?? profile?.avatar_emoji))
   };
@@ -159,8 +165,10 @@ export async function saveMyProfile(supabaseClient, changes = {}) {
   return saveMyProfileLegacy(client, user, profile, changes);
 }
 
+export const STAFF_AVATAR_EMOJI = "🧑‍💻";
+
 export const APPROVED_AVATAR_EMOJIS = Object.freeze([
-  "🙂", "😎", "🤠", "🧑‍💻", "🚚", "🎧",
+  "🙂", "😎", "🤠", "🚚", "🎧",
   "🦊", "🐼", "🦁", "🐯", "🤖", "👽"
 ]);
 
@@ -185,6 +193,11 @@ export async function uploadAvatarSubmission(supabaseClient, file) {
   const client = requireClient(supabaseClient);
   const user = await getCurrentUser(client);
   if (!user) throw profileError("AUTH_REQUIRED");
+
+  const profile = await ensureMyProfile(client);
+  if (["moderator", "admin"].includes(profile?.role)) {
+    throw profileError("STAFF_AVATAR_LOCKED", "INVALID_PROFILE:STAFF_AVATAR_LOCKED");
+  }
 
   const validation = validateAvatarFile(file);
   if (!validation.ok) throw profileError(`AVATAR_${validation.reason}`);
