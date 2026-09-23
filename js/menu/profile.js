@@ -1,7 +1,9 @@
 import {
   APPROVED_AVATAR_EMOJIS,
   STAFF_AVATAR_EMOJI,
+  acceptCurrentEula,
   getCurrentUser,
+  getMyEulaStatus,
   getProfileAvatarImageUrl,
   loadMyAvatarSubmissions,
   loadMyProfile,
@@ -10,7 +12,7 @@ import {
   subscribeToMyProfile,
   uploadAvatarSubmission,
   validateAvatarFile
-} from "../shared/profile-service.js?v=20260923-avatar-review1";
+} from "../shared/profile-service.js?v=20260923-eula1";
 import { shellT, subscribeShellLanguage } from "../shared/shell-language.js";
 
 let unsubscribeProfile = null;
@@ -65,6 +67,7 @@ function profileSaveErrorText(error) {
   if (raw.includes("INVALID_PROFILE:STAFF_AVATAR_LOCKED")) return shellT("staffAvatarLocked");
   if (raw.includes("INVALID_PROFILE:AVATAR_REQUIRED")) return shellT("avatarRequired");
   if (raw.includes("INVALID_PROFILE:EMAIL_VISIBILITY")) return shellT("invalidEmailVisibility");
+  if (raw.includes("EULA_ACCEPTANCE_REQUIRED")) return shellT("eulaRequired");
   if (raw.includes("AUTH_REQUIRED")) return shellT("profileAuth");
   return raw ? shellT("profileSaveFailedDetail",{detail:raw}) : shellT("profileSaveFailed");
 }
@@ -132,13 +135,14 @@ async function renderProfile(panel, profile, user) {
   const presenceVisibility = profile?.presence_visibility || "friends";
   let submissions = [];
   let approvedAvatarUrl = "";
+  let eulaStatus = { accepted: false, required_version: null };
 
   try {
     submissions = await loadMyAvatarSubmissions(window.supabaseClient);
     approvedAvatarUrl = await getProfileAvatarImageUrl(window.supabaseClient, profile);
-  
+    eulaStatus = await getMyEulaStatus(window.supabaseClient);
   } catch (error) {
-    console.error("Avatar submission status load failed", error);
+    console.error("Profile auxiliary data load failed", error);
   }
 
   panel.innerHTML = `
@@ -233,7 +237,15 @@ async function renderProfile(panel, profile, user) {
 
       <a class="menu-profile-btn" href="/messages/">${shellT("friendsMessages")}</a>
 
-      <button id="saveProfilePanel" class="menu-profile-btn" type="button">${shellT("saveProfile")}</button>
+      <div class="profile-placeholder profile-eula">
+        <label style="display:flex;gap:10px;align-items:flex-start">
+          <input id="profileEulaAccepted" type="checkbox"${eulaStatus.accepted ? " checked disabled" : ""} />
+          <span>${eulaStatus.accepted ? shellT("eulaAccepted") : shellT("eulaAcceptLabel")}</span>
+        </label>
+        <a href="/eula/" target="_blank" rel="noopener">${shellT("eulaLink")}</a>
+      </div>
+
+      <button id="saveProfilePanel" class="menu-profile-btn" type="button"${eulaStatus.accepted ? "" : " disabled"}>${shellT("saveProfile")}</button>
       <div id="profilePanelMessage" class="profile-placeholder" aria-live="polite"></div>
     </div>
   `;
@@ -263,6 +275,14 @@ async function renderProfile(panel, profile, user) {
   const cropImage = document.getElementById("avatarCropImage");
   const cropZoomInput = document.getElementById("avatarCropZoom");
   const uploadMessage = document.getElementById("avatarUploadMessage");
+  const eulaCheckbox = document.getElementById("profileEulaAccepted");
+  const saveProfileButton = document.getElementById("saveProfilePanel");
+
+  if (!eulaStatus.accepted) {
+    eulaCheckbox?.addEventListener("change", () => {
+      if (saveProfileButton) saveProfileButton.disabled = !eulaCheckbox.checked;
+    });
+  }
 
   const clearPendingAvatar = () => {
     if (pendingAvatarObjectUrl) URL.revokeObjectURL(pendingAvatarObjectUrl);
@@ -399,9 +419,20 @@ async function renderProfile(panel, profile, user) {
 
   document.getElementById("saveProfilePanel")?.addEventListener("click", async () => {
     const message = document.getElementById("profilePanelMessage");
+
+    if (!eulaStatus.accepted && !eulaCheckbox?.checked) {
+      if (message) message.textContent = shellT("eulaRequired");
+      return;
+    }
+
     if (message) message.textContent = shellT("saving");
 
     try {
+      if (!eulaStatus.accepted) {
+        await acceptCurrentEula(window.supabaseClient);
+        eulaStatus = { ...eulaStatus, accepted: true };
+      }
+
       const saved = await saveMyProfile(window.supabaseClient, {
         nickname: document.getElementById("profileNickname")?.value.trim() || "",
         avatar_emoji: document.getElementById("profileAvatar")?.value || "🙂",

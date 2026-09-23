@@ -34,6 +34,20 @@ function profileError(code, message = code) {
   return error;
 }
 
+export async function getMyEulaStatus(supabaseClient) {
+  const client = requireClient(supabaseClient);
+  const { data, error } = await client.rpc("get_my_eula_status");
+  if (error) throw error;
+  return data || { authenticated: false, accepted: false, required_version: null, accepted_at: null };
+}
+
+export async function acceptCurrentEula(supabaseClient) {
+  const client = requireClient(supabaseClient);
+  const { data, error } = await client.rpc("accept_current_eula");
+  if (error) throw error;
+  return data;
+}
+
 export async function getCurrentUser(supabaseClient) {
   const client = requireClient(supabaseClient);
   const { data, error } = await client.auth.getUser();

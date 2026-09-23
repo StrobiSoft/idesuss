@@ -1,13 +1,14 @@
-const CACHE_NAME = "idesuss-root-v9";
+const CACHE_NAME = "idesuss-root-v10";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
   "/visual-polish.css?v=20260921-byn1",
   "/manifest.webmanifest",
+  "/eula/",
   "/favicon.png",
   "/fx-rates.css?v=20260921-byn1",
   "/js/fx-rates.js?v=20260921-byn1",
-  "/js/menu/menu-core.js?v=20260923-avatar-review1",
+  "/js/menu/menu-core.js?v=20260923-eula1",
   "/js/menu/settings.js?v=20260923-finalweb1",
   "/radio/",
   "/radio/index.html",

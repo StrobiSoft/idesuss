@@ -7,10 +7,10 @@ import {
   subscribeAuthState,
   updatePassword
 } from "../shared/auth-service.js?v=20260921-prod-refresh1";
-import { loadMyProfile } from "../shared/profile-service.js?v=20260921-prod-refresh1";
+import { loadMyProfile } from "../shared/profile-service.js?v=20260923-eula1";
 import { shellT } from "../shared/shell-language.js";
 import { PasswordSecurityError } from "../shared/password-security-service.js";
-import { openProfilePanel } from "./profile.js?v=20260921-prod-refresh1";
+import { openProfilePanel } from "./profile.js?v=20260923-eula1";
 import {
   closeAuthModal,
   ensureAuthModal,
