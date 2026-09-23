@@ -9,9 +9,12 @@ const spyTrap = fs.readFileSync("server/security/spy-trap.js","utf8");
 
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
-assert(authService.includes('checkPasswordSecurity(password)'),"shared sign-up/password update must enforce password security");
-assert((authService.match(/checkPasswordSecurity\(password\)/g) || []).length >= 2,
-  "both sign-up and password update must pass through password security");
+assert(authService.includes('PASSWORD_SECURITY_ENFORCEMENT = "pending-vm101"'),
+  "password security rollout must remain explicitly pending until VM101 is live");
+assert(authService.includes('await checkPasswordSecurity(password)'),
+  "rollout gate must call password security when enforcement is enabled");
+assert((authService.match(/await enforcePasswordSecurity\(password\)/g) || []).length >= 2,
+  "both sign-up and password update must pass through the rollout gate");
 assert(!controller.includes('client.auth.signUp') && !messages.includes('client.auth.signUp'),
   "active web auth surfaces must not bypass shared auth service");
 assert(passwordClient.includes('https://security.idesuss.net/v1/security/password/check'),
