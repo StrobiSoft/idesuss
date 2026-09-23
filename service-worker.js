@@ -8,6 +8,7 @@ const STATIC_ASSETS = [
   "/favicon.png",
   "/fx-rates.css?v=20260921-byn1",
   "/js/fx-rates.js?v=20260921-byn1",
+  "/js/pwa.js?v=20260923-pwa1",
   "/js/pwa-register.js?v=20260923-pwa1",
   "/js/menu/menu-core.js?v=20260923-media-pwa1",
   "/js/menu/settings.js?v=20260923-finalweb1",
