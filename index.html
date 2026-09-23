@@ -1895,8 +1895,8 @@ async function runOnlinePresenceTick() {
 
   if (isOnlineLeader()) {
     await heartbeatOnline();
-    await updateOnlineCount();
   }
+  await updateOnlineCount();
 }
 
 runOnlinePresenceTick();
