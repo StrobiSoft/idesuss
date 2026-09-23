@@ -19,6 +19,12 @@ assert(!controller.includes('client.auth.signUp') && !messages.includes('client.
   "active web auth surfaces must not bypass shared auth service");
 assert(passwordClient.includes('https://security.idesuss.net/v1/security/password/check'),
   "web password client must use the dedicated production gateway origin");
+assert(passwordClient.includes('https://api.pwnedpasswords.com/range/'),
+  "web password client must retain a k-anonymous HIBP resilience path until VM101 public routing is live");
+assert(passwordClient.includes('crypto.subtle.digest') && passwordClient.includes('slice(0, 5)'),
+  "browser resilience path must hash locally and send only the five-character prefix");
+assert(passwordClient.includes('allowBrowserFallback'),
+  "browser fallback must remain explicit and controllable");
 assert(gateway.includes('createHash("sha1")'),"gateway must hash candidate locally");
 assert(gateway.includes('digest.slice(0, 5)') && gateway.includes('digest.slice(5)'),
   "gateway must use HIBP k-anonymity prefix/suffix split");
