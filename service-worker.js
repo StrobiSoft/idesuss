@@ -1,4 +1,4 @@
-const CACHE_NAME = "idesuss-root-v10";
+const CACHE_NAME = "idesuss-root-v11";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -13,7 +13,7 @@ const STATIC_ASSETS = [
   "/radio/",
   "/radio/index.html",
   "/radio/radio-skins.css",
-  "/radio/radio-app.js",
+  "/radio/radio-app.js?v=20260923-media-session1",
   "/radio/radio-engine.js",
   "/radio/radio-entitlements.js",
   "/radio/radio-stations.js"
