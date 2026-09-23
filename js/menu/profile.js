@@ -5,6 +5,7 @@ import {
   loadMyAvatarSubmissions,
   loadMyProfile,
   saveMyProfile,
+  setMyPresenceVisibility,
   subscribeToMyProfile,
   uploadAvatarSubmission,
   validateAvatarFile
@@ -126,6 +127,7 @@ async function renderProfile(panel, profile, user) {
     : (APPROVED_AVATAR_EMOJIS.includes(profile?.avatar_emoji) ? profile.avatar_emoji : "🙂");
   const selectableAvatars = isStaffAvatarLocked ? [STAFF_AVATAR_EMOJI] : APPROVED_AVATAR_EMOJIS;
   const visibility = profile?.email_visibility || "hidden";
+  const presenceVisibility = profile?.presence_visibility || "friends";
   let submissions = [];
 
   try {
@@ -214,6 +216,17 @@ async function renderProfile(panel, profile, user) {
           <option value="public"${visibility === "public" ? " selected" : ""}>Nyilvános</option>
         </select>
       </label>
+
+      <label class="profile-placeholder">
+        <strong>Online állapot láthatósága</strong>
+        <select id="profilePresenceVisibility">
+          <option value="nobody"${presenceVisibility === "nobody" ? " selected" : ""}>Senki</option>
+          <option value="friends"${presenceVisibility === "friends" ? " selected" : ""}>Csak barátok</option>
+          <option value="everyone"${presenceVisibility === "everyone" ? " selected" : ""}>Mindenki</option>
+        </select>
+      </label>
+
+      <a class="menu-profile-btn" href="/messages/">Barátok és üzenetek</a>
 
       <button id="saveProfilePanel" class="menu-profile-btn" type="button">Profil mentése</button>
       <div id="profilePanelMessage" class="profile-placeholder" aria-live="polite"></div>
@@ -389,6 +402,11 @@ async function renderProfile(panel, profile, user) {
         avatar_emoji: document.getElementById("profileAvatar")?.value || "🙂",
         email_visibility: document.getElementById("profileEmailVisibility")?.value || "hidden"
       });
+
+      await setMyPresenceVisibility(
+        window.supabaseClient,
+        document.getElementById("profilePresenceVisibility")?.value || "friends"
+      );
 
       let avatarSubmitted = false;
       let avatarSubmissionError = null;
