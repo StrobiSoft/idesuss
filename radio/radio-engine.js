@@ -79,6 +79,7 @@ export class IdesussRadioEngine extends EventTarget {
             artwork
           })
         : null;
+      if (this.station?.name) document.title = `${this.station.name} — Idesüss Radio`;
       if (this.station) navigator.mediaSession.playbackState = this.audio.paused ? "paused" : "playing";
     } catch {}
   }
