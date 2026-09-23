@@ -1,0 +1,33 @@
+name: Probe security gateway public route
+
+on:
+  push:
+    branches:
+      - probe/security-gateway-public-20260923
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: DNS and WAN reachability
+        shell: bash
+        run: |
+          set -u
+          echo "=== DNS security.idesuss.net ==="
+          dig +short A security.idesuss.net || true
+          echo "=== TCP 80 ==="
+          timeout 6 bash -c '</dev/tcp/62.45.76.51/80' && echo "TCP80=OPEN" || echo "TCP80=CLOSED"
+          echo "=== TCP 443 ==="
+          timeout 6 bash -c '</dev/tcp/62.45.76.51/443' && echo "TCP443=OPEN" || echo "TCP443=CLOSED"
+          echo "=== HTTP host probe ==="
+          curl -sS -D - --max-time 8 -H 'Host: security.idesuss.net' http://62.45.76.51/ -o /tmp/http-body || true
+          head -c 500 /tmp/http-body 2>/dev/null || true
+          echo
+          echo "=== HTTPS SNI probe ==="
+          curl -k -sS -D - --max-time 8 --resolve security.idesuss.net:443:62.45.76.51 https://security.idesuss.net/ -o /tmp/https-body || true
+          head -c 500 /tmp/https-body 2>/dev/null || true
+          echo
