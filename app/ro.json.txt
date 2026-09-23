@@ -2,7 +2,7 @@
   "counterLabel": "Vizualizări",
   "counterNote": "Contorul nu crește la fiecare reîmprospătare.",
   "langBoxLabel": "Limbă",
-  "langSubnote": "Browser maghiar → interfață maghiară, altfel → engleză.",
+  "langSubnote": "Limba selectată se aplică întregii interfețe Idesüss.",
   "textareaPlaceholder": "Lipește linkul aici...",
   "playBtnText": "PORNEȘTE",
   "pasteBtn": "LIPIRE",
