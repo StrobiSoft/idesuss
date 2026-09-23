@@ -2,7 +2,7 @@
   "counterLabel": "Látogatások",
   "counterNote": "A számláló nem nő minden frissítésre.",
   "langBoxLabel": "Nyelv",
-  "langSubnote": "Magyar böngésző → magyar felület, minden más → angol.",
+  "langSubnote": "A kiválasztott nyelv az egész Idesüss felületén érvényes.",
   "textareaPlaceholder": "Másold be a linket ide...",
   "playBtnText": "INDÍTÁS",
   "pasteBtn": "BEILLESZTÉS",
