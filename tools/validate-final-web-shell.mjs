@@ -30,6 +30,8 @@ assert(profile.includes('shellT') && profile.includes('subscribeShellLanguage'),
 assert(profile.includes('profileEulaAccepted') && profile.includes('acceptCurrentEula'),"profile EULA acceptance gate missing");
 assert(index.includes('href="/eula/"'),"EULA link missing from homepage");
 assert(serviceWorker.includes('"/eula/"'),"EULA page missing from static cache");
+assert(index.includes('/js/pwa-register.js?v=20260923-pwa1'),"root PWA registration missing");
+assert(serviceWorker.includes('/js/pwa-register.js?v=20260923-pwa1'),"PWA registration module missing from cache");
 assert(menuCore.includes('navigator.serviceWorker.register("/service-worker.js"'),"root PWA service-worker registration missing");
 assert(index.includes('.profile-eula input[type="checkbox"]'),"mobile EULA checkbox sizing guard missing");
 assert(index.includes('.moderation-inbox-badge[hidden]'),"moderation badge hidden-state guard missing");
