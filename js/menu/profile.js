@@ -41,6 +41,31 @@ function bindClose(panel) {
   document.getElementById("closeProfilePanel")?.addEventListener("click", () => closeProfilePanel(panel));
 }
 
+function showProfileToast(text) {
+  document.getElementById("profileTransientToast")?.remove();
+  const toast = document.createElement("div");
+  toast.id = "profileTransientToast";
+  toast.setAttribute("role", "alert");
+  toast.textContent = text;
+  Object.assign(toast.style, {
+    position: "fixed",
+    left: "50%",
+    bottom: "max(24px, env(safe-area-inset-bottom))",
+    transform: "translateX(-50%)",
+    zIndex: "100000",
+    maxWidth: "min(92vw, 520px)",
+    padding: "12px 16px",
+    borderRadius: "14px",
+    background: "#7f1d1d",
+    color: "#fff",
+    fontWeight: "800",
+    boxShadow: "0 14px 40px rgba(0,0,0,.28)",
+    textAlign: "center"
+  });
+  document.body.appendChild(toast);
+  window.setTimeout(() => toast.remove(), 3600);
+}
+
 function submissionStatusText(submissions = []) {
   const latest = submissions[0];
   if (!latest) return "";
@@ -426,7 +451,10 @@ async function renderProfile(panel, profile, user) {
     const message = document.getElementById("profilePanelMessage");
 
     if (!eulaStatus.accepted && !eulaCheckbox?.checked) {
-      if (message) message.textContent = shellT("eulaRequired");
+      const warning = shellT("eulaRequired");
+      if (message) message.textContent = warning;
+      showProfileToast(warning);
+      eulaCheckbox?.focus();
       return;
     }
 
