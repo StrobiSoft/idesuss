@@ -245,7 +245,7 @@ async function renderProfile(panel, profile, user) {
         <a href="/eula/" target="_blank" rel="noopener">${shellT("eulaLink")}</a>
       </div>
 
-      <button id="saveProfilePanel" class="menu-profile-btn" type="button"${eulaStatus.accepted ? "" : " disabled"}>${shellT("saveProfile")}</button>
+      <button id="saveProfilePanel" class="menu-profile-btn" type="button">${shellT("saveProfile")}</button>
       <div id="profilePanelMessage" class="profile-placeholder" aria-live="polite"></div>
     </div>
   `;
@@ -280,8 +280,13 @@ async function renderProfile(panel, profile, user) {
 
   if (!eulaStatus.accepted) {
     eulaCheckbox?.addEventListener("change", () => {
-      if (saveProfileButton) saveProfileButton.disabled = !eulaCheckbox.checked;
+      const message = document.getElementById("profilePanelMessage");
+      if (message && eulaCheckbox.checked && message.textContent === shellT("eulaRequired")) {
+        message.textContent = "";
+      }
+      saveProfileButton?.classList.toggle("eula-pending", !eulaCheckbox.checked);
     });
+    saveProfileButton?.classList.add("eula-pending");
   }
 
   const clearPendingAvatar = () => {
