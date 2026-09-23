@@ -2,7 +2,7 @@
   "counterLabel": "Views",
   "counterNote": "The counter does not increase on every refresh.",
   "langBoxLabel": "Language",
-  "langSubnote": "Hungarian browser → Hungarian UI, everything else → English.",
+  "langSubnote": "The selected language is used across the entire Idesüss interface.",
   "textareaPlaceholder": "Paste the link here...",
   "playBtnText": "PLAY",
   "pasteBtn": "PASTE",
