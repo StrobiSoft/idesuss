@@ -1,0 +1,19 @@
+-- Idesüss admin user-management boundary
+-- Applied to production Supabase on 2026-09-23.
+--
+-- Admin capabilities in this phase:
+--   * search users by nickname or e-mail
+--   * promote role=user -> role=moderator
+--
+-- Explicitly NOT available to admin:
+--   * promote anyone to admin
+--   * demote/change moderator/admin/owner roles
+--   * grant/revoke complimentary Premium or Premium Plus
+--   * call Platform Owner role/tier APIs
+--
+-- Public RPCs:
+--   public.admin_search_users(text, integer)
+--   public.admin_promote_user_to_moderator(uuid)
+--
+-- Privileged implementations are kept in private schema and call
+-- private.assert_admin_or_owner(). Platform Owner retains separate owner APIs.
