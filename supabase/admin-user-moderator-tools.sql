@@ -9,7 +9,8 @@
 --   * promote anyone to admin
 --   * demote/change moderator/admin/owner roles
 --   * grant/revoke complimentary Premium or Premium Plus
---   * call Platform Owner role/tier APIs
+--   * grant/revoke VIP status
+--   * call Platform Owner role/tier/VIP APIs
 --
 -- Public RPCs:
 --   public.admin_search_users(text, integer)
