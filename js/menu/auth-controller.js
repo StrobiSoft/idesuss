@@ -21,6 +21,7 @@ let profileNickname = "";
 let profileRole = "user";
 let unsubscribeAuth = null;
 let recoveryRequested = false;
+let socialSummaryTimer = null;
 
 function isPasswordRecoveryLocation() {
   const url = new URL(window.location.href);
@@ -95,6 +96,8 @@ function updateButtons() {
   const registerBtn = document.getElementById("registerBtn");
   const menuLogout = document.getElementById("logoutBtnMenu");
   const adminPanelBtn = document.getElementById("openAdminPanelBtn");
+  const messagesBtn = document.getElementById("openMessagesBtn");
+  const messagesBadge = document.getElementById("messagesUnreadBadge");
 
   if (loginBtn && registerBtn) {
     if (identity) {
@@ -114,6 +117,39 @@ function updateButtons() {
   if (adminPanelBtn) {
     adminPanelBtn.hidden = !identity || !["moderator", "admin", "owner"].includes(profileRole);
   }
+
+  if (messagesBtn) {
+    messagesBtn.hidden = !identity;
+  }
+
+  if (!identity && messagesBadge) {
+    messagesBadge.hidden = true;
+    messagesBadge.textContent = "";
+  }
+}
+
+async function refreshSocialSummary() {
+  const badge = document.getElementById("messagesUnreadBadge");
+  if (!identity || !badge) return;
+
+  try {
+    const { data, error } = await getClient().rpc("get_social_summary");
+    if (error) throw error;
+    const unread = Number(data?.unread_messages || 0);
+    badge.textContent = unread > 99 ? "99+" : String(unread);
+    badge.hidden = unread < 1;
+  } catch (error) {
+    console.error("Social summary load failed", error);
+  }
+}
+
+function startSocialSummaryPolling() {
+  if (socialSummaryTimer) window.clearInterval(socialSummaryTimer);
+  socialSummaryTimer = null;
+
+  if (!identity) return;
+  refreshSocialSummary();
+  socialSummaryTimer = window.setInterval(refreshSocialSummary, 15000);
 }
 
 async function maybeOpenProfile() {
@@ -124,6 +160,7 @@ async function maybeOpenProfile() {
     profileNickname = profile?.nickname || "";
     profileRole = profile?.role || "user";
     updateButtons();
+    startSocialSummaryPolling();
 
     if (!profile?.profile_completed) {
       await openProfilePanel();
@@ -139,6 +176,8 @@ async function performSignOut() {
     identity = null;
     profileNickname = "";
     profileRole = "user";
+    if (socialSummaryTimer) window.clearInterval(socialSummaryTimer);
+    socialSummaryTimer = null;
     updateButtons();
   } catch (error) {
     console.error("Shared sign-out failed", error);
@@ -335,6 +374,7 @@ export async function initRootAuthController() {
     profileNickname = "";
     profileRole = "user";
     updateButtons();
+    startSocialSummaryPolling();
 
     if (event === "PASSWORD_RECOVERY") {
       recoveryRequested = true;
@@ -366,6 +406,8 @@ export async function initRootAuthController() {
   return () => {
     unsubscribeAuth?.();
     unsubscribeAuth = null;
+    if (socialSummaryTimer) window.clearInterval(socialSummaryTimer);
+    socialSummaryTimer = null;
   };
 }
 
