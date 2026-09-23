@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const radioBtn = document.getElementById("openRadioBtn");
   radioBtn?.addEventListener("click", () => {
-    window.location.href = "/radio/";
+    window.location.href = "/radio/?autoplay=1";
   });
 
   const profileBtn = document.getElementById("openProfileBtn");
