@@ -13,6 +13,7 @@ on:
       - 'js/lang/modules/auth/lang/auth.js'
       - 'radio/**'
       - 'admin/**'
+      - 'messages/**'
       - 'supabase/**'
       - 'server/radio-proxy/**'
       - 'tools/validate-radio-dev-audio.mjs'
@@ -38,6 +39,7 @@ on:
       - 'js/lang/modules/auth/lang/auth.js'
       - 'radio/**'
       - 'admin/**'
+      - 'messages/**'
       - 'supabase/**'
       - 'server/radio-proxy/**'
       - 'tools/validate-webapp-locales.mjs'
@@ -103,6 +105,7 @@ jobs:
           node --check js/menu/auth-controller.js
           node --check js/menu/profile.js
           node --check js/menu/menu-core.js
+          node --check messages/messages.js
           node --check js/lang/modules/auth/lang/auth.js
       - name: Validate radio module syntax
         run: |

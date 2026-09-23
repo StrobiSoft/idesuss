@@ -1,4 +1,4 @@
-import { initRootAuthController } from "./auth-controller.js?v=20260921-auth-mobile1";
+import { initRootAuthController } from "./auth-controller.js?v=20260923-social1";
 import { openProfilePanel } from "./profile.js?v=20260923-staff-avatar1";
 
 function initFloatingMenu() {
@@ -7,6 +7,7 @@ function initFloatingMenu() {
   const openWebappBtn = document.getElementById("openWebappBtn");
   const openRulesBtn = document.getElementById("openRulesBtn");
   const openAdminPanelBtn = document.getElementById("openAdminPanelBtn");
+  const openMessagesBtn = document.getElementById("openMessagesBtn");
   const openIdeaBoxBtn = document.getElementById("openIdeaBoxBtn");
 
   if (!toggle || !menu) return;
@@ -46,6 +47,10 @@ function initFloatingMenu() {
 
   openAdminPanelBtn?.addEventListener("click", () => {
     window.location.href = "/admin/";
+  });
+
+  openMessagesBtn?.addEventListener("click", () => {
+    window.location.href = "/messages/";
   });
 
   openIdeaBoxBtn?.addEventListener("click", () => {
