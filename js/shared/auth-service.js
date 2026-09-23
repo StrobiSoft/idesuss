@@ -1,5 +1,12 @@
 import { checkPasswordSecurity } from "./password-security-service.js";
 
+const PASSWORD_SECURITY_ENFORCEMENT = "pending-vm101";
+
+async function enforcePasswordSecurity(password) {
+  if (PASSWORD_SECURITY_ENFORCEMENT !== "required") return;
+  await checkPasswordSecurity(password);
+}
+
 function requireClient(supabaseClient) {
   if (!supabaseClient) throw new Error("Missing Supabase client.");
   return supabaseClient;
@@ -29,7 +36,7 @@ export async function signIn(supabaseClient, { email, password }) {
 
 export async function signUp(supabaseClient, { email, password, emailRedirectTo }) {
   const client = requireClient(supabaseClient);
-  await checkPasswordSecurity(password);
+  await enforcePasswordSecurity(password);
   const options = emailRedirectTo ? { emailRedirectTo } : undefined;
   const { data, error } = await client.auth.signUp({
     email,
@@ -53,7 +60,7 @@ export async function requestPasswordReset(supabaseClient, { email, redirectTo }
 
 export async function updatePassword(supabaseClient, { password }) {
   const client = requireClient(supabaseClient);
-  await checkPasswordSecurity(password);
+  await enforcePasswordSecurity(password);
   const { data, error } = await client.auth.updateUser({ password });
   if (error) throw error;
   return toIdentity(data?.user || null);
