@@ -264,7 +264,7 @@ export async function uploadAvatarSubmission(supabaseClient, file) {
       original_filename: String(file.name || "").slice(0, 255),
       mime_type: file.type,
       status: "pending",
-      rules_version: "2026-09-20-v1"
+      rules_version: "2026-09-23-v2"
     })
     .select("id,status,created_at")
     .single();
