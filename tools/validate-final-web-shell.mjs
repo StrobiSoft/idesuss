@@ -5,6 +5,10 @@ const menuCore = fs.readFileSync("js/menu/menu-core.js","utf8");
 const settings = fs.readFileSync("js/menu/settings.js","utf8");
 const polish = fs.readFileSync("visual-polish.css","utf8");
 const serviceWorker = fs.readFileSync("service-worker.js","utf8");
+const authShell = fs.readFileSync("js/menu/auth-shell.js","utf8");
+const authController = fs.readFileSync("js/menu/auth-controller.js","utf8");
+const profile = fs.readFileSync("js/menu/profile.js","utf8");
+const shellLanguage = fs.readFileSync("js/shared/shell-language.js","utf8");
 
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
@@ -19,6 +23,12 @@ assert(polish.includes('data-idesuss-theme="dark"'),"dark appearance CSS missing
 assert(polish.includes('--idesuss-dim-opacity'),"brightness/dimming CSS missing");
 assert(serviceWorker.includes('idesuss-root-v7'),"service worker cache version must be bumped");
 assert(serviceWorker.includes('/js/menu/settings.js?v=20260923-finalweb1'),"settings module missing from static cache");
+assert(authShell.includes('shellT') && authController.includes('shellT'),"auth flow must use shared shell localization");
+assert(profile.includes('shellT') && profile.includes('subscribeShellLanguage'),"profile panel must use shared shell localization");
+for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
+  const marker = code === "en" ? "const EN =" : `${code}: {`;
+  assert(shellLanguage.includes(marker),`missing shared shell locale: ${code}`);
+}
 
 const requiredSettingsKeys = [
   "menuSettings","settingsClose","settingsTitle","settingsIntro","settingsLanguage",
