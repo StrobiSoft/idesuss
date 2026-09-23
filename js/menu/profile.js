@@ -8,7 +8,7 @@ import {
   subscribeToMyProfile,
   uploadAvatarSubmission,
   validateAvatarFile
-} from "../shared/profile-service.js?v=20260920-avatar1";
+} from "../shared/profile-service.js?v=20260923-staff-avatar1";
 
 let unsubscribeProfile = null;
 
