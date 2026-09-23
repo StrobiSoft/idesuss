@@ -90,12 +90,26 @@ async function loadThreads() {
   }
 }
 
+function setComposerReplyability(replyable) {
+  const wrap = $("#composerWrap");
+  const input = $("#messageInput");
+  const send = $("#sendMessageBtn");
+  if (wrap) wrap.hidden = !replyable;
+  if (input) input.disabled = !replyable;
+  if (send) send.disabled = !replyable;
+  if (!replyable) setText($("#sendStatus"), t("systemNoReply"));
+  else setText($("#sendStatus"), "");
+}
+
+function isReplyableThread(thread) {
+  return thread?.last_message_type !== "system";
+}
+
 async function openConversation(thread) {
   currentOther = thread.other_id;
   currentThread = thread;
   setText($("#conversationHead"), (thread.other_avatar_emoji || "🙂") + " " + (thread.other_nickname || t("user")));
-  $("#messageInput").disabled = false;
-  $("#sendMessageBtn").disabled = false;
+  setComposerReplyability(isReplyableThread(thread));
   $("#messagesPanel").classList.add("mobile-conversation");
   await client.rpc("mark_direct_messages_read",{p_sender:currentOther});
   await Promise.all([loadConversation(),loadThreads()]);
@@ -177,7 +191,7 @@ function renderSendFailure(raw) {
 async function sendMessage(forcedBody = null) {
   const input = $("#messageInput");
   const body = (forcedBody ?? input.value).trim();
-  if (!currentOther || !body || sendLocked) return;
+  if (!currentOther || !body || sendLocked || !isReplyableThread(currentThread)) return;
 
   sendLocked = true;
   lastFailedBody = "";
@@ -358,9 +372,13 @@ function subscribeRealtime() {
   if (!me) return;
 
   dmChannel = client.channel(`idesuss-dm-live-${me.id}`)
-    .on("postgres_changes",{event:"INSERT",schema:"public",table:"direct_messages",filter:`recipient_id=eq.${me.id}`},async () => {
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"direct_messages",filter:`recipient_id=eq.${me.id}`},async (payload) => {
       await loadThreads();
       if (currentOther) {
+        if (payload?.new?.sender_id === currentOther && payload?.new?.message_type === "system") {
+          currentThread = {...(currentThread || {}), last_message_type:"system"};
+          setComposerReplyability(false);
+        }
         await client.rpc("mark_direct_messages_read",{p_sender:currentOther});
         await loadConversation();
         await loadThreads();
