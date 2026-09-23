@@ -1,4 +1,4 @@
-import { initRootAuthController } from "./auth-controller.js?v=20260923-social1";
+import { initRootAuthController } from "./auth-controller.js?v=20260923-passwordsec1";
 import { openProfilePanel } from "./profile.js?v=20260923-staff-avatar1";
 import { initSettingsPreferences, openSettingsPanel } from "./settings.js?v=20260923-finalweb1";
 
