@@ -1,5 +1,6 @@
 import {
   APPROVED_AVATAR_EMOJIS,
+  STAFF_AVATAR_EMOJI,
   getCurrentUser,
   loadMyAvatarSubmissions,
   loadMyProfile,
@@ -57,6 +58,8 @@ function profileSaveErrorText(error) {
   if (raw.includes("INVALID_NICKNAME:EMPTY")) return "A becenév nem lehet üres.";
   if (raw.includes("INVALID_NICKNAME:RESERVED_SUFFIX")) return "Ez a becenév-végződés fenntartott.";
   if (raw.includes("INVALID_NICKNAME:RESERVED")) return "Ez a becenév fenntartott, válassz másikat.";
+  if (raw.includes("INVALID_PROFILE:STAFF_AVATAR_RESERVED")) return "Ez az avatar kizárólag moderátorok és adminok számára van fenntartva.";
+  if (raw.includes("INVALID_PROFILE:STAFF_AVATAR_LOCKED")) return "Moderátori vagy admin szerepkörben az avatar rögzített.";
   if (raw.includes("INVALID_PROFILE:AVATAR_REQUIRED")) return "Válassz avatart a profil mentéséhez.";
   if (raw.includes("INVALID_PROFILE:EMAIL_VISIBILITY")) return "Érvénytelen e-mail láthatósági beállítás.";
   if (raw.includes("AUTH_REQUIRED")) return "A profil mentéséhez újra be kell jelentkezni.";
@@ -117,7 +120,11 @@ async function createCroppedAvatarFile(file, positionX, positionY, zoom) {
 async function renderProfile(panel, profile, user) {
   const nickname = profile?.nickname || "";
   const nicknameLocked = profile?.profile_completed === true && Boolean(profile?.nickname_normalized || nickname);
-  const avatar = APPROVED_AVATAR_EMOJIS.includes(profile?.avatar_emoji) ? profile.avatar_emoji : "🙂";
+  const isStaffAvatarLocked = ["moderator", "admin"].includes(profile?.role);
+  const avatar = isStaffAvatarLocked
+    ? STAFF_AVATAR_EMOJI
+    : (APPROVED_AVATAR_EMOJIS.includes(profile?.avatar_emoji) ? profile.avatar_emoji : "🙂");
+  const selectableAvatars = isStaffAvatarLocked ? [STAFF_AVATAR_EMOJI] : APPROVED_AVATAR_EMOJIS;
   const visibility = profile?.email_visibility || "hidden";
   let submissions = [];
 
@@ -144,14 +151,14 @@ async function renderProfile(panel, profile, user) {
         <strong>Avatar</strong>
         <div class="profile-avatar-current" aria-live="polite">
           <span id="profileAvatarPreview" class="profile-avatar-preview" aria-hidden="true">${escapeHtml(avatar)}</span>
-          <button id="toggleAvatarPicker" class="profile-avatar-open" type="button" aria-expanded="false" aria-controls="profileAvatarPicker">
-            Avatar választása
+          <button id="toggleAvatarPicker" class="profile-avatar-open" type="button" aria-expanded="false" aria-controls="profileAvatarPicker"${isStaffAvatarLocked ? " disabled" : ""}>
+            ${isStaffAvatarLocked ? "Szolgálati avatar" : "Avatar választása"}
           </button>
         </div>
 
         <div id="profileAvatarPicker" class="profile-avatar-picker" hidden>
           <div class="profile-avatar-grid" role="list" aria-label="Választható avatárok">
-            ${APPROVED_AVATAR_EMOJIS.map((emoji) => `
+            ${selectableAvatars.map((emoji) => `
               <button
                 class="profile-avatar-choice${emoji === avatar ? " selected" : ""}"
                 type="button"
@@ -162,8 +169,9 @@ async function renderProfile(panel, profile, user) {
             `).join("")}
           </div>
 
-          <button id="openAvatarUpload" class="profile-avatar-upload-link" type="button">Saját kép feltöltése</button>
-          <input id="profileAvatarFile" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+          ${isStaffAvatarLocked
+            ? '<p class="profile-avatar-rule">Moderátori vagy admin szerepkörben ez a szolgálati avatar kötelező, és más avatar vagy saját kép nem választható.</p>'
+            : '<button id="openAvatarUpload" class="profile-avatar-upload-link" type="button">Saját kép feltöltése</button><input id="profileAvatarFile" type="file" accept="image/jpeg,image/png,image/webp" hidden />'}
 
           <div id="avatarCropEditor" class="avatar-crop-editor" hidden>
             <div id="avatarCropFrame" class="avatar-crop-frame" aria-label="Avatar kép pozicionálása">
@@ -216,11 +224,13 @@ async function renderProfile(panel, profile, user) {
 
   const picker = document.getElementById("profileAvatarPicker");
   const toggle = document.getElementById("toggleAvatarPicker");
-  toggle?.addEventListener("click", () => {
-    const willOpen = picker?.hidden !== false;
-    if (picker) picker.hidden = !willOpen;
-    toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
-  });
+  if (!isStaffAvatarLocked) {
+    toggle?.addEventListener("click", () => {
+      const willOpen = picker?.hidden !== false;
+      if (picker) picker.hidden = !willOpen;
+      toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+  }
 
   let pendingAvatarFile = null;
   let pendingAvatarObjectUrl = "";
@@ -264,7 +274,7 @@ async function renderProfile(panel, profile, user) {
     preview.appendChild(image);
   };
 
-  document.querySelectorAll(".profile-avatar-choice").forEach((button) => {
+  if (!isStaffAvatarLocked) document.querySelectorAll(".profile-avatar-choice").forEach((button) => {
     button.addEventListener("click", () => {
       clearPendingAvatar();
       const next = button.dataset.avatar || "🙂";
@@ -285,7 +295,9 @@ async function renderProfile(panel, profile, user) {
   });
 
   const fileInput = document.getElementById("profileAvatarFile");
-  document.getElementById("openAvatarUpload")?.addEventListener("click", () => fileInput?.click());
+  if (!isStaffAvatarLocked) {
+    document.getElementById("openAvatarUpload")?.addEventListener("click", () => fileInput?.click());
+  }
 
   fileInput?.addEventListener("change", () => {
     const file = fileInput.files?.[0];
