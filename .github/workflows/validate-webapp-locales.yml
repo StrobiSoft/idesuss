@@ -110,6 +110,7 @@ jobs:
           node --check app/profile-bridge-entry.js
           node --check app/language-options.js
           node --check js/shared/auth-service.js
+          node --check js/pwa-register.js
           node --check js/shared/profile-service.js
           node --check js/shared/language-preference.js
           node --check js/shared/shell-language.js
