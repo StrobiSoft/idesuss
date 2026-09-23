@@ -445,6 +445,103 @@ function initOwnerSearch() {
   });
 }
 
+
+async function loadAvatarReviewQueue() {
+  const list = $("#avatarReviewList");
+  const status = $("#avatarReviewStatus");
+  if (!list || !status) return;
+
+  list.replaceChildren();
+  text(status, "Függő avatárok betöltése…");
+
+  const { data, error } = await client.rpc("list_pending_avatar_submissions");
+  if (error) {
+    console.error("Avatar review queue failed", error);
+    text(status, `A munkalista nem tölthető be: ${error.message || "ismeretlen hiba"}`);
+    return;
+  }
+
+  for (const item of data || []) {
+    const row = document.createElement("div");
+    row.className = "avatar-review-item";
+
+    const image = document.createElement("img");
+    image.className = "avatar-review-image";
+    image.alt = item.nickname ? `${item.nickname} avatárja` : "Beküldött avatár";
+
+    const signed = await client.storage
+      .from("avatar-submissions")
+      .createSignedUrl(item.storage_path, 300);
+
+    if (signed.error) {
+      console.error("Avatar preview URL failed", signed.error);
+    } else {
+      image.src = signed.data?.signedUrl || "";
+    }
+
+    const meta = document.createElement("div");
+    meta.className = "avatar-review-meta";
+
+    const title = document.createElement("div");
+    title.className = "user-name";
+    title.textContent = item.nickname || item.email || "Névtelen profil";
+
+    const detail = document.createElement("div");
+    detail.className = "user-meta";
+    detail.textContent = `${item.email || "—"} · ${item.original_filename || "kép"} · ${new Date(item.created_at).toLocaleString()}`;
+
+    const note = document.createElement("textarea");
+    note.className = "avatar-review-note";
+    note.maxLength = 1000;
+    note.placeholder = "Moderátori megjegyzés (opcionális)";
+
+    const actions = document.createElement("div");
+    actions.className = "avatar-review-actions";
+
+    const approve = document.createElement("button");
+    approve.type = "button";
+    approve.className = "action save";
+    approve.textContent = "Jóváhagyás";
+
+    const reject = document.createElement("button");
+    reject.type = "button";
+    reject.className = "action reject";
+    reject.textContent = "Elutasítás";
+
+    const decide = async (approved) => {
+      approve.disabled = true;
+      reject.disabled = true;
+      text(status, approved ? "Jóváhagyás mentése…" : "Elutasítás mentése…");
+      const { error: decisionError } = await client.rpc("review_avatar_submission", {
+        p_submission_id: item.submission_id,
+        p_approve: approved,
+        p_note: note.value.trim() || null
+      });
+
+      if (decisionError) {
+        console.error("Avatar review decision failed", decisionError);
+        text(status, `A döntés mentése nem sikerült: ${decisionError.message || "ismeretlen hiba"}`);
+        approve.disabled = false;
+        reject.disabled = false;
+        return;
+      }
+
+      await loadAvatarReviewQueue();
+    };
+
+    approve.addEventListener("click", () => decide(true));
+    reject.addEventListener("click", () => decide(false));
+
+    actions.append(approve, reject);
+    meta.append(title, detail, note, actions);
+    row.append(image, meta);
+    list.appendChild(row);
+  }
+
+  const count = (data || []).length;
+  text(status, count ? `${count} függő avatár vár felülvizsgálatra.` : "Nincs függő avatár.");
+}
+
 async function boot() {
   try {
     const access = await getAccess();
@@ -467,6 +564,13 @@ async function boot() {
     text($("#accessMessage"), "Jogosultság ellenőrizve.");
     $("#adminTermsCard").hidden = true;
     showCapabilities(access);
+
+    if (access?.capabilities?.review_avatars) {
+      await loadAvatarReviewQueue();
+      if (window.location.hash === "#avatar-review") {
+        $("#avatarReviewCard")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
 
     if (access?.capabilities?.platform_owner) {
       initOwnerSearch();
