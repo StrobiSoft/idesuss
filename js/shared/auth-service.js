@@ -4,7 +4,7 @@ const PASSWORD_SECURITY_ENFORCEMENT = "pending-vm101";
 
 async function enforcePasswordSecurity(password) {
   if (PASSWORD_SECURITY_ENFORCEMENT !== "required") return;
-  await enforcePasswordSecurity(password);
+  await checkPasswordSecurity(password);
 }
 
 function requireClient(supabaseClient) {
