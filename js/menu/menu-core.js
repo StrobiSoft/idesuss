@@ -1,5 +1,5 @@
 import { initRootAuthController } from "./auth-controller.js?v=20260921-auth-mobile1";
-import { openProfilePanel } from "./profile.js?v=20260923-profile-loadfix1";
+import { openProfilePanel } from "./profile.js?v=20260923-staff-avatar1";
 
 function initFloatingMenu() {
   const toggle = document.getElementById("menuToggle");
