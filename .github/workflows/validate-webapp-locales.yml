@@ -24,6 +24,7 @@ on:
       - 'tools/validate-common-webapp-locales.mjs'
       - 'tools/validate-root-auth-profile-single-path.mjs'
       - 'tools/validate-messaging-web-integration.mjs'
+      - 'tools/validate-final-web-shell.mjs'
       - 'tools/fixtures/common-webapp-locale-manifest.json'
       - 'tools/fixtures/resolver-vectors.json'
       - 'js/resolver.js'
@@ -88,6 +89,8 @@ jobs:
         run: node tools/validate-root-auth-profile-single-path.mjs
       - name: Validate messaging web integration
         run: node tools/validate-messaging-web-integration.mjs
+      - name: Validate final web shell
+        run: node tools/validate-final-web-shell.mjs
       - name: Validate shared module syntax
         run: |
           node --check app/profile-bridge.js
@@ -96,6 +99,7 @@ jobs:
           node --check js/shared/auth-service.js
           node --check js/shared/profile-service.js
           node --check js/shared/language-preference.js
+          node --check js/shared/shell-language.js
           node --check js/shared/supabase-client.js
           node --check js/lang/home-language.js
           node --check js/lang/modules/Home/lang/hu.js
@@ -109,6 +113,7 @@ jobs:
           node --check js/menu/auth-controller.js
           node --check js/menu/profile.js
           node --check js/menu/menu-core.js
+          node --check js/menu/settings.js
           node --check messages/messages.js
           node --check messages/messages-language.js
           node --check js/lang/modules/auth/lang/auth.js

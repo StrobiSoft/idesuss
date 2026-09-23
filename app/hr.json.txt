@@ -2,7 +2,7 @@
   "counterLabel": "Posjete",
   "counterNote": "Brojač se ne povećava pri svakom osvježavanju.",
   "langBoxLabel": "Jezik",
-  "langSubnote": "Odabrani jezik vrijedi za cijeli Idesüss.",
+  "langSubnote": "Odabrani jezik vrijedi za cijelo Idesüss sučelje.",
   "textareaPlaceholder": "Zalijepi poveznicu ovdje...",
   "playBtnText": "POKRENI",
   "pasteBtn": "ZALIJEPI",

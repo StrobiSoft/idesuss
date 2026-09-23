@@ -1,5 +1,48 @@
+import { shellT, subscribeShellLanguage } from "../shared/shell-language.js";
+
+let unsubscribeShellLanguage = null;
+
 function getModal() {
   return document.getElementById("idesussAuthModal");
+}
+
+function localizeAuthModal() {
+  const modal = getModal();
+  if (!modal) return;
+
+  const mode = modal.dataset.mode || "login";
+  const register = mode === "register";
+  const reset = mode === "reset";
+  const title = document.getElementById("authModalTitle");
+  const submit = document.getElementById("authSubmitBtn");
+  const email = document.getElementById("authEmail");
+  const password = document.getElementById("authPassword");
+  const repeat = document.getElementById("authPasswordRepeat");
+  const forgot = document.getElementById("authForgotPassword");
+  const modeSwitch = document.getElementById("authModeSwitch");
+  const resetHelp = document.getElementById("authResetHelp");
+  const close = document.getElementById("authModalClose");
+
+  if (title) title.textContent = reset ? shellT("resetTitle") : register ? shellT("registerTitle") : shellT("loginTitle");
+  if (submit) submit.textContent = reset ? shellT("savePassword") : register ? shellT("register") : shellT("login");
+  if (email) email.placeholder = shellT("email");
+  if (password) password.placeholder = reset ? shellT("newPassword") : shellT("password");
+  if (repeat) repeat.placeholder = shellT("repeatPassword");
+  if (forgot) forgot.textContent = shellT("forgot");
+  if (modeSwitch) modeSwitch.textContent = register ? shellT("toLogin") : shellT("toRegister");
+  if (resetHelp) resetHelp.textContent = shellT("resetHelp");
+  if (close) {
+    close.setAttribute("aria-label", shellT("close"));
+    close.setAttribute("title", shellT("close"));
+  }
+
+  modal.querySelectorAll(".auth-password-toggle").forEach((button) => {
+    const target = document.getElementById(button.dataset.passwordTarget || "");
+    const revealed = target?.type === "text";
+    const label = revealed ? shellT("hidePassword") : shellT("showPassword");
+    button.setAttribute("aria-label", label);
+    button.setAttribute("title", label);
+  });
 }
 
 function setAuthShellLocked(locked) {
@@ -295,22 +338,22 @@ export function ensureAuthModal() {
   modal.innerHTML = `
     <div class="idesuss-auth-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
       <div class="idesuss-auth-head">
-        <h2 id="authModalTitle">Bejelentkezés</h2>
-        <button id="authModalClose" type="button" aria-label="Bezárás" title="Bezárás">
+        <h2 id="authModalTitle">${shellT("loginTitle")}</h2>
+        <button id="authModalClose" type="button" aria-label="${shellT("close")}" title="${shellT("close")}">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M6 6L18 18M18 6L6 18"></path>
           </svg>
         </button>
       </div>
 
-      <input id="authEmail" type="email" autocomplete="email" placeholder="E-mail cím" style="
+      <input id="authEmail" type="email" autocomplete="email" placeholder="${shellT("email")}" style="
         width:100%;box-sizing:border-box;margin-bottom:12px;padding:14px 16px;
         border-radius:16px;border:1px solid rgba(40,90,150,.25);font-size:16px;
       ">
 
       <div class="auth-password-field" id="authPasswordField">
-        <input id="authPassword" type="password" autocomplete="current-password" placeholder="Jelszó">
-        <button class="auth-password-toggle" type="button" data-password-target="authPassword" aria-label="Jelszó megjelenítése" title="Jelszó megjelenítése">
+        <input id="authPassword" type="password" autocomplete="current-password" placeholder="${shellT("password")}">
+        <button class="auth-password-toggle" type="button" data-password-target="authPassword" aria-label="${shellT("showPassword")}" title="${shellT("showPassword")}">
           <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
             <circle cx="12" cy="12" r="2.5"></circle>
@@ -325,7 +368,7 @@ export function ensureAuthModal() {
       </div>
 
       <div class="auth-password-field" id="authPasswordRepeatField" style="display:none;">
-        <input id="authPasswordRepeat" type="password" autocomplete="new-password" placeholder="Jelszó újra">
+        <input id="authPasswordRepeat" type="password" autocomplete="new-password" placeholder="${shellT("repeatPassword")}">
         <button class="auth-password-toggle" type="button" data-password-target="authPasswordRepeat" aria-label="Jelszó megjelenítése" title="Jelszó megjelenítése">
           <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
@@ -345,18 +388,18 @@ export function ensureAuthModal() {
         background:linear-gradient(135deg,#0f6fff,#4aa3ff);color:white;
         font-weight:800;font-size:16px;cursor:pointer;
         box-shadow:0 12px 28px rgba(20,100,220,.35);
-      ">Bejelentkezés</button>
+      ">${shellT("login")}</button>
 
       <button id="authForgotPassword" type="button" class="auth-secondary-action">
-        Elfelejtetted a jelszavad?
+        ${shellT("forgot")}
       </button>
 
       <button id="authModeSwitch" type="button" class="auth-secondary-action auth-mode-switch">
-        Nincs még fiókod? Regisztráció
+        ${shellT("toRegister")}
       </button>
 
       <p id="authResetHelp" class="auth-help" hidden>
-        Adj meg egy új jelszót kétszer, majd mentsd el.
+        ${shellT("resetHelp")}
       </p>
 
       <p id="authMessage" aria-live="polite" style="
@@ -374,14 +417,18 @@ export function ensureAuthModal() {
 
       const reveal = input.type === "password";
       input.type = reveal ? "text" : "password";
-      button.setAttribute("aria-label", reveal ? "Jelszó elrejtése" : "Jelszó megjelenítése");
-      button.setAttribute("title", reveal ? "Jelszó elrejtése" : "Jelszó megjelenítése");
+      button.setAttribute("aria-label", reveal ? shellT("hidePassword") : shellT("showPassword"));
+      button.setAttribute("title", reveal ? shellT("hidePassword") : shellT("showPassword"));
       button.setAttribute("aria-pressed", String(reveal));
       button.querySelector(".eye-open")?.toggleAttribute("hidden", reveal);
       button.querySelector(".eye-closed")?.toggleAttribute("hidden", !reveal);
       input.focus({ preventScroll: true });
     });
   });
+
+  localizeAuthModal();
+  unsubscribeShellLanguage?.();
+  unsubscribeShellLanguage = subscribeShellLanguage(localizeAuthModal);
 
   document.getElementById("authModalClose")?.addEventListener("click", closeAuthModal);
   modal.addEventListener("click", (event) => {
@@ -414,18 +461,18 @@ export function openAuthModal(mode = "login") {
 
   if (title) {
     title.textContent = reset
-      ? "Új jelszó beállítása"
+      ? shellT("resetTitle")
       : register
-        ? "Regisztráció"
-        : "Bejelentkezés";
+        ? shellT("registerTitle")
+        : shellT("loginTitle");
   }
 
   if (submit) {
     submit.textContent = reset
-      ? "Új jelszó mentése"
+      ? shellT("savePassword")
       : register
-        ? "Regisztráció"
-        : "Bejelentkezés";
+        ? shellT("register")
+        : shellT("login");
   }
 
   if (email) {
@@ -445,12 +492,12 @@ export function openAuthModal(mode = "login") {
     password.value = "";
     password.type = "password";
     password.autocomplete = register || reset ? "new-password" : "current-password";
-    password.placeholder = reset ? "Új jelszó" : "Jelszó";
+    password.placeholder = reset ? shellT("newPassword") : shellT("password");
   }
 
   modal.querySelectorAll(".auth-password-toggle").forEach((button) => {
-    button.setAttribute("aria-label", "Jelszó megjelenítése");
-    button.setAttribute("title", "Jelszó megjelenítése");
+    button.setAttribute("aria-label", shellT("showPassword"));
+    button.setAttribute("title", shellT("showPassword"));
     button.setAttribute("aria-pressed", "false");
     button.querySelector(".eye-open")?.removeAttribute("hidden");
     button.querySelector(".eye-closed")?.setAttribute("hidden", "");
@@ -463,8 +510,8 @@ export function openAuthModal(mode = "login") {
   if (modeSwitch) {
     modeSwitch.style.display = reset ? "none" : "block";
     modeSwitch.textContent = register
-      ? "Már van fiókod? Bejelentkezés"
-      : "Nincs még fiókod? Regisztráció";
+      ? shellT("toLogin")
+      : shellT("toRegister");
   }
 
   if (resetHelp) {
@@ -472,6 +519,7 @@ export function openAuthModal(mode = "login") {
   }
 
   if (message) message.textContent = "";
+  localizeAuthModal();
   setAuthShellLocked(true);
   modal.style.display = "flex";
   modal.scrollTop = 0;

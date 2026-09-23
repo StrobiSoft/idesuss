@@ -2,7 +2,7 @@
   "counterLabel": "Odwiedziny",
   "counterNote": "Licznik nie zwiększa się przy każdym odświeżeniu.",
   "langBoxLabel": "Język",
-  "langSubnote": "Węgierska przeglądarka → interfejs węgierski, inaczej → angielski.",
+  "langSubnote": "Wybrany język obowiązuje w całym interfejsie Idesüss.",
   "textareaPlaceholder": "Wklej link tutaj...",
   "playBtnText": "URUCHOM",
   "pasteBtn": "WKLEJ",

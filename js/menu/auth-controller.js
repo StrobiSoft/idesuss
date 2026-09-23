@@ -8,6 +8,7 @@ import {
   updatePassword
 } from "../shared/auth-service.js?v=20260921-prod-refresh1";
 import { loadMyProfile } from "../shared/profile-service.js?v=20260921-prod-refresh1";
+import { shellT } from "../shared/shell-language.js";
 import { openProfilePanel } from "./profile.js?v=20260921-prod-refresh1";
 import {
   closeAuthModal,
@@ -77,19 +78,19 @@ function localizeAuthError(error) {
     message.includes("for security purposes") ||
     message.includes("request this after")
   ) {
-    return "Biztonsági okból várnod kell egy rövid ideig az újabb kérés előtt. Próbáld meg később.";
+    return shellT("authRateLimit");
   }
-  if (message.includes("invalid login credentials")) return "Hibás e-mail cím vagy jelszó.";
-  if (message.includes("email not confirmed")) return "Az e-mail címed még nincs megerősítve. Ellenőrizd a postafiókodat.";
+  if (message.includes("invalid login credentials")) return shellT("authInvalidCredentials");
+  if (message.includes("email not confirmed")) return shellT("authEmailNotConfirmed");
   if (message.includes("user already registered") || message.includes("already registered")) {
-    return "Ezzel az e-mail címmel már létezik fiók.";
+    return shellT("authAlreadyRegistered");
   }
-  if (message.includes("password should be")) return "A megadott jelszó nem felel meg a biztonsági követelményeknek.";
+  if (message.includes("password should be")) return shellT("authPasswordRequirement");
   if (message.includes("auth session missing")) {
-    return "A munkamenet már nem érvényes. Nyisd meg újra a műveletet, vagy jelentkezz be ismét.";
+    return shellT("authSessionMissing");
   }
 
-  return error?.message || "A művelet nem sikerült. Próbáld újra.";
+  return error?.message || shellT("authGenericFailed");
 }
 
 function updateButtons() {
@@ -213,12 +214,12 @@ async function handlePasswordResetRequest() {
   const email = document.getElementById("authEmail")?.value.trim() || "";
 
   if (!email) {
-    setMessage("Előbb add meg az e-mail címedet.");
+    setMessage(shellT("authEnterEmailFirst"));
     document.getElementById("authEmail")?.focus();
     return;
   }
 
-  setMessage("Jelszó-visszaállító e-mail küldése...");
+  setMessage(shellT("authResetSending"));
 
   try {
     await requestPasswordReset(getClient(), {
@@ -227,7 +228,7 @@ async function handlePasswordResetRequest() {
     });
 
     setMessage(
-      "Ha ehhez az e-mail címhez tartozik fiók, elküldtük a jelszó-visszaállító linket."
+      shellT("authResetSent")
     );
   } catch (error) {
     console.error("Password reset request failed", error);
@@ -247,27 +248,27 @@ async function handleSubmit(event) {
 
   if (mode === "reset") {
     if (!password || !repeatPassword) {
-      setMessage("Add meg kétszer az új jelszót.");
+      setMessage(shellT("authEnterPasswordTwice"));
       return;
     }
 
     if (password !== repeatPassword) {
-      setMessage("A két jelszó nem egyezik.");
+      setMessage(shellT("authPasswordsMismatch"));
       return;
     }
 
     if (password.length < 8) {
-      setMessage("Az új jelszó legalább 8 karakter legyen.");
+      setMessage(shellT("authPasswordMin8"));
       return;
     }
 
-    setMessage("Új jelszó mentése...");
+    setMessage(shellT("authSavingPassword"));
 
     try {
       identity = await updatePassword(getClient(), { password });
       recoveryRequested = false;
       updateButtons();
-      setMessage("A jelszó sikeresen megváltozott.");
+      setMessage(shellT("authPasswordChanged"));
       clearPasswordRecoveryLocation();
       window.setTimeout(closeAuthModal, 650);
     } catch (error) {
@@ -278,23 +279,23 @@ async function handleSubmit(event) {
   }
 
   if (!email || !password) {
-    setMessage("Add meg az e-mail címet és a jelszót.");
+    setMessage(shellT("authEnterEmailPassword"));
     return;
   }
 
   if (mode === "register") {
     if (password !== repeatPassword) {
-      setMessage("A két jelszó nem egyezik.");
+      setMessage(shellT("authPasswordsMismatch"));
       return;
     }
 
     if (password.length < 8) {
-      setMessage("A jelszó legalább 8 karakter legyen.");
+      setMessage(shellT("authPasswordMin8"));
       return;
     }
   }
 
-  setMessage("Dolgozom...");
+  setMessage(shellT("authWorking"));
 
   try {
     const client = getClient();
@@ -312,13 +313,13 @@ async function handleSubmit(event) {
         document.getElementById("authPassword").value = "";
         document.getElementById("authPasswordRepeat").value = "";
         closeAuthModal();
-        showAuthToast("Regisztráció elküldve. Küldtünk egy megerősítő e-mailt; a fiók az e-mail-cím megerősítése után lesz aktív.");
+        showAuthToast(shellT("authRegistrationSent"));
         return;
       }
 
       identity = result.user;
       updateButtons();
-      setMessage("Sikeres regisztráció.");
+      setMessage(shellT("authRegistrationSuccess"));
       closeAuthModal();
       await maybeOpenProfile();
       return;
@@ -326,14 +327,14 @@ async function handleSubmit(event) {
 
     identity = await signIn(client, { email, password });
     updateButtons();
-    setMessage("Sikeres bejelentkezés.");
+    setMessage(shellT("authLoginSuccess"));
     window.setTimeout(closeAuthModal, 350);
     await maybeOpenProfile();
   } catch (error) {
     console.error("Shared auth action failed", error);
 
     if (mode === "register" && /already|registered|exists/i.test(error?.message || "")) {
-      setMessage("Ezzel az e-mail címmel már létezik fiók. Jelentkezz be, vagy állítsd vissza a jelszavad.");
+      setMessage(shellT("authAccountExistsHelp"));
       return;
     }
 
@@ -404,7 +405,7 @@ export async function initRootAuthController() {
     if (event === "PASSWORD_RECOVERY") {
       recoveryRequested = true;
       openAuthModal("reset");
-      setMessage("Állíts be egy új jelszót.");
+      setMessage(shellT("authSetNewPassword"));
       return;
     }
 
@@ -423,7 +424,7 @@ export async function initRootAuthController() {
 
   if (recoveryRequested) {
     openAuthModal("reset");
-    setMessage("Állíts be egy új jelszót.");
+    setMessage(shellT("authSetNewPassword"));
   } else if (identity) {
     await maybeOpenProfile();
   }
