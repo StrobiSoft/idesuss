@@ -9,6 +9,8 @@ const serviceWorker = fs.readFileSync("service-worker.js","utf8");
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
 assert(index.includes('id="openSettingsBtn"'),"homepage settings menu button missing");
+assert(index.includes('ONLINE_TAB_PREFIX') && index.includes('sessionStorage.getItem("idesuss_online_tab_id")'),"multi-tab online presence coordination missing");
+assert(index.includes('isOnlineLeader()') && index.includes('localStorage.removeItem(tabStorageKey)'),"online presence leader/offline coordination missing");
 assert(menuCore.includes('openSettingsPanel') && menuCore.includes('initSettingsPreferences'),"settings panel not wired into menu core");
 assert(settings.includes('setIdesussLanguage') && settings.includes('getIdesussLanguage'),"settings language must use shared language preference");
 assert(settings.includes('idesuss_theme') && settings.includes('idesuss_brightness'),"device-local appearance preferences missing");
