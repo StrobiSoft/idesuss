@@ -1433,6 +1433,43 @@ body.viewer-open #idesussMenu {
   background: #ffffff;
 }
 
+.profile-eula {
+  overflow: hidden;
+}
+
+.profile-eula label {
+  display: grid !important;
+  grid-template-columns: 24px minmax(0,1fr);
+  gap: 10px !important;
+  align-items: start !important;
+  width: 100%;
+  min-width: 0;
+}
+
+.profile-eula label span,
+.profile-eula a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.profile-eula input[type="checkbox"] {
+  width: 22px !important;
+  height: 22px;
+  min-width: 22px;
+  margin: 1px 0 0 !important;
+  padding: 0 !important;
+  flex: 0 0 22px;
+  accent-color: #4da3ff;
+}
+
+.profile-eula a {
+  display: inline-block;
+  margin-top: 8px;
+  color: #7dd3fc;
+  font-weight: 800;
+}
+
 .profile-placeholder {
   margin-top: 14px;
   padding: 14px;
