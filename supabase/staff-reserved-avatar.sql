@@ -1,0 +1,14 @@
+-- Idesüss reserved staff avatar contract
+-- Applied to production Supabase on 2026-09-23.
+--
+-- Reserved avatar: 🧑‍💻
+--
+-- Rules:
+--   * registration / ordinary users do not see or select 🧑‍💻
+--   * moderators and admins are forced to use 🧑‍💻
+--   * while role is moderator/admin, another emoji or custom image cannot be selected
+--   * custom avatar submissions are blocked for moderator/admin at the database boundary
+--   * leaving moderator/admin removes the reserved avatar and falls back to 🙂
+--   * Platform Owner is not included in the forced staff-avatar rule
+--
+-- Enforcement exists at both UI and database layers.
