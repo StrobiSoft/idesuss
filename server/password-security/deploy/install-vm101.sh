@@ -45,10 +45,23 @@ systemctl enable --now idesuss-password-security.service
 systemctl restart idesuss-password-security.service
 systemctl is-active --quiet idesuss-password-security.service || die "gateway service not active"
 
-LISTEN="$(ss -ltnp 2>/dev/null | awk '$4 ~ /127\.0\.0\.1:8790$/ {print $4}' | head -n1 || true)"
+LISTEN=""
+for _ in $(seq 1 20); do
+  LISTEN="$(ss -ltnp 2>/dev/null | awk '$4 ~ /127\.0\.0\.1:8790$/ {print $4}' | head -n1 || true)"
+  [[ "${LISTEN}" == "127.0.0.1:8790" ]] && break
+  sleep 0.5
+done
 [[ "${LISTEN}" == "127.0.0.1:8790" ]] || die "gateway is not bound only to 127.0.0.1:8790"
 
-curl -fsS --max-time 5 http://127.0.0.1:8790/healthz >/dev/null || die "local health check failed"
+HEALTH_OK=0
+for _ in $(seq 1 10); do
+  if curl -fsS --max-time 2 http://127.0.0.1:8790/healthz >/dev/null; then
+    HEALTH_OK=1
+    break
+  fi
+  sleep 0.5
+done
+[[ "${HEALTH_OK}" -eq 1 ]] || die "local health check failed"
 
 mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
 install -m 0644 "${NGINX_SRC}" "${NGINX_DST}"
