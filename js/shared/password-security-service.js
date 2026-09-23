@@ -1,4 +1,4 @@
-const PASSWORD_CHECK_ENDPOINT = "/api/security/password/check";
+const PASSWORD_CHECK_ENDPOINT = "https://security.idesuss.net/v1/security/password/check";
 
 export class PasswordSecurityError extends Error {
   constructor(code, message = code) {

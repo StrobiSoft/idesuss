@@ -64,13 +64,29 @@ GitHub main
     -> idesuss.net
 ```
 
-For server-side components, when they are introduced:
+For server-side components:
 
 ```
 GitHub main/release
     -> automated or explicitly controlled deployment
-    -> Pepper runtime
+    -> Pepper runtime / dedicated VM
 ```
+
+The first production server-side security component is the Password Security
+Gateway:
+
+```
+idesuss.net (GitHub Pages)
+    -> HTTPS request
+    -> security.idesuss.net
+    -> VM101 idesuss-web-01
+    -> Password Security Gateway on 127.0.0.1:8790
+    -> HIBP Pwned Passwords range API
+```
+
+The gateway does **not** move the static frontend away from GitHub Pages.
+`security.idesuss.net` is a dedicated API origin with CORS restricted to the
+production web origin; native clients are not subject to browser CORS.
 
 ## Rules
 
@@ -91,7 +107,8 @@ As of 2026-09-20:
 - production branch: `main`;
 - static production frontend: GitHub Pages;
 - production custom domain: `idesuss.net`;
-- Pepper: development/runtime host only, not the public static frontend source unless this document is deliberately changed in a reviewed commit.
+- Pepper: development/runtime host only, not the public static frontend source unless this document is deliberately changed in a reviewed commit;
+- VM101 `idesuss-web-01`: designated runtime host for the Password Security Gateway at `security.idesuss.net`, once its DNS/TLS/public-routing prerequisites are validated.
 
 ## Change control
 
