@@ -15,45 +15,47 @@ async function request(path, options = {}) {
   return { status: response.status, body };
 }
 
-async function passwordCheck(password, origin = allowedOrigin) {
+async function passwordCheck(password, origin = allowedOrigin, forwardedFor = "198.51.100.10") {
   return request("/v1/security/password/check", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Origin": origin
+      "Origin": origin,
+      "X-Forwarded-For": forwardedFor
     },
     body: JSON.stringify({ password })
   });
 }
 
-const knownCompromised = "password";
+const knownCompromised = "12345678";
 const safeCandidate = "Idesuss-" + crypto.randomBytes(48).toString("base64url");
 
 const health = await request("/healthz");
 assert(health.status === 200 && health.body?.ok === true, "health failed");
 
-const compromised = await passwordCheck(knownCompromised);
+const compromised = await passwordCheck(knownCompromised, allowedOrigin, "198.51.100.11");
 assert(compromised.status === 200, "compromised check HTTP failure");
 assert(compromised.body?.compromised === true, "known compromised password not rejected");
 
-const safe = await passwordCheck(safeCandidate);
+const safe = await passwordCheck(safeCandidate, allowedOrigin, "198.51.100.12");
 assert(safe.status === 200, "safe check HTTP failure");
 assert(safe.body?.compromised === false, "safe candidate unexpectedly rejected");
 
-const wrongOrigin = await passwordCheck(safeCandidate, "https://example.invalid");
-assert(wrongOrigin.status === 403, "wrong Origin was not rejected");
-
-const oversize = "x".repeat(17 * 1024);
-const tooLarge = await passwordCheck(oversize);
-assert(tooLarge.status === 413, "oversized payload was not rejected");
-
-const spy1 = await request("/.env");
-const spy2 = await request("/.env");
-const spy3 = await request("/.env");
-const spy4 = await request("/.env");
+const spyHeaders = { "X-Forwarded-For": "198.51.100.20" };
+const spy1 = await request("/.env", { headers: spyHeaders });
+const spy2 = await request("/.env", { headers: spyHeaders });
+const spy3 = await request("/.env", { headers: spyHeaders });
+const spy4 = await request("/.env", { headers: spyHeaders });
 assert(spy1.status === 404, "Spy Trap first response unexpected");
 assert(spy2.status === 403, "Spy Trap repeat response unexpected");
 assert(spy3.status === 403 && spy4.status === 403, "Spy Trap escalation unexpected");
+
+const wrongOrigin = await passwordCheck(safeCandidate, "https://example.invalid", "198.51.100.30");
+assert(wrongOrigin.status === 403, "wrong Origin was not rejected");
+
+const oversize = "x".repeat(17 * 1024);
+const tooLarge = await passwordCheck(oversize, allowedOrigin, "198.51.100.40");
+assert(tooLarge.status === 413, "oversized payload was not rejected");
 
 const journal = execFileSync("journalctl", [
   "-u", "idesuss-password-security.service",
