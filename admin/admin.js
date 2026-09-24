@@ -141,6 +141,9 @@ async function loadAdminUsers(query = "") {
     const name = document.createElement("div");
     name.className = "user-name";
     name.textContent = user.nickname || user.email || "Névtelen profil";
+    if (user.role === "owner") name.textContent += " 👑";
+    else if (user.role === "admin" || user.role === "moderator") name.textContent += " 🛡️";
+    if (user.is_vip) name.textContent += " 💎";
 
     const meta = document.createElement("div");
     meta.className = "user-meta";
@@ -331,7 +334,7 @@ async function loadOwnerUsers(query = "") {
   list.replaceChildren();
   text(status, "Felhasználók betöltése…");
 
-  const rpcName = query.trim() ? "owner_search_users" : "owner_list_users";
+  const rpcName = query.trim() ? "owner_search_users_v2" : "owner_list_users_v2";
   const args = query.trim() ? { p_query: query.trim(), p_limit: 50 } : undefined;
   const { data, error } = await client.rpc(rpcName, args);
   if (error) {
@@ -367,6 +370,12 @@ async function loadOwnerUsers(query = "") {
     ], user.complimentary_tier || "");
     compSelect.disabled = user.role === "owner";
 
+    const vipSelect = createSelect([
+      ["false", "Normál státusz"],
+      ["true", "💎 VIP"]
+    ], user.is_vip ? "true" : "false");
+    vipSelect.disabled = user.role === "owner";
+
     const controls = document.createElement("div");
     controls.className = "controls";
 
@@ -401,6 +410,15 @@ async function loadOwnerUsers(query = "") {
             if (tierError) throw tierError;
           }
 
+          const nextVip = vipSelect.value === "true";
+          if (nextVip !== Boolean(user.is_vip)) {
+            const { error: vipError } = await client.rpc("owner_set_vip_status", {
+              p_user_id: user.id,
+              p_is_vip: nextVip
+            });
+            if (vipError) throw vipError;
+          }
+
           text(status, `${user.nickname || user.email}: elmentve.`);
           await Promise.all([loadOwnerUsers(), loadOwnerPromotionRequests()]);
         } catch (error) {
@@ -410,13 +428,13 @@ async function loadOwnerUsers(query = "") {
           save.disabled = false;
         }
       });
-      controls.append(roleSelect, compSelect, save);
+      controls.append(roleSelect, compSelect, vipSelect, save);
     }
 
     row.append(identity, roleSelect.disabled ? document.createElement("div") : document.createElement("div"), controls);
     if (!roleSelect.disabled) {
       const middle = row.children[1];
-      middle.append(roleSelect, compSelect);
+      middle.append(roleSelect, compSelect, vipSelect);
     }
     list.appendChild(row);
   }
