@@ -172,6 +172,7 @@ const DICT = {
     authSavingPassword:"Nieuw wachtwoord opslaan…",
     authPasswordChanged:"Wachtwoord succesvol gewijzigd.",
     authEnterEmailPassword:"Vul e-mailadres en wachtwoord in.",
+    authLanguageLabel:"Registratietaal", authLanguageChoose:"Kies een taal", authLanguageRequired:"Kies de registratietaal voordat je doorgaat.",
     authWorking:"Bezig…",
     authRegistrationSent:"Registratieverzoek ontvangen. Als dit een nieuw account is, hebben we een bevestigingsmail gestuurd. Heb je al een account, log dan in of reset je wachtwoord.",
     authRegistrationSuccess:"Registratie geslaagd.",
