@@ -1,6 +1,36 @@
 import { shellT, subscribeShellLanguage } from "../shared/shell-language.js";
+import {
+  IDESUSS_LANGUAGE_KEY,
+  IDESUSS_SUPPORTED_LANGUAGES,
+  normalizeIdesussLanguage,
+  setIdesussLanguage
+} from "../shared/language-preference.js";
 
 let unsubscribeShellLanguage = null;
+
+const REGISTRATION_LANGUAGE_LABELS = Object.freeze({
+  hu: "Magyar",
+  en: "English",
+  nl: "Nederlands",
+  ro: "Română",
+  pl: "Polski",
+  hr: "Hrvatski",
+  be: "Беларуская"
+});
+
+function suggestedRegistrationLanguage() {
+  const stored = window.localStorage.getItem(IDESUSS_LANGUAGE_KEY);
+  if (IDESUSS_SUPPORTED_LANGUAGES.includes(stored)) return stored;
+
+  const browser = normalizeIdesussLanguage(window.navigator.language || "", "");
+  return IDESUSS_SUPPORTED_LANGUAGES.includes(browser) ? browser : "";
+}
+
+function applyRegistrationLanguageSelection(select) {
+  const language = select?.value || "";
+  if (!IDESUSS_SUPPORTED_LANGUAGES.includes(language)) return;
+  setIdesussLanguage(language);
+}
 
 function getModal() {
   return document.getElementById("idesussAuthModal");
@@ -22,6 +52,9 @@ function localizeAuthModal() {
   const modeSwitch = document.getElementById("authModeSwitch");
   const resetHelp = document.getElementById("authResetHelp");
   const close = document.getElementById("authModalClose");
+  const languageField = document.getElementById("authLanguageField");
+  const languageLabel = document.getElementById("authLanguageLabel");
+  const languageSelect = document.getElementById("authLanguage");
 
   if (title) title.textContent = reset ? shellT("resetTitle") : register ? shellT("registerTitle") : shellT("loginTitle");
   if (submit) submit.textContent = reset ? shellT("savePassword") : register ? shellT("register") : shellT("login");
@@ -31,6 +64,16 @@ function localizeAuthModal() {
   if (forgot) forgot.textContent = shellT("forgot");
   if (modeSwitch) modeSwitch.textContent = register ? shellT("toLogin") : shellT("toRegister");
   if (resetHelp) resetHelp.textContent = shellT("resetHelp");
+  if (languageField) languageField.hidden = !register;
+  if (languageLabel) languageLabel.textContent = shellT("authLanguageLabel");
+  if (languageSelect) {
+    const current = languageSelect.value;
+    const placeholder = languageSelect.querySelector('option[value=""]');
+    if (placeholder) placeholder.textContent = shellT("authLanguageChoose");
+    if (current && IDESUSS_SUPPORTED_LANGUAGES.includes(current)) {
+      languageSelect.value = current;
+    }
+  }
   if (close) {
     close.setAttribute("aria-label", shellT("close"));
     close.setAttribute("title", shellT("close"));
@@ -221,6 +264,30 @@ function ensureAuthStyles() {
       pointer-events: none;
     }
 
+    .auth-language-field {
+      display: block;
+      margin: 0 0 14px;
+      color: #17324d;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .auth-language-field[hidden] {
+      display: none !important;
+    }
+
+    .auth-language-field select {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 7px;
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(40,90,150,.25);
+      background: #fff;
+      color: #17324d;
+      font-size: 16px;
+    }
+
     .auth-secondary-action {
       appearance: none;
       border: 0 !important;
@@ -351,6 +418,14 @@ export function ensureAuthModal() {
         border-radius:16px;border:1px solid rgba(40,90,150,.25);font-size:16px;
       ">
 
+      <label id="authLanguageField" class="auth-language-field" hidden>
+        <span id="authLanguageLabel">${shellT("authLanguageLabel")}</span>
+        <select id="authLanguage" required>
+          <option value="">${shellT("authLanguageChoose")}</option>
+          ${IDESUSS_SUPPORTED_LANGUAGES.map((code) => `<option value="${code}">${REGISTRATION_LANGUAGE_LABELS[code]}</option>`).join("")}
+        </select>
+      </label>
+
       <div class="auth-password-field" id="authPasswordField">
         <input id="authPassword" type="password" autocomplete="current-password" placeholder="${shellT("password")}">
         <button class="auth-password-toggle" type="button" data-password-target="authPassword" aria-label="${shellT("showPassword")}" title="${shellT("showPassword")}">
@@ -430,6 +505,10 @@ export function ensureAuthModal() {
   unsubscribeShellLanguage?.();
   unsubscribeShellLanguage = subscribeShellLanguage(localizeAuthModal);
 
+  document.getElementById("authLanguage")?.addEventListener("change", (event) => {
+    applyRegistrationLanguageSelection(event.currentTarget);
+  });
+
   document.getElementById("authModalClose")?.addEventListener("click", closeAuthModal);
   modal.addEventListener("click", (event) => {
     if (event.target === modal) closeAuthModal();
@@ -456,6 +535,8 @@ export function openAuthModal(mode = "login") {
   const modeSwitch = document.getElementById("authModeSwitch");
   const resetHelp = document.getElementById("authResetHelp");
   const message = document.getElementById("authMessage");
+  const languageField = document.getElementById("authLanguageField");
+  const languageSelect = document.getElementById("authLanguage");
 
   modal.dataset.mode = reset ? "reset" : register ? "register" : "login";
 
@@ -477,6 +558,15 @@ export function openAuthModal(mode = "login") {
 
   if (email) {
     email.style.display = reset ? "none" : "block";
+  }
+
+  if (languageField) {
+    languageField.hidden = !register;
+  }
+
+  if (register && languageSelect) {
+    languageSelect.value = suggestedRegistrationLanguage();
+    if (languageSelect.value) applyRegistrationLanguageSelection(languageSelect);
   }
 
   if (repeatField) {
