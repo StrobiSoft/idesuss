@@ -31,6 +31,31 @@ let socialSummaryTimer = null;
 let socialSummaryChannel = null;
 let moderationSummaryTimer = null;
 let moderationSummaryChannel = null;
+let userPresenceTimer = null;
+
+async function heartbeatUserPresence() {
+  if (!identity) return;
+  const { error } = await getClient().rpc("heartbeat_my_presence", {
+    p_page: window.location.pathname || "/"
+  });
+  if (error) console.error("Authenticated presence heartbeat failed", error);
+}
+
+function stopUserPresenceHeartbeat({ markOffline = false } = {}) {
+  if (userPresenceTimer) window.clearInterval(userPresenceTimer);
+  userPresenceTimer = null;
+
+  if (markOffline && window.supabaseClient) {
+    window.supabaseClient.rpc("set_my_presence_offline").catch(() => {});
+  }
+}
+
+function startUserPresenceHeartbeat() {
+  stopUserPresenceHeartbeat();
+  if (!identity) return;
+  heartbeatUserPresence();
+  userPresenceTimer = window.setInterval(heartbeatUserPresence, 15000);
+}
 
 function isPasswordRecoveryLocation() {
   const url = new URL(window.location.href);
@@ -275,6 +300,7 @@ async function performSignOut() {
     profileRole = "user";
     stopSocialSummaryWatch();
     stopModerationSummaryWatch();
+    stopUserPresenceHeartbeat({ markOffline: true });
     updateButtons();
   } catch (error) {
     console.error("Shared sign-out failed", error);
@@ -494,6 +520,7 @@ export async function initRootAuthController() {
     updateButtons();
     startSocialSummaryPolling();
     startModerationSummaryWatch();
+    startUserPresenceHeartbeat();
 
     if (event === "PASSWORD_RECOVERY") {
       recoveryRequested = true;
@@ -519,6 +546,7 @@ export async function initRootAuthController() {
     openAuthModal("reset");
     setMessage(shellT("authSetNewPassword"));
   } else if (identity) {
+    startUserPresenceHeartbeat();
     await maybeOpenProfile();
   }
 
@@ -527,10 +555,23 @@ export async function initRootAuthController() {
     unsubscribeAuth = null;
     stopSocialSummaryWatch();
     stopModerationSummaryWatch();
+    stopUserPresenceHeartbeat({ markOffline: true });
   };
 }
 
 
 window.addEventListener("idesuss:home-language-applied", () => {
   updateButtons();
+});
+
+
+window.addEventListener("pagehide", () => {
+  if (identity) {
+    getClient().rpc("set_my_presence_offline").catch(() => {});
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!identity) return;
+  if (document.visibilityState === "visible") heartbeatUserPresence();
 });
