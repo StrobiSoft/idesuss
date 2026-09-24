@@ -1,5 +1,5 @@
 -- Idesuss EULA acceptance gate
--- Version: 2026-09-23-v1
+-- Version: 2026-09-24-v2
 -- Applied through Supabase migration.
 
 create table if not exists public.legal_acceptances (
@@ -29,7 +29,7 @@ language sql
 immutable
 set search_path = ''
 as $function$
-  select '2026-09-23-v1'::text;
+  select '2026-09-24-v2'::text;
 $function$;
 
 revoke all on function public.current_eula_version() from public;
