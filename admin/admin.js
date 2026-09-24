@@ -351,6 +351,9 @@ async function loadOwnerUsers(query = "") {
     const name = document.createElement("div");
     name.className = "user-name";
     name.textContent = user.nickname || user.email || "Névtelen profil";
+    if (user.role === "owner") name.textContent += " 👑";
+    else if (user.role === "admin" || user.role === "moderator") name.textContent += " 🛡️";
+    if (user.is_vip) name.textContent += " 💎";
     const meta = document.createElement("div");
     meta.className = "user-meta";
     meta.textContent = `${user.email || "—"} · ${roleLabel(user.role)} · ${tierLabel(user.effective_tier)}`;
