@@ -23,7 +23,7 @@ assert(settings.includes('idesuss_theme') && settings.includes('idesuss_brightne
 assert(!settings.toLowerCase().includes("always on top"),"unsupported always-on-top setting must not be exposed");
 assert(polish.includes('data-idesuss-theme="dark"'),"dark appearance CSS missing");
 assert(polish.includes('--idesuss-dim-opacity'),"brightness/dimming CSS missing");
-assert(serviceWorker.includes('idesuss-root-v11'),"service worker cache version must be bumped");
+assert(serviceWorker.includes('idesuss-root-v12'),"service worker cache version must be bumped");
 assert(serviceWorker.includes('/js/menu/settings.js?v=20260923-finalweb1'),"settings module missing from static cache");
 assert(index.includes('id="moderationInboxBtn"') && index.includes('id="moderationInboxBadge"'),"staff moderation inbox badge missing");
 assert(index.includes('/js/menu/menu-core.js?v=20260924-vip-presence1'),"avatar moderation menu bundle version missing");
