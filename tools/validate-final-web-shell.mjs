@@ -5,6 +5,8 @@ const menuCore = fs.readFileSync("js/menu/menu-core.js","utf8");
 const settings = fs.readFileSync("js/menu/settings.js","utf8");
 const polish = fs.readFileSync("visual-polish.css","utf8");
 const serviceWorker = fs.readFileSync("service-worker.js","utf8");
+const onlineUsers = fs.readFileSync("js/online-users.js","utf8");
+const userBadges = fs.readFileSync("js/shared/user-badges.js","utf8");
 const authShell = fs.readFileSync("js/menu/auth-shell.js","utf8");
 const authController = fs.readFileSync("js/menu/auth-controller.js","utf8");
 const profile = fs.readFileSync("js/menu/profile.js","utf8");
@@ -24,7 +26,7 @@ assert(polish.includes('--idesuss-dim-opacity'),"brightness/dimming CSS missing"
 assert(serviceWorker.includes('idesuss-root-v11'),"service worker cache version must be bumped");
 assert(serviceWorker.includes('/js/menu/settings.js?v=20260923-finalweb1'),"settings module missing from static cache");
 assert(index.includes('id="moderationInboxBtn"') && index.includes('id="moderationInboxBadge"'),"staff moderation inbox badge missing");
-assert(index.includes('/js/menu/menu-core.js?v=20260923-media-pwa1'),"avatar moderation menu bundle version missing");
+assert(index.includes('/js/menu/menu-core.js?v=20260924-vip-presence1'),"avatar moderation menu bundle version missing");
 assert(authShell.includes('shellT') && authController.includes('shellT'),"auth flow must use shared shell localization");
 assert(profile.includes('shellT') && profile.includes('subscribeShellLanguage'),"profile panel must use shared shell localization");
 assert(profile.includes('profileEulaAccepted') && profile.includes('acceptCurrentEula'),"profile EULA acceptance gate missing");
@@ -61,3 +63,8 @@ for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
 }
 
 console.log("Final web shell validation: OK");
+
+assert(index.includes('id="onlineUsersList"'),"online users card missing");
+assert(index.includes('/js/online-users.js?v=20260924-vip-presence1'),"online users module missing");
+assert(onlineUsers.includes('list_online_users'),"online users RPC integration missing");
+assert(userBadges.includes('formatUserDisplayName'),"shared user badge helper missing");
