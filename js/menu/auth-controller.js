@@ -9,6 +9,10 @@ import {
 } from "../shared/auth-service.js?v=20260921-prod-refresh1";
 import { loadMyProfile } from "../shared/profile-service.js?v=20260923-eula1";
 import { shellT } from "../shared/shell-language.js";
+import {
+  IDESUSS_SUPPORTED_LANGUAGES,
+  setIdesussLanguage
+} from "../shared/language-preference.js";
 import { PasswordSecurityError } from "../shared/password-security-service.js";
 import { openProfilePanel } from "./profile.js?v=20260923-eula1";
 import {
@@ -311,6 +315,7 @@ async function handleSubmit(event) {
   const email = document.getElementById("authEmail")?.value.trim() || "";
   const password = document.getElementById("authPassword")?.value || "";
   const repeatPassword = document.getElementById("authPasswordRepeat")?.value || "";
+  const language = document.getElementById("authLanguage")?.value || "";
   const mode = modal?.dataset.mode || "login";
 
   if (mode === "reset") {
@@ -351,6 +356,14 @@ async function handleSubmit(event) {
   }
 
   if (mode === "register") {
+    if (!IDESUSS_SUPPORTED_LANGUAGES.includes(language)) {
+      setMessage(shellT("authLanguageRequired"));
+      document.getElementById("authLanguage")?.focus();
+      return;
+    }
+
+    setIdesussLanguage(language);
+
     if (password !== repeatPassword) {
       setMessage(shellT("authPasswordsMismatch"));
       return;
@@ -372,6 +385,7 @@ async function handleSubmit(event) {
       const result = await signUp(client, {
         email,
         password,
+        language,
         emailRedirectTo: new URL("/", window.location.origin).href
       });
 
