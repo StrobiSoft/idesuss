@@ -1,27 +1,86 @@
-export default { common:{appName:"Idesüss"}, home:{
-totalVisitsCounter:"🌍 Łączna liczba wizyt: {count}", onlineUsersCounter:"👁 {count} online teraz",
-heroHow:"⚙️ Jak to działa", heroAbout:"ℹ️ O nas", heroWebapp:"▶️ Webapp",
-footerHow:"⚙️ Jak to działa", footerAbout:"ℹ️ O nas", footerOpenWebapp:"📱 Webapp", footerShare:"📤 Udostępnij",
-brandSubtitle:"Strona główna + miniaplikacja", heroLead:"Wypróbuj naszą popularną miniaplikację bezpośrednio na stronie głównej!",
-openWebapp:"Otwórz webapp", openRadio:"Otwórz radio", inputTitle:"Wklej publiczny link do filmu",
-inputSubtitle:"TikTok, YouTube, Instagram Reel, filmy z Facebooka i inne obsługiwane publiczne linki.",
-inputLabel:"Publiczny adres URL filmu", clipboardChecking:"Sprawdzanie schowka…", installStateUnknown:"Ładowanie stanu instalacji…",
-publicLinksOnly:"Tylko publiczne linki", heroBannerText:"Niektóre urządzenia z Androidem nie są obsługiwane!",
-footerDesc:"Strona główna + punkt wejścia do miniaplikacji dla obsługiwanych publicznych linków wideo.",
-menuRadio:"📻 Radio", menuRules:"📜 Regulamin", menuSettings:"⚙️ Ustawienia", settingsClose:"Zamknij", settingsTitle:"Ustawienia", settingsIntro:"Dostosuj wygląd Idesüss i podstawowe ustawienia na tym urządzeniu.", settingsLanguage:"Język", settingsAppearance:"Wygląd", settingsThemeAuto:"Automatyczny", settingsThemeLight:"Jasny", settingsThemeDark:"Ciemny", settingsBrightness:"Jasność", settingsShare:"Udostępnij Idesüss", settingsLogout:"Wyloguj", settingsShareText:"Idesüss — prosty dostęp do obsługiwanych publicznych linków wideo.", settingsShareDone:"Udostępniono.", settingsLinkCopied:"Link skopiowany.", settingsShareError:"Udostępnianie jest teraz niedostępne.", menuIdeas:"💡 Skrzynka pomysłów", menuIdeasInfoLabel:"Czym jest Skrzynka pomysłów?", menuIdeasInfo:"Możesz przesłać wszystko, co Twoim zdaniem może ulepszyć Idesüss: nową zasadę, funkcję lub usługę, brakującą możliwość, propozycję zmiany, a nawet pomysł na finansowanie lub wsparcie. Przeglądamy zgłoszenia, a wykonalne propozycje zgodne z zasadami Idesüss mogą trafić do rozwoju.",
-paste:"Wklej", open:"Otwórz", clear:"Wyczyść", details:"Szczegóły", profile:"👤 Profil", logout:"🚪 Wyloguj",
-register:"Rejestracja", login:"Zaloguj się", or:"lub",
-fx: {
-  "title": "Oficjalne dzienne kursy walut",
-  "source": "Dzienny kurs referencyjny ECB",
-  "sourceDate": "Data kursu ECB: {date}",
-  "loading": "ładowanie…",
-  "updated": "zaktualizowano",
-  "unavailable": "tymczasowo niedostępne",
-  "note": "Źródło: Europejski Bank Centralny (ECB). Kursy referencyjne ECB są aktualizowane w dni robocze; Idesüss nie śledzi zmian rynkowych w ciągu dnia."
-},
-
-how:{title:"Jak to działa?",text:"Wklej publiczny link do filmu, a następnie naciśnij przycisk otwierania. Idesüss spróbuje otworzyć treść w prosty i szybki sposób."},
-about:{title:"O nas",text:"Idesüss powstał z inspiracji bardzo starym, dobrym przyjacielem. Jego sposób myślenia, nawyki i wyjątkowe spojrzenie na świat sprawiły, że zacząłem myśleć o tej stronie. Jest trochę paranoiczny i trochę leniwy, dlatego przez pewien czas strona prawie nazywała się „Lazy Driver”. Ostatecznie została Idesüss i wcale tego nie żałuję. Nazwa znacznie lepiej oddaje klimat i zamysł strony, a jednocześnie nie jest krzywdząca dla osoby, która zainspirowała cały pomysł."},
-android:{title:"Zgodność z Androidem",text:"Na niektórych urządzeniach lub w przeglądarkach Android otwieranie filmów może działać inaczej. Idesüss próbuje obsłużyć link możliwie najprościej, ale z powodu ograniczeń platformy treść może czasem otworzyć się tylko w zewnętrznej witrynie lub aplikacji."}
-}};
+export default {
+  "common": {
+    "appName": "Idesüss"
+  },
+  "home": {
+    "totalVisitsCounter": "🌍 Łączna liczba wizyt: {count}",
+    "onlineUsersCounter": "👁 {count} online teraz",
+    "heroHow": "⚙️ Jak to działa",
+    "heroAbout": "ℹ️ O nas",
+    "heroWebapp": "▶️ Webapp",
+    "footerHow": "⚙️ Jak to działa",
+    "footerAbout": "ℹ️ O nas",
+    "footerOpenWebapp": "📱 Webapp",
+    "footerShare": "📤 Udostępnij",
+    "brandSubtitle": "Strona główna + miniaplikacja",
+    "heroLead": "Wypróbuj naszą popularną miniaplikację bezpośrednio na stronie głównej!",
+    "openWebapp": "Otwórz webapp",
+    "openRadio": "Otwórz radio",
+    "inputTitle": "Wklej publiczny link do filmu",
+    "inputSubtitle": "TikTok, YouTube, Instagram Reel, filmy z Facebooka i inne obsługiwane publiczne linki.",
+    "inputLabel": "Publiczny adres URL filmu",
+    "clipboardChecking": "Sprawdzanie schowka…",
+    "installStateUnknown": "Ładowanie stanu instalacji…",
+    "publicLinksOnly": "Tylko publiczne linki",
+    "heroBannerText": "Niektóre urządzenia z Androidem nie są obsługiwane!",
+    "footerDesc": "Strona główna + punkt wejścia do miniaplikacji dla obsługiwanych publicznych linków wideo.",
+    "menuRadio": "📻 Radio",
+    "menuRules": "📜 Regulamin",
+    "menuSettings": "⚙️ Ustawienia",
+    "settingsClose": "Zamknij",
+    "settingsTitle": "Ustawienia",
+    "settingsIntro": "Dostosuj wygląd Idesüss i podstawowe ustawienia na tym urządzeniu.",
+    "settingsLanguage": "Język",
+    "settingsAppearance": "Wygląd",
+    "settingsThemeAuto": "Automatyczny",
+    "settingsThemeLight": "Jasny",
+    "settingsThemeDark": "Ciemny",
+    "settingsBrightness": "Jasność",
+    "settingsShare": "Udostępnij Idesüss",
+    "settingsLogout": "Wyloguj",
+    "settingsShareText": "Idesüss — prosty dostęp do obsługiwanych publicznych linków wideo.",
+    "settingsShareDone": "Udostępniono.",
+    "settingsLinkCopied": "Link skopiowany.",
+    "settingsShareError": "Udostępnianie jest teraz niedostępne.",
+    "menuIdeas": "💡 Skrzynka pomysłów",
+    "menuIdeasInfoLabel": "Czym jest Skrzynka pomysłów?",
+    "menuIdeasInfo": "Możesz przesłać wszystko, co Twoim zdaniem może ulepszyć Idesüss: nową zasadę, funkcję lub usługę, brakującą możliwość, propozycję zmiany, a nawet pomysł na finansowanie lub wsparcie. Przeglądamy zgłoszenia, a wykonalne propozycje zgodne z zasadami Idesüss mogą trafić do rozwoju.",
+    "paste": "Wklej",
+    "open": "Otwórz",
+    "clear": "Wyczyść",
+    "details": "Szczegóły",
+    "profile": "👤 Profil",
+    "logout": "🚪 Wyloguj",
+    "register": "Rejestracja",
+    "login": "Zaloguj się",
+    "or": "lub",
+    "fx": {
+      "title": "Oficjalne dzienne kursy walut",
+      "source": "Dzienny kurs referencyjny ECB",
+      "sourceDate": "Data kursu ECB: {date}",
+      "loading": "ładowanie…",
+      "updated": "zaktualizowano",
+      "unavailable": "tymczasowo niedostępne",
+      "note": "Źródło: Europejski Bank Centralny (ECB). Kursy referencyjne ECB są aktualizowane w dni robocze; Idesüss nie śledzi zmian rynkowych w ciągu dnia."
+    },
+    "how": {
+      "title": "Jak to działa?",
+      "text": "Wklej publiczny link do filmu, a następnie naciśnij przycisk otwierania. Idesüss spróbuje otworzyć treść w prosty i szybki sposób."
+    },
+    "about": {
+      "title": "O nas",
+      "text": "Idesüss powstał z inspiracji bardzo starym, dobrym przyjacielem. Jego sposób myślenia, nawyki i wyjątkowe spojrzenie na świat sprawiły, że zacząłem myśleć o tej stronie. Jest trochę paranoiczny i trochę leniwy, dlatego przez pewien czas strona prawie nazywała się „Lazy Driver”. Ostatecznie została Idesüss i wcale tego nie żałuję. Nazwa znacznie lepiej oddaje klimat i zamysł strony, a jednocześnie nie jest krzywdząca dla osoby, która zainspirowała cały pomysł."
+    },
+    "android": {
+      "title": "Zgodność z Androidem",
+      "text": "Na niektórych urządzeniach lub w przeglądarkach Android otwieranie filmów może działać inaczej. Idesüss próbuje obsłużyć link możliwie najprościej, ale z powodu ograniczeń platformy treść może czasem otworzyć się tylko w zewnętrznej witrynie lub aplikacji."
+    },
+    "onlineUsersTitle": "Użytkownicy online",
+    "onlineUsersHint": "Wyświetlani są tylko użytkownicy, którzy zezwolili na widoczność.",
+    "onlineNow": "Online",
+    "onlineUsersNone": "Obecnie nie ma widocznych zarejestrowanych użytkowników online.",
+    "onlineUsersLoadError": "Nie udało się wczytać listy użytkowników online.",
+    "onlineUsersAnonymous": "Użytkownik",
+    "onlineUsersVisibleCount": "{count} widocznych zarejestrowanych użytkowników online."
+  }
+};
