@@ -1,6 +1,11 @@
+import {
+  getIdesussLanguage,
+  normalizeIdesussLanguage,
+  setIdesussLanguage
+} from '../js/shared/language-preference.js';
+
 const BELARUSIAN_LOCALE = 'be';
 const BELARUSIAN_LABEL = '🇧🇾 BY · Беларуская';
-const WEBAPP_LANG_STORAGE_KEY = 'ides_lang';
 
 function ensureBelarusianOption(select) {
   if (!select || select.querySelector(`option[value="${BELARUSIAN_LOCALE}"]`)) return;
@@ -17,14 +22,18 @@ export async function initExtendedLanguageOptions() {
 
   ensureBelarusianOption(select);
 
-  const saved = window.localStorage.getItem(WEBAPP_LANG_STORAGE_KEY);
-  const browserLanguage = (window.navigator.language || '').toLowerCase();
-  const shouldAutoSelectBelarusian = !saved && browserLanguage.startsWith('be');
+  const saved = getIdesussLanguage();
+  const browserLanguage = normalizeIdesussLanguage(window.navigator.language || '', '');
+  const shouldAutoSelectBelarusian =
+    saved === 'en' &&
+    !window.localStorage.getItem('idesuss_lang') &&
+    browserLanguage === BELARUSIAN_LOCALE;
 
-  if (saved === BELARUSIAN_LOCALE || shouldAutoSelectBelarusian) {
-    select.value = BELARUSIAN_LOCALE;
-    if (typeof window.loadLanguage === 'function') {
-      await window.loadLanguage(BELARUSIAN_LOCALE);
-    }
+  const language = shouldAutoSelectBelarusian ? BELARUSIAN_LOCALE : saved;
+  select.value = language;
+  setIdesussLanguage(language, { notify: false });
+
+  if (typeof window.loadLanguage === 'function') {
+    await window.loadLanguage(language);
   }
 }
