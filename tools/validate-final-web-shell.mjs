@@ -48,7 +48,10 @@ const requiredSettingsKeys = [
 for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
   const home = fs.readFileSync(`js/lang/modules/Home/lang/${code}.js`,"utf8");
   for (const key of requiredSettingsKeys) {
-    assert(home.includes(`${key}:`),`missing ${code} home settings key: ${key}`);
+    assert(
+      home.includes(`${key}:`) || home.includes(`"${key}":`),
+      `missing ${code} home settings key: ${key}`
+    );
   }
 
   const webapp = JSON.parse(fs.readFileSync(`app/${code}.json.txt`,"utf8"));
