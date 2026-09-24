@@ -94,6 +94,7 @@ function profileSaveErrorText(error) {
   if (raw.includes("INVALID_PROFILE:EMAIL_VISIBILITY")) return shellT("invalidEmailVisibility");
   if (raw.includes("EULA_ACCEPTANCE_REQUIRED")) return shellT("eulaRequired");
   if (raw.includes("AUTH_REQUIRED")) return shellT("profileAuth");
+  if (error?.code === "42501" && raw.includes("accept_current_eula")) return shellT("profileAuth");
   return raw ? shellT("profileSaveFailedDetail",{detail:raw}) : shellT("profileSaveFailed");
 }
 
@@ -161,13 +162,25 @@ async function renderProfile(panel, profile, user) {
   let submissions = [];
   let approvedAvatarUrl = "";
   let eulaStatus = { accepted: false, required_version: null };
+  let eulaLoadError = null;
 
   try {
     submissions = await loadMyAvatarSubmissions(window.supabaseClient);
+  } catch (error) {
+    console.error("Avatar submission status load failed", error);
+  }
+
+  try {
     approvedAvatarUrl = await getProfileAvatarImageUrl(window.supabaseClient, profile);
+  } catch (error) {
+    console.error("Profile avatar image load failed", error);
+  }
+
+  try {
     eulaStatus = await getMyEulaStatus(window.supabaseClient);
   } catch (error) {
-    console.error("Profile auxiliary data load failed", error);
+    eulaLoadError = error;
+    console.error("EULA status load failed", error);
   }
 
   panel.innerHTML = `
@@ -270,8 +283,8 @@ async function renderProfile(panel, profile, user) {
         <a href="/eula/" target="_blank" rel="noopener">${shellT("eulaLink")}</a>
       </div>
 
-      <button id="saveProfilePanel" class="menu-profile-btn" type="button">${shellT("saveProfile")}</button>
-      <div id="profilePanelMessage" class="profile-placeholder" aria-live="polite"></div>
+      <button id="saveProfilePanel" class="menu-profile-btn" type="button"${eulaLoadError ? " disabled" : ""}>${shellT("saveProfile")}</button>
+      <div id="profilePanelMessage" class="profile-placeholder" aria-live="polite">${eulaLoadError ? escapeHtml(shellT("profileAuth")) : ""}</div>
     </div>
   `;
 
@@ -303,7 +316,10 @@ async function renderProfile(panel, profile, user) {
   const eulaCheckbox = document.getElementById("profileEulaAccepted");
   const saveProfileButton = document.getElementById("saveProfilePanel");
 
-  if (!eulaStatus.accepted) {
+  if (eulaLoadError) {
+    eulaCheckbox?.setAttribute("disabled", "");
+    saveProfileButton?.classList.add("eula-pending");
+  } else if (!eulaStatus.accepted) {
     eulaCheckbox?.addEventListener("change", () => {
       const message = document.getElementById("profilePanelMessage");
       if (message && eulaCheckbox.checked && message.textContent === shellT("eulaRequired")) {
