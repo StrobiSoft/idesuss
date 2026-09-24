@@ -34,14 +34,17 @@ export async function signIn(supabaseClient, { email, password }) {
   return toIdentity(data?.user || null);
 }
 
-export async function signUp(supabaseClient, { email, password, emailRedirectTo }) {
+export async function signUp(supabaseClient, { email, password, emailRedirectTo, language }) {
   const client = requireClient(supabaseClient);
   await enforcePasswordSecurity(password);
-  const options = emailRedirectTo ? { emailRedirectTo } : undefined;
+  const options = {
+    ...(emailRedirectTo ? { emailRedirectTo } : {}),
+    ...(language ? { data: { language } } : {})
+  };
   const { data, error } = await client.auth.signUp({
     email,
     password,
-    ...(options ? { options } : {})
+    options
   });
   if (error) throw error;
   return {
