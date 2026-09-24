@@ -1802,7 +1802,23 @@ body.viewer-open #idesussMenu {
   </div>
 </div>
 
-  <footer class="footer">
+    <section class="online-users-section" aria-labelledby="onlineUsersTitle">
+    <div class="container">
+      <div class="online-users-card">
+        <div class="online-users-head">
+          <div>
+            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Online felhasználók</h2>
+            <p data-i18n="onlineUsersHint">Csak azok jelennek meg, akik ezt engedélyezték.</p>
+          </div>
+          <span class="online-users-live" data-i18n="onlineNow">Online</span>
+        </div>
+        <div id="onlineUsersList" class="online-users-list" aria-live="polite"></div>
+        <div id="onlineUsersListStatus" class="online-users-status"></div>
+      </div>
+    </div>
+  </section>
+
+<footer class="footer">
     <div class="container">
       <div class="footer-card">
         <div class="footer-top">
@@ -1847,22 +1863,6 @@ body.viewer-open #idesussMenu {
         </div>
       </div>
     </div>
-  <section class="online-users-section" aria-labelledby="onlineUsersTitle">
-    <div class="container">
-      <div class="online-users-card">
-        <div class="online-users-head">
-          <div>
-            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Online felhasználók</h2>
-            <p data-i18n="onlineUsersHint">Csak azok jelennek meg, akik ezt engedélyezték.</p>
-          </div>
-          <span class="online-users-live" data-i18n="onlineNow">Online</span>
-        </div>
-        <div id="onlineUsersList" class="online-users-list" aria-live="polite"></div>
-        <div id="onlineUsersListStatus" class="online-users-status"></div>
-      </div>
-    </div>
-  </section>
-
   </footer>
 
   <script type="module">
