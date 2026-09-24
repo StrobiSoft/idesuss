@@ -1,93 +1,60 @@
 export default {
-  common: {
-    appName: "Idesüss"
+  "common": {
+    "appName": "Idesüss"
   },
-
-  home: {
-    totalVisitsCounter: "🌍 {count} total visits",
-
-    onlineUsersCounter: "👁 {count} online now",
-
-    heroHow: "⚙️ How it works",
-
-    heroAbout: "ℹ️ About",
-
-    heroWebapp: "▶️ Webapp",
-
-    footerHow: "⚙️ How it works",
-
-    footerAbout: "ℹ️ About",
-
-    footerOpenWebapp: "📱 Webapp",
-
-    footerShare: "📤 Share",
-
-    brandSubtitle: "Homepage + mini app experience",
-
-    heroLead: "Try our popular mini app directly on the homepage!",
-
-    openWebapp: "Open webapp",
-
-    openRadio: "Open radio",
-
-    inputTitle: "Paste a public video link",
-
-    inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.",
-
-    inputLabel: "Public video URL",
-
-    clipboardChecking: "Checking clipboard…",
-
-    installStateUnknown: "Loading install status…",
-
-    publicLinksOnly: "Public links only",
-
-    heroBannerText: "Some Android devices are not supported!",
-
-    footerDesc: "Homepage + mini app entry point for supported public video links.",
-
-    paste: "Paste",
-
-    open: "Open",
-
-    clear: "Clear",
-
-    menuRadio: "📻 Radio",
-    menuRules: "📜 House rules",
-
-    menuSettings: "⚙️ Settings",
-    settingsClose: "Close",
-    settingsTitle: "Settings",
-    settingsIntro: "Personalize the Idesüss web experience and basic preferences on this device.",
-    settingsLanguage: "Language",
-    settingsAppearance: "Appearance",
-    settingsThemeAuto: "Automatic",
-    settingsThemeLight: "Light",
-    settingsThemeDark: "Dark",
-    settingsBrightness: "Brightness",
-    settingsShare: "Share Idesüss",
-    settingsLogout: "Log out",
-    settingsShareText: "Idesüss — simple access to supported public video links.",
-    settingsShareDone: "Shared.",
-    settingsLinkCopied: "Link copied.",
-    settingsShareError: "Sharing is not available right now.",
-    menuIdeas: "💡 Idea Box",
-    menuIdeasInfoLabel: "What is the Idea Box?",
-    menuIdeasInfo: "Send anything you think could make Idesüss better: a new rule, feature or service, a missing option, a change request, or even a funding or support idea. We review submissions and feasible ideas that fit Idesüss principles may enter development.",
-
-    details: "Details",
-
-    profile: "👤 Profile",
-
-    logout: "🚪 Log out",
-
-    register: "Register",
-
-    login: "Log in",
-
-    or: "or",
-
-    fx: {
+  "home": {
+    "totalVisitsCounter": "🌍 {count} total visits",
+    "onlineUsersCounter": "👁 {count} online now",
+    "heroHow": "⚙️ How it works",
+    "heroAbout": "ℹ️ About",
+    "heroWebapp": "▶️ Webapp",
+    "footerHow": "⚙️ How it works",
+    "footerAbout": "ℹ️ About",
+    "footerOpenWebapp": "📱 Webapp",
+    "footerShare": "📤 Share",
+    "brandSubtitle": "Homepage + mini app experience",
+    "heroLead": "Try our popular mini app directly on the homepage!",
+    "openWebapp": "Open webapp",
+    "openRadio": "Open radio",
+    "inputTitle": "Paste a public video link",
+    "inputSubtitle": "TikTok, YouTube, Instagram Reel, Facebook video and other supported public links.",
+    "inputLabel": "Public video URL",
+    "clipboardChecking": "Checking clipboard…",
+    "installStateUnknown": "Loading install status…",
+    "publicLinksOnly": "Public links only",
+    "heroBannerText": "Some Android devices are not supported!",
+    "footerDesc": "Homepage + mini app entry point for supported public video links.",
+    "paste": "Paste",
+    "open": "Open",
+    "clear": "Clear",
+    "menuRadio": "📻 Radio",
+    "menuRules": "📜 House rules",
+    "menuSettings": "⚙️ Settings",
+    "settingsClose": "Close",
+    "settingsTitle": "Settings",
+    "settingsIntro": "Personalize the Idesüss web experience and basic preferences on this device.",
+    "settingsLanguage": "Language",
+    "settingsAppearance": "Appearance",
+    "settingsThemeAuto": "Automatic",
+    "settingsThemeLight": "Light",
+    "settingsThemeDark": "Dark",
+    "settingsBrightness": "Brightness",
+    "settingsShare": "Share Idesüss",
+    "settingsLogout": "Log out",
+    "settingsShareText": "Idesüss — simple access to supported public video links.",
+    "settingsShareDone": "Shared.",
+    "settingsLinkCopied": "Link copied.",
+    "settingsShareError": "Sharing is not available right now.",
+    "menuIdeas": "💡 Idea Box",
+    "menuIdeasInfoLabel": "What is the Idea Box?",
+    "menuIdeasInfo": "Send anything you think could make Idesüss better: a new rule, feature or service, a missing option, a change request, or even a funding or support idea. We review submissions and feasible ideas that fit Idesüss principles may enter development.",
+    "details": "Details",
+    "profile": "👤 Profile",
+    "logout": "🚪 Log out",
+    "register": "Register",
+    "login": "Log in",
+    "or": "or",
+    "fx": {
       "title": "Official daily exchange rates",
       "source": "ECB daily reference rate",
       "sourceDate": "ECB rate date: {date}",
@@ -96,20 +63,24 @@ export default {
       "unavailable": "temporarily unavailable",
       "note": "Source: European Central Bank (ECB). ECB reference rates are updated on business days; Idesüss does not track intraday market movements."
     },
-
-how: {
-      title: "How does it work?",
-      text: "Paste a public video link, then press the open button. Idesüss will try to open the content in a simple and fast way."
+    "how": {
+      "title": "How does it work?",
+      "text": "Paste a public video link, then press the open button. Idesüss will try to open the content in a simple and fast way."
     },
-
-    about: {
-      title: "About",
-      text: "Idesüss was inspired by a very old good friend of mine. Partly because of his way of thinking, habits and unique worldview, I started thinking about this page. He is a little paranoid and a little lazy, so for a while the page was almost called ‘Lazy Driver’. In the end it became Idesüss, and I do not regret that at all. It came much closer to the mood and intention I wanted this page to represent — without carrying anything that could be hurtful to the person who started the whole idea in me."
+    "about": {
+      "title": "About",
+      "text": "Idesüss was inspired by a very old good friend of mine. Partly because of his way of thinking, habits and unique worldview, I started thinking about this page. He is a little paranoid and a little lazy, so for a while the page was almost called ‘Lazy Driver’. In the end it became Idesüss, and I do not regret that at all. It came much closer to the mood and intention I wanted this page to represent — without carrying anything that could be hurtful to the person who started the whole idea in me."
     },
-
-    android: {
-      title: "Android compatibility",
-      text: "On some Android devices or browsers, opening videos may work differently. In these cases, Idesüss tries to handle the link in the simplest possible way, but because of platform restrictions, the content may sometimes open only on an external site or in an app."
-    }
+    "android": {
+      "title": "Android compatibility",
+      "text": "On some Android devices or browsers, opening videos may work differently. In these cases, Idesüss tries to handle the link in the simplest possible way, but because of platform restrictions, the content may sometimes open only on an external site or in an app."
+    },
+    "onlineUsersTitle": "Online users",
+    "onlineUsersHint": "Only users who allowed visibility are shown.",
+    "onlineNow": "Online",
+    "onlineUsersNone": "No visible registered users are online right now.",
+    "onlineUsersLoadError": "Online users could not be loaded.",
+    "onlineUsersAnonymous": "User",
+    "onlineUsersVisibleCount": "{count} visible registered users online."
   }
 };

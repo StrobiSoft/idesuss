@@ -8,6 +8,7 @@ import {
 } from "../js/shared/auth-service.js";
 import { ensureAuthModal, openAuthModal, closeAuthModal } from "../js/menu/auth-shell.js";
 import { initMessagesLanguage, t, getMessagesLanguage } from "./messages-language.js";
+import { formatUserDisplayName, loadUserBadgeMap } from "../js/shared/user-badges.js";
 
 const $ = (s) => document.querySelector(s);
 let client = null;
@@ -20,6 +21,20 @@ let unsubscribeAuth = null;
 let sendLocked = false;
 let lastFailedBody = "";
 let friendshipByUser = new Map();
+let userBadgeMap = new Map();
+
+async function refreshBadgeMap(userIds) {
+  try {
+    userBadgeMap = await loadUserBadgeMap(client, userIds);
+  } catch (error) {
+    console.error("User badge load failed", error);
+    userBadgeMap = new Map();
+  }
+}
+
+function displayName(userId, name) {
+  return formatUserDisplayName(name || t("user"), userBadgeMap.get(userId));
+}
 
 function setText(el, value) { if (el) el.textContent = value ?? ""; }
 function fmtDate(value) {
@@ -59,6 +74,8 @@ async function loadThreads() {
   if (error) { setText(list,t("threadsLoadError")); return; }
   if (!(data||[]).length) { setText(list,t("noMessages")); return; }
 
+  await refreshBadgeMap((data || []).map((thread) => thread.other_id));
+
   for (const thread of data) {
     const button = document.createElement("button");
     button.className = "thread" + (currentOther === thread.other_id ? " active" : "");
@@ -68,7 +85,7 @@ async function loadThreads() {
     top.className = "thread-top";
     const name = document.createElement("span");
     name.className = "thread-name";
-    name.textContent = (thread.other_avatar_emoji || "🙂") + " " + (thread.other_nickname || t("user"));
+    name.textContent = (thread.other_avatar_emoji || "🙂") + " " + displayName(thread.other_id, thread.other_nickname);
     top.append(name);
 
     if (Number(thread.unread_count) > 0) {
@@ -108,7 +125,8 @@ function isReplyableThread(thread) {
 async function openConversation(thread) {
   currentOther = thread.other_id;
   currentThread = thread;
-  setText($("#conversationHead"), (thread.other_avatar_emoji || "🙂") + " " + (thread.other_nickname || t("user")));
+  if (!userBadgeMap.has(thread.other_id)) await refreshBadgeMap([thread.other_id]);
+  setText($("#conversationHead"), (thread.other_avatar_emoji || "🙂") + " " + displayName(thread.other_id, thread.other_nickname));
   setComposerReplyability(isReplyableThread(thread));
   $("#messagesPanel").classList.add("mobile-conversation");
   await client.rpc("mark_direct_messages_read",{p_sender:currentOther});
@@ -233,13 +251,15 @@ async function loadFriendships() {
   friendshipByUser = new Map((data||[]).map((f) => [f.other_id,f]));
   if (!(data||[]).length) { setText(list,t("noConnections")); return; }
 
+  await refreshBadgeMap((data || []).map((f) => f.other_id));
+
   for (const f of data) {
     const row = document.createElement("div");
     row.className = "person";
 
     const info = document.createElement("div");
     const title = document.createElement("strong");
-    title.textContent = (f.other_avatar_emoji || "🙂") + " " + (f.other_nickname || t("user"));
+    title.textContent = (f.other_avatar_emoji || "🙂") + " " + displayName(f.other_id, f.other_nickname);
     const badge = document.createElement("div");
     badge.className = "status-badge";
     badge.textContent = friendshipStatusLabel(f);
@@ -296,12 +316,13 @@ async function searchFriends() {
   if (error) { setText(status,t("searchError")); return; }
 
   setText(status,(data||[]).length ? t("resultCount",(data||[]).length) : t("noResults"));
+  await refreshBadgeMap((data || []).map((user) => user.id));
   for (const user of data || []) {
     const row = document.createElement("div");
     row.className = "person";
     const info = document.createElement("div");
     const title = document.createElement("strong");
-    title.textContent = (user.avatar_emoji || "🙂") + " " + (user.nickname || t("user"));
+    title.textContent = (user.avatar_emoji || "🙂") + " " + displayName(user.id, user.nickname);
     const role = document.createElement("div");
     role.className = "muted";
     role.textContent = roleLabel(user.role);
