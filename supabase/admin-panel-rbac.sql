@@ -133,6 +133,8 @@ $function$;
 
 revoke all on function public.heartbeat_my_presence(text) from public;
 revoke all on function public.set_my_presence_offline() from public;
+revoke execute on function public.heartbeat_my_presence(text) from anon;
+revoke execute on function public.set_my_presence_offline() from anon;
 grant execute on function public.heartbeat_my_presence(text) to authenticated;
 grant execute on function public.set_my_presence_offline() to authenticated;
 
