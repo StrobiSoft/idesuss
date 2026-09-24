@@ -1558,7 +1558,21 @@ body.viewer-open #idesussMenu {
   opacity: 1;
   visibility: visible;
 }
-  </style>
+  .online-users-section{margin:0 0 24px}
+.online-users-card{background:rgba(255,255,255,.82);border:1px solid rgba(80,120,160,.18);border-radius:22px;padding:18px;box-shadow:0 14px 36px rgba(20,60,110,.10)}
+.online-users-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}
+.online-users-head h2{margin:0 0 4px;font-size:1.15rem}
+.online-users-head p{margin:0;color:#5e748d;font-size:.9rem}
+.online-users-live{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:800;color:#167a42}
+.online-users-live::before{content:"";width:9px;height:9px;border-radius:50%;background:#34c759;box-shadow:0 0 0 4px rgba(52,199,89,.13)}
+.online-users-list{display:grid;gap:8px;max-height:260px;overflow:auto;padding-right:4px}
+.online-user-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 11px;border-radius:14px;background:rgba(13,91,215,.045)}
+.online-user-avatar{font-size:1.15rem}.online-user-name{font-weight:800;min-width:0;overflow-wrap:anywhere}
+.online-user-dot{width:9px;height:9px;border-radius:50%;background:#34c759}
+.online-user-empty,.online-users-status{color:#6a7d91;font-size:.88rem}
+.online-users-status{margin-top:10px}
+@media(max-width:520px){.online-users-card{padding:14px}.online-users-list{max-height:220px}}
+</style>
 </head>
 <body>
   <header class="site-header">
@@ -1833,6 +1847,22 @@ body.viewer-open #idesussMenu {
         </div>
       </div>
     </div>
+  <section class="online-users-section" aria-labelledby="onlineUsersTitle">
+    <div class="container">
+      <div class="online-users-card">
+        <div class="online-users-head">
+          <div>
+            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Online felhasználók</h2>
+            <p data-i18n="onlineUsersHint">Csak azok jelennek meg, akik ezt engedélyezték.</p>
+          </div>
+          <span class="online-users-live" data-i18n="onlineNow">Online</span>
+        </div>
+        <div id="onlineUsersList" class="online-users-list" aria-live="polite"></div>
+        <div id="onlineUsersListStatus" class="online-users-status"></div>
+      </div>
+    </div>
+  </section>
+
   </footer>
 
   <script type="module">
@@ -2365,5 +2395,6 @@ if (closeViewerBtn && viewerShell && viewerFrame) {
 <script type="module" src="./js/fx-rates.js?v=20260921-byn2"></script>
 <script type="module" src="./js/menu/menu-core.js?v=20260923-media-pwa1"></script>
 
+<script type="module" src="/js/online-users.js?v=20260924-vip-presence1"></script>
 </body>
 </html>
