@@ -1,95 +1,60 @@
 export default {
-  common: {
-    appName: "Idesüss"
+  "common": {
+    "appName": "Idesüss"
   },
-
-  home: {
-    totalVisitsCounter: "🌍 {count} összes látogatás",
-    
-    onlineUsersCounter: "👁 {count} online most",
-
-    heroHow: "⚙️ Hogyan működik",
-
-    heroAbout: "ℹ️ Névjegy",
-
-    heroWebapp: "📱 Webapp",
-
-    footerHow: "⚙️ Hogyan működik",
-    
-    footerAbout: "ℹ️ Névjegy",
-
-    footerOpenWebapp: "📱 Webapp",
-
-    footerShare: "📤 Megosztás",
-
-    brandSubtitle: "Főoldal + mini app élmény",
-
-    heroLead: "Próbáld ki közvetlenül a főoldalon népszerű minialkalmazásunkat!",
-
-    openWebapp: "Webapp megnyitása",
-
-    openRadio: "Rádió megnyitása",
-
-    inputTitle: "Illessz be egy nyilvános videólinket",
-
-    inputSubtitle: "TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.",
-
-    inputLabel: "Nyilvános videó URL",
-
-    clipboardChecking: "Vágólap ellenőrzése…",
-
-    installStateUnknown: "Telepítési állapot betöltése…",
-
-    publicLinksOnly: "Csak nyilvános linkek",
-
-    heroBannerText: "Egyes Android eszközök nem támogatják!",
-
-    footerDesc: "Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.",
-
-    paste: "Beillesztés",
-
-    open: "Megnyitás",
-
-    clear: "Törlés",
-
-    menuRadio: "📻 Rádió",
-    menuRules: "📜 Házirend",
-
-    menuSettings: "⚙️ Beállítások",
-    settingsClose: "Bezárás",
-    settingsTitle: "Beállítások",
-    settingsIntro: "Az Idesüss webes megjelenésének és alapbeállításainak személyre szabása ezen az eszközön.",
-    settingsLanguage: "Nyelv",
-    settingsAppearance: "Megjelenés",
-    settingsThemeAuto: "Automatikus",
-    settingsThemeLight: "Világos",
-    settingsThemeDark: "Sötét",
-    settingsBrightness: "Fényerő",
-    settingsShare: "Idesüss megosztása",
-    settingsLogout: "Kijelentkezés",
-    settingsShareText: "Idesüss — támogatott nyilvános videólinkek egyszerű megnyitásához.",
-    settingsShareDone: "Megosztva.",
-    settingsLinkCopied: "Link kimásolva.",
-    settingsShareError: "A megosztás most nem érhető el.",
-    menuIdeas: "💡 Ötletláda",
-    menuIdeasInfoLabel: "Mi az Ötletláda?",
-    menuIdeasInfo: "Ide írhatsz bármit, amitől szerinted jobb lehet az Idesüss: új szabályt, funkciót vagy szolgáltatást, hiányzó lehetőséget, változtatási javaslatot, akár finanszírozási vagy támogatási ötletet is. A beküldéseket átnézzük és értékeljük; a megvalósítható, az Idesüss elveivel összeegyeztethető ötletek bekerülhetnek a fejlesztésbe.",
-
-    details: "Részletek",
-    
-    profile: "👤 Profil",
-
-    heroWebapp: "▶️ Webapp",
-
-    logout: "🚪 Kijelentkezés",
-
-    register: "Regisztráció",
-
-    login: "Bejelentkezés",
-
-    or: "vagy",
-
-    fx: {
+  "home": {
+    "totalVisitsCounter": "🌍 {count} összes látogatás",
+    "onlineUsersCounter": "👁 {count} online most",
+    "heroHow": "⚙️ Hogyan működik",
+    "heroAbout": "ℹ️ Névjegy",
+    "heroWebapp": "▶️ Webapp",
+    "footerHow": "⚙️ Hogyan működik",
+    "footerAbout": "ℹ️ Névjegy",
+    "footerOpenWebapp": "📱 Webapp",
+    "footerShare": "📤 Megosztás",
+    "brandSubtitle": "Főoldal + mini app élmény",
+    "heroLead": "Próbáld ki közvetlenül a főoldalon népszerű minialkalmazásunkat!",
+    "openWebapp": "Webapp megnyitása",
+    "openRadio": "Rádió megnyitása",
+    "inputTitle": "Illessz be egy nyilvános videólinket",
+    "inputSubtitle": "TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.",
+    "inputLabel": "Nyilvános videó URL",
+    "clipboardChecking": "Vágólap ellenőrzése…",
+    "installStateUnknown": "Telepítési állapot betöltése…",
+    "publicLinksOnly": "Csak nyilvános linkek",
+    "heroBannerText": "Egyes Android eszközök nem támogatják!",
+    "footerDesc": "Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.",
+    "paste": "Beillesztés",
+    "open": "Megnyitás",
+    "clear": "Törlés",
+    "menuRadio": "📻 Rádió",
+    "menuRules": "📜 Házirend",
+    "menuSettings": "⚙️ Beállítások",
+    "settingsClose": "Bezárás",
+    "settingsTitle": "Beállítások",
+    "settingsIntro": "Az Idesüss webes megjelenésének és alapbeállításainak személyre szabása ezen az eszközön.",
+    "settingsLanguage": "Nyelv",
+    "settingsAppearance": "Megjelenés",
+    "settingsThemeAuto": "Automatikus",
+    "settingsThemeLight": "Világos",
+    "settingsThemeDark": "Sötét",
+    "settingsBrightness": "Fényerő",
+    "settingsShare": "Idesüss megosztása",
+    "settingsLogout": "Kijelentkezés",
+    "settingsShareText": "Idesüss — támogatott nyilvános videólinkek egyszerű megnyitásához.",
+    "settingsShareDone": "Megosztva.",
+    "settingsLinkCopied": "Link kimásolva.",
+    "settingsShareError": "A megosztás most nem érhető el.",
+    "menuIdeas": "💡 Ötletláda",
+    "menuIdeasInfoLabel": "Mi az Ötletláda?",
+    "menuIdeasInfo": "Ide írhatsz bármit, amitől szerinted jobb lehet az Idesüss: új szabályt, funkciót vagy szolgáltatást, hiányzó lehetőséget, változtatási javaslatot, akár finanszírozási vagy támogatási ötletet is. A beküldéseket átnézzük és értékeljük; a megvalósítható, az Idesüss elveivel összeegyeztethető ötletek bekerülhetnek a fejlesztésbe.",
+    "details": "Részletek",
+    "profile": "👤 Profil",
+    "logout": "🚪 Kijelentkezés",
+    "register": "Regisztráció",
+    "login": "Bejelentkezés",
+    "or": "vagy",
+    "fx": {
       "title": "Napi hivatalos árfolyamok",
       "source": "ECB napi referenciaárfolyam",
       "sourceDate": "ECB árfolyamnap: {date}",
@@ -98,27 +63,31 @@ export default {
       "unavailable": "átmenetileg nem elérhető",
       "note": "Forrás: Európai Központi Bank (ECB). Az ECB referenciaárfolyamai munkanapokon frissülnek; az Idesüss a napon belüli piaci ingadozást nem követi."
     },
-
-how: {
-      title: "Hogyan működik?",
-      text: "Másolj be egy nyilvános videólinket, majd nyomd meg a megnyitás gombot. Az Idesüss megpróbálja egyszerűen és gyorsan megnyitni a tartalmat."
+    "how": {
+      "title": "Hogyan működik?",
+      "text": "Másolj be egy nyilvános videólinket, majd nyomd meg a megnyitás gombot. Az Idesüss megpróbálja egyszerűen és gyorsan megnyitni a tartalmat."
     },
-
-    about: {
-      title: "Névjegy",
-      text: "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem."
-},
-    android: {
-      title: "Android kompatibilitás",
-      text: "Egyes Android eszközökön vagy böngészőkben a videók megnyitása eltérően működhet. Ilyenkor az Idesüss megpróbálja a lehető legegyszerűbb módon kezelni a linket, de bizonyos platformok saját korlátozásai miatt előfordulhat, hogy a tartalom csak külső oldalon vagy alkalmazásban nyílik meg."
-},
-
-    ui: {
-      pastePlaceholder: "Illessz be egy videólinket...",
-      openButton: "Megnyitás",
-      pasteButton: "Beillesztés",
-      clearButton: "Törlés",
-      shareButton: "Megosztás"
-    }
+    "about": {
+      "title": "Névjegy",
+      "text": "Az Idesüss megszületését egy nagyon régi jó barátom ihlette. Részben az ő gondolkodása, szokásai és sajátos világlátása miatt kezdtem el ezen az oldalon gondolkodni. Egy kicsit paranoiás, egy kicsit lusta figura, ezért egy ideig majdnem „Lusta Sofőr” lett az oldal neve. Végül Idesüss lett belőle, amit egyáltalán nem bántam meg. Sokkal közelebb került ahhoz a hangulathoz és szándékhoz, amit az oldallal képviselni szerettem volna — úgy, hogy közben semmi olyasmit ne hordozzon, ami bántó lehetne arra az emberre nézve, aki az egész ötletet elindította bennem."
+    },
+    "android": {
+      "title": "Android kompatibilitás",
+      "text": "Egyes Android eszközökön vagy böngészőkben a videók megnyitása eltérően működhet. Ilyenkor az Idesüss megpróbálja a lehető legegyszerűbb módon kezelni a linket, de bizonyos platformok saját korlátozásai miatt előfordulhat, hogy a tartalom csak külső oldalon vagy alkalmazásban nyílik meg."
+    },
+    "ui": {
+      "pastePlaceholder": "Illessz be egy videólinket...",
+      "openButton": "Megnyitás",
+      "pasteButton": "Beillesztés",
+      "clearButton": "Törlés",
+      "shareButton": "Megosztás"
+    },
+    "onlineUsersTitle": "Online felhasználók",
+    "onlineUsersHint": "Csak azok jelennek meg, akik ezt engedélyezték.",
+    "onlineNow": "Online",
+    "onlineUsersNone": "Jelenleg nincs látható regisztrált felhasználó online.",
+    "onlineUsersLoadError": "Az online felhasználók listája nem tölthető be.",
+    "onlineUsersAnonymous": "Felhasználó",
+    "onlineUsersVisibleCount": "{count} látható regisztrált felhasználó online."
   }
 };
