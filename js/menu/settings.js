@@ -38,7 +38,10 @@ function resolveTheme(theme = getStoredTheme()) {
 }
 
 function getStoredBrightness() {
-  const raw = Number(localStorage.getItem(BRIGHTNESS_KEY));
+  const stored = localStorage.getItem(BRIGHTNESS_KEY);
+  if (stored === null || stored === "") return 100;
+
+  const raw = Number(stored);
   if (!Number.isFinite(raw)) return 100;
   return Math.min(MAX_BRIGHTNESS, Math.max(MIN_BRIGHTNESS, Math.round(raw)));
 }
