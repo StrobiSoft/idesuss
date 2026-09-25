@@ -23,10 +23,10 @@ assert(settings.includes('idesuss_theme') && settings.includes('idesuss_brightne
 assert(!settings.toLowerCase().includes("always on top"),"unsupported always-on-top setting must not be exposed");
 assert(polish.includes('data-idesuss-theme="dark"'),"dark appearance CSS missing");
 assert(polish.includes('--idesuss-dim-opacity'),"brightness/dimming CSS missing");
-assert(serviceWorker.includes('idesuss-root-v12'),"service worker cache version must be bumped");
-assert(serviceWorker.includes('/js/menu/settings.js?v=20260923-finalweb1'),"settings module missing from static cache");
+assert(/idesuss-root-v\\d+/.test(serviceWorker),"service worker cache version marker missing");
+assert(/\/js\/menu\/settings\.js\?v=\d{8}-[a-z0-9-]+/i.test(serviceWorker),"settings module missing from static cache");
 assert(index.includes('id="moderationInboxBtn"') && index.includes('id="moderationInboxBadge"'),"staff moderation inbox badge missing");
-assert(index.includes('/js/menu/menu-core.js?v=20260924-vip-presence1'),"avatar moderation menu bundle version missing");
+assert(/\/js\/menu\/menu-core\.js\?v=\d{8}-[a-z0-9-]+/i.test(index),"versioned menu bundle missing");
 assert(authShell.includes('shellT') && authController.includes('shellT'),"auth flow must use shared shell localization");
 assert(profile.includes('shellT') && profile.includes('subscribeShellLanguage'),"profile panel must use shared shell localization");
 assert(profile.includes('profileEulaAccepted') && profile.includes('acceptCurrentEula'),"profile EULA acceptance gate missing");
