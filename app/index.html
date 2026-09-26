@@ -12,9 +12,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#0f172a" />
+    <meta name="color-scheme" content="dark" />
 
     <style>
         :root {
+            color-scheme: dark;
             --bg-1: #020617;
             --bg-2: #0f172a;
             --card: rgba(15, 23, 42, 0.78);
@@ -66,6 +68,10 @@
         button, textarea, select {
             font: inherit;
         }
+
+        a { color: inherit; }
+        input, textarea, select, button { color: inherit; }
+        body, .app, .card, .panel, .app-menu { forced-color-adjust: none; }
 
         button, select, a {
             touch-action: manipulation;
