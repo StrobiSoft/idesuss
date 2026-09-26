@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "presetOne": {
+    "replaceable": true,
+    "byLocale": {
+      "hu": {
+        "stationId": "hu-radio-1",
+        "name": "Rádió 1",
+        "countryCode": "HU"
+      },
+      "en": {
+        "stationId": "en-heart-uk",
+        "name": "Heart UK",
+        "countryCode": "GB"
+      },
+      "nl": {
+        "stationId": "nl-slam",
+        "name": "SLAM!",
+        "countryCode": "NL"
+      },
+      "ro": {
+        "stationId": "ro-kiss-fm",
+        "name": "Kiss FM",
+        "countryCode": "RO"
+      },
+      "pl": {
+        "stationId": "pl-rmf-maxxx",
+        "name": "RMF MAXXX",
+        "countryCode": "PL"
+      },
+      "hr": {
+        "stationId": "hr-bravo",
+        "name": "bravo!",
+        "countryCode": "HR"
+      },
+      "be": {
+        "stationId": "be-novoe-radio",
+        "name": "Novoe Radio",
+        "countryCode": "BY"
+      }
+    }
+  }
+}

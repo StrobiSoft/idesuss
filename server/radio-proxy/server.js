@@ -2,6 +2,7 @@ import http from "node:http";
 import dns from "node:dns/promises";
 import net from "node:net";
 import crypto from "node:crypto";
+import fs from "node:fs";
 import { createSpyTrap } from "../security/spy-trap.js";
 
 const PORT = Number(process.env.PORT || 8787);
@@ -21,16 +22,60 @@ function spyTrapResponse(res, level) {
 }
 
 function loadStations() {
-  const raw = process.env.IDESUSS_RADIO_STATIONS_JSON || "{}";
   let parsed;
-  try { parsed = JSON.parse(raw); } catch { throw new Error("IDESUSS_RADIO_STATIONS_JSON is not valid JSON"); }
+
+  const override = process.env.IDESUSS_RADIO_STATIONS_JSON;
+  if (override) {
+    try {
+      const legacy = JSON.parse(override);
+      parsed = {
+        schemaVersion: 1,
+        stations: Object.entries(legacy).map(([id, value]) => ({
+          id,
+          name: typeof value === "object" ? String(value?.name || id) : id,
+          sourceUrl: typeof value === "string" ? value : value?.sourceUrl,
+          preferredLocale:
+            typeof value === "object" && Array.isArray(value?.locales)
+              ? String(value.locales[0] || "")
+              : "",
+          enabled: true
+        }))
+      };
+    } catch {
+      throw new Error("IDESUSS_RADIO_STATIONS_JSON is not valid JSON");
+    }
+  } else {
+    parsed = JSON.parse(
+      fs.readFileSync(new URL("./common-radio-catalog.json", import.meta.url), "utf8")
+    );
+  }
+
+  if (parsed?.schemaVersion !== 1 || !Array.isArray(parsed?.stations)) {
+    throw new Error("Canonical radio catalog is invalid");
+  }
+
   const map = new Map();
-  for (const [id, value] of Object.entries(parsed)) {
+  for (const value of parsed.stations) {
+    const id = String(value?.id || "").trim();
     if (!ID_RE.test(id)) throw new Error(`Invalid station id: ${id}`);
-    const sourceUrl = typeof value === "string" ? value : value?.sourceUrl;
-    const name = typeof value === "object" ? String(value?.name || id) : id;
-    const locales = typeof value === "object" && Array.isArray(value?.locales) ? value.locales.map(String) : [];
-    map.set(id, { id, name, sourceUrl: String(sourceUrl || ""), locales });
+
+    const sourceUrl = String(value?.sourceUrl || "").trim();
+    const name = String(value?.name || id).trim() || id;
+    const preferredLocale = String(value?.preferredLocale || "").trim().toLowerCase();
+    const locales = preferredLocale ? [preferredLocale] : [];
+
+    map.set(id, {
+      id,
+      name,
+      sourceUrl,
+      locales,
+      info: String(value?.info || "").trim(),
+      artwork: String(value?.artwork || "").trim(),
+      homepage: String(value?.homepage || "").trim(),
+      countryCode: String(value?.countryCode || "").trim().toUpperCase(),
+      recommendedSlot: Number(value?.recommendedSlot) || 0,
+      enabled: value?.enabled !== false
+    });
   }
   return map;
 }
@@ -175,8 +220,19 @@ async function relayUpstream(req, res, stationId, upstream) {
 
 function catalog(locale) {
   return [...stations.values()]
-    .filter(s => !locale || !s.locales.length || s.locales.includes(locale))
-    .map(s => ({ id:s.id, name:s.name, playbackPath:`/v1/radio/stream/${s.id}`, enabled:true, preferred:Boolean(locale && s.locales[0] === locale) }));
+    .filter(s => s.enabled && (!locale || !s.locales.length || s.locales.includes(locale)))
+    .map(s => ({
+      id: s.id,
+      name: s.name,
+      info: s.info,
+      artwork: s.artwork,
+      homepage: s.homepage,
+      countryCode: s.countryCode,
+      recommendedSlot: s.recommendedSlot,
+      playbackPath: `/v1/radio/stream/${s.id}`,
+      enabled: true,
+      preferred: Boolean(locale && s.locales[0] === locale && s.recommendedSlot === 1)
+    }));
 }
 
 const server = http.createServer(async (req,res) => {
