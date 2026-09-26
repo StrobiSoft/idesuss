@@ -81,6 +81,9 @@ export default {
     "onlineUsersNone": "No visible registered users are online right now.",
     "onlineUsersLoadError": "Online users could not be loaded.",
     "onlineUsersAnonymous": "User",
-    "onlineUsersVisibleCount": "{count} visible registered users online."
+    "onlineUsersVisibleCount": "{count} visible registered users online.",
+    "emptyVideoLink": "Paste a video link first.",
+    "clipboardReadDenied": "The browser could not read the clipboard automatically. Press and hold the field, then choose Paste.",
+    "viewerClose": "Close"
   }
 };
