@@ -319,3 +319,16 @@ export function subscribeToMyProfile(supabaseClient, userId, onChange) {
     client.removeChannel(channel);
   };
 }
+
+
+export async function deleteMyAccount(supabaseClient) {
+  const client = requireClient(supabaseClient);
+  const { data, error } = await client.functions.invoke("delete-account", {
+    method: "POST",
+    body: { confirmation: "DELETE_MY_IDESUSS_ACCOUNT" }
+  });
+  if (error) throw error;
+  if (!data?.deleted) throw new Error("ACCOUNT_DELETE_FAILED");
+  try { await client.auth.signOut(); } catch {}
+  return data;
+}
