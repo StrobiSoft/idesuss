@@ -21,6 +21,7 @@ function initFloatingMenu() {
   const openMessagesBtn = document.getElementById("openMessagesBtn");
   const openIdeaBoxBtn = document.getElementById("openIdeaBoxBtn");
   const openSettingsBtn = document.getElementById("openSettingsBtn");
+  const openFerryBtn = document.getElementById("openFerryBtn");
 
   if (!toggle || !menu) return;
 
@@ -71,6 +72,10 @@ function initFloatingMenu() {
 
   openSettingsBtn?.addEventListener("click", () => {
     openSettingsPanel();
+  });
+
+  openFerryBtn?.addEventListener("click", () => {
+    window.location.href = "/ferry/";
   });
 
   menu.querySelectorAll("button").forEach((button) => {
