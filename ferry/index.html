@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Idesüss™ — Kompjáratok</title>
+  <link rel="icon" href="/favicon.png">
+  <link rel="stylesheet" href="/ferry/ferry-board.css?v=20260927-ferry1">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Idesüss főoldal">Idesüss<span>™</span></a>
+    <a class="home" href="/">← Főoldal</a>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">IDESÜSS LIVE BOARD</p>
+        <h1>⛴ Kompjáratok</h1>
+        <p class="lead">Válaszd ki a relációt. Ugyanaz a tábla mutatja az aktuális indulásokat, függetlenül a hajóstársaságtól.</p>
+      </div>
+
+      <label class="route-picker">
+        <span>Reláció</span>
+        <select id="routeSelect" aria-label="Komp reláció kiválasztása"></select>
+      </label>
+    </section>
+
+    <section class="board-card" aria-live="polite">
+      <div class="board-head">
+        <div>
+          <p id="routeName" class="route-name">—</p>
+          <p id="routeMeta" class="route-meta">—</p>
+        </div>
+        <div class="refresh-box">
+          <span id="liveDot" class="live-dot"></span>
+          <span id="refreshText">Frissítés…</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Idő</th>
+              <th>Járat</th>
+              <th>Hajó</th>
+              <th>Várható</th>
+              <th>Állapot</th>
+            </tr>
+          </thead>
+          <tbody id="boardBody">
+            <tr><td colspan="5" class="empty">Adatok betöltése…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="board-foot">
+        <span id="sourceLabel">Forrás: —</span>
+        <a id="sourceLink" href="#" target="_blank" rel="noopener noreferrer">Hivatalos oldal ↗</a>
+      </div>
+    </section>
+
+    <p class="notice">Az Idesüss nem hajózási társaság. A tábla külső, hivatalos forrásból származó adatokat jelenít meg; indulás előtt mindig ellenőrizd a szolgáltató hivatalos tájékoztatását.</p>
+  </main>
+
+  <script type="module" src="/ferry/ferry-board.js?v=20260927-ferry1"></script>
+</body>
+</html>
