@@ -1,9 +1,5 @@
 import { PRESENCE_POLICY } from "./shared/presence-policy.js";
-
-function getClient() {
-  if (!window.supabaseClient) throw new Error("Missing Supabase client.");
-  return window.supabaseClient;
-}
+import { getSharedSupabaseClient } from "./shared/supabase-client.js";
 
 function getVisitorId() {
   let id = localStorage.getItem("ides_visitor_id");
@@ -23,7 +19,8 @@ function getTabId() {
   return id;
 }
 
-export function initAnonymousWebPresence() {
+export async function initAnonymousWebPresence() {
+  const client = await getSharedSupabaseClient();
   const visitorId = getVisitorId();
   const tabId = getTabId();
   const prefix = PRESENCE_POLICY.anonymousWeb.tabPrefix;
@@ -62,7 +59,7 @@ export function initAnonymousWebPresence() {
   }
 
   async function heartbeatOnline() {
-    await getClient()
+    await client
       .from("online_visitors")
       .upsert({
         visitor_id: visitorId,
@@ -75,7 +72,7 @@ export function initAnonymousWebPresence() {
   }
 
   async function setOffline() {
-    await getClient()
+    await client
       .from("online_visitors")
       .update({
         status: "offline",
@@ -87,7 +84,7 @@ export function initAnonymousWebPresence() {
   async function updateOnlineCount() {
     const since = new Date(Date.now() - staleAfterMs).toISOString();
 
-    const { count, error } = await getClient()
+    const { count, error } = await client
       .from("online_visitors")
       .select("*", { count: "exact", head: true })
       .eq("status", "online")
@@ -138,4 +135,6 @@ export function initAnonymousWebPresence() {
   };
 }
 
-initAnonymousWebPresence();
+initAnonymousWebPresence().catch((error) => {
+  console.error("Anonymous web presence init failed", error);
+});
