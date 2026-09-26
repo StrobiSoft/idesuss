@@ -1,10 +1,11 @@
-const CACHE_NAME = "idesuss-root-v19";
+const CACHE_NAME = "idesuss-root-v20";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
   "/visual-polish.css?v=20260921-byn1",
   "/manifest.webmanifest",
   "/eula/",
+  "/privacy/",
   "/favicon.png",
   "/fx-rates.css?v=20260921-byn1",
   "/js/fx-rates.js?v=20260927-release1",\n  "/js/home-runtime.js?v=20260926-commonhome1",\n  "/js/lang/home-language.js?v=20260926-commonhome1",
@@ -15,6 +16,7 @@ const STATIC_ASSETS = [
   "/js/anonymous-presence.js?v=20260926-common-presence1",
   "/js/shared/presence-policy.js",
   "/js/shared/supabase-client.js",
+  "/js/shared/profile-service.js?v=20260927-accountdelete1",
   "/js/shared/user-badges.js",
   "/radio/",
   "/radio/index.html",
