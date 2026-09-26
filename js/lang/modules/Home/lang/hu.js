@@ -75,19 +75,15 @@ export default {
       "title": "Android kompatibilitás",
       "text": "Egyes Android eszközökön vagy böngészőkben a videók megnyitása eltérően működhet. Ilyenkor az Idesüss megpróbálja a lehető legegyszerűbb módon kezelni a linket, de bizonyos platformok saját korlátozásai miatt előfordulhat, hogy a tartalom csak külső oldalon vagy alkalmazásban nyílik meg."
     },
-    "ui": {
-      "pastePlaceholder": "Illessz be egy videólinket...",
-      "openButton": "Megnyitás",
-      "pasteButton": "Beillesztés",
-      "clearButton": "Törlés",
-      "shareButton": "Megosztás"
-    },
     "onlineUsersTitle": "Online felhasználók",
     "onlineUsersHint": "Csak azok jelennek meg, akik ezt engedélyezték.",
     "onlineNow": "Online",
     "onlineUsersNone": "Jelenleg nincs látható regisztrált felhasználó online.",
     "onlineUsersLoadError": "Az online felhasználók listája nem tölthető be.",
     "onlineUsersAnonymous": "Felhasználó",
-    "onlineUsersVisibleCount": "{count} látható regisztrált felhasználó online."
+    "onlineUsersVisibleCount": "{count} látható regisztrált felhasználó online.",
+    "emptyVideoLink": "Először illessz be egy videólinket.",
+    "clipboardReadDenied": "A böngésző nem engedte automatikusan olvasni a vágólapot. Tartsd nyomva a mezőt, és válaszd a Beillesztést.",
+    "viewerClose": "Bezárás"
   }
 };
