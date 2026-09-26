@@ -81,6 +81,9 @@ export default {
     "onlineUsersNone": "Er zijn momenteel geen zichtbare geregistreerde gebruikers online.",
     "onlineUsersLoadError": "Online gebruikers konden niet worden geladen.",
     "onlineUsersAnonymous": "Gebruiker",
-    "onlineUsersVisibleCount": "{count} zichtbare geregistreerde gebruikers online."
+    "onlineUsersVisibleCount": "{count} zichtbare geregistreerde gebruikers online.",
+    "emptyVideoLink": "Plak eerst een videolink.",
+    "clipboardReadDenied": "De browser kon het klembord niet automatisch lezen. Houd het veld ingedrukt en kies Plakken.",
+    "viewerClose": "Sluiten"
   }
 };

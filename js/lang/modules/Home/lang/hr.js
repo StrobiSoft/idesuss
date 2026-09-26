@@ -81,6 +81,9 @@ export default {
     "onlineUsersNone": "Trenutno nema vidljivih registriranih korisnika na mreži.",
     "onlineUsersLoadError": "Popis korisnika na mreži nije moguće učitati.",
     "onlineUsersAnonymous": "Korisnik",
-    "onlineUsersVisibleCount": "{count} vidljivih registriranih korisnika na mreži."
+    "onlineUsersVisibleCount": "{count} vidljivih registriranih korisnika na mreži.",
+    "emptyVideoLink": "Najprije zalijepi poveznicu na video.",
+    "clipboardReadDenied": "Preglednik nije mogao automatski pročitati međuspremnik. Pritisni i zadrži polje pa odaberi Zalijepi.",
+    "viewerClose": "Zatvori"
   }
 };

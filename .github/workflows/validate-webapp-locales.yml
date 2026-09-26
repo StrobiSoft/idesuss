@@ -11,6 +11,9 @@ on:
       - 'js/menu/**'
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
+      - 'js/lang/modules/Home/lang/**'
+      - 'tools/fixtures/common-home-locales/**'
+      - 'tools/validate-common-home-locales.mjs'
       - 'radio/**'
       - 'admin/**'
       - 'messages/**'
@@ -46,6 +49,9 @@ on:
       - 'js/menu/**'
       - 'js/shared/**'
       - 'js/lang/modules/auth/lang/auth.js'
+      - 'js/lang/modules/Home/lang/**'
+      - 'tools/fixtures/common-home-locales/**'
+      - 'tools/validate-common-home-locales.mjs'
       - 'radio/**'
       - 'admin/**'
       - 'messages/**'
@@ -90,6 +96,8 @@ jobs:
         run: node tools/validate-webapp-locales.mjs
       - name: Validate common-generated webapp locale parity
         run: node tools/validate-common-webapp-locales.mjs
+      - name: Validate common-generated Home locale parity
+        run: node tools/validate-common-home-locales.mjs
       - name: Validate nickname normalization parity
         run: node tools/validate-nickname-normalization.mjs
       - name: Validate resolver parity vectors
@@ -115,6 +123,7 @@ jobs:
           node --check js/shared/shell-language.js
           node --check js/shared/supabase-client.js
           node --check js/shared/password-security-service.js
+          node --check js/home-runtime.js
           node --check js/lang/home-language.js
           node --check js/lang/modules/Home/lang/hu.js
           node --check js/lang/modules/Home/lang/en.js
