@@ -140,10 +140,13 @@ jobs:
           node --check messages/messages.js
           node --check messages/messages-language.js
           node --check js/lang/modules/auth/lang/auth.js
+      - name: Validate common Radio client policy parity
+        run: node tools/validate-common-radio-client-policy.mjs
       - name: Validate radio module syntax
         run: |
           node --check radio/radio-engine.js
           node --check radio/radio-entitlements.js
+          node --check radio/radio-policy.js
           node --check radio/radio-stations.js
           node --check radio/radio-language.js
           node --check radio/radio-app.js
