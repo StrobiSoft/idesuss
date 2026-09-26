@@ -192,11 +192,9 @@ async function loadConversation() {
 function renderSendFailure(raw) {
   const status = $("#sendStatus");
   status.classList.add("error");
-  const message = raw.includes("ENTITLEMENT_REQUIRED:PREMIUM")
-    ? t("premiumRequired")
-    : raw.includes("FRIENDSHIP_REQUIRED")
-      ? t("friendshipRequired")
-      : t("sendError") + ": " + raw;
+  const message = raw.includes("FRIENDSHIP_REQUIRED")
+    ? t("friendshipRequired")
+    : t("sendError") + ": " + raw;
   status.replaceChildren(document.createTextNode(message + " "));
   const retry = document.createElement("button");
   retry.type = "button";
