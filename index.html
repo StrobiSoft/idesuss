@@ -1886,106 +1886,6 @@ body.viewer-open #idesussMenu {
 
 <script src="js/resolver.js"></script>
 <script src="/js/shared/share-intake.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
-
-const SUPABASE_ANON_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
-
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-window.supabaseClient = supabaseClient;
-
-console.log("Supabase connected");
-// Root auth/profile is owned by js/menu/* + js/shared/*.
-function getVisitorKey() {
-  let key = localStorage.getItem("idesuss_visitor_key");
-
-  if (!key) {
-    key = "visitor_" + crypto.randomUUID();
-    localStorage.setItem("idesuss_visitor_key", key);
-  }
-
-  return key;
-}
-
-async function registerVisitSession() {
-  const visitorKey = getVisitorKey();
-
-  const { error: sessionError } = await supabaseClient
-    .from("site_sessions")
-    .insert({
-      visitor_key: visitorKey,
-      interaction_count: 0,
-      is_active: true
-    });
-
-  if (sessionError) {
-    console.error("Session insert error:", sessionError);
-    return;
-  }
-
-  const { data, error: statError } = await supabaseClient.rpc(
-    "register_site_visit"
-  );
-
-  if (statError) {
-    console.error("Counter error:", statError);
-    return;
-  }
-
-  console.log("Visit registered. Total visits:", data);
-  const totalEl = document.getElementById("totalVisitsCounter");
-if (totalEl) {
-  totalEl.dataset.count = String(data ?? 0);
-  const template = window.idesussHomeTranslations?.totalVisitsCounter || "🌍 {count} total visits";
-  totalEl.textContent = template.replace("{count}", totalEl.dataset.count);
-}
-}
-async function loadTotalVisits() {
-  const { data, error } = await supabaseClient
-    .from("site_stats")
-    .select("value")
-    .eq("name", "total_visits")
-    .single();
-
-  if (error) {
-    console.error("Total visits load error:", error);
-    return;
-  }
-
-  const totalEl = document.getElementById("totalVisitsCounter");
-
-  if (totalEl && data) {
-    totalEl.dataset.count = String(data.value ?? 0);
-    const template = window.idesussHomeTranslations?.totalVisitsCounter || "🌍 {count} total visits";
-    totalEl.textContent = template.replace("{count}", totalEl.dataset.count);
-  }
-}
-
-loadTotalVisits();
-const lastVisit = localStorage.getItem("idesuss_last_visit");
-
-const now = Date.now();
-
-const cooldown = 1000 * 60 * 30;
-
-if (!lastVisit || now - Number(lastVisit) > cooldown) {
-
-  localStorage.setItem(
-    "idesuss_last_visit",
-    String(now)
-  );
-
-  registerVisitSession();
-
-}
-</script>
-
 <script type="module">
   document.addEventListener("DOMContentLoaded", function () {
 const infoPanel = document.getElementById("infoPanel");
@@ -2213,6 +2113,6 @@ if (closeViewerBtn && viewerShell && viewerFrame) {
 <script type="module" src="./js/fx-rates.js?v=20260921-byn2"></script>
 <script type="module" src="./js/menu/menu-core.js?v=20260925-brightness1"></script>
 
-<script type="module" src="/js/online-users.js?v=20260924-vip-presence1"></script>\n<script type="module" src="/js/anonymous-presence.js?v=20260926-common-presence1"></script>
+<script type="module" src="/js/site-stats.js?v=20260926-shared-supabase1"></script>\n<script type="module" src="/js/online-users.js?v=20260924-vip-presence1"></script>\n<script type="module" src="/js/anonymous-presence.js?v=20260926-common-presence1"></script>
 </body>
 </html>
