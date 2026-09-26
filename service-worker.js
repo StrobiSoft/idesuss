@@ -1,4 +1,4 @@
-const CACHE_NAME = "idesuss-root-v20";
+const CACHE_NAME = "idesuss-root-v21";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -6,6 +6,7 @@ const STATIC_ASSETS = [
   "/manifest.webmanifest",
   "/eula/",
   "/privacy/",
+  "/delete-account/",
   "/favicon.png",
   "/fx-rates.css?v=20260921-byn1",
   "/js/fx-rates.js?v=20260927-release1",\n  "/js/home-runtime.js?v=20260926-commonhome1",\n  "/js/lang/home-language.js?v=20260926-commonhome1",
