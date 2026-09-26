@@ -1,6 +1,6 @@
 import { checkPasswordSecurity } from "./password-security-service.js";
 
-const PASSWORD_SECURITY_ENFORCEMENT = "pending-vm101";
+const PASSWORD_SECURITY_ENFORCEMENT = "pending";
 
 async function enforcePasswordSecurity(password) {
   if (PASSWORD_SECURITY_ENFORCEMENT !== "required") return;
