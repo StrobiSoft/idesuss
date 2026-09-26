@@ -81,6 +81,9 @@ export default {
     "onlineUsersNone": "Obecnie nie ma widocznych zarejestrowanych użytkowników online.",
     "onlineUsersLoadError": "Nie udało się wczytać listy użytkowników online.",
     "onlineUsersAnonymous": "Użytkownik",
-    "onlineUsersVisibleCount": "{count} widocznych zarejestrowanych użytkowników online."
+    "onlineUsersVisibleCount": "{count} widocznych zarejestrowanych użytkowników online.",
+    "emptyVideoLink": "Najpierw wklej link do filmu.",
+    "clipboardReadDenied": "Przeglądarka nie mogła automatycznie odczytać schowka. Przytrzymaj pole i wybierz Wklej.",
+    "viewerClose": "Zamknij"
   }
 };
