@@ -1,4 +1,4 @@
-const CACHE_NAME = "idesuss-root-v17";
+const CACHE_NAME = "idesuss-root-v18";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -16,6 +16,10 @@ const STATIC_ASSETS = [
   "/js/shared/presence-policy.js",
   "/js/shared/supabase-client.js",
   "/js/shared/user-badges.js",
+  "/ferry/",
+  "/ferry/index.html",
+  "/ferry/ferry-board.css?v=20260927-ferry1",
+  "/ferry/ferry-board.js?v=20260927-ferry1",
   "/radio/",
   "/radio/index.html",
   "/radio/radio-skins.css",
