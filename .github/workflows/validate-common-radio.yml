@@ -1,0 +1,28 @@
+name: Validate common Radio parity
+
+on:
+  push:
+    paths:
+      - 'radio/radio-stations.js'
+      - 'server/radio-proxy/**'
+      - 'tools/fixtures/common-radio-defaults.json'
+      - 'tools/validate-common-radio.mjs'
+      - '.github/workflows/validate-common-radio.yml'
+  pull_request:
+    paths:
+      - 'radio/radio-stations.js'
+      - 'server/radio-proxy/**'
+      - 'tools/fixtures/common-radio-defaults.json'
+      - 'tools/validate-common-radio.mjs'
+      - '.github/workflows/validate-common-radio.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node tools/validate-common-radio.mjs
+      - run: node --check server/radio-proxy/server.js
