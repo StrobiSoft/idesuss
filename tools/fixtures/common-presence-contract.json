@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "contract": "idesuss.presence",
+  "authenticated": {
+    "heartbeatRpc": "heartbeat_my_presence",
+    "offlineRpc": "set_my_presence_offline",
+    "listRpc": "list_online_users",
+    "heartbeatIntervalMs": 15000,
+    "staleAfterMs": 30000,
+    "foregroundHeartbeat": true,
+    "markOfflineOnSignOut": true,
+    "markOfflineOnPageHide": true,
+    "markOfflineOnDispose": true,
+    "pageField": "p_page"
+  },
+  "visibility": {
+    "profileField": "presence_visibility",
+    "allowed": [
+      "nobody",
+      "friends",
+      "everyone"
+    ],
+    "adminOverrideRoles": [
+      "admin",
+      "owner"
+    ],
+    "privacyRule": "Public visibility follows presence_visibility; admin/owner may view hidden online state for security and moderation."
+  },
+  "anonymousWebPresence": {
+    "scope": "web-home-only",
+    "implementation": "web-adapter",
+    "heartbeatIntervalMs": 15000,
+    "staleAfterMs": 30000,
+    "multiTabLeaderElection": true,
+    "note": "Anonymous visitor counters are web analytics/presence UI, not cross-client identity presence."
+  },
+  "lifecycle": {
+    "visible": "heartbeat-immediately",
+    "background": "no-new-heartbeat",
+    "pageHide": "mark-offline-if-last-active-context",
+    "signOut": "mark-offline",
+    "sessionRestore": "resume-heartbeat"
+  },
+  "consumers": [
+    "web-home",
+    "webapp",
+    "native"
+  ]
+}
