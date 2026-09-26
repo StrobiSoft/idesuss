@@ -6,6 +6,8 @@ const settings = fs.readFileSync("js/menu/settings.js","utf8");
 const polish = fs.readFileSync("visual-polish.css","utf8");
 const serviceWorker = fs.readFileSync("service-worker.js","utf8");
 const onlineUsers = fs.readFileSync("js/online-users.js","utf8");
+const anonymousPresence = fs.readFileSync("js/anonymous-presence.js","utf8");
+const presencePolicy = fs.readFileSync("js/shared/presence-policy.js","utf8");
 const userBadges = fs.readFileSync("js/shared/user-badges.js","utf8");
 const authShell = fs.readFileSync("js/menu/auth-shell.js","utf8");
 const authController = fs.readFileSync("js/menu/auth-controller.js","utf8");
@@ -15,8 +17,10 @@ const shellLanguage = fs.readFileSync("js/shared/shell-language.js","utf8");
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
 assert(index.includes('id="openSettingsBtn"'),"homepage settings menu button missing");
-assert(index.includes('ONLINE_TAB_PREFIX') && index.includes('sessionStorage.getItem("idesuss_online_tab_id")'),"multi-tab online presence coordination missing");
-assert(index.includes('isOnlineLeader()') && index.includes('localStorage.removeItem(tabStorageKey)'),"online presence leader/offline coordination missing");
+assert(index.includes('/js/anonymous-presence.js'),"anonymous presence module missing from homepage");
+assert(anonymousPresence.includes('sessionStorage.getItem("idesuss_online_tab_id")'),"multi-tab online presence coordination missing");
+assert(anonymousPresence.includes('isOnlineLeader()') && anonymousPresence.includes('localStorage.removeItem(tabStorageKey)'),"online presence leader/offline coordination missing");
+assert(presencePolicy.includes('heartbeatIntervalMs') && presencePolicy.includes('staleAfterMs'),"shared presence policy adapter missing");
 assert(menuCore.includes('openSettingsPanel') && menuCore.includes('initSettingsPreferences'),"settings panel not wired into menu core");
 assert(settings.includes('setIdesussLanguage') && settings.includes('getIdesussLanguage'),"settings language must use shared language preference");
 assert(settings.includes('idesuss_theme') && settings.includes('idesuss_brightness'),"device-local appearance preferences missing");
