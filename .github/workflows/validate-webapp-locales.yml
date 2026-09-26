@@ -123,7 +123,8 @@ jobs:
           node --check js/shared/shell-language.js
           node --check js/shared/supabase-client.js
           node --check js/shared/password-security-service.js
-          node --check js/home-runtime.js\n          node --check js/lang/home-language.js
+          node --check js/home-runtime.js
+          node --check js/lang/home-language.js
           node --check js/lang/modules/Home/lang/hu.js
           node --check js/lang/modules/Home/lang/en.js
           node --check js/lang/modules/Home/lang/nl.js
