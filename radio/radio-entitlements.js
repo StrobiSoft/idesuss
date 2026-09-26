@@ -1,33 +1,14 @@
-const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
+import { getSharedSupabaseClient } from "../js/shared/supabase-client.js";
+import { RADIO_CLIENT_POLICY } from "./radio-policy.js";
 
-const TIER_RANK = { signed_out: 0, registered: 1, premium: 2, premium_plus: 3 };
-const DEFAULT_PRESET_LIMITS = { signed_out: 0, registered: 2, premium: 4, premium_plus: 8 };
-
-function loadSupabaseLibrary() {
-  if (window.supabase?.createClient) return Promise.resolve(window.supabase);
-  return new Promise((resolve, reject) => {
-    const existing = document.querySelector('script[data-idesuss-supabase]');
-    if (existing) {
-      existing.addEventListener("load", () => resolve(window.supabase), { once: true });
-      existing.addEventListener("error", reject, { once: true });
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-    script.async = true;
-    script.dataset.idesussSupabase = "true";
-    script.addEventListener("load", () => resolve(window.supabase), { once: true });
-    script.addEventListener("error", reject, { once: true });
-    document.head.appendChild(script);
-  });
-}
+const PRESET_POLICY = RADIO_CLIENT_POLICY.preset;
+const TIER_RANK = Object.fromEntries(
+  PRESET_POLICY.tierOrder.map((tier, index) => [tier, index])
+);
+const DEFAULT_PRESET_LIMITS = PRESET_POLICY.maximumSlotsByTier;
 
 export async function getRadioSupabaseClient() {
-  if (window.supabaseClient) return window.supabaseClient;
-  const supabase = await loadSupabaseLibrary();
-  window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  return window.supabaseClient;
+  return getSharedSupabaseClient();
 }
 
 function capabilityEnvelope(tier, canSaveRadioChannels, canUseRadioSkins, maxRadioPresets) {
@@ -64,7 +45,9 @@ export async function loadRadioCapabilities() {
     };
   }
 
-  const { data: entitlementData, error: entitlementError } = await client.rpc("get_my_idesuss_entitlements");
+  const { data: entitlementData, error: entitlementError } = await client.rpc(
+    PRESET_POLICY.entitlementsRpc
+  );
   if (entitlementError) throw entitlementError;
 
   const capabilities = capabilityEnvelope(
@@ -91,7 +74,7 @@ export async function loadRadioCapabilities() {
 export async function loadSavedRadioChannels(client, userId) {
   if (!client || !userId) return [];
   const { data, error } = await client
-    .from("saved_radio_channels")
+    .from(PRESET_POLICY.savedChannelsTable)
     .select("channel_key,channel_name,stream_url,metadata,updated_at")
     .eq("user_id", userId)
     .order("channel_key", { ascending: true });
@@ -102,7 +85,7 @@ export async function loadSavedRadioChannels(client, userId) {
 export async function saveRadioChannel(client, userId, slot, station) {
   if (!client || !userId) throw new Error("AUTH_REQUIRED");
   if (!station?.id || !station?.name) throw new Error("INVALID_STATION");
-  const channelKey = `preset_${slot}`;
+  const channelKey = `${PRESET_POLICY.savedChannelKeyPrefix}${slot}`;
   const payload = {
     user_id: userId,
     channel_key: channelKey,
@@ -121,7 +104,7 @@ export async function saveRadioChannel(client, userId, slot, station) {
   };
 
   const { data, error } = await client
-    .from("saved_radio_channels")
+    .from(PRESET_POLICY.savedChannelsTable)
     .upsert(payload, { onConflict: "user_id,channel_key" })
     .select("channel_key,channel_name,stream_url,metadata,updated_at")
     .single();
