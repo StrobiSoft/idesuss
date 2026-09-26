@@ -14,11 +14,18 @@ const authController = fs.readFileSync("js/menu/auth-controller.js","utf8");
 const profile = fs.readFileSync("js/menu/profile.js","utf8");
 const shellLanguage = fs.readFileSync("js/shared/shell-language.js","utf8");
 const sharedSupabase = fs.readFileSync("js/shared/supabase-client.js","utf8");
-const siteStats = fs.readFileSync("js/site-stats.js","utf8");\nconst homeRuntime = fs.readFileSync("js/home-runtime.js","utf8");
+const siteStats = fs.readFileSync("js/site-stats.js","utf8");
+const homeRuntime = fs.readFileSync("js/home-runtime.js","utf8");
 
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
-assert(index.includes('id="openSettingsBtn"'),"homepage settings menu button missing");\nassert(index.includes('/js/home-runtime.js?v=20260926-commonhome1'),"homepage runtime module missing");\nassert(!index.includes("function updateHeaderClock"),"homepage clock logic must not be inline");\nassert(!index.includes("function buildEmbedUrl"),"homepage viewer logic must not be inline");\nassert(!index.includes("Először illessz be egy videólinket."),"homepage runtime text must come from common i18n");\nassert(!index.includes("Link kimásolva."),"homepage share text must come from common i18n");\nassert(homeRuntime.includes("emptyVideoLink") && homeRuntime.includes("clipboardReadDenied"),"homepage runtime must consume common i18n messages");
+assert(index.includes('id="openSettingsBtn"'),"homepage settings menu button missing");
+assert(index.includes('/js/home-runtime.js?v=20260926-commonhome1'),"homepage runtime module missing");
+assert(!index.includes("function updateHeaderClock"),"homepage clock logic must not be inline");
+assert(!index.includes("function buildEmbedUrl"),"homepage viewer logic must not be inline");
+assert(!index.includes("Először illessz be egy videólinket."),"homepage runtime text must come from common i18n");
+assert(!index.includes("Link kimásolva."),"homepage share text must come from common i18n");
+assert(homeRuntime.includes("emptyVideoLink") && homeRuntime.includes("clipboardReadDenied"),"homepage runtime must consume common i18n messages");
 assert(!index.includes('SUPABASE_URL') && !index.includes('SUPABASE_ANON_KEY'),"homepage must not own Supabase configuration");
 assert(!index.includes('supabase.createClient'),"homepage must use shared Supabase client");
 assert(index.includes('/js/site-stats.js'),"site stats module missing from homepage");
