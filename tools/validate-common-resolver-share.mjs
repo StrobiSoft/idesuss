@@ -24,6 +24,7 @@ const intakePath = path.join(here, 'fixtures', 'common-share-intake.json');
 const resolverPath = path.join(root, 'js', 'resolver.js');
 const intakeAdapterPath = path.join(root, 'js', 'shared', 'share-intake.js');
 const indexPath = path.join(root, 'index.html');
+const homeRuntimePath = path.join(root, 'js', 'home-runtime.js');
 const appPath = path.join(root, 'app', 'index.html');
 
 const contractBytes = fs.readFileSync(contractPath);
@@ -45,6 +46,7 @@ const intake = JSON.parse(intakeBytes.toString('utf8'));
 const resolverSource = fs.readFileSync(resolverPath, 'utf8');
 const intakeSource = fs.readFileSync(intakeAdapterPath, 'utf8');
 const indexSource = fs.readFileSync(indexPath, 'utf8');
+const homeRuntimeSource = fs.readFileSync(homeRuntimePath, 'utf8');
 const appSource = fs.readFileSync(appPath, 'utf8');
 
 const trackingBlock = resolverSource.match(
@@ -101,12 +103,18 @@ assert.equal(
   'Share intake did not pass the URL through the shared resolver.'
 );
 
-for (const source of [indexSource, appSource]) {
-  assert.ok(
-    source.includes('IdesussShareIntake'),
-    'Web consumer is not using the shared intake adapter.'
-  );
-}
+assert.ok(
+  indexSource.includes('/js/shared/share-intake.js'),
+  'Root index must load the shared intake adapter.'
+);
+assert.ok(
+  homeRuntimeSource.includes('IdesussShareIntake'),
+  'Homepage runtime is not using the shared intake adapter.'
+);
+assert.ok(
+  appSource.includes('IdesussShareIntake'),
+  'Webapp is not using the shared intake adapter.'
+);
 
 assert.ok(
   !indexSource.includes('function cleanIncomingUrl'),
