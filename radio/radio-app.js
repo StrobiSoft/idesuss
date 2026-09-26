@@ -4,6 +4,7 @@ import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneSt
 import { loadSharedRadioCatalog } from "./radio-api-client.js";
 import { initRadioLanguage, radioT, getRadioLanguage } from "./radio-language.js";
 import { openRadioDirectory } from "./radio-directory.js";
+import { RADIO_CLIENT_POLICY } from "./radio-policy.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
 const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
@@ -15,6 +16,7 @@ const developmentExternalStation = DEV_AUDIO_MODE
   ? createDevelopmentExternalStation(DEV_PARAMS.get("stream"), DEV_PARAMS.get("type") || "auto")
   : null;
 let STATIONS = [];
+const PRESET_POLICY = RADIO_CLIENT_POLICY.preset;
 let PRESET_RULES = [];
 
 async function prepareStations() {
@@ -66,7 +68,7 @@ async function prepareStations() {
     .filter((station) => station.preferredLocale === locale && station.recommendedSlot)
     .sort((a, b) => a.recommendedSlot - b.recommendedSlot);
 
-  PRESET_RULES = Array.from({ length: 8 }, (_unused, index) => ({
+  PRESET_RULES = Array.from({ length: PRESET_POLICY.slotCount }, (_unused, index) => ({
     slot: index + 1,
     freeStation: index < 2 ? (localeRecommendations[index] || (index === 0 ? localeFavorite : null)) : null
   }));
@@ -107,9 +109,10 @@ function tierLabel(tier) {
   return radioT("guest");
 }
 function requiredTierForSlot(slot) {
-  if (slot === 1) return radioT("guest");
-  if (slot === 2) return radioT("registeredOnly");
-  if (slot<=4) return "Premium";
+  const tier = PRESET_POLICY.minimumTierBySlot[String(slot)] || "premium_plus";
+  if (tier === "signed_out") return radioT("guest");
+  if (tier === "registered") return radioT("registeredOnly");
+  if (tier === "premium") return "Premium";
   return "Premium Plus";
 }
 function canUsePresetSlot(slot) {
@@ -148,10 +151,12 @@ function savedRowToStation(row) {
 function indexSavedPresets(rows) {
   savedPresets={};
   for (const row of rows||[]) {
-    const match=/^preset_(\d+)$/.exec(row.channel_key||"");
-    if (!match) continue;
+    const key = String(row.channel_key || "");
+    if (!key.startsWith(PRESET_POLICY.savedChannelKeyPrefix)) continue;
+    const slot = Number(key.slice(PRESET_POLICY.savedChannelKeyPrefix.length));
+    if (!Number.isInteger(slot) || slot < 1 || slot > PRESET_POLICY.slotCount) continue;
     const station=savedRowToStation(row);
-    if (station) savedPresets[Number(match[1])]=station;
+    if (station) savedPresets[slot]=station;
   }
 }
 async function selectStation(station,message=null) {

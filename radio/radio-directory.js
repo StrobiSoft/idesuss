@@ -1,29 +1,9 @@
 import { radioT } from "./radio-language.js";
+import { RADIO_CLIENT_POLICY } from "./radio-policy.js";
 
-const DIRECTORY_ENDPOINTS = Object.freeze([
-  "https://de1.api.radio-browser.info",
-  "https://nl1.api.radio-browser.info"
-]);
-
-const LOCALE_COUNTRY = Object.freeze({
-  hu: "HU",
-  en: "GB",
-  nl: "NL",
-  ro: "RO",
-  pl: "PL",
-  hr: "HR",
-  be: "BY"
-});
-
-const LOCALE_LANGUAGE = Object.freeze({
-  hu: "hungarian",
-  en: "english",
-  nl: "dutch",
-  ro: "romanian",
-  pl: "polish",
-  hr: "croatian",
-  be: "belarusian"
-});
+const DIRECTORY_POLICY = RADIO_CLIENT_POLICY.directory;
+const DIRECTORY_ENDPOINTS = Object.freeze([...DIRECTORY_POLICY.endpoints]);
+const LOCALE_DEFAULTS = Object.freeze({ ...DIRECTORY_POLICY.localeDefaults });
 
 function inferStreamType(row) {
   if (Number(row?.hls) === 1) return "hls";
@@ -94,12 +74,12 @@ async function directoryFetch(path, params = {}) {
 
 export async function loadDirectoryFilters() {
   const [countries, languages] = await Promise.all([
-    directoryFetch("/json/countries", {
-      hidebroken: "true",
+    directoryFetch(DIRECTORY_POLICY.countriesPath, {
+      hidebroken: String(DIRECTORY_POLICY.hideBroken),
       order: "name"
     }),
-    directoryFetch("/json/languages", {
-      hidebroken: "true",
+    directoryFetch(DIRECTORY_POLICY.languagesPath, {
+      hidebroken: String(DIRECTORY_POLICY.hideBroken),
       order: "name"
     })
   ]);
@@ -126,18 +106,24 @@ export async function searchDirectoryStations({
   countryCode = "",
   language = "",
   tag = "",
-  limit = 80
+  limit = DIRECTORY_POLICY.defaultLimit
 } = {}) {
-  const rows = await directoryFetch("/json/stations/search", {
+  const rows = await directoryFetch(DIRECTORY_POLICY.searchPath, {
     name,
     countrycode: countryCode,
     language,
     tag,
-    hidebroken: "true",
-    is_https: "true",
-    order: "clickcount",
-    reverse: "true",
-    limit: String(Math.max(1, Math.min(120, Number(limit) || 80)))
+    hidebroken: String(DIRECTORY_POLICY.hideBroken),
+    is_https: String(DIRECTORY_POLICY.httpsOnly),
+    order: DIRECTORY_POLICY.order,
+    reverse: String(DIRECTORY_POLICY.reverse),
+    limit: String(Math.max(
+      1,
+      Math.min(
+        DIRECTORY_POLICY.maximumLimit,
+        Number(limit) || DIRECTORY_POLICY.defaultLimit
+      )
+    ))
   });
 
   const seen = new Set();
@@ -286,7 +272,7 @@ async function ensureFilters(locale) {
   fillSelect(
     country,
     filterCache.countries,
-    LOCALE_COUNTRY[locale] || "",
+    LOCALE_DEFAULTS[locale]?.countryCode || "",
     radioT("directoryAllCountries"),
     "code",
     "name"
@@ -294,7 +280,7 @@ async function ensureFilters(locale) {
   fillSelect(
     language,
     filterCache.languages,
-    LOCALE_LANGUAGE[locale] || "",
+    LOCALE_DEFAULTS[locale]?.language || "",
     radioT("directoryAllLanguages"),
     "name",
     "name"
