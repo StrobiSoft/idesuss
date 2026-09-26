@@ -8,6 +8,7 @@ import { RADIO_CLIENT_POLICY } from "./radio-policy.js";
 
 const VOLUME_STORAGE_KEY = "idesuss.radio.volume.v1";
 const SKIN_STORAGE_KEY = "idesuss.radio.skin.v1";
+const LOCAL_PRESETS_STORAGE_KEY = "idesuss.radio.presets.v1";
 const AVAILABLE_SKINS = new Set(["default", "night-drive", "classic-black"]);
 const DEV_PARAMS = new URLSearchParams(window.location.search);
 const DEV_AUDIO_MODE = DEV_PARAMS.get("dev") === "1";
@@ -87,7 +88,7 @@ function streamStateText(state) {
 const storedVolume = Number(localStorage.getItem(VOLUME_STORAGE_KEY));
 const initialVolume = Number.isFinite(storedVolume) ? Math.min(1, Math.max(0, storedVolume)) : 0.7;
 const engine = new IdesussRadioEngine({ initialVolume });
-let capabilities = { tier:"signed_out", label:"Vendég", canSaveRadioChannels:false, maxRadioPresets:0, canUseCustomSkins:false, canUsePremiumPlusFeatures:false, canUseRadioDiagnostics:false };
+let capabilities = { tier:"signed_out", label:"", canSaveRadioChannels:true, maxRadioPresets:PRESET_POLICY.slotCount, canUseCustomSkins:true, canUsePremiumPlusFeatures:false, canUseRadioDiagnostics:false };
 let selectedStation = null;
 let radioClient = null;
 let radioUser = null;
@@ -102,33 +103,37 @@ function appendTextElement(parent, tagName, text) {
   return element;
 }
 function setStatus(text) { const target=$("#radioStatus"); if (target) target.textContent=text; }
-function tierLabel(tier) {
-  if (tier==="premium_plus") return "Premium Plus";
-  if (tier==="premium") return "Premium";
-  if (tier==="registered") return "Free";
-  return radioT("guest");
-}
-function requiredTierForSlot(slot) {
-  const tier = PRESET_POLICY.minimumTierBySlot[String(slot)] || "premium_plus";
-  if (tier === "signed_out") return radioT("guest");
-  if (tier === "registered") return radioT("registeredOnly");
-  if (tier === "premium") return "Premium";
-  return "Premium Plus";
-}
+function tierLabel() { return ""; }
+function requiredTierForSlot() { return ""; }
 function canUsePresetSlot(slot) {
-  if (slot === 1) return true;
-  if (!radioUser) return false;
-  return slot <= capabilities.maxRadioPresets;
+  return Number.isInteger(Number(slot)) && Number(slot) >= 1 && Number(slot) <= PRESET_POLICY.slotCount;
 }
 function canPlayStation(station) {
-  if (!station) return false;
-  if (station.recommendedSlot === 1) return true;
-  if (station.recommendedSlot === 2) return Boolean(radioUser);
-  return Boolean(radioUser);
+  return Boolean(station?.streamUrl);
+}
+function loadLocalPresets() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(LOCAL_PRESETS_STORAGE_KEY) || "{}");
+    if (!parsed || typeof parsed !== "object") return {};
+    const out = {};
+    for (const [slot, station] of Object.entries(parsed)) {
+      const normalized = normalizeRadioStation(station);
+      if (normalized) out[Number(slot)] = normalized;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+function saveLocalPreset(slot, station) {
+  savedPresets[slot] = { ...station };
+  const serializable = {};
+  for (const [key, value] of Object.entries(savedPresets)) serializable[key] = value;
+  localStorage.setItem(LOCAL_PRESETS_STORAGE_KEY, JSON.stringify(serializable));
 }
 function applySkin(requestedSkin,{persist=true}={}) {
   const wanted=AVAILABLE_SKINS.has(requestedSkin)?requestedSkin:"default";
-  const active=(wanted==="default"||capabilities.canUseCustomSkins)?wanted:"default";
+  const active=wanted;
   document.documentElement.dataset.radioSkin=active;
   const skin=$("#skinSelect");
   if (skin && skin.value!==active) skin.value=active;
@@ -162,7 +167,7 @@ function indexSavedPresets(rows) {
 async function selectStation(station,message=null) {
   const normalized=normalizeRadioStation(station);
   if (!normalized) { setStatus(radioT("unavailable")); return; }
-  if (!canPlayStation(normalized)) { setStatus(radioT("registeredOnly")); return; }
+  if (!canPlayStation(normalized)) { setStatus(radioT("streamMissing")); return; }
   selectedStation=normalized;
   engine.audio.loop = normalized.id === "idesuss-demo-tone";
   try {
@@ -176,18 +181,16 @@ async function selectStation(station,message=null) {
 }
 function renderTier() {
   const badge=$("#tierBadge");
-  if (badge) badge.textContent=capabilities.label||tierLabel(capabilities.tier);
+  if (badge) badge.hidden = true;
   const userBtn=$("#radioUserBtn");
   if (userBtn) {
     userBtn.textContent = radioUser ? radioT("profile") : radioT("login");
     userBtn.href = radioUser ? "/#profile" : "/#login";
   }
   const saveHint=$("#saveHint");
-  if (saveHint) saveHint.textContent=radioUser
-    ? radioT("saveCount",{count:capabilities.maxRadioPresets})
-    : radioT("saveLogin");
+  if (saveHint) saveHint.textContent="A presetek ezen az eszközön bejelentkezés nélkül is használhatók.";
   const skin=$("#skinSelect");
-  if (skin) Array.from(skin.options).forEach((option)=>{ if (option.value!=="default") option.disabled=!capabilities.canUseCustomSkins; });
+  if (skin) Array.from(skin.options).forEach((option)=>{ option.disabled=false; });
   const audioTestButton=$("#audioTestBtn");
   if (audioTestButton) {
     audioTestButton.hidden=!capabilities.canUseRadioDiagnostics;
@@ -233,15 +236,16 @@ function renderPresets() {
         await openRadioDirectory({
           slot:rule.slot,
           locale:getRadioLanguage(),
-          canSave:Boolean(radioUser && capabilities.canSaveRadioChannels),
+          canSave:true,
           onPreview:async(station)=>{
             await selectStation(station,radioT("directoryPreviewing",{station:station.name}));
             await engine.play();
           },
           onSave:async(station)=>{
-            if (!radioUser || !capabilities.canSaveRadioChannels) return false;
-            await saveRadioChannel(radioClient,radioUser.id,rule.slot,station);
-            savedPresets[rule.slot]={...station};
+            if (radioUser && radioClient && capabilities.canSaveRadioChannels) {
+              try { await saveRadioChannel(radioClient,radioUser.id,rule.slot,station); } catch (error) { console.warn("Server preset save failed; using local preset", error); }
+            }
+            saveLocalPreset(rule.slot, station);
             await selectStation(station,radioT("directorySaved",{station:station.name,slot:rule.slot}));
             renderPresets();
             return true;
@@ -273,24 +277,17 @@ function renderPresets() {
         return;
       }
 
-      if (!capabilities.canSaveRadioChannels) {
-        if (fallback) {
-          await selectStation(fallback,radioT("recommendedSelected"));
-          await engine.play();
-          return;
-        }
-        setStatus("A szerveroldali preset-mentési jogosultság még nem aktív ehhez a csomaghoz.");
-        return;
-      }
       if (!selectedStation) { setStatus(radioT("selectFirst")); return; }
       try {
-        await saveRadioChannel(radioClient,radioUser?.id,rule.slot,selectedStation);
-        savedPresets[rule.slot]={...selectedStation};
-        setStatus(`${selectedStation.name} elmentve a(z) ${rule.slot}. presetre.`);
+        if (radioUser && radioClient && capabilities.canSaveRadioChannels) {
+          try { await saveRadioChannel(radioClient,radioUser.id,rule.slot,selectedStation); } catch (error) { console.warn("Server preset save failed; using local preset", error); }
+        }
+        saveLocalPreset(rule.slot, selectedStation);
+        setStatus(selectedStation.name + " elmentve a(z) " + rule.slot + ". presetre.");
         renderPresets();
       } catch (error) {
         console.error("Radio preset save failed",error);
-        setStatus("A preset mentése nem sikerült. Ellenőrizd a jogosultságot és a kapcsolatot.");
+        setStatus("A preset mentése nem sikerült.");
       }
     });
     host.appendChild(button);
@@ -329,8 +326,7 @@ function bindControls() {
   $("#skinSelect")?.addEventListener("change",(event)=>{
     const requested=event.target.value;
     const active=applySkin(requested);
-    if (active!==requested) { setStatus("Egyedi skinek Premium szinttől érhetők el."); return; }
-    setStatus(active==="default"?"Idesüss alap skin aktív.":"Premium skin aktív és elmentve.");
+    setStatus(active==="default"?"Idesüss alap skin aktív.":"Rádió skin aktív és elmentve.");
   });
 }
 function bindEngineEvents() {
@@ -378,14 +374,24 @@ async function init() {
 
   try {
     const result=await loadRadioCapabilities();
-    capabilities=result.capabilities; radioClient=result.client; radioUser=result.user;
+    capabilities={...result.capabilities,canSaveRadioChannels:true,maxRadioPresets:PRESET_POLICY.slotCount,canUseCustomSkins:true};
+    radioClient=result.client; radioUser=result.user;
+    savedPresets=loadLocalPresets();
     if (radioUser) {
-      const rows=await loadSavedRadioChannels(radioClient,radioUser.id);
-      indexSavedPresets(rows);
+      try {
+        const rows=await loadSavedRadioChannels(radioClient,radioUser.id);
+        const localPresets={...savedPresets};
+        indexSavedPresets(rows);
+        savedPresets={...localPresets,...savedPresets};
+      } catch (error) {
+        console.warn("Saved server presets unavailable; keeping local presets", error);
+      }
     }
   } catch (error) {
     console.error("Radio entitlement or preset load failed",error);
-    setStatus("A jogosultsági állapot nem tölthető be; biztonsági okból vendég módban működünk.");
+    capabilities={...capabilities,canSaveRadioChannels:true,maxRadioPresets:PRESET_POLICY.slotCount,canUseCustomSkins:true};
+    savedPresets=loadLocalPresets();
+    setStatus("A szerveres profil nem érhető el; a rádió helyi módban tovább használható.");
   }
 
   const initialStation = savedPresets[1] || localeFavorite || STATIONS[0] || null;
