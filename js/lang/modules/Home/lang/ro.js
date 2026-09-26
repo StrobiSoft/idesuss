@@ -81,6 +81,9 @@ export default {
     "onlineUsersNone": "Momentan nu există utilizatori înregistrați vizibili online.",
     "onlineUsersLoadError": "Lista utilizatorilor online nu a putut fi încărcată.",
     "onlineUsersAnonymous": "Utilizator",
-    "onlineUsersVisibleCount": "{count} utilizatori înregistrați vizibili online."
+    "onlineUsersVisibleCount": "{count} utilizatori înregistrați vizibili online.",
+    "emptyVideoLink": "Lipește mai întâi un link video.",
+    "clipboardReadDenied": "Browserul nu a putut citi automat clipboardul. Ține apăsat pe câmp și alege Lipire.",
+    "viewerClose": "Închide"
   }
 };
