@@ -908,6 +908,8 @@
         </div>
     </div>
 
+    <script src="/js/resolver.js"></script>
+    <script src="/js/shared/share-intake.js"></script>
     <script>
         const STORAGE_KEYS = {
             lang: 'idesuss_lang',
@@ -1278,11 +1280,20 @@
         }
 
         function handleGo(urlOverride = null) {
-            const url = (urlOverride || els.urlInput.value).trim();
+            const rawUrl = (urlOverride || els.urlInput.value).trim();
 
-            if (!url) {
+            if (!rawUrl) {
                 setStatus(t('emptyField', 'Error: empty field!'), 'error');
                 return;
+            }
+
+            const resolved = window.IdesussResolver?.cleanVideoUrl(rawUrl);
+            const url = resolved?.ok && resolved.cleanUrl
+                ? resolved.cleanUrl
+                : rawUrl;
+
+            if (url !== rawUrl) {
+                els.urlInput.value = url;
             }
 
             setStatus(t('starting', 'Starting...'));
@@ -1540,10 +1551,8 @@
             renderHistory();
             updateInstallButtonVisibility();
 
-            const params = new URLSearchParams(window.location.search);
-            const rawShared = params.get('url') || params.get('text') || params.get('title') || '';
-            const sharedMatch = rawShared.match(/https?:\/\/[^\s]+/i);
-            const sharedUrl = sharedMatch ? sharedMatch[0] : '';
+            const sharedUrl =
+                window.IdesussShareIntake?.resolveIncomingUrl(window.location.search) || '';
 
             if (sharedUrl) {
                 sharedLaunchHandled = true;

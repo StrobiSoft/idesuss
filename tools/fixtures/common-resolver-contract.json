@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "contract": "idesuss.resolver",
+  "platforms": [
+    "tiktok",
+    "youtube",
+    "facebook",
+    "instagram",
+    "x",
+    "unknown"
+  ],
+  "trackingParams": [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "fbclid",
+    "gclid",
+    "igshid",
+    "si",
+    "feature",
+    "share",
+    "share_app_id",
+    "share_item_id",
+    "share_link_id",
+    "timestamp",
+    "tt_from",
+    "u_code",
+    "_r",
+    "_d",
+    "preview_pb",
+    "sharer_language",
+    "enable_checksum",
+    "source",
+    "social_share_type",
+    "ug_btm",
+    "link_reflow_popup_iteration_sharer",
+    "sp_root_share_link_id",
+    "sp_root_d",
+    "sp_level",
+    "sp_root_u",
+    "user_id",
+    "sec_user_id"
+  ],
+  "rules": {
+    "tiktok": "preserve-origin-path",
+    "youtube": "preserve-watch-v-and-list-or-short-path",
+    "facebook": "preserve-origin-path",
+    "instagram": "preserve-origin-path",
+    "x": "strip-known-tracking-preserve-other-query",
+    "unknown": "strip-known-tracking-preserve-other-query"
+  },
+  "errors": [
+    "EMPTY_URL",
+    "INVALID_URL"
+  ],
+  "consumers": [
+    "web-home",
+    "webapp",
+    "native",
+    "share-intake"
+  ]
+}
