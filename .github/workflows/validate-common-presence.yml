@@ -1,0 +1,34 @@
+name: Validate web presence parity
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'js/anonymous-presence.js'
+      - 'js/shared/presence-policy.js'
+      - 'js/menu/auth-controller.js'
+      - 'tools/fixtures/common-presence-contract.json'
+      - 'tools/validate-common-presence.mjs'
+      - '.github/workflows/validate-common-presence.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'js/anonymous-presence.js'
+      - 'js/shared/presence-policy.js'
+      - 'js/menu/auth-controller.js'
+      - 'tools/fixtures/common-presence-contract.json'
+      - 'tools/validate-common-presence.mjs'
+      - '.github/workflows/validate-common-presence.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node tools/validate-common-presence.mjs
+      - run: node --check js/anonymous-presence.js
+      - run: node --check js/shared/presence-policy.js
+      - run: node --check js/menu/auth-controller.js
