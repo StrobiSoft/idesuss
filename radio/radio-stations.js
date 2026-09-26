@@ -1,27 +1,4 @@
-export const RADIO_STATIONS = Object.freeze([
-  ["hu-radio-1","Rádió 1","https://icast.connectmedia.hu/5201/live.mp3","mp3","HU","hu",1,"https://radio1.hu/"],
-  ["hu-slager-fm","Sláger FM","https://slagerfm.netregator.hu:7813/slagerfm128.mp3","mp3","HU","hu",2,"https://slagerfm.hu/"],
-  ["nl-slam","SLAM!","https://stream.slam.nl/slam_mp3","mp3","NL","nl",1,"https://www.slam.nl/"],
-  ["nl-npo-radio-2","NPO Radio 2","https://icecast.omroep.nl/radio2-bb-aac","aac","NL","nl",2,"https://www.nporadio2.nl/"],
-  ["ro-kiss-fm","Kiss FM","https://live.kissfm.ro/kissfm.aacp","aac","RO","ro",1,"https://www.kissfm.ro/"],
-  ["ro-radio-zu","Radio ZU","https://ivm.antenaplay.ro/liveaudio/radiozu/playlist.m3u8","hls","RO","ro",2,"https://radiozu.ro/"],
-  ["pl-rmf-maxxx","RMF MAXXX","https://rs9-krk2-cyfronet.rmfstream.pl/RMFMAXXX48","aac","PL","pl",1,"https://www.rmfmaxx.pl/"],
-  ["pl-rmf-fm","RMF FM","https://rs102-krk-cyfronet.rmfstream.pl/rmf_fm","mp3","PL","pl",2,"https://www.rmf.fm/"],
-  ["hr-bravo","bravo!","https://relay1.social3.hr/radio/8310/radio.mp3","mp3","HR","hr",1,"https://bravo.hr/"],
-  ["hr-otvoreni","Otvoreni Radio","https://stream.otvoreni.hr/otvoreni","mp3","HR","hr",2,"https://www.otvoreni.hr/"],
-  ["be-novoe-radio","Novoe Radio","https://live.novoeradio.by:444/live/novoeradio_aac128/icecast.audio","aac","BY","be",1,"https://novoeradio.by/"],
-  ["be-radius-fm","Radius FM","https://stream2.datacenter.by/radiusfm_main","aac","BY","be",2,"https://radiusfm.by/"],
-  ["en-heart-uk","Heart UK","https://media-ssl.musicradio.com/HeartUKMP3","mp3","GB","en",1,"https://www.heart.co.uk/"],
-  ["en-capital-fm","Capital FM","https://media-ssl.musicradio.com/CapitalUK","mp3","GB","en",2,"https://www.capitalfm.com/"]
-].map(([id,name,streamUrl,streamType,countryCode,preferredLocale,recommendedSlot,homepage]) => Object.freeze({
-  id,name,streamUrl,streamType,countryCode,preferredLocale,recommendedSlot,homepage,
-  info: "Idesüss ajánlott élő rádió",
-  enabled: true,
-  catalogManaged: true,
-  distributionStatus: "approved",
-  sourceStatus: "configured",
-  isLocaleFavorite: recommendedSlot === 1
-})));
+export const RADIO_STATIONS = Object.freeze([]);
 
 export const RADIO_FAVORITES_BY_LOCALE = Object.freeze({
   hu: Object.freeze({ id: "hu-radio-1", name: "Rádió 1", directoryName: "Rádió 1", countryCode: "HU" }),
