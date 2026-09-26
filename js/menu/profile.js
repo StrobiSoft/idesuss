@@ -3,6 +3,7 @@ import {
   STAFF_AVATAR_EMOJI,
   acceptCurrentEula,
   getCurrentUser,
+  deleteMyAccount,
   getMyEulaStatus,
   getProfileAvatarImageUrl,
   loadMyAvatarSubmissions,
@@ -12,7 +13,7 @@ import {
   subscribeToMyProfile,
   uploadAvatarSubmission,
   validateAvatarFile
-} from "../shared/profile-service.js?v=20260923-eula1";
+} from "../shared/profile-service.js?v=20260927-accountdelete1";
 import { shellT, subscribeShellLanguage } from "../shared/shell-language.js";
 
 let unsubscribeProfile = null;
@@ -284,6 +285,8 @@ async function renderProfile(panel, profile, user) {
       </div>
 
       <button id="saveProfilePanel" class="menu-profile-btn" type="button"${eulaLoadError ? " disabled" : ""}>${shellT("saveProfile")}</button>
+      <a class="menu-profile-btn" href="/privacy/" target="_blank" rel="noopener">${shellT("privacyPolicy")}</a>
+      <button id="deleteAccountBtn" class="menu-profile-btn" type="button" style="background:#7f1d1d">${shellT("deleteAccount")}</button>
       <div id="profilePanelMessage" class="profile-placeholder" aria-live="polite">${eulaLoadError ? escapeHtml(shellT("profileAuth")) : ""}</div>
     </div>
   `;
@@ -329,6 +332,37 @@ async function renderProfile(panel, profile, user) {
     });
     saveProfileButton?.classList.add("eula-pending");
   }
+
+  document.getElementById("deleteAccountBtn")?.addEventListener("click", async () => {
+    const first = window.confirm(shellT("deleteAccountConfirm"));
+    if (!first) return;
+    const typed = window.prompt(shellT("deleteAccountTypePrompt"), "");
+    if (String(typed || "").trim().toUpperCase() !== "DELETE") {
+      showProfileToast(shellT("deleteAccountCancelled"));
+      return;
+    }
+
+    const button = document.getElementById("deleteAccountBtn");
+    if (button) {
+      button.disabled = true;
+      button.textContent = shellT("deleteAccountWorking");
+    }
+
+    try {
+      await deleteMyAccount(window.supabaseClient);
+      window.localStorage.removeItem("idesuss.radio.presets.v1");
+      window.localStorage.removeItem("idesuss.radio.skin.v1");
+      window.localStorage.removeItem("idesuss.radio.volume.v1");
+      window.location.replace("/");
+    } catch (error) {
+      console.error("Account deletion failed", error);
+      showProfileToast(shellT("deleteAccountFailed"));
+      if (button) {
+        button.disabled = false;
+        button.textContent = shellT("deleteAccount");
+      }
+    }
+  });
 
   const clearPendingAvatar = () => {
     if (pendingAvatarObjectUrl) URL.revokeObjectURL(pendingAvatarObjectUrl);
