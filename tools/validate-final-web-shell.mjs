@@ -77,5 +77,6 @@ console.log("Final web shell validation: OK");
 
 assert(index.includes('id="onlineUsersList"'),"online users card missing");
 assert(index.includes('/js/online-users.js?v=20260924-vip-presence1'),"online users module missing");
-assert(onlineUsers.includes('list_online_users'),"online users RPC integration missing");
+assert(onlineUsers.includes('PRESENCE_POLICY.listRpc'),"online users must use shared presence RPC policy");
+assert(presencePolicy.includes('listRpc: "list_online_users"'),"shared presence list RPC missing");
 assert(userBadges.includes('formatUserDisplayName'),"shared user badge helper missing");
