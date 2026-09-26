@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "contract": "idesuss.share-intake",
+  "acceptedFields": [
+    "url",
+    "u",
+    "text",
+    "title"
+  ],
+  "precedence": [
+    "url",
+    "u",
+    "text",
+    "title"
+  ],
+  "urlExtraction": "first-http-or-https-url",
+  "resolverContract": "idesuss.resolver",
+  "routeTargets": {
+    "webHome": "/app/?url={encodedCleanUrl}",
+    "webapp": "current-player",
+    "native": "native-player"
+  },
+  "persistIncomingUrl": false,
+  "consumers": [
+    "web-home",
+    "webapp",
+    "native"
+  ]
+}
