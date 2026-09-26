@@ -14,6 +14,7 @@ import {
   setIdesussLanguage
 } from "../shared/language-preference.js";
 import { PasswordSecurityError } from "../shared/password-security-service.js";
+import { PRESENCE_POLICY } from "../shared/presence-policy.js";
 import { openProfilePanel } from "./profile.js?v=20260923-eula1";
 import {
   closeAuthModal,
@@ -35,8 +36,8 @@ let userPresenceTimer = null;
 
 async function heartbeatUserPresence() {
   if (!identity) return;
-  const { error } = await getClient().rpc("heartbeat_my_presence", {
-    p_page: window.location.pathname || "/"
+  const { error } = await getClient().rpc(PRESENCE_POLICY.heartbeatRpc, {
+    [PRESENCE_POLICY.pageField]: window.location.pathname || "/"
   });
   if (error) console.error("Authenticated presence heartbeat failed", error);
 }
@@ -46,7 +47,7 @@ function stopUserPresenceHeartbeat({ markOffline = false } = {}) {
   userPresenceTimer = null;
 
   if (markOffline && window.supabaseClient) {
-    window.supabaseClient.rpc("set_my_presence_offline").catch(() => {});
+    window.supabaseClient.rpc(PRESENCE_POLICY.offlineRpc).catch(() => {});
   }
 }
 
@@ -54,7 +55,10 @@ function startUserPresenceHeartbeat() {
   stopUserPresenceHeartbeat();
   if (!identity) return;
   heartbeatUserPresence();
-  userPresenceTimer = window.setInterval(heartbeatUserPresence, 15000);
+  userPresenceTimer = window.setInterval(
+    heartbeatUserPresence,
+    PRESENCE_POLICY.heartbeatIntervalMs
+  );
 }
 
 function isPasswordRecoveryLocation() {
@@ -567,7 +571,7 @@ window.addEventListener("idesuss:home-language-applied", () => {
 
 window.addEventListener("pagehide", () => {
   if (identity) {
-    getClient().rpc("set_my_presence_offline").catch(() => {});
+    getClient().rpc(PRESENCE_POLICY.offlineRpc).catch(() => {});
   }
 });
 

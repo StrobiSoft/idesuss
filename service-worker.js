@@ -1,4 +1,4 @@
-const CACHE_NAME = "idesuss-root-v13";
+const CACHE_NAME = "idesuss-root-v14";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -11,6 +11,8 @@ const STATIC_ASSETS = [
   "/js/menu/menu-core.js?v=20260925-brightness1",
   "/js/menu/settings.js?v=20260925-brightness1",
   "/js/online-users.js?v=20260924-vip-presence1",
+  "/js/anonymous-presence.js?v=20260926-common-presence1",
+  "/js/shared/presence-policy.js",
   "/js/shared/user-badges.js",
   "/radio/",
   "/radio/index.html",
