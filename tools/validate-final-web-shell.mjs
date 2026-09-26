@@ -13,10 +13,17 @@ const authShell = fs.readFileSync("js/menu/auth-shell.js","utf8");
 const authController = fs.readFileSync("js/menu/auth-controller.js","utf8");
 const profile = fs.readFileSync("js/menu/profile.js","utf8");
 const shellLanguage = fs.readFileSync("js/shared/shell-language.js","utf8");
+const sharedSupabase = fs.readFileSync("js/shared/supabase-client.js","utf8");
+const siteStats = fs.readFileSync("js/site-stats.js","utf8");
 
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
 assert(index.includes('id="openSettingsBtn"'),"homepage settings menu button missing");
+assert(!index.includes('SUPABASE_URL') && !index.includes('SUPABASE_ANON_KEY'),"homepage must not own Supabase configuration");
+assert(!index.includes('supabase.createClient'),"homepage must use shared Supabase client");
+assert(index.includes('/js/site-stats.js'),"site stats module missing from homepage");
+assert(sharedSupabase.includes('getSharedSupabaseClient'),"shared Supabase client adapter missing");
+assert(siteStats.includes('getSharedSupabaseClient'),"site stats must use shared Supabase client");
 assert(index.includes('/js/anonymous-presence.js'),"anonymous presence module missing from homepage");
 assert(anonymousPresence.includes('sessionStorage.getItem("idesuss_online_tab_id")'),"multi-tab online presence coordination missing");
 assert(anonymousPresence.includes('isOnlineLeader()') && anonymousPresence.includes('localStorage.removeItem(tabStorageKey)'),"online presence leader/offline coordination missing");
@@ -70,5 +77,6 @@ console.log("Final web shell validation: OK");
 
 assert(index.includes('id="onlineUsersList"'),"online users card missing");
 assert(index.includes('/js/online-users.js?v=20260924-vip-presence1'),"online users module missing");
-assert(onlineUsers.includes('list_online_users'),"online users RPC integration missing");
+assert(onlineUsers.includes('PRESENCE_POLICY.listRpc'),"online users must use shared presence RPC policy");
+assert(presencePolicy.includes('listRpc: "list_online_users"'),"shared presence list RPC missing");
 assert(userBadges.includes('formatUserDisplayName'),"shared user badge helper missing");

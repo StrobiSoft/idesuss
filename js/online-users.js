@@ -1,6 +1,8 @@
 import { formatUserDisplayName } from "./shared/user-badges.js";
+import { getSharedSupabaseClient } from "./shared/supabase-client.js";
+import { PRESENCE_POLICY } from "./shared/presence-policy.js";
 
-const REFRESH_MS = 15000;
+const REFRESH_MS = PRESENCE_POLICY.heartbeatIntervalMs;
 
 function t(key, fallback) {
   return window.idesussHomeTranslations?.[key] || fallback;
@@ -18,9 +20,10 @@ function renderEmpty(list, status) {
 async function refreshOnlineUsers() {
   const list = document.getElementById("onlineUsersList");
   const status = document.getElementById("onlineUsersListStatus");
-  if (!list || !status || !window.supabaseClient) return;
+  if (!list || !status) return;
 
-  const { data, error } = await window.supabaseClient.rpc("list_online_users");
+  const client = await getSharedSupabaseClient();
+  const { data, error } = await client.rpc(PRESENCE_POLICY.listRpc);
   if (error) {
     console.error("Online user list failed", error);
     status.textContent = t("onlineUsersLoadError", "Online users could not be loaded.");
