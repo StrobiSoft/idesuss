@@ -1,0 +1,34 @@
+name: Validate web resolver share parity
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'app/index.html'
+      - 'js/resolver.js'
+      - 'js/shared/share-intake.js'
+      - 'tools/fixtures/common-resolver-contract.json'
+      - 'tools/fixtures/common-share-intake.json'
+      - 'tools/validate-common-resolver-share.mjs'
+      - '.github/workflows/validate-common-resolver-share.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'app/index.html'
+      - 'js/resolver.js'
+      - 'js/shared/share-intake.js'
+      - 'tools/fixtures/common-resolver-contract.json'
+      - 'tools/fixtures/common-share-intake.json'
+      - 'tools/validate-common-resolver-share.mjs'
+      - '.github/workflows/validate-common-resolver-share.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node tools/validate-common-resolver-share.mjs
+      - run: node tools/validate-resolver-vectors.mjs
