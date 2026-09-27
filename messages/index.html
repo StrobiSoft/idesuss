@@ -21,7 +21,7 @@
     .panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
     .auth-card{padding:24px;text-align:center}.auth-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.primary{background:var(--primary)!important;border-color:var(--primary)!important;color:#fff!important}
     .messages-layout{display:grid;grid-template-columns:340px 1fr;min-height:670px}
-    .threads-pane{border-right:1px solid var(--line);background:#fbfcfe;min-width:0}.threads-head{padding:14px 14px 8px;font-weight:900}.threads{padding:7px 10px 14px;overflow:auto;max-height:670px}
+    .threads-pane{border-right:1px solid var(--line);background:#fbfcfe;min-width:0}.threads-head{padding:14px 14px 8px;font-weight:900}.recipient-search{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;padding:0 10px 8px}.recipient-search input{min-width:0;border:1px solid #b8c9db;border-radius:11px;background:#fff;color:var(--text);padding:10px 11px}.recipient-search-status{padding:0 12px 5px;margin:0}.recipient-results{display:grid;gap:6px;padding:0 10px 7px}.recipient-result{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:11px;background:var(--surface)}.recipient-result strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.threads{padding:7px 10px 14px;overflow:auto;max-height:670px}
     .thread{width:100%;text-align:left;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--text);padding:12px;margin-bottom:7px}.thread:hover,.thread.active{background:var(--primary-soft);border-color:#b7cff2}
     .thread-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.thread-name{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.thread-preview{margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .unread{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:var(--primary);color:#fff;font-weight:900;font-size:.8rem}
@@ -46,10 +46,7 @@
     <header class="topbar">
       <div class="brand">💬 <span>Idesüss™</span> <span data-msg-i18n="title">Messages</span></div>
       <div class="nav">
-        <a href="/" data-msg-i18n="home">Home</a>
-        <a href="/app/" data-msg-i18n="webapp">Webapp</a>
-        <a href="/radio/?autoplay=1" data-msg-i18n="radio">Radio</a>
-        <label class="language"><span data-msg-i18n="language">Language</span><select id="messagesLanguageSelect" aria-label="Language"></select></label>
+        <a href="/">← <span data-msg-i18n="home">Home</span></a>
       </div>
     </header>
 
@@ -70,6 +67,12 @@
       <div class="messages-layout">
         <aside class="threads-pane">
           <div class="threads-head" data-msg-i18n="messages">Messages</div>
+          <div class="recipient-search">
+            <input id="recipientSearchInput" type="search" autocomplete="off" data-msg-placeholder="nickname" placeholder="Nickname…" />
+            <button id="recipientSearchBtn" class="action" type="button" data-msg-i18n="search">Search</button>
+          </div>
+          <div id="recipientSearchStatus" class="status recipient-search-status" aria-live="polite"></div>
+          <div id="recipientSearchResults" class="recipient-results"></div>
           <div class="threads" id="threadList"></div>
         </aside>
         <section class="conversation">
@@ -117,6 +120,6 @@
     </section>
   </main>
 
-  <script type="module" src="./messages.js?v=20260923-hardening1"></script>
+  <script type="module" src="./messages.js?v=20260927-recipient1"></script>
 </body>
 </html>
