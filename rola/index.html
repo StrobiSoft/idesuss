@@ -4,63 +4,61 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#07111c">
-  <title>Idesüss™ — Rail / RoLa Board</title>
+  <title>Idesüss™ — RoLa Board</title>
   <link rel="icon" href="/favicon.png">
-  <link rel="stylesheet" href="/design-system.css?v=20260927-v2">
-  <style>
-    .board-shell{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:24px 0 56px}
-    .board-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-    .board-top a{color:var(--idesuss-text);text-decoration:none;font-weight:800}
-    .board-card{background:linear-gradient(180deg,rgba(16,33,49,.98),rgba(11,23,36,.98));border:1px solid var(--idesuss-border);border-radius:var(--idesuss-r-hero);padding:22px;box-shadow:var(--idesuss-shadow)}
-    .board-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}
-    .board-head h1{margin:0 0 6px}.board-head p{margin:0;color:var(--idesuss-text-muted)}
-    .route-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .route-card{padding:16px;border:1px solid var(--idesuss-border);border-radius:14px;background:rgba(255,255,255,.035)}
-    .route-line{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .route-card strong{font-size:1rem}.route-meta{margin-top:7px;color:var(--idesuss-text-muted);font-size:.88rem;line-height:1.45}
-    .type{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;border:1px solid rgba(224,168,90,.22);background:rgba(224,168,90,.08);color:var(--idesuss-accent);font-size:.72rem;font-weight:900}
-    .notice{margin-top:18px;padding:14px;border-radius:12px;background:rgba(91,158,216,.08);border:1px solid rgba(91,158,216,.18);color:var(--idesuss-text-muted)}
-    @media(max-width:720px){.route-grid{grid-template-columns:1fr}.board-head{flex-direction:column}}
-  </style>
+  <link rel="stylesheet" href="/boards/board-shell.css?v=20260927-board2">
 </head>
 <body>
-<main class="board-shell">
-  <div class="board-top">
-    <a href="/">← Idesüss</a>
-    <span class="platform-kicker">Rail / RoLa Board</span>
-  </div>
-  <section class="board-card">
-    <div class="board-head">
+  <header class="board-topbar">
+    <div class="board-topbar-inner">
+      <a class="board-brand" href="/" aria-label="Idesüss főoldal">Idesüss<span>™</span></a>
+      <a class="board-home" href="/">← Főoldal</a>
+    </div>
+  </header>
+
+  <main class="board-shell">
+    <section class="board-hero">
       <div>
-        <h1>🚛🚆 Rail / RoLa Board</h1>
-        <p>Kamionszállító vonatok és európai rail motorway kapcsolatok.</p>
+        <p class="board-kicker">Idesüss RoLa Board</p>
+        <h1 class="board-title">Rolling Road</h1>
+        <p class="board-lead">Aktuális, hivatalosan kínált RoLa-kapcsolatok egy helyen. Élő indulási időket csak ellenőrzött szolgáltatói adatforrás bekötése után jelenítünk meg.</p>
       </div>
-      <span class="type">MVP</span>
-    </div>
+    </section>
 
-    <div class="route-grid">
-      <article class="route-card">
-        <div class="route-line"><strong>Brenner → Wörgl</strong><span class="type">Accompanied RoLa</span></div>
-        <div class="route-meta">Rail Cargo Group · kamion + sofőr</div>
+    <section class="board-route-grid" aria-label="RoLa kapcsolatok">
+      <article class="board-route-card">
+        <div class="board-route-row"><h2>Brenner ↔ Wörgl</h2><span class="board-chip">RoLa</span></div>
+        <p>Rail Cargo Group · kísért gördülő országút · 2026. július 1-től aktuális kínálat.</p>
       </article>
-      <article class="route-card">
-        <div class="route-line"><strong>Wörgl → Trento</strong><span class="type">Accompanied RoLa</span></div>
-        <div class="route-meta">Rail Cargo Group · kamion + sofőr</div>
+      <article class="board-route-card">
+        <div class="board-route-row"><h2>Wörgl ↔ Trento</h2><span class="board-chip">RoLa</span></div>
+        <p>Rail Cargo Group · kamion és sofőr együtt utazik a vonaton.</p>
       </article>
-      <article class="route-card">
-        <div class="route-line"><strong>Wels → Maribor</strong><span class="type">Accompanied RoLa</span></div>
-        <div class="route-meta">Rail Cargo Group · kamion + sofőr</div>
+      <article class="board-route-card">
+        <div class="board-route-row"><h2>Wels ↔ Maribor</h2><span class="board-chip">RoLa</span></div>
+        <p>Rail Cargo Group / Adriakombi partnerkapcsolat · kísért RoLa szolgáltatás.</p>
       </article>
-      <article class="route-card">
-        <div class="route-line"><strong>Le Boulou → Calais</strong><span class="type">Rail motorway</span></div>
-        <div class="route-meta">VIIA · kíséret nélküli félpótkocsi</div>
-      </article>
-    </div>
+    </section>
 
-    <div class="notice">
-      Az első verzió információs váz. Élő menetrend és booking csak hivatalos, ellenőrzött szolgáltatói adatforrás bekötése után jelenik meg.
-    </div>
-  </section>
-</main>
+    <section class="board-card" style="margin-top:12px">
+      <div class="board-card-head">
+        <div>
+          <p class="board-route-name">Menetrend és foglalás</p>
+          <p class="board-route-meta">Hivatalos Rail Cargo Group források</p>
+        </div>
+        <span class="board-chip">ellenőrzött forrás</span>
+      </div>
+      <div style="padding:13px 14px">
+        <p class="board-route-meta">A részletes 2026-os menetrend és a foglalási lehetőség a szolgáltató hivatalos felületén érhető el.</p>
+        <div class="board-actions">
+          <a class="board-action" href="https://www.railcargo.com/en/services/rolling-road/timetables-and-prices" target="_blank" rel="noopener noreferrer">Menetrendek ↗</a>
+          <a class="board-action" href="https://obc.railcargo.com/OBC/Home/Fahrplan/en" target="_blank" rel="noopener noreferrer">Online Booking Center ↗</a>
+          <a class="board-action" href="https://www.railcargo.com/en/services/rolling-road/rola-traffic-update" target="_blank" rel="noopener noreferrer">Traffic Update ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <p class="board-notice">Az Idesüss nem vasúti szolgáltató. Indulás és foglalás előtt mindig ellenőrizd a Rail Cargo Group hivatalos tájékoztatását.</p>
+  </main>
 </body>
 </html>
