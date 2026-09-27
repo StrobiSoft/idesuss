@@ -22,6 +22,7 @@ let sendLocked = false;
 let lastFailedBody = "";
 let friendshipByUser = new Map();
 let userBadgeMap = new Map();
+let threadLoadGeneration = 0;
 
 async function refreshBadgeMap(userIds) {
   try {
@@ -68,13 +69,19 @@ $("#friendsTab").addEventListener("click", () => showTab("friends"));
 $("#conversationBackBtn").addEventListener("click", () => $("#messagesPanel").classList.remove("mobile-conversation"));
 
 async function loadThreads() {
+  const generation = ++threadLoadGeneration;
   const list = $("#threadList");
-  list.replaceChildren();
   const {data,error} = await client.rpc("list_message_threads");
+
+  if (generation !== threadLoadGeneration) return;
+
+  list.replaceChildren();
   if (error) { setText(list,t("threadsLoadError")); return; }
   if (!(data||[]).length) { setText(list,t("noMessages")); return; }
 
   await refreshBadgeMap((data || []).map((thread) => thread.other_id));
+
+  if (generation !== threadLoadGeneration) return;
 
   for (const thread of data) {
     const button = document.createElement("button");
@@ -103,6 +110,7 @@ async function loadThreads() {
     date.textContent = fmtDate(thread.last_message_at);
     button.append(top,preview,date);
     button.addEventListener("click", () => openConversation(thread));
+    if (generation !== threadLoadGeneration) return;
     list.append(button);
   }
 }
