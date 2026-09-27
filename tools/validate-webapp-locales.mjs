@@ -8,6 +8,7 @@ const root = path.resolve(here, '..');
 const appDir = path.join(root, 'app');
 const appIndex = path.join(appDir, 'index.html');
 const homeIndex = path.join(root, 'index.html');
+const legacyHomeCss = path.join(root, 'legacy-home.css');
 const expectedLocales = ['hu', 'en', 'nl', 'ro', 'pl', 'be'];
 
 const dictionaries = new Map();
@@ -73,10 +74,13 @@ if (!fs.existsSync(appIndex)) {
 
 if (!fs.existsSync(homeIndex)) {
   failures.push('index.html: missing');
+}
+if (!fs.existsSync(legacyHomeCss)) {
+  failures.push('legacy-home.css: missing');
 } else {
-  const homeSource = fs.readFileSync(homeIndex, 'utf8');
-  if (!homeSource.includes('.hero-footer-links a { color: #173b74; }')) {
-    failures.push('index.html: hero webapp link contrast guard is missing');
+  const homeStyleSource = fs.readFileSync(legacyHomeCss, 'utf8');
+  if (!homeStyleSource.includes('.hero-footer-links a { color: #173b74; }')) {
+    failures.push('legacy-home.css: hero webapp link contrast guard is missing');
   }
 }
 
