@@ -1630,6 +1630,9 @@ body.viewer-open #idesussMenu {
               <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp">▶️ Webapp</button>
             
               <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio">📻 Rádió</button>
+              <button class="idesussMenuBtn" id="openFerryBtn" type="button">⛴️ Ferry Board</button>
+              <button class="idesussMenuBtn" id="openRolaBtn" type="button">🚛🚆 Rail / RoLa</button>
+              <button class="idesussMenuBtn" id="openToolsBtn" type="button">🧰 Tools</button>
 
               <button class="idesussMenuBtn" id="openMessagesBtn" type="button" hidden>💬 Üzenetek <span id="messagesUnreadBadge" hidden></span></button>
             
@@ -1690,6 +1693,55 @@ body.viewer-open #idesussMenu {
   </section>
 
   <main id="top">
+    <section class="platform-modules" aria-labelledby="platformModulesTitle">
+      <div class="container">
+        <div class="platform-section-head">
+          <div>
+            <span class="platform-kicker">Sofőrközpont</span>
+            <h2 id="platformModulesTitle">Gyors elérés</h2>
+          </div>
+          <p>A legfontosabb napi funkciók egy helyen.</p>
+        </div>
+        <div class="platform-module-grid">
+          <a class="platform-module-card" href="/ferry/" aria-label="Ferry Board megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">⛴️</span>
+            <div>
+              <strong>Ferry Board</strong>
+              <span>Kompjáratok, indulások és státuszok</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/rola/" aria-label="Rail és RoLa Board megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">🚛🚆</span>
+            <div>
+              <strong>Rail / RoLa Board</strong>
+              <span>Kamionszállító vonatok és rail motorway</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/radio/?autoplay=1" aria-label="Rádió megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">📻</span>
+            <div>
+              <strong>Rádió</strong>
+              <span>Nemzetközi állomások útközben</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/tools/" aria-label="Tools megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">🧰</span>
+            <div>
+              <strong>Tools</strong>
+              <span>Számológép, naptár, napló és sofőreszközök</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section class="hero">
       <div class="container">
         <div class="hero-shell">
