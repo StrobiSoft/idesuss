@@ -73,6 +73,15 @@ expect(homeCss.includes("display:none!important"), "idea tooltip must remain hid
 expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v32";'), "service worker cache version must include mobile hotfix");
 expect(serviceWorker.includes("home-consolidation.css?v=20260927-package5"), "service worker must cache the mobile hotfix stylesheet");
 
+
+expect(root.includes("visual-polish.css?v=20260927-mobile2"), "homepage must cache-bust mobile visual polish stylesheet");
+const visualPolish = fs.readFileSync("visual-polish.css","utf8");
+expect(visualPolish.includes("justify-content: flex-end !important"), "mobile header actions must align compactly");
+expect(visualPolish.includes("border-color: transparent !important"), "mobile auth shell must not leave an empty visible box");
+expect(visualPolish.includes("color: var(--idesuss-text) !important"), "footer action text must keep dark-theme contrast");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v33";'), "service worker cache version must include mobile header/footer polish");
+expect(serviceWorker.includes("visual-polish.css?v=20260927-mobile2"), "service worker must cache the mobile visual polish stylesheet");
+
 const homepageRoutes = [
   ["/app/", root.includes("/app/") || root.includes("https://idesuss.net/app")],
   ["/radio/", root.includes("/radio/")],
