@@ -21,6 +21,9 @@ function initFloatingMenu() {
   const openMessagesBtn = document.getElementById("openMessagesBtn");
   const openIdeaBoxBtn = document.getElementById("openIdeaBoxBtn");
   const openSettingsBtn = document.getElementById("openSettingsBtn");
+  const openFerryBtn = document.getElementById("openFerryBtn");
+  const openRolaBtn = document.getElementById("openRolaBtn");
+  const openToolsBtn = document.getElementById("openToolsBtn");
 
   if (!toggle || !menu) return;
 
@@ -51,6 +54,18 @@ function initFloatingMenu() {
 
   openWebappBtn?.addEventListener("click", () => {
     window.location.href = "/app/";
+  });
+
+  openFerryBtn?.addEventListener("click", () => {
+    window.location.href = "/ferry/";
+  });
+
+  openRolaBtn?.addEventListener("click", () => {
+    window.location.href = "/rola/";
+  });
+
+  openToolsBtn?.addEventListener("click", () => {
+    window.location.href = "/tools/";
   });
 
   openRulesBtn?.addEventListener("click", () => {
