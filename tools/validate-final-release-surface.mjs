@@ -66,18 +66,33 @@ expect(!serviceWorker.includes("legacy-home.css"), "service worker must not cach
 expect(!serviceWorker.includes("\\n"), "service worker must not contain literal escaped newline artifacts");
 
 
-expect(root.includes("home-consolidation.css?v=20260927-package6"), "homepage must cache-bust mobile hotfix stylesheet");
+expect(root.includes("home-consolidation.css?v=20260927-package7"), "homepage must cache-bust mobile hotfix stylesheet");
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v34";'), "service worker cache version must include mobile hotfix");
-expect(serviceWorker.includes("home-consolidation.css?v=20260927-package6"), "service worker must cache the mobile hotfix stylesheet");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v35";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes("home-consolidation.css?v=20260927-package7"), "service worker must cache the mobile hotfix stylesheet");
 
 expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
 expect(homeCss.includes("justify-content:flex-end!important"), "mobile header actions must align compactly");
 expect(homeCss.includes("border-color:transparent!important"), "mobile auth shell must not leave an empty visible box");
 expect(homeCss.includes("color:var(--idesuss-text)!important"), "footer action text must keep dark-theme contrast");
 expect(!serviceWorker.includes("visual-polish.css"), "service worker must not cache unused visual-polish.css");
+
+expect(homeCss.includes("Signed-in header responsive state"), "signed-in header responsive guard missing");
+expect(homeCss.includes(".auth-chip.is-signed-in"), "signed-in auth-chip selector missing");
+expect(homeCss.includes("text-overflow:ellipsis"), "signed-in profile name must be truncatable");
+expect(homeCss.includes(".idesuss-signed-in .header-actions"), "signed-in header action layout guard missing");
+
+const authController = fs.readFileSync("js/menu/auth-controller.js","utf8");
+expect(authController.includes('classList.toggle("idesuss-signed-in"'), "auth controller must expose signed-in body state");
+expect(authController.includes('authSeparator.hidden = Boolean(identity)'), "signed-in auth separator must be hidden");
+
+const menuCore = fs.readFileSync("js/menu/menu-core.js","utf8");
+expect(menuCore.includes("auth-controller.js?v=20260927-signedheader1"), "menu core must pin signed-in auth controller revision");
+expect(root.includes("js/menu/menu-core.js?v=20260927-signedheader1"), "homepage must cache-bust signed-in menu controller");
+expect(serviceWorker.includes("js/menu/menu-core.js?v=20260927-signedheader1"), "service worker must cache signed-in menu controller");
+
 
 
 
