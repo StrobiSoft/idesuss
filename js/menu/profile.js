@@ -284,9 +284,11 @@ async function renderProfile(panel, profile, user) {
         <a href="/eula/" target="_blank" rel="noopener">${shellT("eulaLink")}</a>
       </div>
 
-      <button id="saveProfilePanel" class="menu-profile-btn" type="button"${eulaLoadError ? " disabled" : ""}>${shellT("saveProfile")}</button>
-      <a class="menu-profile-btn" href="/privacy/" target="_blank" rel="noopener">${shellT("privacyPolicy")}</a>
-      <button id="deleteAccountBtn" class="menu-profile-btn" type="button" style="background:#7f1d1d">${shellT("deleteAccount")}</button>
+      <div class="profile-action-grid">
+        <button id="saveProfilePanel" class="menu-profile-btn" type="button"${eulaLoadError ? " disabled" : ""}>${shellT("saveProfile")}</button>
+        <a class="menu-profile-btn" href="/privacy/" target="_blank" rel="noopener">${shellT("privacyPolicy")}</a>
+        <button id="deleteAccountBtn" class="menu-profile-btn profile-delete-btn" type="button">${shellT("deleteAccount")}</button>
+      </div>
       <div id="profilePanelMessage" class="profile-placeholder" aria-live="polite">${eulaLoadError ? escapeHtml(shellT("profileAuth")) : ""}</div>
     </div>
   `;
