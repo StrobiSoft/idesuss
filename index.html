@@ -16,7 +16,7 @@
 
   <link rel="stylesheet" href="/design-system.css?v=20260927-package2">
   <link rel="stylesheet" href="/interaction-system.css?v=20260927-package3">
-  <link rel="stylesheet" href="/home-consolidation.css?v=20260927-package7">
+  <link rel="stylesheet" href="/home-consolidation.css?v=20260927-package8">
 </head>
 <body>
   <header class="site-header">
@@ -52,15 +52,15 @@
           </select>
         </div>
 
-        <button id="moderationInboxBtn" class="moderation-inbox-btn" type="button" hidden aria-label="Moderációs bejövő" title="Moderációs bejövő">
-          <span aria-hidden="true">✉️</span>
-          <span id="moderationInboxBadge" class="moderation-inbox-badge" hidden></span>
-        </button>
-
         <div class="header-chip auth-chip">
           <button id="loginBtn" class="auth-link" type="button" data-i18n="login"></button>
           <span class="auth-separator" data-i18n="or"></span>
           <button id="registerBtn" class="auth-link" type="button" data-i18n="register"></button>
+
+          <button id="headerMessagesBtn" class="header-messages-btn" type="button" hidden aria-label="Üzenetek" title="Üzenetek">
+            <span aria-hidden="true">✉️</span>
+            <span id="headerMessagesBadge" class="header-messages-badge" hidden></span>
+          </button>
 
           <button
             id="menuToggle"
@@ -412,7 +412,7 @@
 
 
 <script type="module" src="./js/fx-rates.js?v=20260927-release1"></script>
-<script type="module" src="./js/menu/menu-core.js?v=20260927-signedheader1"></script>
+<script type="module" src="./js/menu/menu-core.js?v=20260927-headerfix1"></script>
 
 <script type="module" src="/js/site-stats.js?v=20260926-shared-supabase1"></script>
 <script type="module" src="/js/online-users.js?v=20260927-package2"></script>
