@@ -22,7 +22,7 @@ security definer
 set search_path = pg_catalog, public, private
 as $$
 begin
-  if current_user <> 'service_role' then
+  if auth.role() <> 'service_role' then
     raise exception 'SERVICE_ROLE_REQUIRED';
   end if;
 
@@ -30,7 +30,14 @@ begin
   with picked as (
     select o.id
     from private.push_notification_outbox o
-    where o.status = 'pending'
+    where (
+        o.status = 'pending'
+        or (
+          o.status = 'processing'
+          and o.processed_at is null
+          and o.available_at <= now() - interval '5 minutes'
+        )
+      )
       and o.available_at <= now()
     order by o.created_at
     for update skip locked
@@ -40,7 +47,8 @@ begin
     update private.push_notification_outbox o
     set status = 'processing',
         attempt_count = o.attempt_count + 1,
-        last_error = null
+        last_error = null,
+        available_at = now()
     from picked
     where o.id = picked.id
     returning o.*
@@ -96,7 +104,7 @@ as $$
 declare
   v_updated boolean;
 begin
-  if current_user <> 'service_role' then
+  if auth.role() <> 'service_role' then
     raise exception 'SERVICE_ROLE_REQUIRED';
   end if;
 
