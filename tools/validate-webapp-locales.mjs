@@ -8,7 +8,7 @@ const root = path.resolve(here, '..');
 const appDir = path.join(root, 'app');
 const appIndex = path.join(appDir, 'index.html');
 const homeIndex = path.join(root, 'index.html');
-const legacyHomeCss = path.join(root, 'legacy-home.css');
+const homeConsolidationCss = path.join(root, 'home-consolidation.css');
 const expectedLocales = ['hu', 'en', 'nl', 'ro', 'pl', 'be'];
 
 const dictionaries = new Map();
@@ -75,13 +75,16 @@ if (!fs.existsSync(appIndex)) {
 if (!fs.existsSync(homeIndex)) {
   failures.push('index.html: missing');
 }
-if (!fs.existsSync(legacyHomeCss)) {
-  failures.push('legacy-home.css: missing');
+if (!fs.existsSync(homeConsolidationCss)) {
+  failures.push('home-consolidation.css: missing');
 } else {
-  const homeStyleSource = fs.readFileSync(legacyHomeCss, 'utf8');
-  if (!homeStyleSource.includes('.hero-footer-links a { color: #173b74; }')) {
-    failures.push('legacy-home.css: hero webapp link contrast guard is missing');
+  const homeStyleSource = fs.readFileSync(homeConsolidationCss, 'utf8');
+  if (!homeStyleSource.includes('.hero-webapp-btn') || !homeStyleSource.includes('.hero-radio-btn')) {
+    failures.push('home-consolidation.css: hero action styling is missing');
   }
+}
+if (fs.existsSync(path.join(root, 'legacy-home.css'))) {
+  failures.push('legacy-home.css: obsolete stylesheet must remain removed');
 }
 
 const bridgeEntry = path.join(appDir, 'profile-bridge-entry.js');
