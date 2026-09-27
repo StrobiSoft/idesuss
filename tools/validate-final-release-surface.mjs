@@ -50,6 +50,21 @@ for (const obsolete of [
 }
 
 const root = fs.readFileSync("index.html","utf8");
+
+expect(!root.includes("legacy-home.css"), "homepage must not reference retired legacy-home.css");
+expect(!root.includes("\\n"), "homepage must not contain literal escaped newline artifacts");
+
+const homeCss = fs.readFileSync("home-consolidation.css","utf8");
+expect(homeCss.includes(".viewer-shell,\n.info-panel"), "homepage overlay base selector missing");
+expect(homeCss.includes("display:none!important"), "homepage overlays must be hidden by default");
+expect(homeCss.includes(".viewer-shell.show,\n.info-panel.show"), "homepage overlay show selector missing");
+expect(homeCss.includes("display:flex!important"), "homepage overlays must only display when explicitly shown");
+expect(homeCss.includes("body.viewer-open"), "viewer-open scroll-lock guard missing");
+
+const serviceWorker = fs.readFileSync("service-worker.js","utf8");
+expect(!serviceWorker.includes("legacy-home.css"), "service worker must not cache retired legacy-home.css");
+expect(!serviceWorker.includes("\\n"), "service worker must not contain literal escaped newline artifacts");
+
 const homepageRoutes = [
   ["/app/", root.includes("/app/") || root.includes("https://idesuss.net/app")],
   ["/radio/", root.includes("/radio/")],

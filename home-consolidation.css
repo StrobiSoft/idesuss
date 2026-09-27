@@ -355,3 +355,73 @@ main#top{
   border:2px solid var(--home-surface,#102131);
   box-shadow:0 4px 10px rgba(0,0,0,.22);
 }
+
+
+/* Homepage overlay visibility and mobile overflow guards migrated from retired legacy-home.css */
+html,
+body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+.viewer-shell,
+.info-panel{
+  display:none!important;
+  position:fixed;
+  inset:0;
+  z-index:1200;
+  align-items:flex-start;
+  justify-content:center;
+  background:rgba(3,9,14,.78);
+  backdrop-filter:blur(10px);
+}
+
+.viewer-shell.show,
+.info-panel.show{
+  display:flex!important;
+}
+
+body.viewer-open{
+  overflow:hidden!important;
+  touch-action:none;
+}
+
+.viewer-shell-card,
+.info-panel-card{
+  width:min(920px,calc(100vw - 32px));
+  max-width:100%;
+  margin:auto;
+}
+
+.viewer-frame{
+  display:block;
+  width:100%;
+  min-height:min(62vh,560px);
+  border:0;
+  background:#07111c;
+}
+
+.header-dropdown-menu{
+  display:none;
+}
+
+.header-dropdown-menu[style*="display: flex"]{
+  display:flex!important;
+}
+
+@media(max-width:600px){
+  .viewer-shell,
+  .info-panel{
+    padding:12px!important;
+  }
+
+  .viewer-shell-card,
+  .info-panel-card{
+    width:100%;
+    max-height:calc(100dvh - 24px);
+  }
+
+  .viewer-frame{
+    min-height:52dvh;
+  }
+}
