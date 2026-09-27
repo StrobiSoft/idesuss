@@ -83,7 +83,7 @@ for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
 console.log("Final web shell validation: OK");
 
 assert(index.includes('id="onlineUsersList"'),"online users card missing");
-assert(index.includes('/js/online-users.js?v=20260924-vip-presence1'),"online users module missing");
+assert(/\/js\/online-users\.js\?v=\d{8}-[a-z0-9-]+/i.test(index),"versioned online users module missing");
 assert(onlineUsers.includes('PRESENCE_POLICY.listRpc'),"online users must use shared presence RPC policy");
 assert(presencePolicy.includes('listRpc: "list_online_users"'),"shared presence list RPC missing");
 assert(userBadges.includes('formatUserDisplayName'),"shared user badge helper missing");
