@@ -122,13 +122,19 @@ function isReplyableThread(thread) {
   return thread?.last_message_type !== "system";
 }
 
-async function openConversation(thread) {
+async function openConversation(thread, { focusComposer = false } = {}) {
   currentOther = thread.other_id;
   currentThread = thread;
-  if (!userBadgeMap.has(thread.other_id)) await refreshBadgeMap([thread.other_id]);
   setText($("#conversationHead"), (thread.other_avatar_emoji || "🙂") + " " + displayName(thread.other_id, thread.other_nickname));
   setComposerReplyability(isReplyableThread(thread));
   $("#messagesPanel").classList.add("mobile-conversation");
+
+  if (focusComposer) {
+    $("#messageInput")?.focus({ preventScroll: true });
+  }
+
+  if (!userBadgeMap.has(thread.other_id)) await refreshBadgeMap([thread.other_id]);
+  setText($("#conversationHead"), (thread.other_avatar_emoji || "🙂") + " " + displayName(thread.other_id, thread.other_nickname));
   await client.rpc("mark_direct_messages_read",{p_sender:currentOther});
   await Promise.all([loadConversation(),loadThreads()]);
 }
@@ -237,6 +243,55 @@ $("#messageInput").addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
     sendMessage();
+  }
+});
+
+
+async function searchRecipients() {
+  const q = $("#recipientSearchInput")?.value.trim() || "";
+  const status = $("#recipientSearchStatus");
+  const results = $("#recipientSearchResults");
+  results?.replaceChildren();
+  if (q.length < 2) { setText(status,t("minSearch")); return; }
+
+  setText(status,t("searching"));
+  const { data, error } = await client.rpc("search_social_users",{p_query:q,p_limit:20});
+  if (error) { setText(status,t("searchError")); return; }
+
+  setText(status,(data||[]).length ? t("resultCount",(data||[]).length) : t("noResults"));
+  await refreshBadgeMap((data || []).map((user) => user.id));
+
+  for (const user of data || []) {
+    if (user.id === me?.id) continue;
+    const row = document.createElement("div");
+    row.className = "recipient-result";
+
+    const title = document.createElement("strong");
+    title.textContent = (user.avatar_emoji || "🙂") + " " + displayName(user.id, user.nickname);
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "action";
+    button.textContent = t("message");
+    button.addEventListener("click", () => {
+      openConversation({
+        other_id:user.id,
+        other_nickname:user.nickname,
+        other_avatar_emoji:user.avatar_emoji,
+        last_message_type:"direct"
+      }, { focusComposer:true });
+    });
+
+    row.append(title,button);
+    results.append(row);
+  }
+}
+
+$("#recipientSearchBtn")?.addEventListener("click",searchRecipients);
+$("#recipientSearchInput")?.addEventListener("keydown",(event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    searchRecipients();
   }
 });
 
