@@ -504,3 +504,71 @@ body.viewer-open{
 #footerOpenAppLink:active{
   color:var(--idesuss-text)!important;
 }
+
+
+/* Signed-in header responsive state */
+.auth-chip.is-signed-in{
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:nowrap!important;
+  gap:4px!important;
+  width:auto!important;
+  min-width:0!important;
+}
+
+.auth-chip.is-signed-in .auth-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-width:0!important;
+  white-space:nowrap!important;
+}
+
+.auth-chip.is-signed-in #loginBtn{
+  max-width:150px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.auth-chip.is-signed-in .auth-separator,
+.auth-chip.is-signed-in .auth-separator[hidden]{
+  display:none!important;
+}
+
+@media(max-width:1020px){
+  .idesuss-signed-in .header-actions{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    flex-wrap:nowrap!important;
+    gap:5px!important;
+  }
+
+  .idesuss-signed-in .auth-chip{
+    flex:0 1 auto!important;
+  }
+
+  .idesuss-signed-in .auth-chip #loginBtn{
+    max-width:118px;
+  }
+
+  .idesuss-signed-in .auth-chip #registerBtn{
+    flex:0 0 auto!important;
+  }
+
+  .idesuss-signed-in #menuToggle{
+    flex:0 0 auto!important;
+  }
+}
+
+@media(max-width:760px){
+  .idesuss-signed-in .auth-chip #loginBtn,
+  .idesuss-signed-in .auth-chip #registerBtn{
+    display:none!important;
+  }
+
+  .idesuss-signed-in .auth-chip{
+    background:transparent!important;
+    border-color:transparent!important;
+    padding:0!important;
+  }
+}

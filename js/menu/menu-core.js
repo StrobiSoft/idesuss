@@ -1,4 +1,4 @@
-import { initRootAuthController } from "./auth-controller.js?v=20260924-vip-presence1";
+import { initRootAuthController } from "./auth-controller.js?v=20260927-signedheader1";
 import { openProfilePanel } from "./profile.js?v=20260923-eula1";
 import { initSettingsPreferences, openSettingsPanel } from "./settings.js?v=20260925-brightness1";
 import { getSharedSupabaseClient } from "../shared/supabase-client.js";
