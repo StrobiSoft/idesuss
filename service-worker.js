@@ -1,4 +1,4 @@
-const CACHE_NAME = "idesuss-root-v29";
+const CACHE_NAME = "idesuss-root-v30";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -13,10 +13,11 @@ const STATIC_ASSETS = [
   "/delete-account/",
   "/tools/",
   "/rola/",
+  "/rola/index.html",
   "/ferry/ferry-board.js?v=20260927-board1",
   "/ferry/index.html",
   "/ferry/",
-  "/boards/board-shell.css?v=20260927-board1",
+  "/boards/board-shell.css?v=20260927-board2",
   "/favicon.png",
   "/fx-rates.css?v=20260927-package2",
   "/js/fx-rates.js?v=20260927-release1",\n  "/js/home-runtime.js?v=20260926-commonhome1",\n  "/js/lang/home-language.js?v=20260926-commonhome1",
