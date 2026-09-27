@@ -459,3 +459,48 @@ body.viewer-open{
 .menu-info:focus-within .menu-info-tooltip{
   display:block!important;
 }
+
+
+/* Final mobile header/footer polish */
+@media(max-width:760px){
+  .header-actions{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    width:auto!important;
+    gap:4px!important;
+  }
+
+  .header-actions > *{
+    width:auto!important;
+    min-width:0;
+  }
+
+  .auth-chip{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    flex:0 0 auto!important;
+    min-width:0!important;
+    width:auto!important;
+    border-color:transparent!important;
+    background:transparent!important;
+    padding:0!important;
+  }
+
+  .lang-clock-chip{
+    flex:0 0 auto!important;
+    width:auto!important;
+  }
+}
+
+.footer-action-btn,
+.footer-action-btn:link,
+.footer-action-btn:visited,
+#footerOpenAppLink,
+#footerOpenAppLink:link,
+#footerOpenAppLink:visited,
+#footerOpenAppLink:hover,
+#footerOpenAppLink:active{
+  color:var(--idesuss-text)!important;
+}
