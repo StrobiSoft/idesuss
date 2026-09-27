@@ -4,6 +4,7 @@ const index = fs.readFileSync("index.html","utf8");
 const menuCore = fs.readFileSync("js/menu/menu-core.js","utf8");
 const settings = fs.readFileSync("js/menu/settings.js","utf8");
 const polish = fs.readFileSync("visual-polish.css","utf8");
+const homeConsolidation = fs.readFileSync("home-consolidation.css","utf8");
 const serviceWorker = fs.readFileSync("service-worker.js","utf8");
 const onlineUsers = fs.readFileSync("js/online-users.js","utf8");
 const anonymousPresence = fs.readFileSync("js/anonymous-presence.js","utf8");
@@ -51,8 +52,8 @@ assert(profile.includes('profileEulaAccepted') && profile.includes('acceptCurren
 assert(index.includes('href="/eula/"'),"EULA link missing from homepage");
 assert(serviceWorker.includes('"/eula/"'),"EULA page missing from static cache");
 assert(menuCore.includes('navigator.serviceWorker.register("/service-worker.js"'),"root PWA service-worker registration missing");
-assert(index.includes('.profile-eula input[type="checkbox"]'),"mobile EULA checkbox sizing guard missing");
-assert(index.includes('.moderation-inbox-badge[hidden]'),"moderation badge hidden-state guard missing");
+assert(homeConsolidation.includes('.profile-eula input[type="checkbox"]'),"mobile EULA checkbox sizing guard missing");
+assert(homeConsolidation.includes('.moderation-inbox-badge[hidden]'),"moderation badge hidden-state guard missing");
 for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
   const marker = code === "en" ? "const EN =" : `${code}: {`;
   assert(shellLanguage.includes(marker),`missing shared shell locale: ${code}`);
@@ -83,7 +84,7 @@ for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
 console.log("Final web shell validation: OK");
 
 assert(index.includes('id="onlineUsersList"'),"online users card missing");
-assert(index.includes('/js/online-users.js?v=20260924-vip-presence1'),"online users module missing");
+assert(/\/js\/online-users\.js\?v=\d{8}-[a-z0-9-]+/i.test(index),"versioned online users module missing");
 assert(onlineUsers.includes('PRESENCE_POLICY.listRpc'),"online users must use shared presence RPC policy");
 assert(presencePolicy.includes('listRpc: "list_online_users"'),"shared presence list RPC missing");
 assert(userBadges.includes('formatUserDisplayName'),"shared user badge helper missing");

@@ -1,4 +1,5 @@
 import { getIdesussLanguage } from "./shared/language-preference.js";
+import { getSharedSupabaseClient } from "./shared/supabase-client.js";
 
 const LOCALES = {
   hu: "hu-HU",
@@ -132,10 +133,8 @@ async function loadFxRates({ force = false } = {}) {
   renderLoading();
 
   try {
-    const client = window.supabaseClient;
-    if (!client?.functions?.invoke) {
-      throw new Error("Supabase functions client is not available.");
-    }
+    const client = await getSharedSupabaseClient();
+    if (!client?.functions?.invoke) throw new Error("Supabase functions client is not available.");
 
     const quote = getQuoteCurrency();
     const requestKey = `${getLanguage()}:${quote}`;

@@ -8,10 +8,8 @@ Status: implementation branch `feat/social-messaging-core`.
 - Incoming requests support three decisions: **Igen / Nem / Talán**.
 - `Talán` is stored as `later`; the request remains resolvable later.
 - Friendship requests also appear as **system-style messages** in the private inbox.
-- Private user-to-user messaging keeps the existing entitlement model:
-  - Premium can message accepted friends.
-  - Premium Plus can message any registered user.
-  - All registered users can receive messages.
+- For the 1.0 launch, direct messaging is available to registered users without Premium gating.
+- The underlying entitlement model remains in the platform for possible future product experiments, but it does not block the 1.0 messaging experience.
 - Social user search is by nickname only. E-mail addresses are deliberately not searchable on the social surface.
 - The hamburger menu shows **Üzenetek** only while signed in, with an unread badge.
 - The first implementation uses persisted Postgres rows as the source of truth and Realtime only for UI refresh.
