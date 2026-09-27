@@ -351,3 +351,27 @@ body.secondary-page{
   .secondary-page .card{padding:15px!important}
   .secondary-page .hero{padding:17px!important}
 }
+
+
+/* Release simplification: language is selected on the homepage only. */
+.secondary-page .lang-select,
+.secondary-page .language{
+  display:none!important;
+}
+
+.secondary-page .topbar,
+.secondary-page .top,
+.secondary-page .top-actions{
+  align-items:center!important;
+}
+
+.secondary-page .nav{
+  gap:6px!important;
+}
+
+.secondary-page .nav a,
+.secondary-page .back{
+  color:var(--idesuss-text)!important;
+  background:rgba(255,255,255,.045)!important;
+  border-color:rgba(255,255,255,.09)!important;
+}

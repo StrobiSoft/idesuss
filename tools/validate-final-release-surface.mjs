@@ -66,12 +66,12 @@ expect(!serviceWorker.includes("legacy-home.css"), "service worker must not cach
 expect(!serviceWorker.includes("\\n"), "service worker must not contain literal escaped newline artifacts");
 
 
-expect(root.includes("home-consolidation.css?v=20260927-package8"), "homepage must cache-bust mobile hotfix stylesheet");
+expect(root.includes("home-consolidation.css?v=20260927-package9"), "homepage must cache-bust mobile hotfix stylesheet");
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v36";'), "service worker cache version must include mobile hotfix");
-expect(serviceWorker.includes("home-consolidation.css?v=20260927-package8"), "service worker must cache the mobile hotfix stylesheet");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v37";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes("home-consolidation.css?v=20260927-package9"), "service worker must cache the mobile hotfix stylesheet");
 
 expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
 expect(homeCss.includes("justify-content:flex-end!important"), "mobile header actions must align compactly");
@@ -101,6 +101,23 @@ expect(homeCss.includes("background:#f2eee5!important"), "language selector cont
 expect(homeCss.includes(".hero-banner-link"), "Android details contrast guard missing");
 expect(authController.includes('headerMessagesBtn?.addEventListener("click"'), "header Messages click binding missing");
 expect(authController.includes('window.location.href = "/messages/"'), "header Messages must route to Messages");
+
+expect(!root.includes('class="platform-nav"'), "duplicated homepage platform nav must stay removed");
+expect(!root.includes('id="footerOpenAppLink"'), "duplicated footer Webapp action must stay removed");
+expect(homeCss.includes("Release header simplification: brand + compact actions only"), "simplified homepage header guard missing");
+expect(homeCss.includes(".profile-action-grid"), "profile action grid guard missing");
+expect(serviceWorker.includes("/secondary-page-shell.css?v=20260927-secondary2"), "service worker must cache simplified secondary shell");
+
+const messagesHtml = fs.readFileSync("messages/index.html","utf8");
+const messagesJs = fs.readFileSync("messages/messages.js","utf8");
+expect(messagesHtml.includes('id="recipientSearchInput"'), "Messages recipient search input missing");
+expect(messagesHtml.includes('id="recipientSearchBtn"'), "Messages recipient search action missing");
+expect(!messagesHtml.includes('id="messagesLanguageSelect"'), "Messages must not expose a duplicate language selector");
+expect(!messagesHtml.includes('href="/app/"'), "Messages header must not duplicate Webapp navigation");
+expect(!messagesHtml.includes('href="/radio/?autoplay=1"'), "Messages header must not duplicate Radio navigation");
+expect(messagesJs.includes('search_social_users'), "Messages recipient search RPC missing");
+expect(messagesJs.includes('focusComposer:true'), "Messages recipient selection must focus composer");
+
 
 
 
