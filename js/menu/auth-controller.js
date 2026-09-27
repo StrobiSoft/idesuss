@@ -148,7 +148,6 @@ function updateButtons() {
   const headerMessagesBtn = document.getElementById("headerMessagesBtn");
   const headerMessagesBadge = document.getElementById("headerMessagesBadge");
   const moderationInboxBtn = document.getElementById("moderationInboxBtn");
-  const headerMessagesBtn = document.getElementById("headerMessagesBtn");
   const moderationInboxBadge = document.getElementById("moderationInboxBadge");
 
   document.body?.classList.toggle("idesuss-signed-in", Boolean(identity));
@@ -491,6 +490,7 @@ function bindHandlers() {
   const forgotBtn = document.getElementById("authForgotPassword");
   const modeSwitch = document.getElementById("authModeSwitch");
   const moderationInboxBtn = document.getElementById("moderationInboxBtn");
+  const headerMessagesBtn = document.getElementById("headerMessagesBtn");
 
   loginBtn?.addEventListener("click", (event) => {
     event.preventDefault();
