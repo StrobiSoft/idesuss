@@ -164,3 +164,91 @@ body{
   }
   .auth-link,.auth-separator{display:none!important}
 }
+
+
+.platform-modules{
+  padding:var(--idesuss-s5) 0 var(--idesuss-s3);
+}
+.platform-section-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:var(--idesuss-s4);
+  margin-bottom:var(--idesuss-s4);
+}
+.platform-section-head h2{
+  margin:2px 0 0;
+  font-size:clamp(1.45rem,2.5vw,2rem);
+  color:var(--idesuss-text);
+}
+.platform-section-head p{
+  margin:0;
+  color:var(--idesuss-text-muted);
+}
+.platform-kicker{
+  color:var(--idesuss-accent);
+  text-transform:uppercase;
+  font-size:.72rem;
+  letter-spacing:.14em;
+  font-weight:900;
+}
+.platform-module-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:var(--idesuss-s3);
+}
+.platform-module-card{
+  min-height:112px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:var(--idesuss-s3);
+  padding:var(--idesuss-s4);
+  border-radius:var(--idesuss-r-card);
+  border:1px solid var(--idesuss-border);
+  background:linear-gradient(180deg,rgba(21,41,59,.96),rgba(13,29,43,.96));
+  box-shadow:0 12px 30px rgba(0,0,0,.20);
+  text-decoration:none;
+  color:var(--idesuss-text);
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+.platform-module-card:hover,
+.platform-module-card:focus-visible{
+  transform:translateY(-2px);
+  border-color:rgba(224,168,90,.42);
+  background:linear-gradient(180deg,rgba(27,52,74,.98),rgba(15,33,48,.98));
+  outline:none;
+}
+.platform-module-icon{
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(224,168,90,.10);
+  border:1px solid rgba(224,168,90,.20);
+  font-size:1.35rem;
+}
+.platform-module-card strong{
+  display:block;
+  font-size:1rem;
+  margin-bottom:4px;
+}
+.platform-module-card span:not(.platform-module-icon):not(.platform-module-arrow){
+  color:var(--idesuss-text-muted);
+  font-size:.84rem;
+  line-height:1.35;
+}
+.platform-module-arrow{
+  color:var(--idesuss-accent);
+  font-size:1.25rem;
+  font-weight:900;
+}
+@media(max-width:980px){
+  .platform-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+  .platform-section-head{align-items:flex-start;flex-direction:column}
+  .platform-module-grid{grid-template-columns:1fr}
+  .platform-module-card{min-height:92px}
+}
