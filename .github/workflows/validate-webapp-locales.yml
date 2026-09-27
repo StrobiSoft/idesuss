@@ -41,6 +41,7 @@ on:
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-release-webapp-shell.mjs'
+      - 'tools/validate-final-release-surface.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
       - 'tools/validate-common-webapp-locales.mjs'
@@ -86,6 +87,7 @@ on:
       - 'tools/validate-password-security-gateway.mjs'
       - 'tools/validate-webapp-locales.mjs'
       - 'tools/validate-release-webapp-shell.mjs'
+      - 'tools/validate-final-release-surface.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
       - 'tools/validate-common-webapp-locales.mjs'
@@ -122,6 +124,8 @@ jobs:
         run: node tools/validate-release-webapp-shell.mjs
       - name: Validate shared secondary page shell
         run: node tools/validate-secondary-page-shell.mjs
+      - name: Validate final release surface
+        run: node tools/validate-final-release-surface.mjs
       - name: Validate common-generated webapp locale parity
         run: node tools/validate-common-webapp-locales.mjs
       - name: Validate common-generated Home locale parity
