@@ -1,8 +1,7 @@
-const CACHE_NAME = "idesuss-root-v30";
+const CACHE_NAME = "idesuss-root-v31";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
-  "/legacy-home.css?v=20260927-shell1",
   "/visual-polish.css?v=20260921-byn1",
   "/design-system.css?v=20260927-package2",
   "/interaction-system.css?v=20260927-package3",
@@ -20,7 +19,9 @@ const STATIC_ASSETS = [
   "/boards/board-shell.css?v=20260927-board2",
   "/favicon.png",
   "/fx-rates.css?v=20260927-package2",
-  "/js/fx-rates.js?v=20260927-release1",\n  "/js/home-runtime.js?v=20260926-commonhome1",\n  "/js/lang/home-language.js?v=20260926-commonhome1",
+  "/js/fx-rates.js?v=20260927-release1",
+  "/js/home-runtime.js?v=20260926-commonhome1",
+  "/js/lang/home-language.js?v=20260926-commonhome1",
   "/js/menu/menu-core.js?v=20260925-brightness1",
   "/js/menu/settings.js?v=20260925-brightness1",
   "/js/site-stats.js?v=20260926-shared-supabase1",
