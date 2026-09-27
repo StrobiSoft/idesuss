@@ -50,8 +50,15 @@ for (const obsolete of [
 }
 
 const root = fs.readFileSync("index.html","utf8");
-for (const route of ["/app/","/radio/","/ferry/","/rola/","/tools/"]) {
-  expect(root.includes(route), "homepage release navigation missing route " + route);
+const homepageRoutes = [
+  ["/app/", root.includes("/app/") || root.includes("https://idesuss.net/app")],
+  ["/radio/", root.includes("/radio/")],
+  ["/ferry/", root.includes("/ferry/")],
+  ["/rola/", root.includes("/rola/")],
+  ["/tools/", root.includes("/tools/")]
+];
+for (const [route, present] of homepageRoutes) {
+  expect(present, "homepage release navigation missing route " + route);
 }
 
 const webapp = fs.readFileSync("app/index.html","utf8");
