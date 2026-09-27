@@ -8,55 +8,29 @@
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="icon" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="stylesheet" href="/design-system.css?v=20260927-package2" />
   <link rel="stylesheet" href="./radio-skins.css?v=20260922-cross-nav1" />
-  <style>
-    :root{
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:#eef6ff;
-      background:#09111d;
-      --panel:#111b29;
-      --panel-soft:#162235;
-      --line:#2b3d55;
-      --accent:#4da3ff;
-      --accent-strong:#0d5bd7;
-      --muted:#93a8bf;
-      --locked:#4d5968;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#16253b 0,#09111d 52%,#050a10 100%)}
-    button,select,input{font:inherit}
-    .shell{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:22px 0 38px}
-    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .brand{font-weight:900;font-size:1.2rem;letter-spacing:.02em}.top-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}.language-select{border:1px solid #35506d;border-radius:12px;padding:10px 12px;font-weight:800;background:#132033;color:#eaf4ff;cursor:pointer}.back{border:1px solid #35506d;border-radius:12px;padding:10px 14px;font-weight:800;background:#132033;color:#eaf4ff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-    .radio-face{border:1px solid #33465d;border-radius:24px;background:linear-gradient(180deg,#172335,#0f1825);box-shadow:0 28px 70px rgba(0,0,0,.42);padding:20px}
-    .face-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:16px;flex-wrap:wrap}
-    h1{margin:0;font-size:1.5rem}.subtitle{margin:5px 0 0;color:var(--muted)}
-    .tier{display:flex;align-items:center;gap:10px}.badge{border:1px solid #365f8e;border-radius:999px;padding:7px 12px;background:#10253f;color:#8dc5ff;font-weight:850}.skin-select{background:#101b29;color:#eef6ff;border:1px solid #34506d;border-radius:10px;padding:8px 10px}
-    .display{background:linear-gradient(180deg,#071523,#0a1c2d);border:1px solid #25415f;border-radius:18px;padding:18px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;min-height:150px}
-    .eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:#70b7ff;font-weight:850}.now{font-size:clamp(1.6rem,4vw,2.5rem);font-weight:900;margin:8px 0 6px}.status{color:#b6c7da;min-height:1.4em}.volume-wrap{display:grid;gap:7px;min-width:210px}.volume-wrap label{font-size:.82rem;color:var(--muted);font-weight:800}.volume-wrap input{width:100%;accent-color:var(--accent)}
-    .transport{position:sticky;bottom:max(14px,env(safe-area-inset-bottom));z-index:120;display:flex;align-items:center;gap:10px;width:max-content;max-width:100%;margin:16px auto 0;padding:9px;border:1px solid rgba(154,196,236,.32);border-radius:22px;background:linear-gradient(135deg,rgba(20,42,67,.72),rgba(8,20,34,.62));box-shadow:0 18px 45px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(18px) saturate(145%);-webkit-backdrop-filter:blur(18px) saturate(145%)}.transport button{border:1px solid rgba(126,180,232,.45);border-radius:15px;padding:12px 18px;font-weight:850;cursor:pointer;background:rgba(20,34,56,.66);color:#edf6ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}.transport .primary{min-width:150px;background:linear-gradient(135deg,rgba(13,91,215,.88),rgba(77,163,255,.82));border-color:rgba(126,190,255,.82)}
-    .section-title{margin:22px 0 10px;font-size:.88rem;text-transform:uppercase;letter-spacing:.1em;color:#8fa8c1}
-    .stations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.station{border:1px solid #31465d;border-radius:14px;padding:13px;text-align:left;background:#121f31;color:#f3f8ff;cursor:pointer}.station:hover{border-color:#4f83b8}.station.locked{opacity:.42;cursor:not-allowed}.station.locked:hover{border-color:#31465d}.station strong{display:block;margin-bottom:4px}.station span{color:var(--muted);font-size:.88rem}
-    .presets{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px}.preset{min-height:68px;border:1px solid #3b5774;border-radius:12px;background:linear-gradient(180deg,#1a2c43,#111c2b);color:#fff;cursor:pointer;display:grid;place-items:center;padding:8px}.preset b{font-size:1.15rem}.preset small{font-size:.68rem;color:#a9bdd1;text-transform:capitalize}.preset.saved{box-shadow:inset 0 0 0 1px rgba(77,163,255,.4)}.preset.locked{opacity:.38;cursor:not-allowed}.preset.unlocked{opacity:1}.preset.unlocked b{font-size:1.35rem;color:#fff;text-shadow:0 0 10px rgba(255,255,255,.18)}.preset b{display:inline-flex;align-items:center;gap:8px}.preset-lock{position:relative;display:inline-block;width:16px;height:13px;border:2px solid currentColor;border-radius:3px;color:#7b8795}.preset-lock::before{content:"";position:absolute;width:10px;height:9px;border:2px solid currentColor;border-bottom:0;border-radius:8px 8px 0 0;left:1px;top:-10px;transform-origin:left bottom}.preset-lock.is-open{color:#ffd84d;filter:drop-shadow(0 0 5px rgba(255,216,77,.75))}.preset-lock.is-open::before{transform:translate(5px,-1px) rotate(32deg)}.preset-lock.is-closed{color:#7b8795}
-    .note{margin-top:14px;color:#8fa3b9;font-size:.86rem;line-height:1.5}
-    body.radio-directory-open{overflow:hidden}
-    .radio-directory-panel[hidden]{display:none!important}
-    .radio-directory-panel{position:fixed;inset:0;z-index:200000;background:rgba(3,9,17,.78);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);padding:max(16px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:center}
-    .radio-directory-card{width:min(980px,100%);height:min(820px,92dvh);background:linear-gradient(180deg,#142237,#0b1420);border:1px solid #35506d;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.55);padding:18px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
-    .radio-directory-head{display:flex;align-items:center;justify-content:space-between;gap:14px}.radio-directory-head h2{margin:0;font-size:1.25rem}.radio-directory-close{width:42px;height:42px;border:1px solid #46617e;border-radius:50%;background:#15253a;color:#fff;font-size:1.7rem;line-height:1;cursor:pointer}
-    .radio-directory-filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}.radio-directory-field{display:grid;gap:6px;color:#9eb3c8;font-size:.78rem;font-weight:800}.radio-directory-field input,.radio-directory-field select{width:100%;min-width:0;border:1px solid #35506d;border-radius:10px;padding:10px 11px;background:#0c1725;color:#eef6ff}
-    .radio-directory-actions{display:flex;justify-content:flex-end}.radio-directory-actions button,.radio-directory-result-actions button{border:1px solid #3a5876;border-radius:10px;padding:9px 12px;background:#142238;color:#edf6ff;font-weight:800;cursor:pointer}.radio-directory-actions .primary,.radio-directory-result-actions .primary{background:linear-gradient(135deg,#0d5bd7,#4da3ff);border-color:#4da3ff}.radio-directory-result-actions button:disabled{opacity:.4;cursor:not-allowed}
-    .radio-directory-message{min-height:1.3em;color:#a9bdd1;font-size:.88rem}.radio-directory-results{overflow-y:auto;overscroll-behavior:contain;display:grid;gap:8px;padding-right:4px}.radio-directory-result{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #2e455e;border-radius:13px;background:#101d2c;padding:12px}.radio-directory-result-copy{display:grid;gap:4px;min-width:0}.radio-directory-result-copy strong{overflow-wrap:anywhere}.radio-directory-result-copy span{color:#91a8bf;font-size:.8rem;overflow-wrap:anywhere}.radio-directory-result-actions{display:flex;gap:7px;flex:0 0 auto}
-    @media(max-width:760px){.radio-directory-panel{align-items:flex-start}.radio-directory-card{height:calc(100dvh - max(32px,env(safe-area-inset-top) + env(safe-area-inset-bottom)));border-radius:18px;padding:14px}.radio-directory-filters{grid-template-columns:1fr 1fr}.radio-directory-result{align-items:flex-start;flex-direction:column}.radio-directory-result-actions{width:100%}.radio-directory-result-actions button{flex:1}}
-    @media(max-width:480px){.radio-directory-filters{grid-template-columns:1fr}.radio-directory-card{gap:10px}.radio-directory-result-actions{flex-direction:column}}
-    @media(max-width:820px){.presets{grid-template-columns:repeat(4,1fr)}.display{grid-template-columns:1fr}.volume-wrap{min-width:0}}
-    @media(max-width:620px){.stations{grid-template-columns:1fr}.presets{grid-template-columns:repeat(2,1fr)}}
-  </style>
+  <link rel="stylesheet" href="./radio-release.css?v=20260927-release-shell1" />
 </head>
 <body>
-  <main class="shell">
-    <div class="top">
-      <div class="brand">Idesüss™ Radio</div>
+  <header class="radio-topbar">
+    <div class="radio-topbar-inner">
+      <a class="radio-brand" href="../" aria-label="Idesüss főoldal">
+        <img class="radio-brand-logo" src="../favicon.png" alt="" />
+        <span class="radio-brand-copy">
+          <span class="radio-brand-title">Idesüss™</span>
+          <span class="radio-brand-sub">Driver Platform</span>
+        </span>
+      </a>
+
+      <nav class="radio-nav" aria-label="Fő navigáció">
+        <a href="../">Kezdőlap</a>
+        <a href="../ferry/">Ferry</a>
+        <a href="../rola/">RoLa</a>
+        <a class="is-active" href="./">Rádió</a>
+        <a href="../tools/">Tools</a>
+      </nav>
+
       <div class="top-nav">
         <select id="radioLangSelect" class="language-select" aria-label="Language">
           <option value="hu">🇭🇺 Magyar</option>
@@ -67,56 +41,83 @@
           <option value="hr">🇭🇷 Hrvatski</option>
           <option value="be">🇧🇾 Беларуская</option>
         </select>
-        <a class="back" href="../" data-radio-i18n="home">← Főoldal</a>
         <a class="back" href="../app/" data-radio-i18n="webapp">▶ Webapp</a>
         <a id="radioUserBtn" class="back" href="/#login">👤 Bejelentkezés</a>
       </div>
     </div>
+  </header>
 
-    <section class="radio-face" aria-label="Idesüss rádió">
-      <div class="face-head">
-        <div>
-          <h1 data-radio-i18n="title">📻 Rádió</h1>
-          <p class="subtitle" data-radio-i18n="subtitle">Élő rádióállomások, gyors csatornaváltás és személyes presetek egy helyen.</p>
-        </div>
-        <div class="tier">
-          <span id="tierBadge" class="badge" hidden></span>
-          <select id="skinSelect" class="skin-select" aria-label="Rádió skin">
-            <option value="default">Idesüss Default</option>
-            <option value="night-drive">Night Drive</option>
-            <option value="classic-black">Classic Black</option>
-          </select>
-        </div>
+  <main class="shell">
+    <section class="radio-hero" aria-labelledby="radioTitle">
+      <div>
+        <p class="radio-kicker">Idesüss Driver Platform</p>
+        <h1 id="radioTitle" data-radio-i18n="title">📻 Rádió</h1>
+        <p class="subtitle" data-radio-i18n="subtitle">Élő rádióállomások, gyors csatornaváltás és személyes presetek egy helyen.</p>
       </div>
-
-      <div class="display">
-        <div>
-          <div class="eyebrow" data-radio-i18n="live">Live radio</div>
-          <div id="nowPlaying" class="now" data-radio-i18n="none">Nincs kiválasztott állomás</div>
-          <div id="radioStatus" class="status" role="status" aria-live="polite" data-radio-i18n="choose">Válassz egy állomást a listából, vagy indíts hangtesztet.</div>
-        </div>
-        <div class="volume-wrap">
-          <label for="volumeSlider" data-radio-i18n="volume">Hangerő</label>
-          <input id="volumeSlider" type="range" min="0" max="100" step="1" value="70" />
-        </div>
-      </div>
-
-      <div class="transport">
-        <button id="playPauseBtn" class="primary" type="button" aria-pressed="false">▶ Lejátszás</button>
-        <button id="audioTestBtn" type="button" hidden disabled data-radio-i18n="test">🔊 Hangteszt</button>
-      </div>
-
-
-      <div class="section-title" data-radio-i18n="presets">Csatornagombok / presetek</div>
-      <div id="presetGrid" class="presets"></div>
-      <div id="saveHint" class="note"></div>
-
-      <div class="note" data-radio-i18n="note">
-        Az 1-es preset induláskor egy, a választott nyelvhez illő népszerű állomást ajánl. Bármelyik presetet hosszan nyomva új állomást kereshetsz és ezen az eszközön elmentheted.
+      <div class="tier">
+        <span id="tierBadge" class="badge" hidden></span>
+        <select id="skinSelect" class="skin-select" aria-label="Rádió skin">
+          <option value="default">Idesüss Default</option>
+          <option value="night-drive">Night Drive</option>
+          <option value="classic-black">Classic Black</option>
+        </select>
       </div>
     </section>
+
+    <section class="radio-face" aria-label="Idesüss rádió">
+      <div class="face-head" aria-hidden="true"></div>
+
+      <div class="radio-console">
+        <div class="display">
+          <div>
+            <div class="eyebrow" data-radio-i18n="live">Live radio</div>
+            <div id="nowPlaying" class="now" data-radio-i18n="none">Nincs kiválasztott állomás</div>
+            <div id="radioStatus" class="status" role="status" aria-live="polite" data-radio-i18n="choose">Válassz egy állomást a listából, vagy indíts hangtesztet.</div>
+          </div>
+          <div class="volume-wrap">
+            <label for="volumeSlider" data-radio-i18n="volume">Hangerő</label>
+            <input id="volumeSlider" type="range" min="0" max="100" step="1" value="70" />
+            <span class="volume-value">70%</span>
+          </div>
+        </div>
+
+        <aside class="radio-controls" aria-label="Lejátszás vezérlők">
+          <div>
+            <p class="radio-control-label">Playback</p>
+            <div class="transport">
+              <button id="playPauseBtn" class="primary" type="button" aria-pressed="false">▶ Lejátszás</button>
+              <button id="audioTestBtn" type="button" hidden disabled data-radio-i18n="test">🔊 Hangteszt</button>
+            </div>
+          </div>
+          <p class="radio-control-meta">Gyors hozzáférés az útközbeni hallgatáshoz, a meglévő lejátszási és autoplay szabályok megtartásával.</p>
+        </aside>
+      </div>
+
+      <div class="radio-presets-section">
+        <div class="section-head">
+          <div class="section-title" data-radio-i18n="presets">Csatornagombok / presetek</div>
+          <p class="section-hint">Hosszan nyomva állomást válthatsz vagy menthetsz.</p>
+        </div>
+        <div id="presetGrid" class="presets"></div>
+        <div id="saveHint" class="note"></div>
+      </div>
+    </section>
+
+    <div class="radio-footer-note" data-radio-i18n="note">
+      Az 1-es preset induláskor egy, a választott nyelvhez illő népszerű állomást ajánl. Bármelyik presetet hosszan nyomva új állomást kereshetsz és ezen az eszközön elmentheted.
+    </div>
   </main>
 
   <script type="module" src="./radio-app.js?v=20260927-release1"></script>
+  <script>
+    (() => {
+      const slider = document.getElementById('volumeSlider');
+      const label = document.querySelector('.volume-value');
+      if (!slider || !label) return;
+      const sync = () => { label.textContent = slider.value + '%'; };
+      slider.addEventListener('input', sync);
+      sync();
+    })();
+  </script>
 </body>
 </html>
