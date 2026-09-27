@@ -200,7 +200,7 @@ input:focus-visible {
 .footer-action-btn,
 .footer-action-btn:link,
 .footer-action-btn:visited {
-  color: var(--idesuss-text) !important;
+  color: #173b74 !important;
   white-space: normal;
   text-align: center;
   line-height: 1.2;
@@ -211,7 +211,7 @@ input:focus-visible {
 #footerOpenAppLink:visited,
 #footerOpenAppLink:hover,
 #footerOpenAppLink:active {
-  color: var(--idesuss-text) !important;
+  color: #173b74 !important;
 }
 
 /* Header-integrated menu */
@@ -390,33 +390,24 @@ input:focus-visible {
   }
 
   .header-actions {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    width: auto !important;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .header-actions > * {
-    width: auto !important;
+    width: 100%;
     min-width: 0;
   }
 
   .auth-chip {
-    display: flex !important;
-    grid-template-columns: none !important;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: flex-end;
-    flex: 0 0 auto !important;
-    min-width: 0 !important;
-    border-color: transparent !important;
-    background: transparent !important;
-    padding: 0 !important;
   }
 
   .lang-clock-chip {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    flex: 0 0 auto !important;
   }
 
   .lang-select {
