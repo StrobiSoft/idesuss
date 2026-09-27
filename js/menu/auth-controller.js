@@ -145,7 +145,10 @@ function updateButtons() {
   const adminPanelBtn = document.getElementById("openAdminPanelBtn");
   const messagesBtn = document.getElementById("openMessagesBtn");
   const messagesBadge = document.getElementById("messagesUnreadBadge");
+  const headerMessagesBtn = document.getElementById("headerMessagesBtn");
+  const headerMessagesBadge = document.getElementById("headerMessagesBadge");
   const moderationInboxBtn = document.getElementById("moderationInboxBtn");
+  const headerMessagesBtn = document.getElementById("headerMessagesBtn");
   const moderationInboxBadge = document.getElementById("moderationInboxBadge");
 
   document.body?.classList.toggle("idesuss-signed-in", Boolean(identity));
@@ -174,10 +177,17 @@ function updateButtons() {
   if (messagesBtn) {
     messagesBtn.hidden = !identity;
   }
+  if (headerMessagesBtn) {
+    headerMessagesBtn.hidden = !identity;
+  }
 
   if (!identity && messagesBadge) {
     messagesBadge.hidden = true;
     messagesBadge.textContent = "";
+  }
+  if (!identity && headerMessagesBadge) {
+    headerMessagesBadge.hidden = true;
+    headerMessagesBadge.textContent = "";
   }
 
   const canReviewAvatars = Boolean(identity) && ["moderator", "admin", "owner"].includes(profileRole);
@@ -190,14 +200,22 @@ function updateButtons() {
 
 async function refreshSocialSummary() {
   const badge = document.getElementById("messagesUnreadBadge");
-  if (!identity || !badge) return;
+  const headerBadge = document.getElementById("headerMessagesBadge");
+  if (!identity || (!badge && !headerBadge)) return;
 
   try {
     const { data, error } = await getClient().rpc("get_social_summary");
     if (error) throw error;
     const unread = Number(data?.unread_messages || 0);
-    badge.textContent = unread > 99 ? "99+" : String(unread);
-    badge.hidden = unread < 1;
+    const label = unread > 99 ? "99+" : String(unread);
+    if (badge) {
+      badge.textContent = label;
+      badge.hidden = unread < 1;
+    }
+    if (headerBadge) {
+      headerBadge.textContent = label;
+      headerBadge.hidden = unread < 1;
+    }
   } catch (error) {
     console.error("Social summary load failed", error);
   }
@@ -506,6 +524,10 @@ function bindHandlers() {
 
   moderationInboxBtn?.addEventListener("click", () => {
     window.location.href = "/admin/#avatar-review";
+  });
+
+  headerMessagesBtn?.addEventListener("click", () => {
+    window.location.href = "/messages/";
   });
 
   window.addEventListener("idesuss:profile-saved", (event) => {
