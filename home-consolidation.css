@@ -705,3 +705,90 @@ body.viewer-open{
     max-width:86px!important;
   }
 }
+
+
+/* Release header simplification: brand + compact actions only. */
+.header-inner{
+  grid-template-columns:auto 1fr!important;
+}
+
+.header-actions{
+  justify-self:end!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:0!important;
+  gap:6px!important;
+}
+
+.header-actions .header-chip{
+  border:1px solid rgba(255,255,255,.09)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.035)!important;
+}
+
+.auth-chip{
+  border-left:1px solid rgba(255,255,255,.09)!important;
+  border-radius:10px!important;
+}
+
+.lang-clock-chip{
+  border-radius:10px!important;
+}
+
+.platform-nav{
+  display:none!important;
+}
+
+/* Profile release polish */
+#profilePanel{
+  padding:16px!important;
+}
+
+.profile-panel-card{
+  width:min(760px,calc(100vw - 24px))!important;
+  max-width:100%!important;
+  overflow:auto!important;
+  overflow-x:hidden!important;
+}
+
+.profile-panel-card a,
+.profile-panel-card .menu-profile-btn{
+  color:var(--idesuss-text)!important;
+}
+
+.profile-action-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px!important;
+  width:100%;
+  margin-top:10px;
+}
+
+.profile-action-grid .menu-profile-btn{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:42px!important;
+  padding:9px 10px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+  background:#12283a!important;
+  text-align:center!important;
+  text-decoration:none!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere;
+}
+
+.profile-action-grid .profile-delete-btn{
+  background:#7f1d1d!important;
+  color:#fff!important;
+}
+
+@media(max-width:600px){
+  .profile-action-grid{
+    grid-template-columns:1fr!important;
+  }
+}
