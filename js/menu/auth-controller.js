@@ -139,12 +139,18 @@ function localizePasswordSecurityError(error) {
 function updateButtons() {
   const loginBtn = document.getElementById("loginBtn");
   const registerBtn = document.getElementById("registerBtn");
+  const authSeparator = document.querySelector(".auth-separator");
+  const authChip = document.querySelector(".auth-chip");
   const menuLogout = document.getElementById("logoutBtnMenu");
   const adminPanelBtn = document.getElementById("openAdminPanelBtn");
   const messagesBtn = document.getElementById("openMessagesBtn");
   const messagesBadge = document.getElementById("messagesUnreadBadge");
   const moderationInboxBtn = document.getElementById("moderationInboxBtn");
   const moderationInboxBadge = document.getElementById("moderationInboxBadge");
+
+  document.body?.classList.toggle("idesuss-signed-in", Boolean(identity));
+  authChip?.classList.toggle("is-signed-in", Boolean(identity));
+  if (authSeparator) authSeparator.hidden = Boolean(identity);
 
   if (loginBtn && registerBtn) {
     if (identity) {
