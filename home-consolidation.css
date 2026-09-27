@@ -425,3 +425,37 @@ body.viewer-open{
     min-height:52dvh;
   }
 }
+
+
+/* Mobile menu and idea-tooltip guards */
+.header-dropdown-menu[style*="display: flex"]{
+  flex-direction:column!important;
+  align-items:stretch!important;
+}
+
+.menu-idea-row{
+  position:relative;
+}
+
+.menu-info-tooltip{
+  display:none!important;
+  position:absolute;
+  right:0;
+  top:calc(100% + 6px);
+  width:min(260px,calc(100vw - 36px));
+  padding:9px 10px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:9px;
+  background:#0b1724;
+  color:#dce5eb;
+  box-shadow:0 12px 28px rgba(0,0,0,.30);
+  z-index:1300;
+  font-size:.72rem;
+  line-height:1.45;
+}
+
+.menu-info:hover .menu-info-tooltip,
+.menu-info:focus .menu-info-tooltip,
+.menu-info:focus-within .menu-info-tooltip{
+  display:block!important;
+}
