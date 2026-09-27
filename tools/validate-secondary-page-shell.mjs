@@ -41,9 +41,12 @@ for (const [file, pageClass] of Object.entries(pages)) {
   const html = fs.readFileSync(file, "utf8");
   expect(html.includes('/design-system.css'), file + " must load design-system.css");
   expect(html.includes('/secondary-page-shell.css'), file + " must load secondary-page-shell.css");
-  expect(new RegExp('<body[^>]*class=["\\'][^"\\']*secondary-page[^"\\']*' + pageClass).test(html), file + " must opt into shared body class");
+  const bodyMatch = html.match(/<body[^>]*class=["']([^"']+)["']/i);
+  const bodyClasses = new Set((bodyMatch?.[1] || "").split(/\s+/).filter(Boolean));
+  expect(bodyClasses.has("secondary-page"), file + " must opt into shared secondary-page class");
+  expect(bodyClasses.has(pageClass), file + " must opt into " + pageClass);
   for (const id of criticalIds[file]) {
-    expect(new RegExp('\\bid=["\\']' + id + '["\\']').test(html), file + " missing critical id #" + id);
+    expect(html.includes('id="' + id + '"') || html.includes("id='" + id + "'"), file + " missing critical id #" + id);
   }
 
   const refs = [...html.matchAll(/getElementById\(["']([^"']+)["']\)/g)].map(m => m[1]);
