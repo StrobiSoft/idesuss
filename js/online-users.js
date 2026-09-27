@@ -8,12 +8,20 @@ function t(key, fallback) {
   return window.idesussHomeTranslations?.[key] || fallback;
 }
 
+function setStatusState(status, state, message = "") {
+  status.className = "online-users-status info-state";
+  status.dataset.state = state;
+  status.textContent = message;
+}
+
 function renderEmpty(list, status) {
   list.replaceChildren();
   const item = document.createElement("div");
   item.className = "online-user-empty";
   item.textContent = t("onlineUsersNone", "No visible registered users are online.");
   list.append(item);
+  status.className = "online-users-status";
+  status.removeAttribute("data-state");
   status.textContent = "";
 }
 
@@ -22,11 +30,12 @@ async function refreshOnlineUsers() {
   const status = document.getElementById("onlineUsersListStatus");
   if (!list || !status) return;
 
+  setStatusState(status, "loading", t("onlineUsersLoading", "Online users loading…"));
   const client = await getSharedSupabaseClient();
   const { data, error } = await client.rpc(PRESENCE_POLICY.listRpc);
   if (error) {
     console.error("Online user list failed", error);
-    status.textContent = t("onlineUsersLoadError", "Online users could not be loaded.");
+    setStatusState(status, "error", t("onlineUsersLoadError", "Online users could not be loaded."));
     return;
   }
 
@@ -60,6 +69,8 @@ async function refreshOnlineUsers() {
     list.append(row);
   }
 
+  status.className = "online-users-status";
+  status.removeAttribute("data-state");
   status.textContent = t("onlineUsersVisibleCount", "{count} visible registered users online.")
     .replace("{count}", String(data.length));
 }
