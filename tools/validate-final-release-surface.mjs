@@ -70,7 +70,7 @@ expect(root.includes("home-consolidation.css?v=20260927-package9"), "homepage mu
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v37";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v38";'), "service worker cache version must include mobile hotfix");
 expect(serviceWorker.includes("home-consolidation.css?v=20260927-package9"), "service worker must cache the mobile hotfix stylesheet");
 
 expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
@@ -123,6 +123,16 @@ expect(messagesJs.includes('focusComposer:true'), "Messages recipient selection 
 
 
 
+
+
+const visionCss = fs.readFileSync("vision-theme.css","utf8");
+expect(root.includes("vision-theme.css?v=20260927-vision1"), "homepage must load the concept-driven vision theme");
+expect(serviceWorker.includes("/vision-theme.css?v=20260927-vision1"), "service worker must cache the vision theme");
+expect(visionCss.includes("Idesüss Vision UI Theme"), "vision theme identity marker missing");
+expect(visionCss.includes("Portrait mobile: auth must remain available"), "portrait auth visibility guard missing");
+expect(visionCss.includes('body:not(.idesuss-signed-in) .auth-chip #loginBtn'), "portrait login visibility selector missing");
+expect(visionCss.includes('body:not(.idesuss-signed-in) .auth-chip #registerBtn'), "portrait registration visibility selector missing");
+expect(!root.includes('class="platform-nav"'), "duplicated homepage platform nav must remain removed");
 
 const homepageRoutes = [
   ["/app/", root.includes("/app/") || root.includes("https://idesuss.net/app")],
