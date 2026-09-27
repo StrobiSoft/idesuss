@@ -12,7 +12,7 @@
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="icon" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
-  <link rel="stylesheet" href="/fx-rates.css?v=20260927-release1" />
+  <link rel="stylesheet" href="/fx-rates.css?v=20260927-package2" />
 
   <style>
     :root {
@@ -1573,6 +1573,7 @@ body.viewer-open #idesussMenu {
 .online-users-status{margin-top:10px}
 @media(max-width:520px){.online-users-card{padding:14px}.online-users-list{max-height:220px}}
 </style>
+  <link rel="stylesheet" href="/design-system.css?v=20260927-package2">
 </head>
 <body>
   <header class="site-header">
@@ -1585,6 +1586,13 @@ body.viewer-open #idesussMenu {
         </div>
       </a>
 
+      <nav class="platform-nav" aria-label="Fő navigáció">
+        <a class="platform-nav-link is-active" href="/">Kezdőlap</a>
+        <a class="platform-nav-link" href="/ferry/">Ferry</a>
+        <a class="platform-nav-link" href="/rola/">RoLa</a>
+        <a class="platform-nav-link" href="/radio/">Rádió</a>
+        <a class="platform-nav-link" href="/tools/">Tools</a>
+      </nav>
       <div class="header-actions">
 
         <div class="header-chip lang-clock-chip">
@@ -1629,6 +1637,9 @@ body.viewer-open #idesussMenu {
               <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp">▶️ Webapp</button>
             
               <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio">📻 Rádió</button>
+              <button class="idesussMenuBtn" id="openFerryBtn" type="button">⛴️ Ferry Board</button>
+              <button class="idesussMenuBtn" id="openRolaBtn" type="button">🚛🚆 Rail / RoLa</button>
+              <button class="idesussMenuBtn" id="openToolsBtn" type="button">🧰 Tools</button>
 
               <button class="idesussMenuBtn" id="openMessagesBtn" type="button" hidden>💬 Üzenetek <span id="messagesUnreadBadge" hidden></span></button>
             
@@ -1653,42 +1664,72 @@ body.viewer-open #idesussMenu {
     </div>
   </header>
 
-  <section class="fx-strip" aria-labelledby="fxTitle">
-    <div class="container">
-      <div class="fx-card">
-        <div class="fx-card-head">
-          <h2 id="fxTitle" class="fx-title" data-i18n="fx.title">Napi hivatalos árfolyamok</h2>
-          <div class="fx-source">
-            <span id="fxSourceDate">ECB napi referenciaárfolyam</span>
-            · <span id="fxStatus" class="fx-status">betöltés…</span>
-          </div>
-        </div>
-
-        <div class="fx-grid" aria-live="polite">
-          <div class="fx-item">
-            <span class="fx-code" data-fx-label="EUR">EUR/HUF</span>
-            <strong class="fx-value" data-fx-value="EUR">—</strong>
-          </div>
-          <div class="fx-item">
-            <span class="fx-code" data-fx-label="USD">USD/HUF</span>
-            <strong class="fx-value" data-fx-value="USD">—</strong>
-          </div>
-          <div class="fx-item">
-            <span class="fx-code" data-fx-label="GBP">GBP/HUF</span>
-            <strong class="fx-value" data-fx-value="GBP">—</strong>
-          </div>
-          <div class="fx-item">
-            <span class="fx-code" data-fx-label="CHF">CHF/HUF</span>
-            <strong class="fx-value" data-fx-value="CHF">—</strong>
-          </div>
-        </div>
-
-        <p class="fx-note" data-i18n="fx.note">Forrás: Európai Központi Bank (ECB). Az ECB referenciaárfolyamai munkanapokon frissülnek; az Idesüss a napon belüli piaci ingadozást nem követi.</p>
-      </div>
-    </div>
-  </section>
-
   <main id="top">
+    <section class="dashboard-intro">
+      <div class="container">
+        <div class="dashboard-intro-shell">
+          <div class="dashboard-intro-copy">
+            <span class="platform-kicker">Idesüss Driver Platform</span>
+            <h1>Úton. Egy helyen.</h1>
+            <p>Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.</p>
+          </div>
+          <div class="dashboard-intro-status" aria-label="Platform állapot">
+            <span class="status-dot status-dot-live"></span>
+            <span>Rendszer elérhető</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="platform-modules" aria-labelledby="platformModulesTitle">
+      <div class="container">
+        <div class="platform-section-head">
+          <div>
+            <span class="platform-kicker">Sofőrközpont</span>
+            <h2 id="platformModulesTitle">Gyors elérés</h2>
+          </div>
+          <p>A legfontosabb napi funkciók egy helyen.</p>
+        </div>
+        <div class="platform-module-grid">
+          <a class="platform-module-card" href="/ferry/" aria-label="Ferry Board megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">⛴️</span>
+            <div>
+              <strong>Ferry Board</strong>
+              <span>Kompjáratok, indulások és státuszok</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/rola/" aria-label="Rail és RoLa Board megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">🚛🚆</span>
+            <div>
+              <strong>Rail / RoLa Board</strong>
+              <span>Kamionszállító vonatok és rail motorway</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/radio/?autoplay=1" aria-label="Rádió megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">📻</span>
+            <div>
+              <strong>Rádió</strong>
+              <span>Nemzetközi állomások útközben</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/tools/" aria-label="Tools megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">🧰</span>
+            <div>
+              <strong>Tools</strong>
+              <span>Számológép, naptár, napló és sofőreszközök</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section class="hero">
       <div class="container">
         <div class="hero-shell">
@@ -1754,6 +1795,74 @@ body.viewer-open #idesussMenu {
         </div>
       </div>
     </section>
+
+    <section class="dashboard-info-layer" aria-labelledby="dashboardInfoTitle">
+      <div class="container">
+        <div class="dashboard-info-head">
+          <div>
+            <span class="platform-kicker">Napi információ</span>
+            <h2 id="dashboardInfoTitle">Áttekintés</h2>
+          </div>
+          <p>Hasznos állapotok egy helyen, másodlagos prioritással.</p>
+        </div>
+        <div class="dashboard-info-grid">
+          <div class="dashboard-info-primary">
+            <section class="fx-strip" aria-labelledby="fxTitle">
+    <div class="container">
+      <div class="fx-card">
+        <div class="fx-card-head">
+          <h2 id="fxTitle" class="fx-title" data-i18n="fx.title">Napi hivatalos árfolyamok</h2>
+          <div class="fx-source">
+            <span id="fxSourceDate">ECB napi referenciaárfolyam</span>
+            · <span id="fxStatus" class="fx-status">betöltés…</span>
+          </div>
+        </div>
+
+        <div class="fx-grid" aria-live="polite">
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="EUR">EUR/HUF</span>
+            <strong class="fx-value" data-fx-value="EUR">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="USD">USD/HUF</span>
+            <strong class="fx-value" data-fx-value="USD">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="GBP">GBP/HUF</span>
+            <strong class="fx-value" data-fx-value="GBP">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="CHF">CHF/HUF</span>
+            <strong class="fx-value" data-fx-value="CHF">—</strong>
+          </div>
+        </div>
+
+        <p class="fx-note" data-i18n="fx.note">Forrás: Európai Központi Bank (ECB). Az ECB referenciaárfolyamai munkanapokon frissülnek; az Idesüss a napon belüli piaci ingadozást nem követi.</p>
+      </div>
+    </div>
+  </section>
+          </div>
+          <div class="dashboard-info-secondary">
+            <section class="online-users-section" aria-labelledby="onlineUsersTitle">
+    <div class="container">
+      <div class="online-users-card">
+        <div class="online-users-head">
+          <div>
+            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Online felhasználók</h2>
+            <p data-i18n="onlineUsersHint">Csak azok jelennek meg, akik ezt engedélyezték.</p>
+          </div>
+          <span class="online-users-live" data-i18n="onlineNow">Online</span>
+        </div>
+        <div id="onlineUsersList" class="online-users-list" aria-live="polite"></div>
+        <div id="onlineUsersListStatus" class="online-users-status"></div>
+      </div>
+    </div>
+  </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
 <div id="viewerShell" class="viewer-shell">
 
   <div class="viewer-shell-card">
@@ -1801,22 +1910,6 @@ body.viewer-open #idesussMenu {
     <p id="infoPanelText"></p>
   </div>
 </div>
-
-    <section class="online-users-section" aria-labelledby="onlineUsersTitle">
-    <div class="container">
-      <div class="online-users-card">
-        <div class="online-users-head">
-          <div>
-            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Online felhasználók</h2>
-            <p data-i18n="onlineUsersHint">Csak azok jelennek meg, akik ezt engedélyezték.</p>
-          </div>
-          <span class="online-users-live" data-i18n="onlineNow">Online</span>
-        </div>
-        <div id="onlineUsersList" class="online-users-list" aria-live="polite"></div>
-        <div id="onlineUsersListStatus" class="online-users-status"></div>
-      </div>
-    </div>
-  </section>
 
 <footer class="footer">
     <div class="container">
@@ -1877,6 +1970,6 @@ body.viewer-open #idesussMenu {
 <script type="module" src="./js/fx-rates.js?v=20260927-release1"></script>
 <script type="module" src="./js/menu/menu-core.js?v=20260925-brightness1"></script>
 
-<script type="module" src="/js/site-stats.js?v=20260926-shared-supabase1"></script>\n<script type="module" src="/js/online-users.js?v=20260924-vip-presence1"></script>\n<script type="module" src="/js/anonymous-presence.js?v=20260926-common-presence1"></script>
+<script type="module" src="/js/site-stats.js?v=20260926-shared-supabase1"></script>\n<script type="module" src="/js/online-users.js?v=20260927-package2"></script>\n<script type="module" src="/js/anonymous-presence.js?v=20260926-common-presence1"></script>
 </body>
 </html>
