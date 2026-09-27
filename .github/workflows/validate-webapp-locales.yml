@@ -5,6 +5,9 @@ on:
     paths:
       - 'index.html'
       - 'app/index.html'
+      - 'app/app-release.css'
+      - 'app/manifest.json'
+      - 'app/service-worker.js'
       - 'app/*.json.txt'
       - 'app/profile-bridge*.js'
       - 'app/language-options.js'
@@ -29,6 +32,7 @@ on:
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-radio-dev-audio.mjs'
       - 'tools/validate-webapp-locales.mjs'
+      - 'tools/validate-release-webapp-shell.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
       - 'tools/validate-common-webapp-locales.mjs'
@@ -43,6 +47,9 @@ on:
     paths:
       - 'index.html'
       - 'app/index.html'
+      - 'app/app-release.css'
+      - 'app/manifest.json'
+      - 'app/service-worker.js'
       - 'app/*.json.txt'
       - 'app/profile-bridge*.js'
       - 'app/language-options.js'
@@ -62,6 +69,7 @@ on:
       - 'tools/mock-hibp-server.mjs'
       - 'tools/validate-password-security-gateway.mjs'
       - 'tools/validate-webapp-locales.mjs'
+      - 'tools/validate-release-webapp-shell.mjs'
       - 'tools/validate-nickname-normalization.mjs'
       - 'tools/validate-resolver-vectors.mjs'
       - 'tools/validate-common-webapp-locales.mjs'
@@ -94,6 +102,8 @@ jobs:
           node-version: '22'
       - name: Validate webapp locale parity and bridge wiring
         run: node tools/validate-webapp-locales.mjs
+      - name: Validate release Webapp shell and PWA wiring
+        run: node tools/validate-release-webapp-shell.mjs
       - name: Validate common-generated webapp locale parity
         run: node tools/validate-common-webapp-locales.mjs
       - name: Validate common-generated Home locale parity
