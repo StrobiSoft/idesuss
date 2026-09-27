@@ -31,6 +31,8 @@ for (const marker of [
   "revoke all on function public.finish_push_notification_job",
   "grant execute on function public.finish_push_notification_job",
   "for update skip locked",
+  "auth.role()",
+  "interval \'5 minutes\'",
 ]) {
   assert.ok(sql.toLowerCase().includes(marker.toLowerCase()), "dispatch SQL missing guard: " + marker);
 }
