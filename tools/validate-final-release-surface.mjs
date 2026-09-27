@@ -66,21 +66,21 @@ expect(!serviceWorker.includes("legacy-home.css"), "service worker must not cach
 expect(!serviceWorker.includes("\\n"), "service worker must not contain literal escaped newline artifacts");
 
 
-expect(root.includes("home-consolidation.css?v=20260927-package5"), "homepage must cache-bust mobile hotfix stylesheet");
+expect(root.includes("home-consolidation.css?v=20260927-package6"), "homepage must cache-bust mobile hotfix stylesheet");
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v32";'), "service worker cache version must include mobile hotfix");
-expect(serviceWorker.includes("home-consolidation.css?v=20260927-package5"), "service worker must cache the mobile hotfix stylesheet");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v34";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes("home-consolidation.css?v=20260927-package6"), "service worker must cache the mobile hotfix stylesheet");
+
+expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
+expect(homeCss.includes("justify-content:flex-end!important"), "mobile header actions must align compactly");
+expect(homeCss.includes("border-color:transparent!important"), "mobile auth shell must not leave an empty visible box");
+expect(homeCss.includes("color:var(--idesuss-text)!important"), "footer action text must keep dark-theme contrast");
+expect(!serviceWorker.includes("visual-polish.css"), "service worker must not cache unused visual-polish.css");
 
 
-expect(root.includes("visual-polish.css?v=20260927-mobile2"), "homepage must cache-bust mobile visual polish stylesheet");
-const visualPolish = fs.readFileSync("visual-polish.css","utf8");
-expect(visualPolish.includes("justify-content: flex-end !important"), "mobile header actions must align compactly");
-expect(visualPolish.includes("border-color: transparent !important"), "mobile auth shell must not leave an empty visible box");
-expect(visualPolish.includes("color: var(--idesuss-text) !important"), "footer action text must keep dark-theme contrast");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v33";'), "service worker cache version must include mobile header/footer polish");
-expect(serviceWorker.includes("visual-polish.css?v=20260927-mobile2"), "service worker must cache the mobile visual polish stylesheet");
+
 
 const homepageRoutes = [
   ["/app/", root.includes("/app/") || root.includes("https://idesuss.net/app")],
