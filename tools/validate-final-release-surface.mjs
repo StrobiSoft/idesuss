@@ -66,12 +66,12 @@ expect(!serviceWorker.includes("legacy-home.css"), "service worker must not cach
 expect(!serviceWorker.includes("\\n"), "service worker must not contain literal escaped newline artifacts");
 
 
-expect(root.includes("home-consolidation.css?v=20260927-package7"), "homepage must cache-bust mobile hotfix stylesheet");
+expect(root.includes("home-consolidation.css?v=20260927-package8"), "homepage must cache-bust mobile hotfix stylesheet");
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v35";'), "service worker cache version must include mobile hotfix");
-expect(serviceWorker.includes("home-consolidation.css?v=20260927-package7"), "service worker must cache the mobile hotfix stylesheet");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v36";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes("home-consolidation.css?v=20260927-package8"), "service worker must cache the mobile hotfix stylesheet");
 
 expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
 expect(homeCss.includes("justify-content:flex-end!important"), "mobile header actions must align compactly");
@@ -90,8 +90,18 @@ expect(authController.includes('authSeparator.hidden = Boolean(identity)'), "sig
 
 const menuCore = fs.readFileSync("js/menu/menu-core.js","utf8");
 expect(menuCore.includes("auth-controller.js?v=20260927-signedheader1"), "menu core must pin signed-in auth controller revision");
-expect(root.includes("js/menu/menu-core.js?v=20260927-signedheader1"), "homepage must cache-bust signed-in menu controller");
-expect(serviceWorker.includes("js/menu/menu-core.js?v=20260927-signedheader1"), "service worker must cache signed-in menu controller");
+expect(root.includes("js/menu/menu-core.js?v=20260927-headerfix1"), "homepage must cache-bust signed-in menu controller");
+expect(serviceWorker.includes("js/menu/menu-core.js?v=20260927-headerfix1"), "service worker must cache signed-in menu controller");
+
+expect(root.includes('id="headerMessagesBtn"'), "homepage header Messages button missing");
+expect(!root.includes('id="moderationInboxBtn" class="moderation-inbox-btn"'), "moderation inbox must not occupy the public header");
+expect(homeCss.includes("Header messages, language contrast and unified action cluster"), "header contrast cluster guard missing");
+expect(homeCss.includes(".header-messages-btn"), "header Messages styling missing");
+expect(homeCss.includes("background:#f2eee5!important"), "language selector contrast guard missing");
+expect(homeCss.includes(".hero-banner-link"), "Android details contrast guard missing");
+expect(authController.includes('headerMessagesBtn?.addEventListener("click"'), "header Messages click binding missing");
+expect(authController.includes('window.location.href = "/messages/"'), "header Messages must route to Messages");
+
 
 
 
