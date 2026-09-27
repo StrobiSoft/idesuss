@@ -21,7 +21,7 @@ const pages = {
 
 const criticalIds = {
   "admin/index.html": ["roleBadge","accessMessage","adminContent","adminUserSearch","ownerUserSearch"],
-  "messages/index.html": ["messagesLanguageSelect","mainTabs","messagesPanel","threadList","messageList","messageInput","sendMessageBtn","friendsPanel"],
+  "messages/index.html": ["mainTabs","messagesPanel","recipientSearchInput","recipientSearchBtn","threadList","messageList","messageInput","sendMessageBtn","friendsPanel"],
   "tools/index.html": ["calcA","calcOp","calcB","calcResult"],
   "rules/index.html": ["rulesLangSelect","rulesTitle","ruleHeading","rule2Heading","rulesVersion"],
   "ideas/index.html": ["ideasLangSelect","ideaForm","ideaTitle","ideaBody","submitBtn","myIdeas"],
@@ -36,6 +36,7 @@ expect(shellCss.includes(".secondary-messages"), "shared shell must cover messag
 expect(shellCss.includes(".secondary-admin"), "shared shell must cover admin");
 expect(shellCss.includes(".secondary-tools"), "shared shell must cover tools");
 expect(shellCss.includes(".secondary-legal"), "shared shell must cover legal pages");
+expect(shellCss.includes(".secondary-page .lang-select"), "language selection must stay on homepage only");
 
 for (const [file, pageClass] of Object.entries(pages)) {
   const html = fs.readFileSync(file, "utf8");
@@ -58,7 +59,7 @@ for (const [file, pageClass] of Object.entries(pages)) {
 
 const navigationCoverage = [
   ["admin/index.html", ["/","/app/","/radio/"]],
-  ["messages/index.html", ["/","/app/","/radio/"]],
+  ["messages/index.html", ["/"]],
   ["tools/index.html", ["/"]],
   ["rules/index.html", ["/"]],
   ["ideas/index.html", ["/"]],
