@@ -89,7 +89,7 @@ expect(authController.includes('classList.toggle("idesuss-signed-in"'), "auth co
 expect(authController.includes('authSeparator.hidden = Boolean(identity)'), "signed-in auth separator must be hidden");
 
 const menuCore = fs.readFileSync("js/menu/menu-core.js","utf8");
-expect(menuCore.includes("auth-controller.js?v=20260927-signedheader1"), "menu core must pin signed-in auth controller revision");
+expect(menuCore.includes("auth-controller.js?v=20260927-headerfix1"), "menu core must pin signed-in auth controller revision");
 expect(root.includes("js/menu/menu-core.js?v=20260927-headerfix1"), "homepage must cache-bust signed-in menu controller");
 expect(serviceWorker.includes("js/menu/menu-core.js?v=20260927-headerfix1"), "service worker must cache signed-in menu controller");
 
