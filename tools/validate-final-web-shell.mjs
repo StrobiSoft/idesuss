@@ -44,7 +44,8 @@ assert(polish.includes('data-idesuss-theme="dark"'),"dark appearance CSS missing
 assert(polish.includes('--idesuss-dim-opacity'),"brightness/dimming CSS missing");
 assert(/idesuss-root-v\d+/.test(serviceWorker),"service worker cache version marker missing");
 assert(/\/js\/menu\/settings\.js\?v=\d{8}-[a-z0-9-]+/i.test(serviceWorker),"settings module missing from static cache");
-assert(index.includes('id="moderationInboxBtn"') && index.includes('id="moderationInboxBadge"'),"staff moderation inbox badge missing");
+assert(index.includes('id="headerMessagesBtn"') && index.includes('id="headerMessagesBadge"'),"header Messages action missing");
+assert(index.includes('id="openAdminPanelBtn"'),"Admin menu entry missing");
 assert(/\/js\/menu\/menu-core\.js\?v=\d{8}-[a-z0-9-]+/i.test(index),"versioned menu bundle missing");
 assert(authShell.includes('shellT') && authController.includes('shellT'),"auth flow must use shared shell localization");
 assert(profile.includes('shellT') && profile.includes('subscribeShellLanguage'),"profile panel must use shared shell localization");
@@ -53,7 +54,7 @@ assert(index.includes('href="/eula/"'),"EULA link missing from homepage");
 assert(serviceWorker.includes('"/eula/"'),"EULA page missing from static cache");
 assert(menuCore.includes('navigator.serviceWorker.register("/service-worker.js"'),"root PWA service-worker registration missing");
 assert(homeConsolidation.includes('.profile-eula input[type="checkbox"]'),"mobile EULA checkbox sizing guard missing");
-assert(homeConsolidation.includes('.moderation-inbox-badge[hidden]'),"moderation badge hidden-state guard missing");
+assert(homeConsolidation.includes('.header-messages-badge[hidden]'),"header Messages badge hidden-state guard missing");
 for (const code of ["hu","en","nl","ro","pl","hr","be"]) {
   const marker = code === "en" ? "const EN =" : `${code}: {`;
   assert(shellLanguage.includes(marker),`missing shared shell locale: ${code}`);
