@@ -17,6 +17,8 @@ assert(js.includes('sendLocked') && js.includes('lastFailedBody'),"send de-dupli
 assert(js.includes('mobile-conversation'),"mobile conversation navigation missing");
 assert(js.includes('search_social_users'),"recipient search must use shared social search RPC");
 assert(js.includes('focusComposer:true'),"recipient selection must focus the composer");
+assert(js.includes('threadLoadGeneration'),"thread render generation guard missing");
+assert(js.includes('generation !== threadLoadGeneration'),"stale thread loads must not render");
 assert(js.includes('isReplyableThread') && js.includes('last_message_type !== "system"'),"system messages must be one-way");
 assert(js.includes('setComposerReplyability(false)'),"system-message composer lock missing");
 assert(js.includes('postgres_changes'),"messages realtime subscription missing");
