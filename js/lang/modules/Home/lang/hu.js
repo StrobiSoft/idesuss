@@ -3,6 +3,25 @@ export default {
     "appName": "Idesüss"
   },
   "home": {
+    "vision": {
+          "kicker": "Idesüss Driver Platform",
+          "heroTitle": "Úton. Egy helyen.",
+          "heroLead": "Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.",
+          "status": "Rendszer elérhető",
+          "quickKicker": "Sofőrközpont",
+          "quickTitle": "Gyors elérés",
+          "quickLead": "A legfontosabb napi funkciók egy helyen.",
+          "ferryDesc": "Kompjáratok, indulások és státuszok",
+          "rolaDesc": "Kamionszállító vonatok és RoLa kapcsolatok",
+          "radioTitle": "Rádió",
+          "radioDesc": "Nemzetközi állomások útközben",
+          "toolsDesc": "Számológép, naptár, napló és sofőreszközök",
+          "dailyKicker": "Napi információ",
+          "overviewTitle": "Áttekintés",
+          "overviewLead": "Hasznos állapotok egy helyen, másodlagos prioritással.",
+          "footerTerms": "Felhasználási feltételek",
+          "footerPrivacy": "Adatvédelem"
+    },
     "totalVisitsCounter": "🌍 {count} összes látogatás",
     "onlineUsersCounter": "👁 {count} online most",
     "heroHow": "⚙️ Hogyan működik",
