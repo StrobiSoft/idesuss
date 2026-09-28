@@ -1,9 +1,9 @@
 export function userStatusBadges({ role, isVip } = {}) {
   const badges = [];
-  if (role === "owner") badges.push({ icon: "👑", label: "Platform Owner" });
+  if (role === "owner") badges.push({ icon: "🛡️", label: "Platform Owner" });
   else if (role === "admin") badges.push({ icon: "🛡️", label: "Admin" });
   else if (role === "moderator") badges.push({ icon: "🛡️", label: "Moderátor" });
-  if (isVip) badges.push({ icon: "💎", label: "VIP" });
+  if (isVip) badges.push({ icon: "👑", label: "VIP" });
   return badges;
 }
 
