@@ -3,6 +3,25 @@ export default {
     "appName": "Idesüss"
   },
   "home": {
+    "vision": {
+          "kicker": "Idesüss Platforma za vozače",
+          "heroTitle": "Na putu. Sve na jednom mjestu.",
+          "heroLead": "Svakodnevne informacije i alati za vozače — brzo, pregledno i bez nepotrebne buke.",
+          "status": "Sustav dostupan",
+          "quickKicker": "Centar za vozače",
+          "quickTitle": "Brzi pristup",
+          "quickLead": "Najvažnije dnevne funkcije na jednom mjestu.",
+          "ferryDesc": "Trajektne linije, polasci i statusi",
+          "rolaDesc": "Vlakovi za prijevoz kamiona i RoLa",
+          "radioTitle": "Radio",
+          "radioDesc": "Međunarodne postaje na putu",
+          "toolsDesc": "Kalkulator, kalendar, dnevnik i alati za vozače",
+          "dailyKicker": "Dnevne informacije",
+          "overviewTitle": "Pregled",
+          "overviewLead": "Korisni statusi na jednom mjestu, kao sekundarne informacije.",
+          "footerTerms": "Uvjeti korištenja",
+          "footerPrivacy": "Privatnost"
+    },
     "totalVisitsCounter": "🌍 {count} ukupnih posjeta",
     "onlineUsersCounter": "👁 {count} trenutno online",
     "heroHow": "⚙️ Kako radi",
