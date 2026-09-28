@@ -70,7 +70,7 @@ expect(root.includes("home-consolidation.css?v=20260927-package9"), "homepage mu
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v39";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v40";'), "service worker cache version must include mobile hotfix");
 expect(serviceWorker.includes("home-consolidation.css?v=20260927-package9"), "service worker must cache the mobile hotfix stylesheet");
 
 expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
@@ -146,8 +146,32 @@ expect(!radioHtml.includes('id="radioLangSelect"'), "radio must not expose dupli
 expect(!radioHtml.includes('href="../app/"'), "radio header must not expose duplicate Webapp action");
 expect(radioHtml.includes('href="../">← Főoldal</a>'), "radio must provide a direct Home action");
 expect(visionSubpages.includes("Idesüss Vision Subpages"), "Vision subpage theme marker missing");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v39";'), "service worker cache must include Vision subpages");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v40";'), "service worker cache must include Vision subpages");
 expect(serviceWorker.includes("/vision-subpages.css?v=20260928-vision1"), "service worker must cache Vision subpage theme");
+
+
+expect(root.includes('id="footerLangSelect"'), "footer language selector missing");
+expect(root.includes('data-i18n="vision.heroTitle"'), "Vision hero must be translated");
+expect(root.includes('data-i18n="vision.overviewTitle"'), "Vision overview must be translated");
+expect(root.includes('/js/home-runtime.js?v=20260928-visioni18n1'), "homepage must cache-bust Vision language runtime");
+expect(serviceWorker.includes('/js/home-runtime.js?v=20260928-visioni18n1'), "service worker must cache Vision language runtime");
+expect(serviceWorker.includes('/js/lang/home-language.js?v=20260928-visioni18n1'), "service worker must cache Vision language loader");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v40";'), "service worker cache must include Vision i18n release");
+
+const homeLanguage = fs.readFileSync("js/lang/home-language.js","utf8");
+expect(homeLanguage.includes('data-idesuss-language-select'), "home language selectors must share one state");
+expect(homeLanguage.includes('20260928-visioni18n1'), "Vision language asset revision missing");
+
+for (const language of ["hu","en","nl","ro","pl","hr","be"]) {
+  const langFile = fs.readFileSync("js/lang/modules/Home/lang/" + language + ".js","utf8");
+  expect(langFile.includes('"vision": {'), language + " Vision translations missing");
+  expect(langFile.includes('"heroTitle"'), language + " Vision hero translation missing");
+  expect(langFile.includes('"footerPrivacy"'), language + " Vision footer translation missing");
+}
+
+const badges = fs.readFileSync("js/shared/user-badges.js","utf8");
+expect(badges.includes('role === "owner") badges.push({ icon: "🛡️"'), "owner badge must use shield");
+expect(badges.includes('isVip) badges.push({ icon: "👑"'), "VIP badge must use crown");
 
 const homepageRoutes = [
   ["/app/", root.includes("/app/") || root.includes("https://idesuss.net/app")],

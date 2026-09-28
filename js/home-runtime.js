@@ -1,4 +1,4 @@
-import { initHomeLanguage } from "./lang/home-language.js?v=20260926-commonhome1";
+import { initHomeLanguage } from "./lang/home-language.js?v=20260928-visioni18n1";
 
 function homeText(key, fallback = "") {
   const value = window.idesussHomeTranslations?.[key];

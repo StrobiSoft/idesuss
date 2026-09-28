@@ -84,6 +84,25 @@ export default {
     "onlineUsersVisibleCount": "{count} visible registered users online.",
     "emptyVideoLink": "Paste a video link first.",
     "clipboardReadDenied": "The browser could not read the clipboard automatically. Press and hold the field, then choose Paste.",
-    "viewerClose": "Close"
+    "viewerClose": "Close",
+    "vision": {
+      "kicker": "Idesüss Driver Platform",
+      "heroTitle": "On the road. In one place.",
+      "heroLead": "Everyday information and tools for drivers — fast, clear and without unnecessary noise.",
+      "status": "System online",
+      "quickKicker": "Driver hub",
+      "quickTitle": "Quick access",
+      "quickLead": "The most important daily functions in one place.",
+      "ferryDesc": "Ferry routes, departures and status",
+      "rolaDesc": "Truck-carrying trains and rolling motorway",
+      "radioTitle": "Radio",
+      "radioDesc": "International stations on the road",
+      "toolsDesc": "Calculator, calendar, logbook and driver tools",
+      "dailyKicker": "Daily information",
+      "overviewTitle": "Overview",
+      "overviewLead": "Useful status information in one place, with secondary priority.",
+      "footerTerms": "Terms of use",
+      "footerPrivacy": "Privacy"
+    }
   }
 };

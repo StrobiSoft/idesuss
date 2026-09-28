@@ -1,4 +1,4 @@
-const CACHE_NAME = "idesuss-root-v39";
+const CACHE_NAME = "idesuss-root-v40";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -22,8 +22,8 @@ const STATIC_ASSETS = [
   "/favicon.png",
   "/fx-rates.css?v=20260927-package2",
   "/js/fx-rates.js?v=20260927-release1",
-  "/js/home-runtime.js?v=20260926-commonhome1",
-  "/js/lang/home-language.js?v=20260926-commonhome1",
+  "/js/home-runtime.js?v=20260928-visioni18n1",
+  "/js/lang/home-language.js?v=20260928-visioni18n1",
   "/js/menu/menu-core.js?v=20260927-headerfix1",
   "/js/menu/settings.js?v=20260925-brightness1",
   "/js/site-stats.js?v=20260926-shared-supabase1",

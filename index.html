@@ -34,7 +34,7 @@
         <div class="header-chip lang-clock-chip">
           <span id="headerClock" class="header-clock-inline">00:00</span>
 
-          <select id="langSelect" class="lang-select" aria-label="Nyelv választó">
+          <select id="langSelect" class="lang-select" data-idesuss-language-select aria-label="Nyelv választó">
             <option value="hu">HU Magyar</option>
             <option value="en">GB English</option>
             <option value="nl">NL Nederlands</option>
@@ -105,13 +105,13 @@
       <div class="container">
         <div class="dashboard-intro-shell">
           <div class="dashboard-intro-copy">
-            <span class="platform-kicker">Idesüss Driver Platform</span>
-            <h1>Úton. Egy helyen.</h1>
-            <p>Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.</p>
+            <span class="platform-kicker" data-i18n="vision.kicker">Idesüss Driver Platform</span>
+            <h1 data-i18n="vision.heroTitle">Úton. Egy helyen.</h1>
+            <p data-i18n="vision.heroLead">Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.</p>
           </div>
           <div class="dashboard-intro-status" aria-label="Platform állapot">
             <span class="status-dot status-dot-live"></span>
-            <span>Rendszer elérhető</span>
+            <span data-i18n="vision.status">Rendszer elérhető</span>
           </div>
         </div>
       </div>
@@ -121,17 +121,17 @@
       <div class="container">
         <div class="platform-section-head">
           <div>
-            <span class="platform-kicker">Sofőrközpont</span>
-            <h2 id="platformModulesTitle">Gyors elérés</h2>
+            <span class="platform-kicker" data-i18n="vision.quickKicker">Sofőrközpont</span>
+            <h2 id="platformModulesTitle" data-i18n="vision.quickTitle">Gyors elérés</h2>
           </div>
-          <p>A legfontosabb napi funkciók egy helyen.</p>
+          <p data-i18n="vision.quickLead">A legfontosabb napi funkciók egy helyen.</p>
         </div>
         <div class="platform-module-grid">
           <a class="platform-module-card" href="/ferry/" aria-label="Ferry Board megnyitása">
             <span class="platform-module-icon" aria-hidden="true">⛴️</span>
             <div>
               <strong>Ferry Board</strong>
-              <span>Kompjáratok, indulások és státuszok</span>
+              <span data-i18n="vision.ferryDesc">Kompjáratok, indulások és státuszok</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -140,7 +140,7 @@
             <span class="platform-module-icon" aria-hidden="true">🚛🚆</span>
             <div>
               <strong>Rail / RoLa Board</strong>
-              <span>Kamionszállító vonatok és rail motorway</span>
+              <span data-i18n="vision.rolaDesc">Kamionszállító vonatok és rail motorway</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -148,8 +148,8 @@
           <a class="platform-module-card" href="/radio/?autoplay=1" aria-label="Rádió megnyitása">
             <span class="platform-module-icon" aria-hidden="true">📻</span>
             <div>
-              <strong>Rádió</strong>
-              <span>Nemzetközi állomások útközben</span>
+              <strong data-i18n="vision.radioTitle">Rádió</strong>
+              <span data-i18n="vision.radioDesc">Nemzetközi állomások útközben</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -158,7 +158,7 @@
             <span class="platform-module-icon" aria-hidden="true">🧰</span>
             <div>
               <strong>Tools</strong>
-              <span>Számológép, naptár, napló és sofőreszközök</span>
+              <span data-i18n="vision.toolsDesc">Számológép, naptár, napló és sofőreszközök</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -236,10 +236,10 @@
       <div class="container">
         <div class="dashboard-info-head">
           <div>
-            <span class="platform-kicker">Napi információ</span>
-            <h2 id="dashboardInfoTitle">Áttekintés</h2>
+            <span class="platform-kicker" data-i18n="vision.dailyKicker">Napi információ</span>
+            <h2 id="dashboardInfoTitle" data-i18n="vision.overviewTitle">Áttekintés</h2>
           </div>
-          <p>Hasznos állapotok egy helyen, másodlagos prioritással.</p>
+          <p data-i18n="vision.overviewLead">Hasznos állapotok egy helyen, másodlagos prioritással.</p>
         </div>
         <div class="dashboard-info-grid">
           <div class="dashboard-info-primary">
@@ -367,14 +367,27 @@
           data-panel="about"
           data-i18n="footerAbout"></button>
 
-  <a class="footer-action-btn" href="/eula/">Felhasználási feltételek</a>
-  <a class="footer-action-btn" href="/privacy/">Adatvédelem</a>
+  <a class="footer-action-btn" href="/eula/" data-i18n="vision.footerTerms">Felhasználási feltételek</a>
+  <a class="footer-action-btn" href="/privacy/" data-i18n="vision.footerPrivacy">Adatvédelem</a>
 
 
   <button id="shareBtn"
           class="footer-action-btn"
           type="button"
           data-i18n="footerShare"></button>
+
+  <label class="footer-action-btn footer-language-control" for="footerLangSelect">
+    <span aria-hidden="true">🌐</span>
+    <select id="footerLangSelect" data-idesuss-language-select aria-label="Language">
+      <option value="hu">🇭🇺 Magyar</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="nl">🇳🇱 Nederlands</option>
+      <option value="ro">🇷🇴 Română</option>
+      <option value="pl">🇵🇱 Polski</option>
+      <option value="hr">🇭🇷 Hrvatski</option>
+      <option value="be">🇧🇾 Беларуская</option>
+    </select>
+  </label>
 
 </div>
         </div>
@@ -394,7 +407,7 @@
 
 <script src="js/resolver.js"></script>
 <script src="/js/shared/share-intake.js"></script>
-<script type="module" src="/js/home-runtime.js?v=20260926-commonhome1"></script>
+<script type="module" src="/js/home-runtime.js?v=20260928-visioni18n1"></script>
 
 
 
