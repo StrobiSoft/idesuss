@@ -3,6 +3,25 @@ export default {
     "appName": "Idesüss"
   },
   "home": {
+    "vision": {
+          "kicker": "Idesüss Platforma kierowcy",
+          "heroTitle": "W trasie. Wszystko w jednym miejscu.",
+          "heroLead": "Codzienne informacje i narzędzia dla kierowców — szybko, przejrzyście i bez zbędnego szumu.",
+          "status": "System dostępny",
+          "quickKicker": "Centrum kierowcy",
+          "quickTitle": "Szybki dostęp",
+          "quickLead": "Najważniejsze codzienne funkcje w jednym miejscu.",
+          "ferryDesc": "Promy, odjazdy i statusy",
+          "rolaDesc": "Pociągi przewożące ciężarówki i RoLa",
+          "radioTitle": "Radio",
+          "radioDesc": "Międzynarodowe stacje w trasie",
+          "toolsDesc": "Kalkulator, kalendarz, dziennik i narzędzia kierowcy",
+          "dailyKicker": "Informacje na dziś",
+          "overviewTitle": "Przegląd",
+          "overviewLead": "Przydatne statusy w jednym miejscu, jako informacje drugorzędne.",
+          "footerTerms": "Warunki korzystania",
+          "footerPrivacy": "Prywatność"
+    },
     "totalVisitsCounter": "🌍 Łączna liczba wizyt: {count}",
     "onlineUsersCounter": "👁 {count} online teraz",
     "heroHow": "⚙️ Jak to działa",
