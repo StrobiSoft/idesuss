@@ -3,6 +3,25 @@ export default {
     "appName": "Idesüss"
   },
   "home": {
+    "vision": {
+          "kicker": "Idesüss Chauffeursplatform",
+          "heroTitle": "Onderweg. Alles op één plek.",
+          "heroLead": "Dagelijkse informatie en tools voor chauffeurs — snel, overzichtelijk en zonder onnodige ruis.",
+          "status": "Systeem beschikbaar",
+          "quickKicker": "Chauffeurscentrum",
+          "quickTitle": "Snelle toegang",
+          "quickLead": "De belangrijkste dagelijkse functies op één plek.",
+          "ferryDesc": "Veerdiensten, vertrektijden en status",
+          "rolaDesc": "Vrachtwagentreinen en rollende snelweg",
+          "radioTitle": "Radio",
+          "radioDesc": "Internationale zenders onderweg",
+          "toolsDesc": "Rekenmachine, kalender, logboek en chauffeurstools",
+          "dailyKicker": "Dagelijkse informatie",
+          "overviewTitle": "Overzicht",
+          "overviewLead": "Handige statusinformatie op één plek, als secundaire informatie.",
+          "footerTerms": "Gebruiksvoorwaarden",
+          "footerPrivacy": "Privacy"
+    },
     "totalVisitsCounter": "🌍 {count} totale bezoeken",
     "onlineUsersCounter": "👁 {count} nu online",
     "heroHow": "⚙️ Hoe werkt het",
