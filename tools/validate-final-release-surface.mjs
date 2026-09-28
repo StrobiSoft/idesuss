@@ -134,6 +134,16 @@ expect(visionCss.includes('body:not(.idesuss-signed-in) .auth-chip #loginBtn'), 
 expect(visionCss.includes('body:not(.idesuss-signed-in) .auth-chip #registerBtn'), "portrait registration visibility selector missing");
 expect(!root.includes('class="platform-nav"'), "duplicated homepage platform nav must remain removed");
 
+
+expect(root.includes('/vision-theme.css?v=20260928-vision1'), "homepage must load vision theme");
+const visionTheme = fs.readFileSync("vision-theme.css","utf8");
+expect(visionTheme.includes("Idesüss Vision UI Theme"), "vision theme marker missing");
+expect(visionTheme.includes("dashboard-intro-shell"), "vision hero styling missing");
+expect(visionTheme.includes("platform-module-card"), "vision module card styling missing");
+expect(visionTheme.includes("body:not(.idesuss-signed-in) .auth-chip #loginBtn"), "portrait login visibility guard missing");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v38";'), "service worker cache must include vision release");
+expect(serviceWorker.includes("/vision-theme.css?v=20260928-vision1"), "service worker must cache vision theme");
+
 const homepageRoutes = [
   ["/app/", root.includes("/app/") || root.includes("https://idesuss.net/app")],
   ["/radio/", root.includes("/radio/")],
