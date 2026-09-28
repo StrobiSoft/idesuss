@@ -70,7 +70,7 @@ expect(root.includes("home-consolidation.css?v=20260927-package9"), "homepage mu
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v40";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v41";'), "service worker cache version must include mobile hotfix");
 expect(serviceWorker.includes("home-consolidation.css?v=20260927-package9"), "service worker must cache the mobile hotfix stylesheet");
 
 expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
@@ -126,7 +126,7 @@ expect(messagesJs.includes('focusComposer:true'), "Messages recipient selection 
 
 
 const visionCss = fs.readFileSync("vision-theme.css","utf8");
-expect(root.includes("vision-theme.css?v=20260927-vision1"), "homepage must load the concept-driven vision theme");
+expect(root.includes("vision-theme.css?v=20260928-vision2"), "homepage must load the concept-driven vision theme");
 expect(serviceWorker.includes("/vision-theme.css?v=20260927-vision1"), "service worker must cache the vision theme");
 expect(visionCss.includes("Idesüss Vision UI Theme"), "vision theme identity marker missing");
 expect(visionCss.includes("Portrait mobile: auth must remain available"), "portrait auth visibility guard missing");
@@ -195,3 +195,8 @@ expect(fs.existsSync("tools/validate-secondary-page-shell.mjs"), "secondary page
 if (!process.exitCode) {
   console.log("FINAL_RELEASE_SURFACE_OK");
 }
+
+
+expect(root.includes('class="vision-primary-nav"'), "Vision desktop primary navigation missing");
+expect(visionCss.includes("VISION REFERENCE FIDELITY"), "Vision reference fidelity layer missing");
+expect(visionCss.includes(".vision-primary-nav"), "Vision primary navigation styling missing");
