@@ -21,7 +21,7 @@ const homeRuntime = fs.readFileSync("js/home-runtime.js","utf8");
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
 assert(index.includes('id="openSettingsBtn"'),"homepage settings menu button missing");
-assert(index.includes('/js/home-runtime.js?v=20260926-commonhome1'),"homepage runtime module missing");
+assert(index.includes('/js/home-runtime.js?v=20260928-visioni18n1'),"homepage runtime module missing");
 assert(!index.includes("function updateHeaderClock"),"homepage clock logic must not be inline");
 assert(!index.includes("function buildEmbedUrl"),"homepage viewer logic must not be inline");
 assert(!index.includes("Először illessz be egy videólinket."),"homepage runtime text must come from common i18n");
