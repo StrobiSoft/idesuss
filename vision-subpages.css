@@ -1,0 +1,314 @@
+/* Idesüss Vision Subpages — shared visual language for Ferry, RoLa, Radio, Tools */
+:root{
+  --vision-sub-bg:#071019;
+  --vision-sub-panel:#0d1d2a;
+  --vision-sub-panel2:#122736;
+  --vision-sub-line:rgba(255,255,255,.10);
+  --vision-sub-text:#f5efe5;
+  --vision-sub-muted:#9fadb8;
+  --vision-sub-gold:#d7a45e;
+  --vision-sub-gold2:#efc17b;
+  --vision-sub-green:#2caf72;
+  --vision-sub-shadow:0 20px 48px rgba(0,0,0,.30);
+}
+
+body{
+  background:
+    radial-gradient(circle at 82% 0%,rgba(215,164,94,.08),transparent 30rem),
+    radial-gradient(circle at 10% 0%,rgba(62,113,150,.12),transparent 30rem),
+    linear-gradient(180deg,#091520 0%,#071019 62%,#050c13 100%)!important;
+  color:var(--vision-sub-text)!important;
+}
+
+.board-topbar,
+.radio-topbar,
+.secondary-page .tools-top{
+  background:rgba(5,13,21,.96)!important;
+  border-bottom:1px solid var(--vision-sub-line)!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(18px)!important;
+}
+
+.board-topbar-inner,
+.radio-topbar-inner{
+  min-height:72px!important;
+}
+
+.board-brand,
+.radio-brand-title,
+.secondary-tools .tools-top a{
+  color:#fff!important;
+  font-weight:950!important;
+}
+
+.board-home,
+.radio-home-link,
+.secondary-tools .tools-top a{
+  min-height:38px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  padding:7px 11px!important;
+  border:1px solid var(--vision-sub-line)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:#e8edf0!important;
+  text-decoration:none!important;
+}
+
+.board-shell,
+.radio-topbar-inner,
+.shell,
+.secondary-tools .tools-shell{
+  width:min(1240px,calc(100% - 28px))!important;
+}
+
+/* Hero language shared by boards/radio/tools */
+.board-hero,
+.radio-hero{
+  position:relative;
+  overflow:hidden;
+  margin:20px 0 16px!important;
+  padding:30px!important;
+  border:1px solid var(--vision-sub-line)!important;
+  border-radius:18px!important;
+  background:
+    radial-gradient(circle at 88% 16%,rgba(215,164,94,.18),transparent 22rem),
+    linear-gradient(145deg,rgba(19,44,62,.98),rgba(8,20,31,.98))!important;
+  box-shadow:var(--vision-sub-shadow)!important;
+}
+
+.board-hero::after,
+.radio-hero::after{
+  content:"";
+  position:absolute;
+  right:-30px;
+  bottom:-70px;
+  width:330px;
+  height:190px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(215,164,94,.14),transparent 68%);
+  pointer-events:none;
+}
+
+.board-kicker,
+.radio-kicker,
+.secondary-tools .platform-kicker{
+  color:var(--vision-sub-gold2)!important;
+  letter-spacing:.14em!important;
+  font-weight:900!important;
+}
+
+.board-title,
+.radio-hero h1{
+  color:#fff!important;
+  text-shadow:0 6px 24px rgba(0,0,0,.24);
+}
+
+.board-lead,
+.subtitle{
+  color:#c1ccd4!important;
+  max-width:760px!important;
+}
+
+/* Cards */
+.board-card,
+.board-route-card,
+.radio-face,
+.secondary-tools .tool-card{
+  border:1px solid var(--vision-sub-line)!important;
+  border-radius:16px!important;
+  background:
+    linear-gradient(180deg,rgba(17,36,52,.98),rgba(8,20,31,.99))!important;
+  box-shadow:0 16px 38px rgba(0,0,0,.23)!important;
+}
+
+.board-route-card{
+  min-height:150px!important;
+  padding:18px!important;
+  position:relative;
+  overflow:hidden;
+}
+.board-route-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 88% 16%,rgba(215,164,94,.09),transparent 34%);
+  pointer-events:none;
+}
+.board-route-card h2{position:relative;color:#fff!important;font-size:1rem!important}
+.board-route-card p{position:relative;color:var(--vision-sub-muted)!important}
+.board-chip{
+  color:#edc98e!important;
+  background:rgba(215,164,94,.09)!important;
+  border-color:rgba(215,164,94,.22)!important;
+}
+.board-action{
+  background:rgba(255,255,255,.035)!important;
+  color:#e7ecef!important;
+  border-color:var(--vision-sub-line)!important;
+}
+.board-action:hover{
+  background:rgba(215,164,94,.10)!important;
+  border-color:rgba(215,164,94,.30)!important;
+}
+
+/* Ferry table */
+.board-card-head{
+  background:rgba(255,255,255,.018)!important;
+}
+.board-table th{
+  background:#0a1722!important;
+  color:#8295a4!important;
+}
+.board-table td{
+  color:#e3e8eb!important;
+}
+.board-time{color:#fff!important}
+
+/* Radio */
+.radio-topbar-inner{
+  justify-content:space-between!important;
+}
+.radio-nav,
+.language-select{
+  display:none!important;
+}
+.top-nav{
+  margin-left:auto!important;
+  min-width:0!important;
+}
+.radio-user-link{
+  min-height:38px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  padding:7px 11px!important;
+  border:1px solid var(--vision-sub-line)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:#e8edf0!important;
+  text-decoration:none!important;
+  font-size:.72rem!important;
+  font-weight:850!important;
+}
+.radio-face{
+  overflow:hidden!important;
+}
+.display{
+  background:
+    radial-gradient(circle at 14% 10%,rgba(79,132,173,.13),transparent 40%),
+    #081621!important;
+}
+.radio-controls{
+  background:linear-gradient(180deg,#142a3a,#0d1e2b)!important;
+}
+.transport .primary{
+  border-color:rgba(215,164,94,.42)!important;
+  background:linear-gradient(135deg,#b38145,#dda75b)!important;
+  color:#08131d!important;
+}
+.preset{
+  background:rgba(255,255,255,.025)!important;
+  border-color:var(--vision-sub-line)!important;
+}
+.preset:hover{
+  border-color:rgba(215,164,94,.28)!important;
+  background:rgba(215,164,94,.06)!important;
+}
+
+/* Tools */
+.secondary-tools .tools-shell{
+  padding-top:0!important;
+}
+.secondary-tools .tools-top{
+  margin-bottom:20px!important;
+}
+.secondary-tools .tools-grid{
+  gap:12px!important;
+}
+.secondary-tools .tool-card{
+  min-height:180px!important;
+  position:relative;
+  overflow:hidden;
+}
+.secondary-tools .tool-card::before{
+  content:"";
+  position:absolute;
+  right:-35px;
+  top:-35px;
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(215,164,94,.10),transparent 68%);
+  pointer-events:none;
+}
+.secondary-tools .tool-icon,
+.secondary-tools .tool-card h2,
+.secondary-tools .tool-card p,
+.secondary-tools .calc-form,
+.secondary-tools .tool-state{
+  position:relative;
+}
+.secondary-tools .tool-icon{
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  border-radius:13px;
+  background:rgba(215,164,94,.08);
+  border:1px solid rgba(215,164,94,.18);
+}
+.secondary-tools .tool-card h2{color:#fff!important}
+.secondary-tools .tool-state{
+  color:#edc98e!important;
+  border-color:rgba(215,164,94,.20)!important;
+  background:rgba(215,164,94,.07)!important;
+}
+
+/* Mobile */
+@media(max-width:760px){
+  .board-topbar-inner,
+  .radio-topbar-inner,
+  .board-shell,
+  .shell,
+  .secondary-tools .tools-shell{
+    width:min(100% - 20px,1240px)!important;
+  }
+
+  .board-hero,
+  .radio-hero{
+    padding:22px!important;
+    border-radius:15px!important;
+  }
+
+  .board-title,
+  .radio-hero h1{
+    font-size:clamp(2.1rem,11vw,3.35rem)!important;
+  }
+
+  .radio-topbar-inner{
+    flex-wrap:nowrap!important;
+    align-items:center!important;
+    padding:10px 0!important;
+  }
+
+  .radio-brand-copy{min-width:0}
+  .radio-brand-sub{display:none!important}
+  .top-nav{
+    width:auto!important;
+    justify-content:flex-end!important;
+    overflow:visible!important;
+  }
+
+  .board-route-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+
+@media(max-width:520px){
+  .radio-user-link{
+    max-width:118px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+}
