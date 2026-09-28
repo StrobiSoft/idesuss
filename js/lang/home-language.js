@@ -6,7 +6,7 @@ import {
 } from "../shared/language-preference.js";
 
 const SUPPORTED_HOME_LANGUAGES = ["hu", "en", "nl", "ro", "pl", "hr", "be"];
-const HOME_LANGUAGE_ASSET_VERSION = "20260926-commonhome1";
+const HOME_LANGUAGE_ASSET_VERSION = "20260928-visioni18n1";
 let languageLoadRevision = 0;
 
 function getSafeHomeLanguage(langCode) {
@@ -62,8 +62,9 @@ export async function loadHomeLanguage(langCode, { persist = true } = {}) {
   document.documentElement.lang = safeLanguage;
   if (persist) setIdesussLanguage(safeLanguage);
 
-  const languageSelect = document.getElementById("langSelect");
-  if (languageSelect) languageSelect.value = safeLanguage;
+  document.querySelectorAll("[data-idesuss-language-select]").forEach((select) => {
+    select.value = safeLanguage;
+  });
 
   applyHomeTranslations(homeTranslations);
   window.dispatchEvent(new CustomEvent("idesuss:home-language-applied", {
@@ -72,10 +73,10 @@ export async function loadHomeLanguage(langCode, { persist = true } = {}) {
 }
 
 export async function initHomeLanguage() {
-  const languageSelect = document.getElementById("langSelect");
+  const languageSelects = [...document.querySelectorAll("[data-idesuss-language-select]")];
   const initialLanguage = getSafeHomeLanguage(getIdesussLanguage());
 
-  if (languageSelect) {
+  for (const languageSelect of languageSelects) {
     languageSelect.value = initialLanguage;
     languageSelect.addEventListener("change", function (event) {
       loadHomeLanguage(event.target.value).catch(function (error) {
