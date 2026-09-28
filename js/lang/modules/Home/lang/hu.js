@@ -3,25 +3,6 @@ export default {
     "appName": "Idesüss"
   },
   "home": {
-    "vision": {
-          "kicker": "Idesüss Driver Platform",
-          "heroTitle": "Úton. Egy helyen.",
-          "heroLead": "Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.",
-          "status": "Rendszer elérhető",
-          "quickKicker": "Sofőrközpont",
-          "quickTitle": "Gyors elérés",
-          "quickLead": "A legfontosabb napi funkciók egy helyen.",
-          "ferryDesc": "Kompjáratok, indulások és státuszok",
-          "rolaDesc": "Kamionszállító vonatok és RoLa kapcsolatok",
-          "radioTitle": "Rádió",
-          "radioDesc": "Nemzetközi állomások útközben",
-          "toolsDesc": "Számológép, naptár, napló és sofőreszközök",
-          "dailyKicker": "Napi információ",
-          "overviewTitle": "Áttekintés",
-          "overviewLead": "Hasznos állapotok egy helyen, másodlagos prioritással.",
-          "footerTerms": "Felhasználási feltételek",
-          "footerPrivacy": "Adatvédelem"
-    },
     "totalVisitsCounter": "🌍 {count} összes látogatás",
     "onlineUsersCounter": "👁 {count} online most",
     "heroHow": "⚙️ Hogyan működik",
@@ -103,6 +84,25 @@ export default {
     "onlineUsersVisibleCount": "{count} látható regisztrált felhasználó online.",
     "emptyVideoLink": "Először illessz be egy videólinket.",
     "clipboardReadDenied": "A böngésző nem engedte automatikusan olvasni a vágólapot. Tartsd nyomva a mezőt, és válaszd a Beillesztést.",
-    "viewerClose": "Bezárás"
+    "viewerClose": "Bezárás",
+    "vision": {
+      "kicker": "Idesüss Driver Platform",
+      "heroTitle": "Úton. Egy helyen.",
+      "heroLead": "Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.",
+      "status": "Rendszer elérhető",
+      "quickKicker": "Sofőrközpont",
+      "quickTitle": "Gyors elérés",
+      "quickLead": "A legfontosabb napi funkciók egy helyen.",
+      "ferryDesc": "Kompjáratok, indulások és státuszok",
+      "rolaDesc": "Kamionszállító vonatok és RoLa kapcsolatok",
+      "radioTitle": "Rádió",
+      "radioDesc": "Nemzetközi állomások útközben",
+      "toolsDesc": "Számológép, naptár, napló és sofőreszközök",
+      "dailyKicker": "Napi információ",
+      "overviewTitle": "Áttekintés",
+      "overviewLead": "Hasznos állapotok egy helyen, másodlagos prioritással.",
+      "footerTerms": "Felhasználási feltételek",
+      "footerPrivacy": "Adatvédelem"
+    }
   }
 };
