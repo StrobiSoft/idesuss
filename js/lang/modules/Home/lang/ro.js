@@ -3,6 +3,25 @@ export default {
     "appName": "Idesüss"
   },
   "home": {
+    "vision": {
+          "kicker": "Idesüss Platformă pentru șoferi",
+          "heroTitle": "La drum. Într-un singur loc.",
+          "heroLead": "Informații și instrumente zilnice pentru șoferi — rapid, clar și fără zgomot inutil.",
+          "status": "Sistem disponibil",
+          "quickKicker": "Centru pentru șoferi",
+          "quickTitle": "Acces rapid",
+          "quickLead": "Cele mai importante funcții zilnice într-un singur loc.",
+          "ferryDesc": "Rute de feribot, plecări și stări",
+          "rolaDesc": "Trenuri pentru camioane și autostradă rulantă",
+          "radioTitle": "Radio",
+          "radioDesc": "Posturi internaționale pentru drum",
+          "toolsDesc": "Calculator, calendar, jurnal și instrumente pentru șoferi",
+          "dailyKicker": "Informații zilnice",
+          "overviewTitle": "Prezentare generală",
+          "overviewLead": "Stări utile într-un singur loc, ca informații secundare.",
+          "footerTerms": "Termeni de utilizare",
+          "footerPrivacy": "Confidențialitate"
+    },
     "totalVisitsCounter": "🌍 {count} vizite totale",
     "onlineUsersCounter": "👁 {count} online acum",
     "heroHow": "⚙️ Cum funcționează",
