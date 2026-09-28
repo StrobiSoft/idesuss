@@ -70,7 +70,7 @@ expect(root.includes("home-consolidation.css?v=20260927-package9"), "homepage mu
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v38";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v39";'), "service worker cache version must include mobile hotfix");
 expect(serviceWorker.includes("home-consolidation.css?v=20260927-package9"), "service worker must cache the mobile hotfix stylesheet");
 
 expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
@@ -133,6 +133,21 @@ expect(visionCss.includes("Portrait mobile: auth must remain available"), "portr
 expect(visionCss.includes('body:not(.idesuss-signed-in) .auth-chip #loginBtn'), "portrait login visibility selector missing");
 expect(visionCss.includes('body:not(.idesuss-signed-in) .auth-chip #registerBtn'), "portrait registration visibility selector missing");
 expect(!root.includes('class="platform-nav"'), "duplicated homepage platform nav must remain removed");
+
+
+const visionSubpages = fs.readFileSync("vision-subpages.css","utf8");
+for (const page of ["ferry/index.html","rola/index.html","radio/index.html","tools/index.html"]) {
+  const html = fs.readFileSync(page,"utf8");
+  expect(html.includes("/vision-subpages.css?v=20260928-vision1"), page + " missing Vision subpage theme");
+}
+const radioHtml = fs.readFileSync("radio/index.html","utf8");
+expect(!radioHtml.includes('class="radio-nav"'), "radio must not duplicate platform navigation");
+expect(!radioHtml.includes('id="radioLangSelect"'), "radio must not expose duplicate language selector");
+expect(!radioHtml.includes('href="../app/"'), "radio header must not expose duplicate Webapp action");
+expect(radioHtml.includes('href="../">← Főoldal</a>'), "radio must provide a direct Home action");
+expect(visionSubpages.includes("Idesüss Vision Subpages"), "Vision subpage theme marker missing");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v39";'), "service worker cache must include Vision subpages");
+expect(serviceWorker.includes("/vision-subpages.css?v=20260928-vision1"), "service worker must cache Vision subpage theme");
 
 const homepageRoutes = [
   ["/app/", root.includes("/app/") || root.includes("https://idesuss.net/app")],
