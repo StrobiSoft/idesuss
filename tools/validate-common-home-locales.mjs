@@ -5,13 +5,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const EXPECTED_BLOBS = {
-  hu: '6856511fe710ab7bfceffc57a02758bd68cf8fe2',
-  en: 'a8e1ab8b40760e2736bf374723bbc724d4f94f30',
-  nl: '03b156122a14898a985bde82114f6e97d3b6ea4e',
-  ro: '4a06c48e7b9b07ea17481d0f1503baa4dbf91b8b',
-  pl: 'e50c059f72a78596636ce7a7f4bcee10fb7ee212',
-  hr: '6f8903463c71011eb6f878be41d7a138220c40a8',
-  be: '5e6bec45d77bcd9512c477a0cd232ca2bc3b16ac'
+  hu: 'b0b0a63d587f550383d4401f993678d9eaf7a19f',
+  en: 'd4c50a31ee8889ce8e9bcf79e4678d4c3d8ce829',
+  nl: 'ed23b1a2677dcee923a1b36586922eef0947a6fc',
+  ro: '6d38ff9dac2a8e3a0b9d543d1e99a3fd2b206af7',
+  pl: '72a9769c116e10dc790662f6d358fd1b52a113f6',
+  hr: '86a7dc0160ae2e578d2a2b030b69c3823e3ad913',
+  be: '0dfd16131dd253c14c216e272440b5b4e2fe4f11'
 };
 
 const here = path.dirname(fileURLToPath(import.meta.url));
