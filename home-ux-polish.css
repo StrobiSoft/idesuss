@@ -646,3 +646,324 @@ body.profile-panel-open{
   -webkit-text-fill-color:#f6f0e6!important;
   opacity:1!important;
 }
+
+
+/* BRAND HIERARCHY + BODY/FOOTER VISION + PREMIUM CONTROLS — 2026-09-29 */
+.header-brand-slogan{
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  text-decoration:none!important;
+}
+.header-brand-slogan .brand-logo{
+  flex:0 0 auto!important;
+}
+.header-slogan{
+  margin:0!important;
+  max-width:180px;
+  color:#e8edf0!important;
+  font-size:.86rem!important;
+  line-height:1.18!important;
+  font-weight:850!important;
+  letter-spacing:-.015em!important;
+}
+
+.dashboard-intro-copy{
+  max-width:760px!important;
+}
+.dashboard-brand-lockup{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  gap:22px;
+}
+.dashboard-brand-logo{
+  width:112px;
+  height:112px;
+  flex:0 0 112px;
+  border-radius:28px;
+  object-fit:cover;
+  background:#f7f3eb;
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:
+    0 22px 52px rgba(0,0,0,.32),
+    0 0 0 1px rgba(255,255,255,.045),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+.dashboard-brand-copy{
+  min-width:0;
+}
+.dashboard-intro-copy .dashboard-brand-title{
+  margin:4px 0 6px!important;
+  color:#fff!important;
+  font-size:clamp(4.6rem,8vw,7.8rem)!important;
+  line-height:.82!important;
+  letter-spacing:-.065em!important;
+  font-weight:950!important;
+  text-shadow:0 9px 28px rgba(0,0,0,.32);
+}
+.dashboard-intro-copy .dashboard-brand-sub{
+  margin:0!important;
+  max-width:560px;
+  color:#d9e1e6!important;
+  font-size:1rem!important;
+  line-height:1.4!important;
+  font-weight:700!important;
+}
+.dashboard-intro-copy .dashboard-brand-lead{
+  position:relative;
+  z-index:2;
+  margin:20px 0 0!important;
+  max-width:660px;
+  color:#e3e8eb!important;
+  font-size:1.04rem!important;
+  line-height:1.5!important;
+}
+
+/* Restore visual continuity throughout the entire body. */
+main#top{
+  background:
+    radial-gradient(circle at 14% 28%,rgba(64,117,153,.16),transparent 28rem),
+    radial-gradient(circle at 88% 48%,rgba(215,164,94,.12),transparent 30rem),
+    linear-gradient(180deg,#08131e 0%,#071019 38%,#08131e 68%,#050c13 100%)!important;
+}
+main#top::after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(120deg,transparent 0 31%,rgba(255,255,255,.018) 31.5% 32%,transparent 32.5% 100%),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.014) 0 1px,transparent 1px 46px);
+  opacity:.85;
+}
+.platform-modules,
+.hero,
+.dashboard-info-layer{
+  position:relative;
+}
+.platform-modules::before,
+.hero::before,
+.dashboard-info-layer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.platform-modules::before{
+  background:linear-gradient(180deg,rgba(255,255,255,.014),rgba(255,255,255,0));
+}
+.hero::before{
+  background:
+    radial-gradient(circle at 8% 45%,rgba(73,129,168,.10),transparent 22rem),
+    radial-gradient(circle at 92% 52%,rgba(215,164,94,.08),transparent 24rem);
+}
+.dashboard-info-layer::before{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006)),
+    radial-gradient(circle at 76% 12%,rgba(215,164,94,.08),transparent 24rem)!important;
+  border-block:1px solid rgba(255,255,255,.035)!important;
+}
+
+/* Premium control language */
+.btn,
+.miniapp-btn,
+.hero-webapp-btn,
+.hero-radio-btn,
+.footer-action-btn,
+.idadesussMenuBtn,
+.auth-link,
+.header-menu-toggle,
+.header-messages-btn{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+.btn::after,
+.miniapp-btn::after,
+.hero-webapp-btn::after,
+.hero-radio-btn::after,
+.footer-action-btn::after,
+.idadesussMenuBtn::after,
+.auth-link::after,
+.header-menu-toggle::after,
+.header-messages-btn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),transparent 52%,rgba(0,0,0,.08));
+  opacity:.9;
+}
+.btn,
+.miniapp-btn,
+.hero-webapp-btn,
+.hero-radio-btn,
+.footer-action-btn{
+  border:1px solid rgba(255,255,255,.11)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 8px 18px rgba(0,0,0,.16)!important;
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    background .16s ease,
+    box-shadow .16s ease!important;
+}
+.btn:hover,
+.miniapp-btn:hover,
+.hero-webapp-btn:hover,
+.hero-radio-btn:hover,
+.footer-action-btn:hover{
+  transform:translateY(-2px)!important;
+  border-color:rgba(240,194,122,.38)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 13px 26px rgba(0,0,0,.23),
+    0 0 0 1px rgba(240,194,122,.035)!important;
+}
+.btn:active,
+.miniapp-btn:active,
+.hero-webapp-btn:active,
+.hero-radio-btn:active,
+.footer-action-btn:active{
+  transform:translateY(0)!important;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.22),0 4px 10px rgba(0,0,0,.12)!important;
+}
+.btn:focus-visible,
+.miniapp-btn:focus-visible,
+.hero-webapp-btn:focus-visible,
+.hero-radio-btn:focus-visible,
+.footer-action-btn:focus-visible{
+  outline:2px solid rgba(240,194,122,.72)!important;
+  outline-offset:3px!important;
+}
+
+.hero-webapp-btn,
+.hero-radio-btn{
+  min-height:46px!important;
+  padding:10px 16px!important;
+  border-radius:12px!important;
+  background:linear-gradient(180deg,#1d3d56,#143149)!important;
+  color:#f7f2ea!important;
+  font-weight:900!important;
+}
+.hero-radio-btn{
+  background:linear-gradient(180deg,#6f4b24,#523719)!important;
+  border-color:rgba(240,194,122,.28)!important;
+}
+#openBtn,
+.btn-primary{
+  background:linear-gradient(180deg,#f1c889,#d7a45e)!important;
+  color:#08131c!important;
+  border-color:rgba(255,231,192,.58)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.34),
+    0 10px 22px rgba(215,164,94,.19)!important;
+}
+.btn-soft{
+  background:linear-gradient(180deg,#19364d,#112b3f)!important;
+  color:#f4f1eb!important;
+}
+.footer-action-btn{
+  min-height:50px!important;
+  padding:10px 12px!important;
+  border-radius:12px!important;
+  background:
+    linear-gradient(180deg,rgba(31,65,88,.95),rgba(17,43,63,.98))!important;
+}
+.footer-action-btn:hover,
+.footer-action-btn:focus-visible{
+  background:
+    linear-gradient(180deg,rgba(41,82,108,.98),rgba(22,54,77,.98))!important;
+}
+.footer-language-control{
+  background:
+    linear-gradient(180deg,rgba(31,65,88,.95),rgba(17,43,63,.98))!important;
+}
+
+/* Footer gets a designed ending instead of a flat stop. */
+.footer{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 14% 12%,rgba(68,122,158,.12),transparent 25rem),
+    radial-gradient(circle at 86% 28%,rgba(215,164,94,.09),transparent 24rem),
+    linear-gradient(180deg,#071019 0%,#050b12 100%)!important;
+}
+.footer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.014),transparent 34%),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.012) 0 1px,transparent 1px 48px);
+}
+.footer-card{
+  position:relative;
+  z-index:1;
+  border-color:rgba(255,255,255,.12)!important;
+  background:
+    radial-gradient(circle at 92% 10%,rgba(215,164,94,.07),transparent 19rem),
+    linear-gradient(180deg,rgba(17,36,52,.96),rgba(7,19,29,.985))!important;
+  box-shadow:
+    0 24px 58px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.045)!important;
+}
+
+@media(max-width:920px){
+  .header-slogan{
+    max-width:130px;
+    font-size:.78rem!important;
+  }
+}
+@media(max-width:760px){
+  .dashboard-brand-lockup{
+    align-items:flex-start;
+    gap:14px;
+  }
+  .dashboard-brand-logo{
+    width:84px;
+    height:84px;
+    flex-basis:84px;
+    border-radius:22px;
+  }
+  .dashboard-intro-copy .dashboard-brand-title{
+    font-size:clamp(3.7rem,17vw,5.6rem)!important;
+  }
+  .dashboard-intro-copy .dashboard-brand-sub{
+    font-size:.88rem!important;
+  }
+  .dashboard-intro-copy .dashboard-brand-lead{
+    margin-top:16px!important;
+    font-size:.94rem!important;
+  }
+  .header-slogan{
+    max-width:106px;
+    font-size:.72rem!important;
+  }
+}
+@media(max-width:430px){
+  .dashboard-brand-lockup{
+    display:grid;
+    grid-template-columns:72px minmax(0,1fr);
+    gap:12px;
+  }
+  .dashboard-brand-logo{
+    width:72px;
+    height:72px;
+    flex-basis:72px;
+    border-radius:19px;
+  }
+  .dashboard-intro-copy .dashboard-brand-title{
+    font-size:3.35rem!important;
+  }
+  .dashboard-intro-copy .dashboard-brand-sub{
+    font-size:.80rem!important;
+  }
+}
