@@ -695,7 +695,7 @@ body.profile-panel-open{
 .dashboard-brand-copy{
   min-width:0;
 }
-.dashboard-brand-title{
+.dashboard-intro-copy .dashboard-brand-title{
   margin:4px 0 6px!important;
   color:#fff!important;
   font-size:clamp(4.6rem,8vw,7.8rem)!important;
@@ -704,7 +704,7 @@ body.profile-panel-open{
   font-weight:950!important;
   text-shadow:0 9px 28px rgba(0,0,0,.32);
 }
-.dashboard-brand-sub{
+.dashboard-intro-copy .dashboard-brand-sub{
   margin:0!important;
   max-width:560px;
   color:#d9e1e6!important;
@@ -712,7 +712,7 @@ body.profile-panel-open{
   line-height:1.4!important;
   font-weight:700!important;
 }
-.dashboard-brand-lead{
+.dashboard-intro-copy .dashboard-brand-lead{
   position:relative;
   z-index:2;
   margin:20px 0 0!important;
@@ -933,13 +933,13 @@ main#top::after{
     flex-basis:84px;
     border-radius:22px;
   }
-  .dashboard-brand-title{
+  .dashboard-intro-copy .dashboard-brand-title{
     font-size:clamp(3.7rem,17vw,5.6rem)!important;
   }
-  .dashboard-brand-sub{
+  .dashboard-intro-copy .dashboard-brand-sub{
     font-size:.88rem!important;
   }
-  .dashboard-brand-lead{
+  .dashboard-intro-copy .dashboard-brand-lead{
     margin-top:16px!important;
     font-size:.94rem!important;
   }
@@ -960,10 +960,10 @@ main#top::after{
     flex-basis:72px;
     border-radius:19px;
   }
-  .dashboard-brand-title{
+  .dashboard-intro-copy .dashboard-brand-title{
     font-size:3.35rem!important;
   }
-  .dashboard-brand-sub{
+  .dashboard-intro-copy .dashboard-brand-sub{
     font-size:.80rem!important;
   }
 }
