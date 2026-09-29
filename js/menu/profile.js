@@ -36,6 +36,7 @@ function escapeHtml(value = "") {
 function closeProfilePanel(panel) {
   panel?.classList.remove("show");
   panel?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("profile-open");
 }
 
 function bindClose(panel) {
@@ -597,6 +598,7 @@ export async function openProfilePanel() {
 
   panel.classList.add("show");
   panel.setAttribute("aria-hidden", "false");
+  document.body.classList.add("profile-open");
   renderPanelState(panel, shellT("loading"));
 
   try {
