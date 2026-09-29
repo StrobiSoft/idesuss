@@ -39,6 +39,7 @@ function showCapabilities(access) {
   $("#adminContent").hidden = false;
   $("#moderationCard").hidden = !caps.moderate_content;
   $("#avatarReviewCard").hidden = !caps.review_avatars;
+  $("#activityCard").hidden = !caps.manage_users;
   $("#userAdminCard").hidden = !caps.manage_users || caps.platform_owner;
   $("#ownerCard").hidden = !caps.platform_owner;
 }
