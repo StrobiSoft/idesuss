@@ -170,7 +170,7 @@ function updateButtons() {
   }
 
   if (adminPanelBtn) {
-    adminPanelBtn.hidden = !identity || !["moderator", "admin", "owner"].includes(profileRole);
+    adminPanelBtn.hidden = !identity || !["admin", "owner"].includes(profileRole);
   }
 
   if (messagesBtn) {
