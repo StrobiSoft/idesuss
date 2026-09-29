@@ -238,3 +238,9 @@ expect(visionSubpages.includes("VISION UI PACKAGE 3 — Secondary Pages Refineme
 expect(visionSubpages.includes(".board-route-card:hover"), "Vision board card refinement missing");
 expect(visionSubpages.includes(".radio-console"), "Vision radio console refinement missing");
 expect(visionSubpages.includes(".tool-card:hover"), "Vision tools refinement missing");
+
+const adminHtml = fs.readFileSync("admin/index.html","utf8");
+const adminJs = fs.readFileSync("admin/admin.js","utf8");
+expect(adminHtml.includes("<h2>🛡️ Platform Owner</h2>"), "admin owner heading must use shield");
+expect(!adminHtml.includes("<h2>👑 Platform Owner</h2>"), "admin owner heading must not use crown");
+expect(adminJs.includes('user.role === "owner") name.textContent += " 🛡️"'), "admin owner result badge must use shield");
