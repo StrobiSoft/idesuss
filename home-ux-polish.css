@@ -322,3 +322,40 @@ body.profile-panel-open{
     min-height:40px!important;
   }
 }
+
+
+/* Header language selector: same dark control family as auth/user actions. */
+.lang-select{
+  min-height:34px!important;
+  padding:5px 28px 5px 10px!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:9px!important;
+  background:rgba(255,255,255,.035)!important;
+  color:#f6f0e6!important;
+  font-weight:850!important;
+  text-shadow:none!important;
+  box-shadow:none!important;
+  color-scheme:dark;
+}
+
+.lang-select:hover,
+.lang-select:focus-visible{
+  border-color:rgba(240,194,122,.28)!important;
+  background:rgba(215,164,94,.10)!important;
+  color:#fff!important;
+  outline:none!important;
+}
+
+.lang-select option{
+  background:#0d1d2b!important;
+  color:#f6f0e6!important;
+}
+
+@media(max-width:760px){
+  .lang-select{
+    min-width:64px!important;
+    max-width:92px!important;
+    background:rgba(255,255,255,.035)!important;
+    color:#f6f0e6!important;
+  }
+}
