@@ -634,3 +634,15 @@ body.profile-panel-open{
     grid-template-columns:1fr!important;
   }
 }
+
+
+/* Mobile Safari contrast guard for the Android compatibility detail action. */
+.hero-banner-link,
+.hero-banner-link:link,
+.hero-banner-link:visited,
+.hero-banner-link:hover,
+.hero-banner-link:focus-visible{
+  color:#f6f0e6!important;
+  -webkit-text-fill-color:#f6f0e6!important;
+  opacity:1!important;
+}
