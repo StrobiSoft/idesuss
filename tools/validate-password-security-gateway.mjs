@@ -9,8 +9,8 @@ const spyTrap = fs.readFileSync("server/security/spy-trap.js","utf8");
 
 function assert(condition,message){ if(!condition) throw new Error(message); }
 
-assert(authService.includes('PASSWORD_SECURITY_ENFORCEMENT = "pending-vm101"'),
-  "password security rollout must remain explicitly pending until VM101 is live");
+assert(authService.includes('PASSWORD_SECURITY_ENFORCEMENT = "required"'),
+  "password security enforcement must be required before public release");
 assert(authService.includes('await checkPasswordSecurity(password)'),
   "rollout gate must call password security when enforcement is enabled");
 assert((authService.match(/await enforcePasswordSecurity\(password\)/g) || []).length >= 2,
@@ -20,7 +20,7 @@ assert(!controller.includes('client.auth.signUp') && !messages.includes('client.
 assert(passwordClient.includes('https://security.idesuss.net/v1/security/password/check'),
   "web password client must use the dedicated production gateway origin");
 assert(passwordClient.includes('https://api.pwnedpasswords.com/range/'),
-  "web password client must retain a k-anonymous HIBP resilience path until VM101 public routing is live");
+  "web password client must retain a k-anonymous HIBP resilience path for gateway outages");
 assert(passwordClient.includes('crypto.subtle.digest') && passwordClient.includes('slice(0, 5)'),
   "browser resilience path must hash locally and send only the five-character prefix");
 assert(passwordClient.includes('allowBrowserFallback'),

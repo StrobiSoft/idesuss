@@ -124,9 +124,9 @@ export async function checkPasswordSecurity(password, {
       throw error;
     }
 
-    // Resilience path for the static GitHub Pages client until the VM101
-    // public API route is online. The candidate stays local; only the
-    // first 5 SHA-1 hex characters leave the browser.
+    // Resilience path for temporary gateway/DNS/TLS outages. Enforcement
+    // remains mandatory: the candidate stays local and only the first
+    // 5 SHA-1 hex characters leave the browser.
     return checkPasswordDirectWithHibp(password, { fetchImpl });
   }
 }
