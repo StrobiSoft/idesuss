@@ -15,7 +15,7 @@ import {
 } from "../shared/language-preference.js";
 import { PasswordSecurityError } from "../shared/password-security-service.js";
 import { PRESENCE_POLICY } from "../shared/presence-policy.js";
-import { openProfilePanel } from "./profile.js?v=20260923-eula1";
+import { openProfilePanel } from "./profile.js?v=20260929-shell1";
 import {
   closeAuthModal,
   ensureAuthModal,
