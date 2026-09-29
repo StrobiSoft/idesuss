@@ -359,3 +359,41 @@ body.profile-panel-open{
     color:#f6f0e6!important;
   }
 }
+
+
+/* Release guard: hidden auth/menu controls must stay hidden even when component rules use !important display. */
+[hidden]{
+  display:none!important;
+}
+
+/* iOS/Safari: force native select text and footer labels into the Vision light text palette. */
+.site-header .lang-select,
+.site-header .lang-select:focus,
+.site-header .lang-select:active,
+.footer .footer-action-btn,
+.footer .footer-action-btn:link,
+.footer .footer-action-btn:visited,
+.footer .footer-action-btn button,
+.footer .footer-language-control,
+.footer .footer-language-control select{
+  -webkit-text-fill-color:#f6f0e6!important;
+  color:#f6f0e6!important;
+  opacity:1!important;
+}
+
+.site-header .lang-select{
+  appearance:auto!important;
+  -webkit-appearance:menulist!important;
+  background-color:#112b3f!important;
+  border-color:rgba(255,255,255,.13)!important;
+}
+
+.footer .footer-action-btn{
+  background:linear-gradient(180deg,#19364d,#112b3f)!important;
+}
+
+.footer .footer-action-btn:disabled{
+  color:#aab7c2!important;
+  -webkit-text-fill-color:#aab7c2!important;
+  opacity:.62!important;
+}
