@@ -924,3 +924,30 @@ body{
     grid-template-columns:1fr!important;
   }
 }
+
+
+/* Header control parity — 2026-09-29 */
+.lang-select{
+  min-height:32px!important;
+  min-width:86px!important;
+  max-width:126px!important;
+  padding:6px 28px 6px 10px!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  color:#fff!important;
+  font-size:.8rem!important;
+  font-weight:800!important;
+  line-height:1.2!important;
+  box-shadow:none!important;
+}
+.lang-select:hover,
+.lang-select:focus-visible{
+  background:rgba(215,164,94,.12)!important;
+  border-color:rgba(215,164,94,.22)!important;
+  color:#fff!important;
+}
+.lang-select option{
+  background:#0d1d2b!important;
+  color:#f6f0e6!important;
+}
