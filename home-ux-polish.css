@@ -1,0 +1,324 @@
+/* Idesuss homepage UX polish — 2026-09-29
+   Final layer for profile modal, visual continuity, dashboard balance and footer contrast. */
+
+:root{
+  --home-polish-shell:rgba(10,24,37,.86);
+  --home-polish-shell-strong:rgba(8,19,30,.96);
+  --home-polish-line:rgba(255,255,255,.11);
+  --home-polish-glow:rgba(215,164,94,.12);
+  --home-polish-cool:rgba(73,129,168,.14);
+}
+
+/* Keep the visual language alive below the hero instead of dropping into flat black. */
+main#top{
+  position:relative;
+  isolation:isolate;
+  overflow:clip;
+  background:
+    radial-gradient(circle at 10% 38%,var(--home-polish-cool),transparent 28rem),
+    radial-gradient(circle at 88% 58%,var(--home-polish-glow),transparent 30rem),
+    linear-gradient(180deg,rgba(10,22,33,.30),rgba(5,12,19,.12) 38%,rgba(5,12,19,.50) 100%);
+}
+
+main#top::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:34rem 0 0;
+  pointer-events:none;
+  opacity:.78;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.018),transparent 18rem),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.012) 0 1px,transparent 1px 42px);
+  mask-image:linear-gradient(180deg,transparent 0,#000 8rem,#000 82%,transparent 100%);
+}
+
+.hero,
+.dashboard-info-layer{
+  position:relative;
+  z-index:1;
+}
+
+.hero .container,
+.dashboard-info-layer .container,
+.footer .container{
+  width:min(1240px,calc(100% - 36px))!important;
+}
+
+.hero-shell{
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.28),
+    0 0 0 1px rgba(255,255,255,.015),
+    0 20px 80px rgba(73,129,168,.05)!important;
+}
+
+/* Daily info should read as one composed section, not two unrelated cards. */
+.dashboard-info-layer{
+  padding:18px 0 28px!important;
+}
+
+.dashboard-info-layer::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006));
+  border-block:1px solid rgba(255,255,255,.025);
+}
+
+.dashboard-info-head{
+  position:relative;
+  z-index:1;
+  margin-bottom:12px!important;
+}
+
+.dashboard-info-grid{
+  position:relative;
+  z-index:1;
+  grid-template-columns:minmax(0,1.55fr) minmax(300px,.75fr)!important;
+  gap:12px!important;
+  align-items:stretch!important;
+  padding:12px!important;
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 82% 18%,rgba(215,164,94,.055),transparent 22rem),
+    linear-gradient(180deg,rgba(13,29,43,.58),rgba(7,18,28,.52));
+  box-shadow:0 14px 34px rgba(0,0,0,.14);
+}
+
+.dashboard-info-primary,
+.dashboard-info-secondary,
+.dashboard-info-primary .fx-strip,
+.dashboard-info-secondary .online-users-section,
+.dashboard-info-primary .container,
+.dashboard-info-secondary .container{
+  height:100%;
+}
+
+.dashboard-info-primary .container,
+.dashboard-info-secondary .container{
+  width:100%!important;
+  max-width:none!important;
+}
+
+.dashboard-info-primary .fx-card,
+.dashboard-info-secondary .online-users-card{
+  min-height:100%;
+  border-color:rgba(255,255,255,.085)!important;
+  background:linear-gradient(180deg,rgba(17,37,53,.92),rgba(9,22,34,.94))!important;
+}
+
+.dashboard-info-secondary .online-users-card{
+  display:flex;
+  flex-direction:column;
+}
+
+.dashboard-info-secondary .online-users-list{
+  flex:1 1 auto;
+}
+
+/* Footer actions must look interactive, not disabled. */
+.footer-action-btn,
+.footer-action-btn:link,
+.footer-action-btn:visited{
+  min-height:46px!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  background:linear-gradient(180deg,#19364d,#112b3f)!important;
+  color:#f6f0e6!important;
+  opacity:1!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 5px 14px rgba(0,0,0,.12)!important;
+  font-weight:850!important;
+  text-decoration:none!important;
+}
+
+.footer-action-btn:hover,
+.footer-action-btn:focus-visible{
+  transform:translateY(-1px)!important;
+  border-color:rgba(240,194,122,.40)!important;
+  background:linear-gradient(180deg,#21445f,#17364d)!important;
+  color:#fff!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 8px 20px rgba(0,0,0,.18)!important;
+}
+
+.footer-action-btn:active{
+  transform:translateY(0)!important;
+}
+
+.footer-language-control select{
+  color:#f6f0e6!important;
+  opacity:1!important;
+}
+
+/* Profile is a true modal shell. */
+#profilePanel{
+  display:none!important;
+  position:fixed!important;
+  inset:0!important;
+  z-index:5000!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))!important;
+  overflow:auto!important;
+  overscroll-behavior:contain;
+  background:rgba(2,8,13,.78)!important;
+  backdrop-filter:blur(12px) saturate(112%);
+  -webkit-backdrop-filter:blur(12px) saturate(112%);
+}
+
+#profilePanel.show{
+  display:flex!important;
+}
+
+body.profile-panel-open{
+  overflow:hidden!important;
+  touch-action:none;
+  overscroll-behavior:none;
+}
+
+.profile-panel-card{
+  position:relative!important;
+  width:min(760px,calc(100vw - 32px))!important;
+  max-width:100%!important;
+  max-height:min(88dvh,900px)!important;
+  margin:auto!important;
+  padding:22px!important;
+  overflow:auto!important;
+  overflow-x:hidden!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  border-radius:18px!important;
+  background:
+    radial-gradient(circle at 82% 4%,rgba(215,164,94,.10),transparent 20rem),
+    linear-gradient(180deg,rgba(17,36,52,.985),rgba(7,19,30,.99))!important;
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.58),
+    inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+
+.profile-panel-card h2{
+  margin:0 48px 14px 0!important;
+  color:#fff!important;
+}
+
+.profile-panel-close{
+  position:sticky!important;
+  z-index:4;
+  top:0!important;
+  float:right;
+  width:38px!important;
+  min-width:38px!important;
+  height:38px!important;
+  min-height:38px!important;
+  margin:0 0 8px 12px!important;
+  padding:0!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid rgba(255,255,255,.15)!important;
+  border-radius:10px!important;
+  background:#173247!important;
+  color:#fff!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.20)!important;
+  cursor:pointer;
+}
+
+.profile-panel-close:hover,
+.profile-panel-close:focus-visible{
+  background:#21435d!important;
+  border-color:rgba(240,194,122,.40)!important;
+  outline:2px solid rgba(240,194,122,.50)!important;
+  outline-offset:2px!important;
+}
+
+.profile-panel-close svg{
+  width:18px!important;
+  height:18px!important;
+  display:block!important;
+  stroke:currentColor!important;
+  stroke-width:2.2!important;
+  fill:none!important;
+  stroke-linecap:round!important;
+}
+
+.profile-panel-card .profile-placeholder,
+.profile-panel-card .profile-avatar-section,
+.profile-panel-card .profile-eula{
+  border-color:rgba(255,255,255,.09)!important;
+  background:rgba(255,255,255,.025)!important;
+}
+
+@media(min-width:1600px){
+  .hero .container,
+  .dashboard-info-layer .container,
+  .footer .container{
+    width:min(1320px,calc(100% - 64px))!important;
+  }
+
+  .hero-shell,
+  .dashboard-info-grid,
+  .footer-card{
+    position:relative;
+  }
+
+  .hero-shell::after,
+  .dashboard-info-grid::after,
+  .footer-card::after{
+    content:"";
+    position:absolute;
+    pointer-events:none;
+    width:220px;
+    height:220px;
+    right:-70px;
+    top:50%;
+    transform:translateY(-50%);
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(215,164,94,.045),transparent 68%);
+    filter:blur(2px);
+  }
+}
+
+@media(max-width:820px){
+  .dashboard-info-grid{
+    grid-template-columns:1fr!important;
+    padding:9px!important;
+  }
+
+  .dashboard-info-primary .fx-card,
+  .dashboard-info-secondary .online-users-card{
+    min-height:auto;
+  }
+}
+
+@media(max-width:600px){
+  .hero .container,
+  .dashboard-info-layer .container,
+  .footer .container{
+    width:min(100% - 24px,1240px)!important;
+  }
+
+  .dashboard-info-layer{
+    padding:12px 0 20px!important;
+  }
+
+  #profilePanel{
+    align-items:flex-start!important;
+    padding:10px!important;
+  }
+
+  .profile-panel-card{
+    width:100%!important;
+    max-height:calc(100dvh - 20px)!important;
+    padding:16px!important;
+    border-radius:15px!important;
+  }
+
+  .profile-panel-close{
+    width:40px!important;
+    min-width:40px!important;
+    height:40px!important;
+    min-height:40px!important;
+  }
+}
