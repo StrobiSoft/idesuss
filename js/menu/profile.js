@@ -14,7 +14,7 @@ import {
   subscribeToMyProfile,
   uploadAvatarSubmission,
   validateAvatarFile
-} from "../shared/profile-service.js?v=20260927-accountdelete1";
+} from "../shared/profile-service.js?v=20260929-profileprefs1";
 import { shellT, subscribeShellLanguage } from "../shared/shell-language.js";
 
 let unsubscribeProfile = null;
