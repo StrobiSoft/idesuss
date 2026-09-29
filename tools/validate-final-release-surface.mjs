@@ -71,10 +71,10 @@ expect(root.includes("home-consolidation.css?v=20260927-package9"), "homepage mu
 expect(homeCss.includes("flex-direction:column!important"), "mobile dropdown must remain vertical");
 expect(homeCss.includes(".menu-info-tooltip"), "idea tooltip guard missing");
 expect(homeCss.includes("display:none!important"), "idea tooltip must remain hidden by default");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v47";'), "service worker cache version must include mobile hotfix");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v48";'), "service worker cache version must include mobile hotfix");
 expect(serviceWorker.includes("home-consolidation.css?v=20260927-package9"), "service worker must cache the mobile hotfix stylesheet");
-expect(root.includes("home-ux-polish.css?v=20260929-ux3"), "homepage must load UX polish stylesheet");
-expect(serviceWorker.includes("/home-ux-polish.css?v=20260929-ux3"), "service worker must cache UX polish stylesheet");
+expect(root.includes("home-ux-polish.css?v=20260929-ux4"), "homepage must load UX polish stylesheet");
+expect(serviceWorker.includes("/home-ux-polish.css?v=20260929-ux4"), "service worker must cache UX polish stylesheet");
 expect(homeUxPolish.includes("Profile is a true modal shell"), "profile modal UX polish guard missing");
 expect(homeUxPolish.includes("body.profile-panel-open"), "profile background scroll lock styling missing");
 expect(homeUxPolish.includes("Daily info should read as one composed section"), "dashboard composition polish missing");
@@ -83,6 +83,8 @@ expect(homeUxPolish.includes("Header language selector: same dark control family
 expect(homeUxPolish.includes("color-scheme:dark"), "language selector must opt into dark native control rendering");
 expect(homeUxPolish.includes("[hidden]{"), "global hidden-state release guard missing");
 expect(homeUxPolish.includes("-webkit-text-fill-color:#f6f0e6!important"), "iOS control text contrast guard missing");
+expect(homeUxPolish.includes("LOWER VISION CONTINUITY"), "lower-page Vision continuity missing");
+expect(homeUxPolish.includes("PROFILE PRIVACY + BADGES"), "profile privacy styling missing");
 
 expect(homeCss.includes("Final mobile header/footer polish"), "active homepage stylesheet missing final mobile polish");
 expect(homeCss.includes("justify-content:flex-end!important"), "mobile header actions must align compactly");
@@ -103,11 +105,16 @@ expect(authController.includes('!["admin", "owner"].includes(profileRole)'), "Ad
 const menuCore = fs.readFileSync("js/menu/menu-core.js","utf8");
 const profileModule = fs.readFileSync("js/menu/profile.js","utf8");
 expect(menuCore.includes("auth-controller.js?v=20260929-adminmenu1"), "menu core must pin signed-in auth controller revision");
-expect(root.includes("js/menu/menu-core.js?v=20260929-adminmenu1"), "homepage must cache-bust signed-in menu controller");
-expect(serviceWorker.includes("js/menu/menu-core.js?v=20260929-adminmenu1"), "service worker must cache signed-in menu controller");
-expect(menuCore.includes("profile.js?v=20260929-modal1"), "menu core must cache-bust profile modal revision");
+expect(root.includes("js/menu/menu-core.js?v=20260929-profileprefs1"), "homepage must cache-bust signed-in menu controller");
+expect(serviceWorker.includes("js/menu/menu-core.js?v=20260929-profileprefs1"), "service worker must cache signed-in menu controller");
+expect(menuCore.includes("profile.js?v=20260929-profileprefs1"), "menu core must cache-bust profile modal revision");
 expect(profileModule.includes('classList.add("profile-panel-open")'), "profile open must lock background scroll");
 expect(profileModule.includes('classList.remove("profile-panel-open")'), "profile close must restore background scroll");
+expect(profileModule.includes("profile-setting-row"), "profile privacy rows must stay independent");
+expect(profileModule.includes("profileBadgesVisible"), "profile badge visibility control missing");
+expect(profileModule.includes("profile-badges-list"), "profile badge list missing");
+expect(profileModule.includes('|| "everyone"'), "profile online visibility must default to everyone");
+expect(!profileModule.includes("Új becenévhez új fiók szükséges"), "retired nickname sentence must stay removed");
 
 expect(root.includes('id="headerMessagesBtn"'), "homepage header Messages button missing");
 expect(!root.includes('id="moderationInboxBtn" class="moderation-inbox-btn"'), "moderation inbox must not occupy the public header");
@@ -162,7 +169,7 @@ expect(!radioHtml.includes('id="radioLangSelect"'), "radio must not expose dupli
 expect(!radioHtml.includes('href="../app/"'), "radio header must not expose duplicate Webapp action");
 expect(radioHtml.includes('href="../">← Főoldal</a>'), "radio must provide a direct Home action");
 expect(visionSubpages.includes("Idesüss Vision Subpages"), "Vision subpage theme marker missing");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v47";'), "service worker cache must include Vision subpages");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v48";'), "service worker cache must include Vision subpages");
 expect(serviceWorker.includes("/vision-subpages.css?v=20260929-vision2"), "service worker must cache Vision subpage theme");
 
 
@@ -172,7 +179,7 @@ expect(root.includes('data-i18n="vision.overviewTitle"'), "Vision overview must 
 expect(root.includes('/js/home-runtime.js?v=20260928-visioni18n1'), "homepage must cache-bust Vision language runtime");
 expect(serviceWorker.includes('/js/home-runtime.js?v=20260928-visioni18n1'), "service worker must cache Vision language runtime");
 expect(serviceWorker.includes('/js/lang/home-language.js?v=20260928-visioni18n1'), "service worker must cache Vision language loader");
-expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v47";'), "service worker cache must include Vision i18n release");
+expect(serviceWorker.includes('const CACHE_NAME = "idesuss-root-v48";'), "service worker cache must include Vision i18n release");
 
 const homeLanguage = fs.readFileSync("js/lang/home-language.js","utf8");
 expect(homeLanguage.includes('data-idesuss-language-select'), "home language selectors must share one state");

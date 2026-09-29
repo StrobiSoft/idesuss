@@ -75,6 +75,8 @@ export async function ensureMyProfile(supabaseClient) {
       id: user.id,
       email: user.email || "",
       email_visibility: "hidden",
+      presence_visibility: "everyone",
+      badges_visible: true,
       profile_completed: false
     })
     .select()
@@ -187,6 +189,15 @@ export async function setMyPresenceVisibility(supabaseClient, visibility) {
 
   const { data, error } = await client.rpc("set_my_presence_visibility", {
     p_visibility: visibility
+  });
+  if (error) throw error;
+  return data;
+}
+
+export async function setMyBadgesVisibility(supabaseClient, visible) {
+  const client = requireClient(supabaseClient);
+  const { data, error } = await client.rpc("set_my_badges_visibility", {
+    p_visible: visible !== false
   });
   if (error) throw error;
   return data;

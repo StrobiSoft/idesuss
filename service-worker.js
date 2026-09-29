@@ -1,4 +1,4 @@
-const CACHE_NAME = "idesuss-root-v47";
+const CACHE_NAME = "idesuss-root-v48";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -7,7 +7,7 @@ const STATIC_ASSETS = [
   "/secondary-page-shell.css?v=20260927-secondary2",
   "/home-consolidation.css?v=20260927-package9",
   "/vision-theme.css?v=20260928-vision3",
-  "/home-ux-polish.css?v=20260929-ux3",
+  "/home-ux-polish.css?v=20260929-ux4",
   "/vision-subpages.css?v=20260929-vision2",
   "/manifest.webmanifest",
   "/eula/",
@@ -25,14 +25,14 @@ const STATIC_ASSETS = [
   "/js/fx-rates.js?v=20260927-release1",
   "/js/home-runtime.js?v=20260928-visioni18n1",
   "/js/lang/home-language.js?v=20260928-visioni18n1",
-  "/js/menu/menu-core.js?v=20260929-adminmenu1",
+  "/js/menu/menu-core.js?v=20260929-profileprefs1",
   "/js/menu/settings.js?v=20260925-brightness1",
   "/js/site-stats.js?v=20260926-shared-supabase1",
   "/js/online-users.js?v=20260927-package2",
   "/js/anonymous-presence.js?v=20260926-common-presence1",
   "/js/shared/presence-policy.js",
   "/js/shared/supabase-client.js",
-  "/js/shared/profile-service.js?v=20260927-accountdelete1",
+  "/js/shared/profile-service.js?v=20260929-profileprefs1",
   "/js/shared/user-badges.js",
   "/radio/",
   "/radio/index.html",

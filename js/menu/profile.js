@@ -10,10 +10,11 @@ import {
   loadMyProfile,
   saveMyProfile,
   setMyPresenceVisibility,
+  setMyBadgesVisibility,
   subscribeToMyProfile,
   uploadAvatarSubmission,
   validateAvatarFile
-} from "../shared/profile-service.js?v=20260927-accountdelete1";
+} from "../shared/profile-service.js?v=20260929-profileprefs1";
 import { shellT, subscribeShellLanguage } from "../shared/shell-language.js";
 
 let unsubscribeProfile = null;
@@ -160,7 +161,13 @@ async function renderProfile(panel, profile, user) {
     : (APPROVED_AVATAR_EMOJIS.includes(profile?.avatar_emoji) ? profile.avatar_emoji : "🙂");
   const selectableAvatars = isStaffAvatarLocked ? [STAFF_AVATAR_EMOJI] : APPROVED_AVATAR_EMOJIS;
   const visibility = profile?.email_visibility || "hidden";
-  const presenceVisibility = profile?.presence_visibility || "friends";
+  const presenceVisibility = profile?.presence_visibility || "everyone";
+  const badgesVisible = profile?.badges_visible !== false;
+  const myBadges = [];
+  if (profile?.role === "owner") myBadges.push({ icon: "🛡️", label: "Platform Owner" });
+  else if (profile?.role === "admin") myBadges.push({ icon: "🛡️", label: "Admin" });
+  else if (profile?.role === "moderator") myBadges.push({ icon: "🛡️", label: shellT("moderatorBadge") });
+  if (profile?.is_vip === true) myBadges.push({ icon: "👑", label: "VIP" });
   let submissions = [];
   let approvedAvatarUrl = "";
   let eulaStatus = { accepted: false, required_version: null };
@@ -257,7 +264,7 @@ async function renderProfile(panel, profile, user) {
           : shellT("nicknameFirst")}</span>
       </label>
 
-      <label class="profile-placeholder">
+      <label class="profile-placeholder profile-setting-row">
         <strong>${shellT("emailVisibility")}</strong>
         <select id="profileEmailVisibility">
           <option value="hidden"${visibility === "hidden" ? " selected" : ""}>${shellT("hidden")}</option>
@@ -266,14 +273,31 @@ async function renderProfile(panel, profile, user) {
         </select>
       </label>
 
-      <label class="profile-placeholder">
+      <label class="profile-placeholder profile-setting-row">
         <strong>${shellT("presenceVisibility")}</strong>
         <select id="profilePresenceVisibility">
-          <option value="nobody"${presenceVisibility === "nobody" ? " selected" : ""}>${shellT("nobody")}</option>
-          <option value="friends"${presenceVisibility === "friends" ? " selected" : ""}>${shellT("friendsOnly")}</option>
           <option value="everyone"${presenceVisibility === "everyone" ? " selected" : ""}>${shellT("everyone")}</option>
+          <option value="friends"${presenceVisibility === "friends" ? " selected" : ""}>${shellT("friendsOnly")}</option>
+          <option value="nobody"${presenceVisibility === "nobody" ? " selected" : ""}>${shellT("nobody")}</option>
         </select>
       </label>
+
+      <div class="profile-placeholder profile-setting-row profile-badges-toggle">
+        <strong>${shellT("badgesVisibility")}</strong>
+        <label class="profile-toggle-control">
+          <input id="profileBadgesVisible" type="checkbox"${badgesVisible ? " checked" : ""} />
+          <span>${shellT("badgesShow")}</span>
+        </label>
+      </div>
+
+      <details class="profile-placeholder profile-badges-list">
+        <summary>${shellT("yourBadges")}</summary>
+        <div class="profile-badge-items">
+          ${myBadges.length
+            ? myBadges.map((badge) => `<span class="profile-badge-item"><span aria-hidden="true">${escapeHtml(badge.icon)}</span>${escapeHtml(badge.label)}</span>`).join("")
+            : `<span class="profile-badge-empty">${shellT("noBadges")}</span>`}
+        </div>
+      </details>
 
       <a class="menu-profile-btn" href="/messages/">${shellT("friendsMessages")}</a>
 
@@ -527,7 +551,12 @@ async function renderProfile(panel, profile, user) {
 
       await setMyPresenceVisibility(
         window.supabaseClient,
-        document.getElementById("profilePresenceVisibility")?.value || "friends"
+        document.getElementById("profilePresenceVisibility")?.value || "everyone"
+      );
+
+      await setMyBadgesVisibility(
+        window.supabaseClient,
+        document.getElementById("profileBadgesVisible")?.checked !== false
       );
 
       let avatarSubmitted = false;
