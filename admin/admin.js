@@ -142,7 +142,7 @@ async function loadAdminUsers(query = "") {
     const name = document.createElement("div");
     name.className = "user-name";
     name.textContent = user.nickname || user.email || "Névtelen profil";
-    if (user.role === "owner") name.textContent += " 👑";
+    if (user.role === "owner") name.textContent += " 🛡️";
     else if (user.role === "admin" || user.role === "moderator") name.textContent += " 🛡️";
     if (user.is_vip) name.textContent += " 💎";
 
