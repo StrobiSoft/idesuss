@@ -263,7 +263,7 @@ body{
       linear-gradient(145deg,#173246 0%,#23455a 50%,#b66f35 82%,#e0a85a 100%)!important;
   }
   .dashboard-intro-copy h1{font-size:clamp(2.7rem,14vw,4.5rem)!important;max-width:92%!important}
-  .dashboard-intro-status{right:auto!important;left:18px!important;bottom:22px!important}
+  .dashboard-intro-status{right:auto!important;left:18px!important;bottom:58px!important}
   .platform-modules{margin-top:-38px!important}
   .platform-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
   .platform-module-card{min-height:135px!important;padding:14px!important}
