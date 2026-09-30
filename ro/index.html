@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Idesüss™ — Platformă pentru șoferi</title>
+  <meta
+    name="description"
+    content="Idesüss reunește informații și instrumente zilnice pentru șoferi — Ferry Board, RoLa, radio, webapp și funcții utile pentru drum."
+  />
+  <link rel="canonical" href="https://idesuss.net/ro/" />
+  <link rel="alternate" hreflang="hu" href="https://idesuss.net/hu/" />
+  <link rel="alternate" hreflang="en" href="https://idesuss.net/en/" />
+  <link rel="alternate" hreflang="nl" href="https://idesuss.net/nl/" />
+  <link rel="alternate" hreflang="ro" href="https://idesuss.net/ro/" />
+  <link rel="alternate" hreflang="pl" href="https://idesuss.net/pl/" />
+  <link rel="alternate" hreflang="hr" href="https://idesuss.net/hr/" />
+  <link rel="alternate" hreflang="be" href="https://idesuss.net/be/" />
+  <link rel="alternate" hreflang="x-default" href="https://idesuss.net/" />
+  <meta name="theme-color" content="#0d5bd7" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="stylesheet" href="/fx-rates.css?v=20260927-package2" />
+
+  <link rel="stylesheet" href="/design-system.css?v=20260927-package2">
+  <link rel="stylesheet" href="/interaction-system.css?v=20260927-package3">
+  <link rel="stylesheet" href="/home-consolidation.css?v=20260927-package9">
+  <link rel="stylesheet" href="/vision-theme.css?v=20260928-vision3">
+  <link rel="stylesheet" href="/home-ux-polish.css?v=20260929-ux5">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand-wrap header-brand-slogan" aria-label="Idesüss főoldal">
+        <img src="/favicon.png" alt="Idesüss logo" class="brand-logo" />
+        <div class="brand-text">
+          <p class="header-slogan" data-i18n="vision.heroTitle">La drum. Într-un singur loc.</p>
+        </div>
+      </a>
+
+      <nav class="vision-primary-nav" aria-label="Fő navigáció">
+        <a class="vision-nav-link is-active" href="#top" aria-current="page">
+          <span class="vision-nav-icon" aria-hidden="true">⌂</span>
+          <span >Kezdőlap</span>
+        </a>
+        <a class="vision-nav-link" href="/ferry/">
+          <span class="vision-nav-icon" aria-hidden="true">⛴️</span>
+          <span>Ferry Board</span>
+        </a>
+        <a class="vision-nav-link" href="/rola/">
+          <span class="vision-nav-icon" aria-hidden="true">🚛</span>
+          <span>RoLa Board</span>
+        </a>
+        <a class="vision-nav-link" href="/radio/?autoplay=1">
+          <span class="vision-nav-icon" aria-hidden="true">◉</span>
+          <span data-i18n="vision.radioTitle">Radio</span>
+        </a>
+        <a class="vision-nav-link" href="/tools/">
+          <span class="vision-nav-icon" aria-hidden="true">🛠</span>
+          <span>Tools</span>
+        </a>
+        <a class="vision-nav-link" href="/app/">
+          <span class="vision-nav-icon" aria-hidden="true">▣</span>
+          <span>WebApp</span>
+        </a>
+      </nav>
+
+      <div class="header-actions">
+
+        <div class="header-chip lang-clock-chip">
+          <span id="headerClock" class="header-clock-inline">00:00</span>
+
+          <select id="langSelect" class="lang-select" data-idesuss-language-select aria-label="Nyelv választó">
+            <option value="hu">HU Magyar</option>
+            <option value="en">GB English</option>
+            <option value="nl">NL Nederlands</option>
+            <option value="ro">RO Română</option>
+            <option value="pl">PL Polski</option>
+            <option value="hr">HR Hrvatski</option>
+            <option value="be">BY Беларуская</option>
+          </select>
+        </div>
+
+        <div class="header-chip auth-chip">
+          <button id="loginBtn" class="auth-link" type="button" data-i18n="login">Autentificare</button>
+          <span class="auth-separator" data-i18n="or">sau</span>
+          <button id="registerBtn" class="auth-link" type="button" data-i18n="register">Înregistrare</button>
+
+          <button id="headerMessagesBtn" class="header-messages-btn" type="button" hidden aria-label="Üzenetek" title="Üzenetek">
+            <span aria-hidden="true">✉️</span>
+            <span id="headerMessagesBadge" class="header-messages-badge" hidden></span>
+          </button>
+
+          <button
+            id="menuToggle"
+            class="header-menu-toggle"
+            type="button"
+            aria-label="Menü"
+            aria-haspopup="true"
+          >
+            <span class="menu-bar" aria-hidden="true"></span>
+            <span class="menu-bar" aria-hidden="true"></span>
+            <span class="menu-bar" aria-hidden="true"></span>
+          </button>
+
+          <div id="idesussMenu" class="header-dropdown-menu">
+            <button class="idesussMenuBtn" id="openProfileBtn" data-i18n="profile">👤 Profil</button>
+            
+              <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp">▶️ Webapp</button>
+            
+              <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio">📻 Radio</button>
+              <button class="idesussMenuBtn" id="openFerryBtn" type="button">⛴️ Ferry Board</button>
+              <button class="idesussMenuBtn" id="openRolaBtn" type="button">🚛🚆 Rail / RoLa</button>
+              <button class="idesussMenuBtn" id="openToolsBtn" type="button">🧰 Tools</button>
+
+              <button class="idesussMenuBtn" id="openMessagesBtn" type="button" hidden>💬 Üzenetek <span id="messagesUnreadBadge" hidden></span></button>
+            
+              <button class="idesussMenuBtn" id="openAdminPanelBtn" type="button" hidden>🛡️ Admin</button>
+            
+              <button class="idesussMenuBtn" id="openRulesBtn" type="button" data-i18n="menuRules">📜 Regulament</button>
+              <button class="idesussMenuBtn" id="openSettingsBtn" type="button" data-i18n="menuSettings">⚙️ Setări</button>
+            
+              <div class="menu-idea-row">
+                <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas">💡 Cutia cu idei</button>
+                <span class="menu-info" tabindex="0" data-i18n-aria-label="menuIdeasInfoLabel">
+                  i
+                  <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo">Poți trimite orice crezi că ar putea face Idesüss mai bun: o regulă nouă, o funcție sau un serviciu, o opțiune lipsă, o propunere de schimbare sau chiar o idee de finanțare ori sprijin. Analizăm propunerile, iar cele realizabile și compatibile cu principiile Idesüss pot intra în dezvoltare.</span>
+                </span>
+              </div>
+            
+              <button class="idesussMenuBtn" id="logoutBtnMenu" data-i18n="logout">🚪 Deconectare</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="dashboard-intro">
+      <div class="container">
+        <div class="dashboard-intro-shell">
+          <div class="dashboard-intro-copy">
+            <div class="dashboard-brand-lockup">
+              <img src="/favicon.png" alt="Idesüss logo" class="dashboard-brand-logo" />
+              <div class="dashboard-brand-copy">
+                <span class="platform-kicker" data-i18n="vision.kicker">Idesüss Platformă pentru șoferi</span>
+                <h1 class="dashboard-brand-title">Idesüss<span class="tm-mark">™</span></h1>
+                <p class="dashboard-brand-sub" data-i18n="brandSubtitle">Pagina principală + experiență mini-aplicație</p>
+              </div>
+            </div>
+            <p class="dashboard-brand-lead" data-i18n="vision.heroLead">Informații și instrumente zilnice pentru șoferi — rapid, clar și fără zgomot inutil.</p>
+          </div>
+          <div class="dashboard-intro-status" aria-label="Platform állapot">
+            <span class="status-dot status-dot-live"></span>
+            <span data-i18n="vision.status">Sistem disponibil</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="platform-modules" aria-labelledby="platformModulesTitle">
+      <div class="container">
+        <div class="platform-section-head">
+          <div>
+            <span class="platform-kicker" data-i18n="vision.quickKicker">Centru pentru șoferi</span>
+            <h2 id="platformModulesTitle" data-i18n="vision.quickTitle">Acces rapid</h2>
+          </div>
+          <p data-i18n="vision.quickLead">Cele mai importante funcții zilnice într-un singur loc.</p>
+        </div>
+        <div class="platform-module-grid">
+          <a class="platform-module-card" href="/ferry/" aria-label="Ferry Board megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">⛴️</span>
+            <div>
+              <strong>Ferry Board</strong>
+              <span data-i18n="vision.ferryDesc">Rute de feribot, plecări și stări</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/rola/" aria-label="Rail és RoLa Board megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">🚛🚆</span>
+            <div>
+              <strong>Rail / RoLa Board</strong>
+              <span data-i18n="vision.rolaDesc">Trenuri pentru camioane și autostradă rulantă</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/radio/?autoplay=1" aria-label="Rádió megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">📻</span>
+            <div>
+              <strong data-i18n="vision.radioTitle">Radio</strong>
+              <span data-i18n="vision.radioDesc">Posturi internaționale pentru drum</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="platform-module-card" href="/tools/" aria-label="Tools megnyitása">
+            <span class="platform-module-icon" aria-hidden="true">🧰</span>
+            <div>
+              <strong>Tools</strong>
+              <span data-i18n="vision.toolsDesc">Calculator, calendar, jurnal și instrumente pentru șoferi</span>
+            </div>
+            <span class="platform-module-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero">
+      <div class="container">
+        <div class="hero-shell">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <div>
+                <div class="hero-brand">
+                  <img src="/favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
+                  <div>
+                    <h1 class="hero-brand-title">Idesüss<span class="tm-mark">™</span></h1>
+                    <p class="hero-brand-sub" data-i18n="brandSubtitle">Pagina principală + experiență mini-aplicație</p>
+                  </div>
+                </div>
+                <p class="hero-lead" data-i18n="heroLead">Încearcă mini-aplicația noastră populară direct pe pagina principală!</p>
+              </div>
+              <div class="hero-actions">
+                <a id="heroOpenAppBtn" class="btn hero-webapp-btn" href="https://idesuss.net/app">
+                  <span data-i18n="openWebapp">Deschide webapp-ul</span>
+                </a>
+                <a id="heroOpenRadioBtn" class="btn hero-webapp-btn hero-radio-btn" href="/radio/?autoplay=1">
+                  <span data-i18n="openRadio">Deschide radioul</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="hero-miniapp">
+              <h3 class="miniapp-title" data-i18n="inputTitle">Lipește un link video public</h3>
+              <p class="miniapp-subtitle" data-i18n="inputSubtitle">TikTok, YouTube, Instagram Reel, video Facebook și alte linkuri publice acceptate.</p>
+              <div class="field">
+                <label for="videoUrl" data-i18n="inputLabel">URL video public</label>
+                <input id="videoUrl" class="input" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://..." />
+              </div>
+              <div class="input-actions">
+                <button id="pasteBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="paste">Lipește</button>
+                <button id="openBtn" class="btn miniapp-btn btn-primary" type="button" data-i18n="open">Deschide</button>
+                <button id="clearBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="clear">Șterge</button>
+              </div>
+              <div class="status-bar">
+                <div id="clipboardStatus" class="status-pill">
+                  <span class="status-dot"></span>
+                  <span data-i18n="clipboardChecking">Se verifică clipboardul…</span>
+                </div>
+                <div id="installStatus" class="status-pill">
+                  <span class="status-dot"></span>
+                  <span data-i18n="installStateUnknown">Se încarcă starea instalării…</span>
+                </div>
+                <div class="status-pill status-ok">
+                  <span class="status-dot"></span>
+                  <span data-i18n="publicLinksOnly">Doar linkuri publice</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-bottom">
+            <div class="hero-banner">
+              <div class="hero-banner-text">
+                <span class="hero-banner-icon"></span>
+                <span data-i18n="heroBannerText">Unele dispozitive Android nu sunt acceptate!</span>
+              </div>
+             <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details">Detalii</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-info-layer" aria-labelledby="dashboardInfoTitle">
+      <div class="container">
+        <div class="dashboard-info-head">
+          <div>
+            <span class="platform-kicker" data-i18n="vision.dailyKicker">Informații zilnice</span>
+            <h2 id="dashboardInfoTitle" data-i18n="vision.overviewTitle">Prezentare generală</h2>
+          </div>
+          <p data-i18n="vision.overviewLead">Stări utile într-un singur loc, ca informații secundare.</p>
+        </div>
+        <div class="dashboard-info-grid">
+          <div class="dashboard-info-primary">
+            <section class="fx-strip" aria-labelledby="fxTitle">
+    <div class="container">
+      <div class="fx-card">
+        <div class="fx-card-head">
+          <h2 id="fxTitle" class="fx-title" data-i18n="fx.title">Cursuri valutare oficiale zilnice</h2>
+          <div class="fx-source">
+            <span id="fxSourceDate">ECB napi referenciaárfolyam</span>
+            · <span id="fxStatus" class="fx-status">betöltés…</span>
+          </div>
+        </div>
+
+        <div class="fx-grid" aria-live="polite">
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="EUR">EUR/HUF</span>
+            <strong class="fx-value" data-fx-value="EUR">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="USD">USD/HUF</span>
+            <strong class="fx-value" data-fx-value="USD">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="GBP">GBP/HUF</span>
+            <strong class="fx-value" data-fx-value="GBP">—</strong>
+          </div>
+          <div class="fx-item">
+            <span class="fx-code" data-fx-label="CHF">CHF/HUF</span>
+            <strong class="fx-value" data-fx-value="CHF">—</strong>
+          </div>
+        </div>
+
+        <p class="fx-note" data-i18n="fx.note">Sursa: Banca Centrală Europeană (ECB). Cursurile de referință ECB sunt actualizate în zilele lucrătoare; Idesüss nu urmărește variațiile pieței din timpul zilei.</p>
+      </div>
+    </div>
+  </section>
+          </div>
+          <div class="dashboard-info-secondary">
+            <section class="online-users-section" aria-labelledby="onlineUsersTitle">
+    <div class="container">
+      <div class="online-users-card">
+        <div class="online-users-head">
+          <div>
+            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Utilizatori online</h2>
+            <p data-i18n="onlineUsersHint">Sunt afișați doar utilizatorii care au permis vizibilitatea.</p>
+          </div>
+          <span class="online-users-live" data-i18n="onlineNow">Online</span>
+        </div>
+        <div id="onlineUsersList" class="online-users-list" aria-live="polite"></div>
+        <div id="onlineUsersListStatus" class="online-users-status"></div>
+      </div>
+    </div>
+  </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<div id="viewerShell" class="viewer-shell">
+
+  <div class="viewer-shell-card">
+
+    <div class="viewer-shell-top">
+
+      <div class="viewer-shell-title">
+        Idesüss Viewer
+      </div>
+
+      <button
+        id="closeViewerBtn"
+        class="viewer-shell-close icon-close-btn"
+        type="button"
+        aria-label="Bezárás"
+        title="Bezárás"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6L18 18M18 6L6 18"></path>
+        </svg>
+      </button>
+
+    </div>
+
+    <iframe
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      id="viewerFrame"
+      class="viewer-frame"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+
+  </div>
+
+</div>
+     </main><div id="infoPanel" class="info-panel" aria-hidden="true">
+  <div class="info-panel-card">
+    <button id="infoPanelClose" class="info-panel-close icon-close-btn" type="button" aria-label="Bezárás" title="Bezárás">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 6L18 18M18 6L6 18"></path>
+      </svg>
+    </button>
+    <h2 id="infoPanelTitle"></h2>
+    <p id="infoPanelText"></p>
+  </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+      <div class="footer-card">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <h3>Idesüss<span class="tm-mark">™</span></h3>
+            <p data-i18n="footerDesc">Pagină principală + punct de acces mini-aplicație pentru linkuri video publice acceptate.</p>
+          </div>
+          <div class="footer-links">
+
+  <button class="footer-action-btn"
+          type="button"
+          data-panel="how"
+          data-i18n="footerHow">⚙️ Cum funcționează</button>
+
+  <button class="footer-action-btn"
+          type="button"
+          data-panel="about"
+          data-i18n="footerAbout">ℹ️ Despre</button>
+
+  <a class="footer-action-btn" href="/eula/" data-i18n="vision.footerTerms">Termeni de utilizare</a>
+  <a class="footer-action-btn" href="/privacy/" data-i18n="vision.footerPrivacy">Confidențialitate</a>
+
+
+  <button id="shareBtn"
+          class="footer-action-btn"
+          type="button"
+          data-i18n="footerShare">📤 Distribuie</button>
+
+  <label class="footer-action-btn footer-language-control" for="footerLangSelect">
+    <span aria-hidden="true">🌐</span>
+    <select id="footerLangSelect" data-idesuss-language-select aria-label="Language">
+      <option value="hu">🇭🇺 Magyar</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="nl">🇳🇱 Nederlands</option>
+      <option value="ro">🇷🇴 Română</option>
+      <option value="pl">🇵🇱 Polski</option>
+      <option value="hr">🇭🇷 Hrvatski</option>
+      <option value="be">🇧🇾 Беларуская</option>
+    </select>
+  </label>
+
+</div>
+        </div>
+        <div class="footer-bottom">
+          <div>© <span id="year"></span> Idesüss<span class="tm-mark">™</span></div>
+           <div class="footer-stats">
+             <span id="onlineUsersCounter" data-i18n="onlineUsersCounter">👁 {count} online acum</span>
+             <span id="totalVisitsCounter" data-i18n="totalVisitsCounter">🌍 {count} vizite totale</span>
+           </div>
+          <div class="powered">Powered by StZoo</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  
+
+<script src="/js/resolver.js"></script>
+<script src="/js/shared/share-intake.js"></script>
+<script type="module" src="/js/home-runtime.js?v=20260928-visioni18n1"></script>
+
+
+
+
+<script type="module" src="/js/fx-rates.js?v=20260927-release1"></script>
+<script type="module" src="/js/menu/menu-core.js?v=20260929-profileprefs1"></script>
+
+<script type="module" src="/js/site-stats.js?v=20260926-shared-supabase1"></script>
+<script type="module" src="/js/online-users.js?v=20260927-package2"></script>
+<script type="module" src="/js/anonymous-presence.js?v=20260926-common-presence1"></script>
+</body>
+</html>
