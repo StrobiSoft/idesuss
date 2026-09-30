@@ -470,6 +470,7 @@ body{
 @media(max-width:1120px){
   .vision-primary-nav{gap:0}
   .vision-nav-link{min-width:64px;padding-inline:6px;font-size:.64rem}
+  .platform-section-head p{display:none!important}
 }
 @media(max-width:920px){
   .vision-primary-nav{display:none!important}
