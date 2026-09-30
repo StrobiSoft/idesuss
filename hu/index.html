@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Idesüss™ — Driver Platform</title>
+  <title>Idesüss™ — Sofőrplatform</title>
   <meta
     name="description"
-    content="Idesüss brings everyday information and tools for drivers together — Ferry Board, RoLa, radio, webapp and useful on-the-road features in one place."
+    content="Idesüss: mindennapi információk és eszközök sofőröknek — Ferry Board, RoLa, rádió, webapp és hasznos útközbeni funkciók egy helyen."
   />
-  <link rel="canonical" href="https://idesuss.net/" />
+  <link rel="canonical" href="https://idesuss.net/hu/" />
   <link rel="alternate" hreflang="hu" href="https://idesuss.net/hu/" />
   <link rel="alternate" hreflang="en" href="https://idesuss.net/en/" />
   <link rel="alternate" hreflang="nl" href="https://idesuss.net/nl/" />
@@ -33,7 +33,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="#top" class="brand-wrap header-brand-slogan" aria-label="Idesüss főoldal">
-        <img src="favicon.png" alt="Idesüss logo" class="brand-logo" />
+        <img src="/favicon.png" alt="Idesüss logo" class="brand-logo" />
         <div class="brand-text">
           <p class="header-slogan" data-i18n="vision.heroTitle">Úton. Egy helyen.</p>
         </div>
@@ -83,9 +83,9 @@
         </div>
 
         <div class="header-chip auth-chip">
-          <button id="loginBtn" class="auth-link" type="button" data-i18n="login"></button>
-          <span class="auth-separator" data-i18n="or"></span>
-          <button id="registerBtn" class="auth-link" type="button" data-i18n="register"></button>
+          <button id="loginBtn" class="auth-link" type="button" data-i18n="login">Bejelentkezés</button>
+          <span class="auth-separator" data-i18n="or">vagy</span>
+          <button id="registerBtn" class="auth-link" type="button" data-i18n="register">Regisztráció</button>
 
           <button id="headerMessagesBtn" class="header-messages-btn" type="button" hidden aria-label="Üzenetek" title="Üzenetek">
             <span aria-hidden="true">✉️</span>
@@ -125,7 +125,7 @@
                 <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas">💡 Ötletláda</button>
                 <span class="menu-info" tabindex="0" data-i18n-aria-label="menuIdeasInfoLabel">
                   i
-                  <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo">Ide írhatsz bármit, amitől szerinted jobb lehet az Idesüss.</span>
+                  <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo">Ide írhatsz bármit, amitől szerinted jobb lehet az Idesüss: új szabályt, funkciót vagy szolgáltatást, hiányzó lehetőséget, változtatási javaslatot, akár finanszírozási vagy támogatási ötletet is. A beküldéseket átnézzük és értékeljük; a megvalósítható, az Idesüss elveivel összeegyeztethető ötletek bekerülhetnek a fejlesztésbe.</span>
                 </span>
               </div>
             
@@ -143,11 +143,11 @@
         <div class="dashboard-intro-shell">
           <div class="dashboard-intro-copy">
             <div class="dashboard-brand-lockup">
-              <img src="favicon.png" alt="Idesüss logo" class="dashboard-brand-logo" />
+              <img src="/favicon.png" alt="Idesüss logo" class="dashboard-brand-logo" />
               <div class="dashboard-brand-copy">
                 <span class="platform-kicker" data-i18n="vision.kicker">Idesüss Driver Platform</span>
                 <h1 class="dashboard-brand-title">Idesüss<span class="tm-mark">™</span></h1>
-                <p class="dashboard-brand-sub" data-i18n="brandSubtitle"></p>
+                <p class="dashboard-brand-sub" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
               </div>
             </div>
             <p class="dashboard-brand-lead" data-i18n="vision.heroLead">Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.</p>
@@ -183,7 +183,7 @@
             <span class="platform-module-icon" aria-hidden="true">🚛🚆</span>
             <div>
               <strong>Rail / RoLa Board</strong>
-              <span data-i18n="vision.rolaDesc">Kamionszállító vonatok és rail motorway</span>
+              <span data-i18n="vision.rolaDesc">Kamionszállító vonatok és RoLa kapcsolatok</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -216,48 +216,48 @@
             <div class="hero-copy">
               <div>
                 <div class="hero-brand">
-                  <img src="favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
+                  <img src="/favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
                   <div>
                     <h1 class="hero-brand-title">Idesüss<span class="tm-mark">™</span></h1>
-                    <p class="hero-brand-sub" data-i18n="brandSubtitle"></p>
+                    <p class="hero-brand-sub" data-i18n="brandSubtitle">Főoldal + mini app élmény</p>
                   </div>
                 </div>
-                <p class="hero-lead" data-i18n="heroLead"></p>
+                <p class="hero-lead" data-i18n="heroLead">Próbáld ki közvetlenül a főoldalon népszerű minialkalmazásunkat!</p>
               </div>
               <div class="hero-actions">
                 <a id="heroOpenAppBtn" class="btn hero-webapp-btn" href="https://idesuss.net/app">
-                  <span data-i18n="openWebapp"></span>
+                  <span data-i18n="openWebapp">Webapp megnyitása</span>
                 </a>
                 <a id="heroOpenRadioBtn" class="btn hero-webapp-btn hero-radio-btn" href="/radio/?autoplay=1">
-                  <span data-i18n="openRadio"></span>
+                  <span data-i18n="openRadio">Rádió megnyitása</span>
                 </a>
               </div>
             </div>
 
             <div class="hero-miniapp">
-              <h3 class="miniapp-title" data-i18n="inputTitle"></h3>
-              <p class="miniapp-subtitle" data-i18n="inputSubtitle"></p>
+              <h3 class="miniapp-title" data-i18n="inputTitle">Illessz be egy nyilvános videólinket</h3>
+              <p class="miniapp-subtitle" data-i18n="inputSubtitle">TikTok, YouTube, Instagram Reel, Facebook videó és más támogatott nyilvános linkek.</p>
               <div class="field">
-                <label for="videoUrl" data-i18n="inputLabel"></label>
+                <label for="videoUrl" data-i18n="inputLabel">Nyilvános videó URL</label>
                 <input id="videoUrl" class="input" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://..." />
               </div>
               <div class="input-actions">
-                <button id="pasteBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="paste"></button>
-                <button id="openBtn" class="btn miniapp-btn btn-primary" type="button" data-i18n="open"></button>
-                <button id="clearBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="clear"></button>
+                <button id="pasteBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="paste">Beillesztés</button>
+                <button id="openBtn" class="btn miniapp-btn btn-primary" type="button" data-i18n="open">Megnyitás</button>
+                <button id="clearBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="clear">Törlés</button>
               </div>
               <div class="status-bar">
                 <div id="clipboardStatus" class="status-pill">
                   <span class="status-dot"></span>
-                  <span data-i18n="clipboardChecking"></span>
+                  <span data-i18n="clipboardChecking">Vágólap ellenőrzése…</span>
                 </div>
                 <div id="installStatus" class="status-pill">
                   <span class="status-dot"></span>
-                  <span data-i18n="installStateUnknown"></span>
+                  <span data-i18n="installStateUnknown">Telepítési állapot betöltése…</span>
                 </div>
                 <div class="status-pill status-ok">
                   <span class="status-dot"></span>
-                  <span data-i18n="publicLinksOnly"></span>
+                  <span data-i18n="publicLinksOnly">Csak nyilvános linkek</span>
                 </div>
               </div>
             </div>
@@ -266,9 +266,9 @@
             <div class="hero-banner">
               <div class="hero-banner-text">
                 <span class="hero-banner-icon"></span>
-                <span data-i18n="heroBannerText"></span>
+                <span data-i18n="heroBannerText">Egyes Android eszközök nem támogatják!</span>
               </div>
-             <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details"></button>
+             <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details">Részletek</button>
             </div>
           </div>
         </div>
@@ -396,19 +396,19 @@
         <div class="footer-top">
           <div class="footer-brand">
             <h3>Idesüss<span class="tm-mark">™</span></h3>
-            <p data-i18n="footerDesc"></p>
+            <p data-i18n="footerDesc">Főoldal + mini app belépőpont támogatott nyilvános videólinkekhez.</p>
           </div>
           <div class="footer-links">
 
   <button class="footer-action-btn"
           type="button"
           data-panel="how"
-          data-i18n="footerHow"></button>
+          data-i18n="footerHow">⚙️ Hogyan működik</button>
 
   <button class="footer-action-btn"
           type="button"
           data-panel="about"
-          data-i18n="footerAbout"></button>
+          data-i18n="footerAbout">ℹ️ Névjegy</button>
 
   <a class="footer-action-btn" href="/eula/" data-i18n="vision.footerTerms">Felhasználási feltételek</a>
   <a class="footer-action-btn" href="/privacy/" data-i18n="vision.footerPrivacy">Adatvédelem</a>
@@ -417,7 +417,7 @@
   <button id="shareBtn"
           class="footer-action-btn"
           type="button"
-          data-i18n="footerShare"></button>
+          data-i18n="footerShare">📤 Megosztás</button>
 
   <label class="footer-action-btn footer-language-control" for="footerLangSelect">
     <span aria-hidden="true">🌐</span>
@@ -437,8 +437,8 @@
         <div class="footer-bottom">
           <div>© <span id="year"></span> Idesüss<span class="tm-mark">™</span></div>
            <div class="footer-stats">
-             <span id="onlineUsersCounter" data-i18n="onlineUsersCounter"></span>
-             <span id="totalVisitsCounter" data-i18n="totalVisitsCounter"></span>
+             <span id="onlineUsersCounter" data-i18n="onlineUsersCounter">👁 {count} online most</span>
+             <span id="totalVisitsCounter" data-i18n="totalVisitsCounter">🌍 {count} összes látogatás</span>
            </div>
           <div class="powered">Powered by StZoo</div>
         </div>
@@ -448,15 +448,15 @@
 
   
 
-<script src="js/resolver.js"></script>
+<script src="/js/resolver.js"></script>
 <script src="/js/shared/share-intake.js"></script>
 <script type="module" src="/js/home-runtime.js?v=20260928-visioni18n1"></script>
 
 
 
 
-<script type="module" src="./js/fx-rates.js?v=20260927-release1"></script>
-<script type="module" src="./js/menu/menu-core.js?v=20260929-profileprefs1"></script>
+<script type="module" src="/js/fx-rates.js?v=20260927-release1"></script>
+<script type="module" src="/js/menu/menu-core.js?v=20260929-profileprefs1"></script>
 
 <script type="module" src="/js/site-stats.js?v=20260926-shared-supabase1"></script>
 <script type="module" src="/js/online-users.js?v=20260927-package2"></script>

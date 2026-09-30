@@ -14,6 +14,21 @@ function getSafeHomeLanguage(langCode) {
   return SUPPORTED_HOME_LANGUAGES.includes(normalized) ? normalized : "hu";
 }
 
+function getPathLanguage() {
+  const firstSegment = window.location.pathname.split("/").filter(Boolean)[0];
+  return SUPPORTED_HOME_LANGUAGES.includes(firstSegment) ? firstSegment : null;
+}
+
+function syncLocalePath(language) {
+  const safeLanguage = getSafeHomeLanguage(language);
+  const pathLanguage = getPathLanguage();
+  if (pathLanguage === safeLanguage) return;
+
+  const targetPath = "/" + safeLanguage + "/";
+  const nextUrl = targetPath + window.location.search + window.location.hash;
+  window.history.replaceState(window.history.state, "", nextUrl);
+}
+
 function getTranslationValue(section, key) {
   return key.split(".").reduce(function (current, part) {
     if (!current || typeof current !== "object") return undefined;
@@ -60,7 +75,10 @@ export async function loadHomeLanguage(langCode, { persist = true } = {}) {
 
   window.idesussHomeTranslations = homeTranslations;
   document.documentElement.lang = safeLanguage;
-  if (persist) setIdesussLanguage(safeLanguage);
+  if (persist) {
+    setIdesussLanguage(safeLanguage);
+    syncLocalePath(safeLanguage);
+  }
 
   document.querySelectorAll("[data-idesuss-language-select]").forEach((select) => {
     select.value = safeLanguage;
@@ -74,7 +92,7 @@ export async function loadHomeLanguage(langCode, { persist = true } = {}) {
 
 export async function initHomeLanguage() {
   const languageSelects = [...document.querySelectorAll("[data-idesuss-language-select]")];
-  const initialLanguage = getSafeHomeLanguage(getIdesussLanguage());
+  const initialLanguage = getSafeHomeLanguage(getPathLanguage() || getIdesussLanguage());
 
   for (const languageSelect of languageSelects) {
     languageSelect.value = initialLanguage;

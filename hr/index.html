@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Idesüss™ — Driver Platform</title>
+  <title>Idesüss™ — Platforma za vozače</title>
   <meta
     name="description"
-    content="Idesüss brings everyday information and tools for drivers together — Ferry Board, RoLa, radio, webapp and useful on-the-road features in one place."
+    content="Idesüss okuplja svakodnevne informacije i alate za vozače — Ferry Board, RoLa, radio, webapp i korisne funkcije na putu."
   />
-  <link rel="canonical" href="https://idesuss.net/" />
+  <link rel="canonical" href="https://idesuss.net/hr/" />
   <link rel="alternate" hreflang="hu" href="https://idesuss.net/hu/" />
   <link rel="alternate" hreflang="en" href="https://idesuss.net/en/" />
   <link rel="alternate" hreflang="nl" href="https://idesuss.net/nl/" />
@@ -33,9 +33,9 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="#top" class="brand-wrap header-brand-slogan" aria-label="Idesüss főoldal">
-        <img src="favicon.png" alt="Idesüss logo" class="brand-logo" />
+        <img src="/favicon.png" alt="Idesüss logo" class="brand-logo" />
         <div class="brand-text">
-          <p class="header-slogan" data-i18n="vision.heroTitle">Úton. Egy helyen.</p>
+          <p class="header-slogan" data-i18n="vision.heroTitle">Na putu. Sve na jednom mjestu.</p>
         </div>
       </a>
 
@@ -54,7 +54,7 @@
         </a>
         <a class="vision-nav-link" href="/radio/?autoplay=1">
           <span class="vision-nav-icon" aria-hidden="true">◉</span>
-          <span data-i18n="vision.radioTitle">Rádió</span>
+          <span data-i18n="vision.radioTitle">Radio</span>
         </a>
         <a class="vision-nav-link" href="/tools/">
           <span class="vision-nav-icon" aria-hidden="true">🛠</span>
@@ -83,9 +83,9 @@
         </div>
 
         <div class="header-chip auth-chip">
-          <button id="loginBtn" class="auth-link" type="button" data-i18n="login"></button>
-          <span class="auth-separator" data-i18n="or"></span>
-          <button id="registerBtn" class="auth-link" type="button" data-i18n="register"></button>
+          <button id="loginBtn" class="auth-link" type="button" data-i18n="login">Prijava</button>
+          <span class="auth-separator" data-i18n="or">ili</span>
+          <button id="registerBtn" class="auth-link" type="button" data-i18n="register">Registracija</button>
 
           <button id="headerMessagesBtn" class="header-messages-btn" type="button" hidden aria-label="Üzenetek" title="Üzenetek">
             <span aria-hidden="true">✉️</span>
@@ -109,7 +109,7 @@
             
               <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp">▶️ Webapp</button>
             
-              <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio">📻 Rádió</button>
+              <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio">📻 Radio</button>
               <button class="idesussMenuBtn" id="openFerryBtn" type="button">⛴️ Ferry Board</button>
               <button class="idesussMenuBtn" id="openRolaBtn" type="button">🚛🚆 Rail / RoLa</button>
               <button class="idesussMenuBtn" id="openToolsBtn" type="button">🧰 Tools</button>
@@ -118,18 +118,18 @@
             
               <button class="idesussMenuBtn" id="openAdminPanelBtn" type="button" hidden>🛡️ Admin</button>
             
-              <button class="idesussMenuBtn" id="openRulesBtn" type="button" data-i18n="menuRules">📜 Házirend</button>
-              <button class="idesussMenuBtn" id="openSettingsBtn" type="button" data-i18n="menuSettings">⚙️ Beállítások</button>
+              <button class="idesussMenuBtn" id="openRulesBtn" type="button" data-i18n="menuRules">📜 Kućni red</button>
+              <button class="idesussMenuBtn" id="openSettingsBtn" type="button" data-i18n="menuSettings">⚙️ Postavke</button>
             
               <div class="menu-idea-row">
-                <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas">💡 Ötletláda</button>
+                <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas">💡 Kutija ideja</button>
                 <span class="menu-info" tabindex="0" data-i18n-aria-label="menuIdeasInfoLabel">
                   i
-                  <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo">Ide írhatsz bármit, amitől szerinted jobb lehet az Idesüss.</span>
+                  <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo">Pošalji sve što bi po tvom mišljenju moglo poboljšati Idesüss: novo pravilo, funkciju ili uslugu, mogućnost koja nedostaje, prijedlog promjene ili čak ideju za financiranje i podršku. Pregledavamo prijedloge, a izvedive ideje usklađene s načelima Idesüssa mogu ući u razvoj.</span>
                 </span>
               </div>
             
-              <button class="idesussMenuBtn" id="logoutBtnMenu" data-i18n="logout">🚪 Kijelentkezés</button>
+              <button class="idesussMenuBtn" id="logoutBtnMenu" data-i18n="logout">🚪 Odjava</button>
           </div>
         </div>
 
@@ -143,18 +143,18 @@
         <div class="dashboard-intro-shell">
           <div class="dashboard-intro-copy">
             <div class="dashboard-brand-lockup">
-              <img src="favicon.png" alt="Idesüss logo" class="dashboard-brand-logo" />
+              <img src="/favicon.png" alt="Idesüss logo" class="dashboard-brand-logo" />
               <div class="dashboard-brand-copy">
-                <span class="platform-kicker" data-i18n="vision.kicker">Idesüss Driver Platform</span>
+                <span class="platform-kicker" data-i18n="vision.kicker">Idesüss Platforma za vozače</span>
                 <h1 class="dashboard-brand-title">Idesüss<span class="tm-mark">™</span></h1>
-                <p class="dashboard-brand-sub" data-i18n="brandSubtitle"></p>
+                <p class="dashboard-brand-sub" data-i18n="brandSubtitle">Početna stranica + mini aplikacija</p>
               </div>
             </div>
-            <p class="dashboard-brand-lead" data-i18n="vision.heroLead">Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.</p>
+            <p class="dashboard-brand-lead" data-i18n="vision.heroLead">Svakodnevne informacije i alati za vozače — brzo, pregledno i bez nepotrebne buke.</p>
           </div>
           <div class="dashboard-intro-status" aria-label="Platform állapot">
             <span class="status-dot status-dot-live"></span>
-            <span data-i18n="vision.status">Rendszer elérhető</span>
+            <span data-i18n="vision.status">Sustav dostupan</span>
           </div>
         </div>
       </div>
@@ -164,17 +164,17 @@
       <div class="container">
         <div class="platform-section-head">
           <div>
-            <span class="platform-kicker" data-i18n="vision.quickKicker">Sofőrközpont</span>
-            <h2 id="platformModulesTitle" data-i18n="vision.quickTitle">Gyors elérés</h2>
+            <span class="platform-kicker" data-i18n="vision.quickKicker">Centar za vozače</span>
+            <h2 id="platformModulesTitle" data-i18n="vision.quickTitle">Brzi pristup</h2>
           </div>
-          <p data-i18n="vision.quickLead">A legfontosabb napi funkciók egy helyen.</p>
+          <p data-i18n="vision.quickLead">Najvažnije dnevne funkcije na jednom mjestu.</p>
         </div>
         <div class="platform-module-grid">
           <a class="platform-module-card" href="/ferry/" aria-label="Ferry Board megnyitása">
             <span class="platform-module-icon" aria-hidden="true">⛴️</span>
             <div>
               <strong>Ferry Board</strong>
-              <span data-i18n="vision.ferryDesc">Kompjáratok, indulások és státuszok</span>
+              <span data-i18n="vision.ferryDesc">Trajektne linije, polasci i statusi</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -183,7 +183,7 @@
             <span class="platform-module-icon" aria-hidden="true">🚛🚆</span>
             <div>
               <strong>Rail / RoLa Board</strong>
-              <span data-i18n="vision.rolaDesc">Kamionszállító vonatok és rail motorway</span>
+              <span data-i18n="vision.rolaDesc">Vlakovi za prijevoz kamiona i RoLa</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -191,8 +191,8 @@
           <a class="platform-module-card" href="/radio/?autoplay=1" aria-label="Rádió megnyitása">
             <span class="platform-module-icon" aria-hidden="true">📻</span>
             <div>
-              <strong data-i18n="vision.radioTitle">Rádió</strong>
-              <span data-i18n="vision.radioDesc">Nemzetközi állomások útközben</span>
+              <strong data-i18n="vision.radioTitle">Radio</strong>
+              <span data-i18n="vision.radioDesc">Međunarodne postaje na putu</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -201,7 +201,7 @@
             <span class="platform-module-icon" aria-hidden="true">🧰</span>
             <div>
               <strong>Tools</strong>
-              <span data-i18n="vision.toolsDesc">Számológép, naptár, napló és sofőreszközök</span>
+              <span data-i18n="vision.toolsDesc">Kalkulator, kalendar, dnevnik i alati za vozače</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -216,48 +216,48 @@
             <div class="hero-copy">
               <div>
                 <div class="hero-brand">
-                  <img src="favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
+                  <img src="/favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
                   <div>
                     <h1 class="hero-brand-title">Idesüss<span class="tm-mark">™</span></h1>
-                    <p class="hero-brand-sub" data-i18n="brandSubtitle"></p>
+                    <p class="hero-brand-sub" data-i18n="brandSubtitle">Početna stranica + mini aplikacija</p>
                   </div>
                 </div>
-                <p class="hero-lead" data-i18n="heroLead"></p>
+                <p class="hero-lead" data-i18n="heroLead">Isprobaj našu popularnu mini aplikaciju izravno na početnoj stranici!</p>
               </div>
               <div class="hero-actions">
                 <a id="heroOpenAppBtn" class="btn hero-webapp-btn" href="https://idesuss.net/app">
-                  <span data-i18n="openWebapp"></span>
+                  <span data-i18n="openWebapp">Otvori webapp</span>
                 </a>
                 <a id="heroOpenRadioBtn" class="btn hero-webapp-btn hero-radio-btn" href="/radio/?autoplay=1">
-                  <span data-i18n="openRadio"></span>
+                  <span data-i18n="openRadio">Otvori radio</span>
                 </a>
               </div>
             </div>
 
             <div class="hero-miniapp">
-              <h3 class="miniapp-title" data-i18n="inputTitle"></h3>
-              <p class="miniapp-subtitle" data-i18n="inputSubtitle"></p>
+              <h3 class="miniapp-title" data-i18n="inputTitle">Zalijepi javnu poveznicu na video</h3>
+              <p class="miniapp-subtitle" data-i18n="inputSubtitle">TikTok, YouTube, Instagram Reel, Facebook video i druge podržane javne poveznice.</p>
               <div class="field">
-                <label for="videoUrl" data-i18n="inputLabel"></label>
+                <label for="videoUrl" data-i18n="inputLabel">Javni URL videa</label>
                 <input id="videoUrl" class="input" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://..." />
               </div>
               <div class="input-actions">
-                <button id="pasteBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="paste"></button>
-                <button id="openBtn" class="btn miniapp-btn btn-primary" type="button" data-i18n="open"></button>
-                <button id="clearBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="clear"></button>
+                <button id="pasteBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="paste">Zalijepi</button>
+                <button id="openBtn" class="btn miniapp-btn btn-primary" type="button" data-i18n="open">Otvori</button>
+                <button id="clearBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="clear">Obriši</button>
               </div>
               <div class="status-bar">
                 <div id="clipboardStatus" class="status-pill">
                   <span class="status-dot"></span>
-                  <span data-i18n="clipboardChecking"></span>
+                  <span data-i18n="clipboardChecking">Provjera međuspremnika…</span>
                 </div>
                 <div id="installStatus" class="status-pill">
                   <span class="status-dot"></span>
-                  <span data-i18n="installStateUnknown"></span>
+                  <span data-i18n="installStateUnknown">Učitavanje statusa instalacije…</span>
                 </div>
                 <div class="status-pill status-ok">
                   <span class="status-dot"></span>
-                  <span data-i18n="publicLinksOnly"></span>
+                  <span data-i18n="publicLinksOnly">Samo javne poveznice</span>
                 </div>
               </div>
             </div>
@@ -266,9 +266,9 @@
             <div class="hero-banner">
               <div class="hero-banner-text">
                 <span class="hero-banner-icon"></span>
-                <span data-i18n="heroBannerText"></span>
+                <span data-i18n="heroBannerText">Neki Android uređaji nisu podržani!</span>
               </div>
-             <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details"></button>
+             <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details">Detalji</button>
             </div>
           </div>
         </div>
@@ -279,10 +279,10 @@
       <div class="container">
         <div class="dashboard-info-head">
           <div>
-            <span class="platform-kicker" data-i18n="vision.dailyKicker">Napi információ</span>
-            <h2 id="dashboardInfoTitle" data-i18n="vision.overviewTitle">Áttekintés</h2>
+            <span class="platform-kicker" data-i18n="vision.dailyKicker">Dnevne informacije</span>
+            <h2 id="dashboardInfoTitle" data-i18n="vision.overviewTitle">Pregled</h2>
           </div>
-          <p data-i18n="vision.overviewLead">Hasznos állapotok egy helyen, másodlagos prioritással.</p>
+          <p data-i18n="vision.overviewLead">Korisni statusi na jednom mjestu, kao sekundarne informacije.</p>
         </div>
         <div class="dashboard-info-grid">
           <div class="dashboard-info-primary">
@@ -290,7 +290,7 @@
     <div class="container">
       <div class="fx-card">
         <div class="fx-card-head">
-          <h2 id="fxTitle" class="fx-title" data-i18n="fx.title">Napi hivatalos árfolyamok</h2>
+          <h2 id="fxTitle" class="fx-title" data-i18n="fx.title">Službeni dnevni tečajevi</h2>
           <div class="fx-source">
             <span id="fxSourceDate">ECB napi referenciaárfolyam</span>
             · <span id="fxStatus" class="fx-status">betöltés…</span>
@@ -316,7 +316,7 @@
           </div>
         </div>
 
-        <p class="fx-note" data-i18n="fx.note">Forrás: Európai Központi Bank (ECB). Az ECB referenciaárfolyamai munkanapokon frissülnek; az Idesüss a napon belüli piaci ingadozást nem követi.</p>
+        <p class="fx-note" data-i18n="fx.note">Izvor: Europska središnja banka (ECB). Referentni tečajevi ECB-a ažuriraju se radnim danima; Idesüss ne prati tržišna kretanja unutar dana.</p>
       </div>
     </div>
   </section>
@@ -327,8 +327,8 @@
       <div class="online-users-card">
         <div class="online-users-head">
           <div>
-            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Online felhasználók</h2>
-            <p data-i18n="onlineUsersHint">Csak azok jelennek meg, akik ezt engedélyezték.</p>
+            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Korisnici na mreži</h2>
+            <p data-i18n="onlineUsersHint">Prikazuju se samo korisnici koji su dopustili vidljivost.</p>
           </div>
           <span class="online-users-live" data-i18n="onlineNow">Online</span>
         </div>
@@ -396,28 +396,28 @@
         <div class="footer-top">
           <div class="footer-brand">
             <h3>Idesüss<span class="tm-mark">™</span></h3>
-            <p data-i18n="footerDesc"></p>
+            <p data-i18n="footerDesc">Početna stranica + ulaz u mini aplikaciju za podržane javne video poveznice.</p>
           </div>
           <div class="footer-links">
 
   <button class="footer-action-btn"
           type="button"
           data-panel="how"
-          data-i18n="footerHow"></button>
+          data-i18n="footerHow">⚙️ Kako radi</button>
 
   <button class="footer-action-btn"
           type="button"
           data-panel="about"
-          data-i18n="footerAbout"></button>
+          data-i18n="footerAbout">ℹ️ O projektu</button>
 
-  <a class="footer-action-btn" href="/eula/" data-i18n="vision.footerTerms">Felhasználási feltételek</a>
-  <a class="footer-action-btn" href="/privacy/" data-i18n="vision.footerPrivacy">Adatvédelem</a>
+  <a class="footer-action-btn" href="/eula/" data-i18n="vision.footerTerms">Uvjeti korištenja</a>
+  <a class="footer-action-btn" href="/privacy/" data-i18n="vision.footerPrivacy">Privatnost</a>
 
 
   <button id="shareBtn"
           class="footer-action-btn"
           type="button"
-          data-i18n="footerShare"></button>
+          data-i18n="footerShare">📤 Podijeli</button>
 
   <label class="footer-action-btn footer-language-control" for="footerLangSelect">
     <span aria-hidden="true">🌐</span>
@@ -437,8 +437,8 @@
         <div class="footer-bottom">
           <div>© <span id="year"></span> Idesüss<span class="tm-mark">™</span></div>
            <div class="footer-stats">
-             <span id="onlineUsersCounter" data-i18n="onlineUsersCounter"></span>
-             <span id="totalVisitsCounter" data-i18n="totalVisitsCounter"></span>
+             <span id="onlineUsersCounter" data-i18n="onlineUsersCounter">👁 {count} trenutno online</span>
+             <span id="totalVisitsCounter" data-i18n="totalVisitsCounter">🌍 {count} ukupnih posjeta</span>
            </div>
           <div class="powered">Powered by StZoo</div>
         </div>
@@ -448,15 +448,15 @@
 
   
 
-<script src="js/resolver.js"></script>
+<script src="/js/resolver.js"></script>
 <script src="/js/shared/share-intake.js"></script>
 <script type="module" src="/js/home-runtime.js?v=20260928-visioni18n1"></script>
 
 
 
 
-<script type="module" src="./js/fx-rates.js?v=20260927-release1"></script>
-<script type="module" src="./js/menu/menu-core.js?v=20260929-profileprefs1"></script>
+<script type="module" src="/js/fx-rates.js?v=20260927-release1"></script>
+<script type="module" src="/js/menu/menu-core.js?v=20260929-profileprefs1"></script>
 
 <script type="module" src="/js/site-stats.js?v=20260926-shared-supabase1"></script>
 <script type="module" src="/js/online-users.js?v=20260927-package2"></script>

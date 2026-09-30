@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Idesüss™ — Driver Platform</title>
+  <title>Idesüss™ — Platformă pentru șoferi</title>
   <meta
     name="description"
-    content="Idesüss brings everyday information and tools for drivers together — Ferry Board, RoLa, radio, webapp and useful on-the-road features in one place."
+    content="Idesüss reunește informații și instrumente zilnice pentru șoferi — Ferry Board, RoLa, radio, webapp și funcții utile pentru drum."
   />
-  <link rel="canonical" href="https://idesuss.net/" />
+  <link rel="canonical" href="https://idesuss.net/ro/" />
   <link rel="alternate" hreflang="hu" href="https://idesuss.net/hu/" />
   <link rel="alternate" hreflang="en" href="https://idesuss.net/en/" />
   <link rel="alternate" hreflang="nl" href="https://idesuss.net/nl/" />
@@ -33,9 +33,9 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="#top" class="brand-wrap header-brand-slogan" aria-label="Idesüss főoldal">
-        <img src="favicon.png" alt="Idesüss logo" class="brand-logo" />
+        <img src="/favicon.png" alt="Idesüss logo" class="brand-logo" />
         <div class="brand-text">
-          <p class="header-slogan" data-i18n="vision.heroTitle">Úton. Egy helyen.</p>
+          <p class="header-slogan" data-i18n="vision.heroTitle">La drum. Într-un singur loc.</p>
         </div>
       </a>
 
@@ -54,7 +54,7 @@
         </a>
         <a class="vision-nav-link" href="/radio/?autoplay=1">
           <span class="vision-nav-icon" aria-hidden="true">◉</span>
-          <span data-i18n="vision.radioTitle">Rádió</span>
+          <span data-i18n="vision.radioTitle">Radio</span>
         </a>
         <a class="vision-nav-link" href="/tools/">
           <span class="vision-nav-icon" aria-hidden="true">🛠</span>
@@ -83,9 +83,9 @@
         </div>
 
         <div class="header-chip auth-chip">
-          <button id="loginBtn" class="auth-link" type="button" data-i18n="login"></button>
-          <span class="auth-separator" data-i18n="or"></span>
-          <button id="registerBtn" class="auth-link" type="button" data-i18n="register"></button>
+          <button id="loginBtn" class="auth-link" type="button" data-i18n="login">Autentificare</button>
+          <span class="auth-separator" data-i18n="or">sau</span>
+          <button id="registerBtn" class="auth-link" type="button" data-i18n="register">Înregistrare</button>
 
           <button id="headerMessagesBtn" class="header-messages-btn" type="button" hidden aria-label="Üzenetek" title="Üzenetek">
             <span aria-hidden="true">✉️</span>
@@ -109,7 +109,7 @@
             
               <button class="idesussMenuBtn" id="openWebappBtn" data-i18n="heroWebapp">▶️ Webapp</button>
             
-              <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio">📻 Rádió</button>
+              <button class="idesussMenuBtn" id="openRadioBtn" type="button" data-i18n="menuRadio">📻 Radio</button>
               <button class="idesussMenuBtn" id="openFerryBtn" type="button">⛴️ Ferry Board</button>
               <button class="idesussMenuBtn" id="openRolaBtn" type="button">🚛🚆 Rail / RoLa</button>
               <button class="idesussMenuBtn" id="openToolsBtn" type="button">🧰 Tools</button>
@@ -118,18 +118,18 @@
             
               <button class="idesussMenuBtn" id="openAdminPanelBtn" type="button" hidden>🛡️ Admin</button>
             
-              <button class="idesussMenuBtn" id="openRulesBtn" type="button" data-i18n="menuRules">📜 Házirend</button>
-              <button class="idesussMenuBtn" id="openSettingsBtn" type="button" data-i18n="menuSettings">⚙️ Beállítások</button>
+              <button class="idesussMenuBtn" id="openRulesBtn" type="button" data-i18n="menuRules">📜 Regulament</button>
+              <button class="idesussMenuBtn" id="openSettingsBtn" type="button" data-i18n="menuSettings">⚙️ Setări</button>
             
               <div class="menu-idea-row">
-                <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas">💡 Ötletláda</button>
+                <button class="idesussMenuBtn" id="openIdeaBoxBtn" type="button" data-i18n="menuIdeas">💡 Cutia cu idei</button>
                 <span class="menu-info" tabindex="0" data-i18n-aria-label="menuIdeasInfoLabel">
                   i
-                  <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo">Ide írhatsz bármit, amitől szerinted jobb lehet az Idesüss.</span>
+                  <span class="menu-info-tooltip" role="tooltip" data-i18n="menuIdeasInfo">Poți trimite orice crezi că ar putea face Idesüss mai bun: o regulă nouă, o funcție sau un serviciu, o opțiune lipsă, o propunere de schimbare sau chiar o idee de finanțare ori sprijin. Analizăm propunerile, iar cele realizabile și compatibile cu principiile Idesüss pot intra în dezvoltare.</span>
                 </span>
               </div>
             
-              <button class="idesussMenuBtn" id="logoutBtnMenu" data-i18n="logout">🚪 Kijelentkezés</button>
+              <button class="idesussMenuBtn" id="logoutBtnMenu" data-i18n="logout">🚪 Deconectare</button>
           </div>
         </div>
 
@@ -143,18 +143,18 @@
         <div class="dashboard-intro-shell">
           <div class="dashboard-intro-copy">
             <div class="dashboard-brand-lockup">
-              <img src="favicon.png" alt="Idesüss logo" class="dashboard-brand-logo" />
+              <img src="/favicon.png" alt="Idesüss logo" class="dashboard-brand-logo" />
               <div class="dashboard-brand-copy">
-                <span class="platform-kicker" data-i18n="vision.kicker">Idesüss Driver Platform</span>
+                <span class="platform-kicker" data-i18n="vision.kicker">Idesüss Platformă pentru șoferi</span>
                 <h1 class="dashboard-brand-title">Idesüss<span class="tm-mark">™</span></h1>
-                <p class="dashboard-brand-sub" data-i18n="brandSubtitle"></p>
+                <p class="dashboard-brand-sub" data-i18n="brandSubtitle">Pagina principală + experiență mini-aplicație</p>
               </div>
             </div>
-            <p class="dashboard-brand-lead" data-i18n="vision.heroLead">Mindennapi információk és eszközök sofőröknek — gyorsan, átláthatóan, felesleges zaj nélkül.</p>
+            <p class="dashboard-brand-lead" data-i18n="vision.heroLead">Informații și instrumente zilnice pentru șoferi — rapid, clar și fără zgomot inutil.</p>
           </div>
           <div class="dashboard-intro-status" aria-label="Platform állapot">
             <span class="status-dot status-dot-live"></span>
-            <span data-i18n="vision.status">Rendszer elérhető</span>
+            <span data-i18n="vision.status">Sistem disponibil</span>
           </div>
         </div>
       </div>
@@ -164,17 +164,17 @@
       <div class="container">
         <div class="platform-section-head">
           <div>
-            <span class="platform-kicker" data-i18n="vision.quickKicker">Sofőrközpont</span>
-            <h2 id="platformModulesTitle" data-i18n="vision.quickTitle">Gyors elérés</h2>
+            <span class="platform-kicker" data-i18n="vision.quickKicker">Centru pentru șoferi</span>
+            <h2 id="platformModulesTitle" data-i18n="vision.quickTitle">Acces rapid</h2>
           </div>
-          <p data-i18n="vision.quickLead">A legfontosabb napi funkciók egy helyen.</p>
+          <p data-i18n="vision.quickLead">Cele mai importante funcții zilnice într-un singur loc.</p>
         </div>
         <div class="platform-module-grid">
           <a class="platform-module-card" href="/ferry/" aria-label="Ferry Board megnyitása">
             <span class="platform-module-icon" aria-hidden="true">⛴️</span>
             <div>
               <strong>Ferry Board</strong>
-              <span data-i18n="vision.ferryDesc">Kompjáratok, indulások és státuszok</span>
+              <span data-i18n="vision.ferryDesc">Rute de feribot, plecări și stări</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -183,7 +183,7 @@
             <span class="platform-module-icon" aria-hidden="true">🚛🚆</span>
             <div>
               <strong>Rail / RoLa Board</strong>
-              <span data-i18n="vision.rolaDesc">Kamionszállító vonatok és rail motorway</span>
+              <span data-i18n="vision.rolaDesc">Trenuri pentru camioane și autostradă rulantă</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -191,8 +191,8 @@
           <a class="platform-module-card" href="/radio/?autoplay=1" aria-label="Rádió megnyitása">
             <span class="platform-module-icon" aria-hidden="true">📻</span>
             <div>
-              <strong data-i18n="vision.radioTitle">Rádió</strong>
-              <span data-i18n="vision.radioDesc">Nemzetközi állomások útközben</span>
+              <strong data-i18n="vision.radioTitle">Radio</strong>
+              <span data-i18n="vision.radioDesc">Posturi internaționale pentru drum</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -201,7 +201,7 @@
             <span class="platform-module-icon" aria-hidden="true">🧰</span>
             <div>
               <strong>Tools</strong>
-              <span data-i18n="vision.toolsDesc">Számológép, naptár, napló és sofőreszközök</span>
+              <span data-i18n="vision.toolsDesc">Calculator, calendar, jurnal și instrumente pentru șoferi</span>
             </div>
             <span class="platform-module-arrow" aria-hidden="true">→</span>
           </a>
@@ -216,48 +216,48 @@
             <div class="hero-copy">
               <div>
                 <div class="hero-brand">
-                  <img src="favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
+                  <img src="/favicon.png" alt="Idesüss logo" class="hero-brand-logo" />
                   <div>
                     <h1 class="hero-brand-title">Idesüss<span class="tm-mark">™</span></h1>
-                    <p class="hero-brand-sub" data-i18n="brandSubtitle"></p>
+                    <p class="hero-brand-sub" data-i18n="brandSubtitle">Pagina principală + experiență mini-aplicație</p>
                   </div>
                 </div>
-                <p class="hero-lead" data-i18n="heroLead"></p>
+                <p class="hero-lead" data-i18n="heroLead">Încearcă mini-aplicația noastră populară direct pe pagina principală!</p>
               </div>
               <div class="hero-actions">
                 <a id="heroOpenAppBtn" class="btn hero-webapp-btn" href="https://idesuss.net/app">
-                  <span data-i18n="openWebapp"></span>
+                  <span data-i18n="openWebapp">Deschide webapp-ul</span>
                 </a>
                 <a id="heroOpenRadioBtn" class="btn hero-webapp-btn hero-radio-btn" href="/radio/?autoplay=1">
-                  <span data-i18n="openRadio"></span>
+                  <span data-i18n="openRadio">Deschide radioul</span>
                 </a>
               </div>
             </div>
 
             <div class="hero-miniapp">
-              <h3 class="miniapp-title" data-i18n="inputTitle"></h3>
-              <p class="miniapp-subtitle" data-i18n="inputSubtitle"></p>
+              <h3 class="miniapp-title" data-i18n="inputTitle">Lipește un link video public</h3>
+              <p class="miniapp-subtitle" data-i18n="inputSubtitle">TikTok, YouTube, Instagram Reel, video Facebook și alte linkuri publice acceptate.</p>
               <div class="field">
-                <label for="videoUrl" data-i18n="inputLabel"></label>
+                <label for="videoUrl" data-i18n="inputLabel">URL video public</label>
                 <input id="videoUrl" class="input" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://..." />
               </div>
               <div class="input-actions">
-                <button id="pasteBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="paste"></button>
-                <button id="openBtn" class="btn miniapp-btn btn-primary" type="button" data-i18n="open"></button>
-                <button id="clearBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="clear"></button>
+                <button id="pasteBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="paste">Lipește</button>
+                <button id="openBtn" class="btn miniapp-btn btn-primary" type="button" data-i18n="open">Deschide</button>
+                <button id="clearBtn" class="btn miniapp-btn btn-soft" type="button" data-i18n="clear">Șterge</button>
               </div>
               <div class="status-bar">
                 <div id="clipboardStatus" class="status-pill">
                   <span class="status-dot"></span>
-                  <span data-i18n="clipboardChecking"></span>
+                  <span data-i18n="clipboardChecking">Se verifică clipboardul…</span>
                 </div>
                 <div id="installStatus" class="status-pill">
                   <span class="status-dot"></span>
-                  <span data-i18n="installStateUnknown"></span>
+                  <span data-i18n="installStateUnknown">Se încarcă starea instalării…</span>
                 </div>
                 <div class="status-pill status-ok">
                   <span class="status-dot"></span>
-                  <span data-i18n="publicLinksOnly"></span>
+                  <span data-i18n="publicLinksOnly">Doar linkuri publice</span>
                 </div>
               </div>
             </div>
@@ -266,9 +266,9 @@
             <div class="hero-banner">
               <div class="hero-banner-text">
                 <span class="hero-banner-icon"></span>
-                <span data-i18n="heroBannerText"></span>
+                <span data-i18n="heroBannerText">Unele dispozitive Android nu sunt acceptate!</span>
               </div>
-             <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details"></button>
+             <button class="hero-banner-link" type="button" data-panel="android" data-i18n="details">Detalii</button>
             </div>
           </div>
         </div>
@@ -279,10 +279,10 @@
       <div class="container">
         <div class="dashboard-info-head">
           <div>
-            <span class="platform-kicker" data-i18n="vision.dailyKicker">Napi információ</span>
-            <h2 id="dashboardInfoTitle" data-i18n="vision.overviewTitle">Áttekintés</h2>
+            <span class="platform-kicker" data-i18n="vision.dailyKicker">Informații zilnice</span>
+            <h2 id="dashboardInfoTitle" data-i18n="vision.overviewTitle">Prezentare generală</h2>
           </div>
-          <p data-i18n="vision.overviewLead">Hasznos állapotok egy helyen, másodlagos prioritással.</p>
+          <p data-i18n="vision.overviewLead">Stări utile într-un singur loc, ca informații secundare.</p>
         </div>
         <div class="dashboard-info-grid">
           <div class="dashboard-info-primary">
@@ -290,7 +290,7 @@
     <div class="container">
       <div class="fx-card">
         <div class="fx-card-head">
-          <h2 id="fxTitle" class="fx-title" data-i18n="fx.title">Napi hivatalos árfolyamok</h2>
+          <h2 id="fxTitle" class="fx-title" data-i18n="fx.title">Cursuri valutare oficiale zilnice</h2>
           <div class="fx-source">
             <span id="fxSourceDate">ECB napi referenciaárfolyam</span>
             · <span id="fxStatus" class="fx-status">betöltés…</span>
@@ -316,7 +316,7 @@
           </div>
         </div>
 
-        <p class="fx-note" data-i18n="fx.note">Forrás: Európai Központi Bank (ECB). Az ECB referenciaárfolyamai munkanapokon frissülnek; az Idesüss a napon belüli piaci ingadozást nem követi.</p>
+        <p class="fx-note" data-i18n="fx.note">Sursa: Banca Centrală Europeană (ECB). Cursurile de referință ECB sunt actualizate în zilele lucrătoare; Idesüss nu urmărește variațiile pieței din timpul zilei.</p>
       </div>
     </div>
   </section>
@@ -327,8 +327,8 @@
       <div class="online-users-card">
         <div class="online-users-head">
           <div>
-            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Online felhasználók</h2>
-            <p data-i18n="onlineUsersHint">Csak azok jelennek meg, akik ezt engedélyezték.</p>
+            <h2 id="onlineUsersTitle" data-i18n="onlineUsersTitle">Utilizatori online</h2>
+            <p data-i18n="onlineUsersHint">Sunt afișați doar utilizatorii care au permis vizibilitatea.</p>
           </div>
           <span class="online-users-live" data-i18n="onlineNow">Online</span>
         </div>
@@ -396,28 +396,28 @@
         <div class="footer-top">
           <div class="footer-brand">
             <h3>Idesüss<span class="tm-mark">™</span></h3>
-            <p data-i18n="footerDesc"></p>
+            <p data-i18n="footerDesc">Pagină principală + punct de acces mini-aplicație pentru linkuri video publice acceptate.</p>
           </div>
           <div class="footer-links">
 
   <button class="footer-action-btn"
           type="button"
           data-panel="how"
-          data-i18n="footerHow"></button>
+          data-i18n="footerHow">⚙️ Cum funcționează</button>
 
   <button class="footer-action-btn"
           type="button"
           data-panel="about"
-          data-i18n="footerAbout"></button>
+          data-i18n="footerAbout">ℹ️ Despre</button>
 
-  <a class="footer-action-btn" href="/eula/" data-i18n="vision.footerTerms">Felhasználási feltételek</a>
-  <a class="footer-action-btn" href="/privacy/" data-i18n="vision.footerPrivacy">Adatvédelem</a>
+  <a class="footer-action-btn" href="/eula/" data-i18n="vision.footerTerms">Termeni de utilizare</a>
+  <a class="footer-action-btn" href="/privacy/" data-i18n="vision.footerPrivacy">Confidențialitate</a>
 
 
   <button id="shareBtn"
           class="footer-action-btn"
           type="button"
-          data-i18n="footerShare"></button>
+          data-i18n="footerShare">📤 Distribuie</button>
 
   <label class="footer-action-btn footer-language-control" for="footerLangSelect">
     <span aria-hidden="true">🌐</span>
@@ -437,8 +437,8 @@
         <div class="footer-bottom">
           <div>© <span id="year"></span> Idesüss<span class="tm-mark">™</span></div>
            <div class="footer-stats">
-             <span id="onlineUsersCounter" data-i18n="onlineUsersCounter"></span>
-             <span id="totalVisitsCounter" data-i18n="totalVisitsCounter"></span>
+             <span id="onlineUsersCounter" data-i18n="onlineUsersCounter">👁 {count} online acum</span>
+             <span id="totalVisitsCounter" data-i18n="totalVisitsCounter">🌍 {count} vizite totale</span>
            </div>
           <div class="powered">Powered by StZoo</div>
         </div>
@@ -448,15 +448,15 @@
 
   
 
-<script src="js/resolver.js"></script>
+<script src="/js/resolver.js"></script>
 <script src="/js/shared/share-intake.js"></script>
 <script type="module" src="/js/home-runtime.js?v=20260928-visioni18n1"></script>
 
 
 
 
-<script type="module" src="./js/fx-rates.js?v=20260927-release1"></script>
-<script type="module" src="./js/menu/menu-core.js?v=20260929-profileprefs1"></script>
+<script type="module" src="/js/fx-rates.js?v=20260927-release1"></script>
+<script type="module" src="/js/menu/menu-core.js?v=20260929-profileprefs1"></script>
 
 <script type="module" src="/js/site-stats.js?v=20260926-shared-supabase1"></script>
 <script type="module" src="/js/online-users.js?v=20260927-package2"></script>

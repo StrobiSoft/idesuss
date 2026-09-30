@@ -4,6 +4,26 @@ on:
   pull_request:
     paths:
       - 'index.html'
+      - 'hu/**'
+      - 'en/**'
+      - 'nl/**'
+      - 'ro/**'
+      - 'pl/**'
+      - 'hr/**'
+      - 'be/**'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - 'tools/validate-localized-search-seo.mjs'
+      - 'hu/**'
+      - 'en/**'
+      - 'nl/**'
+      - 'ro/**'
+      - 'pl/**'
+      - 'hr/**'
+      - 'be/**'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - 'tools/validate-localized-search-seo.mjs'
       - 'home-consolidation.css'
       - 'secondary-page-shell.css'
       - 'tools/validate-secondary-page-shell.mjs'
@@ -128,6 +148,8 @@ jobs:
         run: node tools/validate-secondary-page-shell.mjs
       - name: Validate final release surface
         run: node tools/validate-final-release-surface.mjs
+      - name: Validate localized search SEO
+        run: node tools/validate-localized-search-seo.mjs
       - name: Validate common-generated webapp locale parity
         run: node tools/validate-common-webapp-locales.mjs
       - name: Validate common-generated Home locale parity

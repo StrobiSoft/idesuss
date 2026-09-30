@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://idesuss.net/sitemap.xml
