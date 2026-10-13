@@ -1,6 +1,6 @@
 import { IdesussRadioEngine } from "./radio-engine.js";
 import { loadRadioCapabilities, loadSavedRadioChannels, saveRadioChannel } from "./radio-entitlements.js";
-import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation, createDevelopmentExternalStation, getLocaleFavoriteStationSeed, resolveFavoriteStation, detectRadioLocale } from "./radio-stations.js";
+import { getEnabledRadioStations, normalizeRadioStation, createDevelopmentToneStation, createDevelopmentExternalStation, getLocaleFavoriteStationSeed, getLocaleSecondaryStationSeed, resolveFavoriteStation, detectRadioLocale } from "./radio-stations.js";
 import { loadSharedRadioCatalog } from "./radio-api-client.js";
 import { initRadioLanguage, radioT, getRadioLanguage } from "./radio-language.js";
 import { openRadioDirectory } from "./radio-directory.js";
@@ -23,6 +23,7 @@ let PRESET_RULES = [];
 async function prepareStations() {
   const locale = detectRadioLocale();
   let localeFavorite = null;
+  let localeSecond = null;
   let sharedStations = null;
 
   try {
@@ -34,6 +35,7 @@ async function prepareStations() {
   if (sharedStations?.length) {
     const normalizedShared = sharedStations.map(normalizeRadioStation).filter(Boolean);
     localeFavorite = normalizedShared.find((station) => station.isLocaleFavorite) || normalizedShared[0] || null;
+    localeSecond = normalizedShared.find((station) => station.recommendedSlot === 2) || null;
     STATIONS = normalizedShared;
   } else {
     const builtInStations = getEnabledRadioStations();
@@ -53,9 +55,19 @@ async function prepareStations() {
       }
     }
 
+    localeSecond = localeRecommendations[1] || null;
+    if (!localeSecond) {
+      try {
+        localeSecond = await resolveFavoriteStation(getLocaleSecondaryStationSeed(locale));
+      } catch (error) {
+        console.warn("Second locale radio favorite could not be resolved", error);
+      }
+    }
+
     STATIONS = [
       ...(localeFavorite ? [localeFavorite] : []),
-      ...builtInStations.filter((station) => !localeFavorite || station.id !== localeFavorite.id)
+      ...(localeSecond && localeSecond.id !== localeFavorite?.id ? [localeSecond] : []),
+      ...builtInStations.filter((station) => station.id !== localeFavorite?.id && station.id !== localeSecond?.id)
     ];
   }
 
@@ -71,7 +83,7 @@ async function prepareStations() {
 
   PRESET_RULES = Array.from({ length: PRESET_POLICY.slotCount }, (_unused, index) => ({
     slot: index + 1,
-    freeStation: index < 2 ? (localeRecommendations[index] || (index === 0 ? localeFavorite : null)) : null
+    freeStation: index < 2 ? (localeRecommendations[index] || (index === 0 ? localeFavorite : localeSecond)) : null
   }));
 
   return localeFavorite;
@@ -176,7 +188,7 @@ async function selectStation(station,message=null) {
     await engine.selectStation(normalized);
     renderPresets();
   } catch (error) {
-    setStatus(`Állomásválasztási hiba: ${error.message}`);
+    setStatus(radioT("selectStationError", {error:error.message}));
   }
 }
 function renderTier() {
@@ -188,7 +200,7 @@ function renderTier() {
     userBtn.href = radioUser ? "/#profile" : "/#login";
   }
   const saveHint=$("#saveHint");
-  if (saveHint) saveHint.textContent="A presetek ezen az eszközön bejelentkezés nélkül is használhatók.";
+  if (saveHint) saveHint.textContent=radioT("localPresetsHint");
   const skin=$("#skinSelect");
   if (skin) Array.from(skin.options).forEach((option)=>{ option.disabled=false; });
   const audioTestButton=$("#audioTestBtn");
@@ -220,7 +232,7 @@ function renderPresets() {
       : (stationForButton?.name||(unlocked?radioT("empty"):requiredTierForSlot(rule.slot)));
     appendTextElement(button,"small",label);
     button.title=unlocked
-      ? (stationForButton?`${stationForButton.name} betöltése`:"Üres preset — a kiválasztott állomás mentése")
+      ? (stationForButton?radioT("loadPresetTitle",{station:stationForButton.name}):radioT("emptyPresetTitle"))
       : `${requiredTierForSlot(rule.slot)} csomag szükséges`;
     let longPressTimer=null;
     let longPressTriggered=false;
@@ -266,12 +278,12 @@ function renderPresets() {
         return;
       }
       if (stored) {
-        await selectStation(stored,"Mentett preset kiválasztva; lejátszás indul…");
+        await selectStation(stored,radioT("savedPresetSelected"));
         await engine.play();
         return;
       }
 
-      if (fallback && (!selectedStation || selectedStation.id === fallback.id)) {
+      if (fallback) {
         await selectStation(fallback,radioT("recommendedSelected"));
         await engine.play();
         return;
@@ -283,11 +295,11 @@ function renderPresets() {
           try { await saveRadioChannel(radioClient,radioUser.id,rule.slot,selectedStation); } catch (error) { console.warn("Server preset save failed; using local preset", error); }
         }
         saveLocalPreset(rule.slot, selectedStation);
-        setStatus(selectedStation.name + " elmentve a(z) " + rule.slot + ". presetre.");
+        setStatus(radioT("presetSavedStatus",{station:selectedStation.name,slot:rule.slot}));
         renderPresets();
       } catch (error) {
         console.error("Radio preset save failed",error);
-        setStatus("A preset mentése nem sikerült.");
+        setStatus(radioT("presetSaveFailed"));
       }
     });
     host.appendChild(button);
@@ -307,12 +319,12 @@ function bindControls() {
     try {
       audioTestTone?.revoke?.();
       audioTestTone=createDevelopmentToneStation();
-      await selectStation(audioTestTone.station,"Helyi hangteszt betöltve…");
+      await selectStation(audioTestTone.station,radioT("audioTestLoaded"));
       await engine.play();
-      setStatus("Hangteszt fut — a rádiómotor és a hangerőszabályzás működik.");
+      setStatus(radioT("audioTestRunning"));
     } catch (error) {
       console.error("Radio audio self-test failed",error);
-      setStatus(`Hangteszt hiba: ${error.message}`);
+      setStatus(radioT("audioTestError",{error:error.message}));
     }
   });
   const volume=$("#volumeSlider");
@@ -326,7 +338,7 @@ function bindControls() {
   $("#skinSelect")?.addEventListener("change",(event)=>{
     const requested=event.target.value;
     const active=applySkin(requested);
-    setStatus(active==="default"?"Idesüss alap skin aktív.":"Rádió skin aktív és elmentve.");
+    setStatus(radioT(active==="default"?"skinDefaultActive":"skinActive"));
   });
 }
 function bindEngineEvents() {
@@ -345,7 +357,7 @@ function bindEngineEvents() {
     const slider=$("#volumeSlider");
     if (slider) slider.value=String(Math.round((event.detail?.volume||0)*100));
   });
-  engine.addEventListener("error",(event)=>setStatus(event.detail?.message||"Rádióhiba történt."));
+  engine.addEventListener("error",(event)=>setStatus(event.detail?.message||radioT("radioError")));
 }
 function registerRadioServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
@@ -362,6 +374,11 @@ async function init() {
     await prepareStations();
     renderTier();
     renderPresets();
+    if (selectedStation) {
+      setStatus(engine.audio?.paused === false
+        ? radioT("playing")
+        : radioT("readyStation", { station: selectedStation.name }));
+    }
     const button = $("#playPauseBtn");
     if (button) {
       const playing=engine.audio?.paused===false;
@@ -391,7 +408,7 @@ async function init() {
     console.error("Radio entitlement or preset load failed",error);
     capabilities={...capabilities,canSaveRadioChannels:true,maxRadioPresets:PRESET_POLICY.slotCount,canUseCustomSkins:true};
     savedPresets=loadLocalPresets();
-    setStatus("A szerveres profil nem érhető el; a rádió helyi módban tovább használható.");
+    setStatus(radioT("profileLocalMode"));
   }
 
   const initialStation = savedPresets[1] || localeFavorite || STATIONS[0] || null;
