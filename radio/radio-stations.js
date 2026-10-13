@@ -10,6 +10,33 @@ export const RADIO_FAVORITES_BY_LOCALE = Object.freeze({
   be: Object.freeze({ id: "be-novoe-radio", name: "Novoe Radio", directoryName: "Novoe Radio", countryCode: "BY" })
 });
 
+export const RADIO_SECOND_FAVORITES_BY_LOCALE = Object.freeze({
+  hu: Object.freeze({ id: "hu-slager-fm", name: "Sláger FM", directoryName: "Sláger FM", countryCode: "HU" }),
+  en: Object.freeze({ id: "en-capital-fm", name: "Capital FM", directoryName: "Capital FM", countryCode: "GB" }),
+  nl: Object.freeze({ id: "nl-npo-radio-2", name: "NPO Radio 2", directoryName: "NPO Radio 2", countryCode: "NL" }),
+  ro: Object.freeze({ id: "ro-radio-zu", name: "Radio ZU", directoryName: "Radio ZU", countryCode: "RO" }),
+  pl: Object.freeze({ id: "pl-rmf-fm", name: "RMF FM", directoryName: "RMF FM", countryCode: "PL" }),
+  hr: Object.freeze({ id: "hr-otvoreni", name: "Otvoreni Radio", directoryName: "Otvoreni Radio", countryCode: "HR" }),
+  be: Object.freeze({ id: "be-radius-fm", name: "Radius FM", directoryName: "Radius FM", countryCode: "BY" })
+});
+
+export function getLocaleSecondaryStationSeed(locale = detectRadioLocale()) {
+  const normalized = normalizedLocale(locale);
+  const config = RADIO_SECOND_FAVORITES_BY_LOCALE[normalized];
+  return config ? normalizeRadioStation({
+    ...config,
+    info: "Recommended second station",
+    streamUrl: "",
+    streamType: "auto",
+    enabled: true,
+    catalogManaged: true,
+    distributionStatus: "unreviewed",
+    sourceStatus: "resolving",
+    preferredLocale: normalized,
+    recommendedSlot: 2
+  }) : null;
+}
+
 const RADIO_DIRECTORY_ENDPOINTS = Object.freeze([
   "https://de1.api.radio-browser.info",
   "https://nl1.api.radio-browser.info"
