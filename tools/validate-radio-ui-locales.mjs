@@ -34,7 +34,7 @@ for (const key of [
 
 assert.match(html, /class="section-hint" data-radio-i18n="presetsHint"/);
 assert.match(html, /class="radio-control-meta" data-radio-i18n="playbackMeta"/);
-assert.match(html, /href="\.\." data-radio-i18n="home"/);
+assert.match(html, /href="\.\.\/" data-radio-i18n="home"/);
 assert.match(app, /if \(fallback\) \{/);
 assert.match(app, /getLocaleSecondaryStationSeed\(locale\)/);
 assert.match(app, /radioT\("localPresetsHint"\)/);
