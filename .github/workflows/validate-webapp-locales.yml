@@ -47,6 +47,7 @@ on:
       - 'js/lang/modules/Home/lang/**'
       - 'tools/fixtures/common-home-locales/**'
       - 'tools/validate-common-home-locales.mjs'
+      - 'tools/validate-radio-ui-locales.mjs'
       - 'radio/**'
       - 'admin/**'
       - 'messages/**'
@@ -100,6 +101,7 @@ on:
       - 'js/lang/modules/Home/lang/**'
       - 'tools/fixtures/common-home-locales/**'
       - 'tools/validate-common-home-locales.mjs'
+      - 'tools/validate-radio-ui-locales.mjs'
       - 'radio/**'
       - 'admin/**'
       - 'messages/**'
@@ -210,6 +212,8 @@ jobs:
           node --check radio/radio-app.js
           node --check rules/rules-language.js
           node --check ideas/ideas-language.js
+      - name: Validate Radio UI localization and default presets
+        run: node tools/validate-radio-ui-locales.mjs
       - name: Validate generated radio development audio
         run: node tools/validate-radio-dev-audio.mjs
 
