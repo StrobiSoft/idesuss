@@ -7,6 +7,7 @@ import {
 
 const TEXT = {
   hu: {
+    skinAria:"Rádió megjelenés", documentTitle:"Idesüss — Rádió",
     brandHomeAria:"Idesüss főoldal",
     radioAria:"Idesüss rádió",
     controlsAria:"Lejátszás vezérlők",
@@ -47,6 +48,7 @@ const TEXT = {
     unavailable:"Jelenleg nincs elérhető rádióállomás.", language:"Nyelv"
   },
   en: {
+    skinAria:"Radio appearance", documentTitle:"Idesüss — Radio",
     brandHomeAria:"Idesüss home",
     radioAria:"Idesüss radio",
     controlsAria:"Playback controls",
@@ -86,6 +88,7 @@ const TEXT = {
     unavailable:"No radio station is currently available.", language:"Language"
   },
   nl: {
+    skinAria:"Radio-uiterlijk", documentTitle:"Idesüss — Radio",
     brandHomeAria:"Idesüss startpagina",
     radioAria:"Idesüss radio",
     controlsAria:"Afspeelknoppen",
@@ -125,6 +128,7 @@ const TEXT = {
     unavailable:"Er is momenteel geen radiostation beschikbaar.", language:"Taal"
   },
   ro: {
+    skinAria:"Aspect radio", documentTitle:"Idesüss — Radio",
     brandHomeAria:"Pagina principală Idesüss",
     radioAria:"Radio Idesüss",
     controlsAria:"Comenzi de redare",
@@ -164,6 +168,7 @@ const TEXT = {
     unavailable:"Momentan nu este disponibil niciun post radio.", language:"Limbă"
   },
   pl: {
+    skinAria:"Wygląd radia", documentTitle:"Idesüss — Radio",
     brandHomeAria:"Strona główna Idesüss",
     radioAria:"Radio Idesüss",
     controlsAria:"Sterowanie odtwarzaniem",
@@ -203,6 +208,7 @@ const TEXT = {
     unavailable:"Obecnie żadna stacja radiowa nie jest dostępna.", language:"Język"
   },
   hr: {
+    skinAria:"Izgled radija", documentTitle:"Idesüss — Radio",
     brandHomeAria:"Početna stranica Idesüss",
     radioAria:"Idesüss radio",
     controlsAria:"Kontrole reprodukcije",
@@ -242,6 +248,7 @@ const TEXT = {
     unavailable:"Trenutno nema dostupnih radijskih postaja.", language:"Jezik"
   },
   be: {
+    skinAria:"Выгляд радыё", documentTitle:"Idesüss — Радыё",
     brandHomeAria:"Галоўная старонка Idesüss",
     radioAria:"Радыё Idesüss",
     controlsAria:"Кіраванне прайграваннем",
@@ -294,6 +301,7 @@ export function radioT(key, values = {}) {
 
 function applyRadioLanguage() {
   document.documentElement.lang = currentLanguage;
+  document.title = radioT("documentTitle");
   document.querySelectorAll("[data-radio-i18n]").forEach((element) => {
     const value = radioT(element.dataset.radioI18n);
     if (value) element.textContent = value;
