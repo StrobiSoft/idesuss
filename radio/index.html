@@ -16,7 +16,7 @@
 <body>
   <header class="radio-topbar">
     <div class="radio-topbar-inner">
-      <a class="radio-brand" href="../" aria-label="Idesüss főoldal">
+      <a class="radio-brand" href="../" aria-label="Idesüss főoldal" data-radio-i18n-aria-label="brandHomeAria">
         <img class="radio-brand-logo" src="../favicon.png" alt="" />
         <span class="radio-brand-copy">
           <span class="radio-brand-title">Idesüss™</span>
@@ -25,7 +25,7 @@
       </a>
 
       <div class="top-nav">
-        <a class="back" href="../">← Főoldal</a>
+        <a class="back" href="../" data-radio-i18n="home">← Főoldal</a>
         <a id="radioUserBtn" class="back" href="/#login">👤 Bejelentkezés</a>
       </div>
     </div>
@@ -48,7 +48,7 @@
       </div>
     </section>
 
-    <section class="radio-face" aria-label="Idesüss rádió">
+    <section class="radio-face" aria-label="Idesüss rádió" data-radio-i18n-aria-label="radioAria">
       <div class="face-head" aria-hidden="true"></div>
 
       <div class="radio-console">
@@ -65,22 +65,22 @@
           </div>
         </div>
 
-        <aside class="radio-controls" aria-label="Lejátszás vezérlők">
+        <aside class="radio-controls" aria-label="Lejátszás vezérlők" data-radio-i18n-aria-label="controlsAria">
           <div>
-            <p class="radio-control-label">Playback</p>
+            <p class="radio-control-label" data-radio-i18n="playbackLabel">Playback</p>
             <div class="transport">
               <button id="playPauseBtn" class="primary" type="button" aria-pressed="false">▶ Lejátszás</button>
               <button id="audioTestBtn" type="button" hidden disabled data-radio-i18n="test">🔊 Hangteszt</button>
             </div>
           </div>
-          <p class="radio-control-meta">Gyors hozzáférés az útközbeni hallgatáshoz, a meglévő lejátszási és autoplay szabályok megtartásával.</p>
+          <p class="radio-control-meta" data-radio-i18n="playbackMeta">Gyors hozzáférés az útközbeni hallgatáshoz, a meglévő lejátszási és autoplay szabályok megtartásával.</p>
         </aside>
       </div>
 
       <div class="radio-presets-section">
         <div class="section-head">
           <div class="section-title" data-radio-i18n="presets">Csatornagombok / presetek</div>
-          <p class="section-hint">Hosszan nyomva állomást válthatsz vagy menthetsz.</p>
+          <p class="section-hint" data-radio-i18n="presetsHint">Hosszan nyomva állomást válthatsz vagy menthetsz.</p>
         </div>
         <div id="presetGrid" class="presets"></div>
         <div id="saveHint" class="note"></div>
@@ -92,7 +92,7 @@
     </div>
   </main>
 
-  <script type="module" src="./radio-app.js?v=20260927-release1"></script>
+  <script type="module" src="./radio-app.js?v=20261013-radio-i18n1"></script>
   <script>
     (() => {
       const slider = document.getElementById('volumeSlider');
