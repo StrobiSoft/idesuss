@@ -1,3 +1,5 @@
+import { ensureSecureProductionOrigin } from "./production-https.js?v=20261031-https1";
+
 const SUPABASE_URL = "https://aypymehochdhcisgkowy.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_1Ek9_3audYdKlguLegBm-Q_2i4S-W3G";
 
@@ -28,6 +30,9 @@ function loadSupabaseLibrary() {
 }
 
 export async function getSharedSupabaseClient() {
+  if (!ensureSecureProductionOrigin()) {
+    throw new Error("A secure HTTPS connection is required.");
+  }
   if (window.supabaseClient) return window.supabaseClient;
   const supabase = await loadSupabaseLibrary();
   if (!supabase?.createClient) throw new Error("Supabase library failed to load.");
