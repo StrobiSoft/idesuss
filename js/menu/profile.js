@@ -154,7 +154,8 @@ async function createCroppedAvatarFile(file, positionX, positionY, zoom) {
 
 async function renderProfile(panel, profile, user) {
   const nickname = profile?.nickname || "";
-  const nicknameLocked = profile?.profile_completed === true && Boolean(profile?.nickname_normalized || nickname);
+  // A nickname can be preassigned to an uncompleted profile; lock it before first save as well.
+  const nicknameLocked = Boolean(profile?.nickname_normalized || (profile?.profile_completed && nickname));
   const isStaffAvatarLocked = ["moderator", "admin"].includes(profile?.role);
   const avatar = isStaffAvatarLocked
     ? STAFF_AVATAR_EMOJI
