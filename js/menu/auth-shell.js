@@ -126,6 +126,8 @@ function ensureAuthStyles() {
     }
 
     .idesuss-auth-card {
+      box-sizing: border-box;
+      max-width: 100%;
       position: relative;
       z-index: 1;
       display: block !important;
@@ -358,7 +360,7 @@ function ensureAuthStyles() {
       }
 
       .idesuss-auth-card {
-        width: min(100% - 24px, 420px);
+        width: min(100%, 420px);
         padding: 26px 20px 22px;
         border-radius: 24px;
       }
