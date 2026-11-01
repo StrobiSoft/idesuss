@@ -7,6 +7,8 @@ const vectors = new Map([
   ['Çañón', 'canon'],
   ['Über_Café', 'uber_cafe'],
   ['MOD_HU', 'mod_hu'],
+  ['Béla', 'bela'],
+  ['béla', 'bela'],
 ]);
 
 const failures = [];
