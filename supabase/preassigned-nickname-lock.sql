@@ -28,9 +28,16 @@ begin
       raise exception 'INVALID_NICKNAME:RESERVED';
     end if;
   elsif tg_op = 'INSERT' then
+    -- save_my_profile uses INSERT .. ON CONFLICT DO UPDATE: BEFORE INSERT
+    -- fires before the existing row can be updated. Permit only the
+    -- authenticated user's *already preassigned* nickname in that case.
     if exists (
       select 1 from public.reserved_nicknames r
       where r.nickname_normalized = new.nickname_normalized
+    ) and not exists (
+      select 1 from public.profiles p
+      where p.id = new.id
+        and p.nickname_normalized = new.nickname_normalized
     ) then
       raise exception 'INVALID_NICKNAME:RESERVED';
     end if;
